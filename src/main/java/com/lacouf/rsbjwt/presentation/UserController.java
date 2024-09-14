@@ -33,10 +33,9 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/me")
-	public ResponseEntity<UserDTO> getMe(HttpServletRequest request){
-		return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON).body(
-			userService.getMe(request.getHeader("Authorization")));
-	}
-
+//	@GetMapping("/me")
+//	public ResponseEntity<UserDTO> getMe(HttpServletRequest request){
+//		return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON).body(
+//			userService.getMe(request.getHeader("Authorization")));
+//	}
 }

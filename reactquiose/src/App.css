@@ -1,38 +1,106 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.App-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1vmax;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+.App-header-connexion {
+    color: white;
+    text-align: center;
+    margin: auto;
+    padding: 1em;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.App-header-connexion h1 {
+    font-size: 5vmax;
+    margin: 0;
+    padding: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.App-header-connexion p {
+    font-size: 2vmax;
+    margin: 0;
+    padding: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.App-image {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.5)),
+            url("./images/background_image.png") no-repeat center;
+    background-size: cover;
+    animation: fondu 80s ease-in-out infinite alternate;
+}
+
+@keyframes fondu {
+    0% {
+        background-image: url("./images/background_image.png");
+    }
+    20% {
+        background-image: url("./images/background_image2.png");
+        background-position: right;
+    }
+    40% {
+        background-image: url("./images/background_image3.png");
+    }
+    60% {
+        background-image: url("./images/background_image4.png");
+    }
+    80% {
+        background-image: url("./images/background_image5.png");
+    }
+    100% {
+        background-image: url("./images/background_image6.png");
+    }
+}
+
+
+
+/** Form **/
+.form-compte {
+    background-color: lightgray;
+    border: 0.3em solid black;
+    border-radius: 1em;
+}
+
+.form-compte h2 {
+    text-align: center;
+    margin-top: 0.5em;
+}
+
+.form-compte form {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-compte legend {
+    color: red;
+    margin-bottom: 1em;
+}
+
+.form-compte label, .form-compte legend, .form-compte small {
+    font-size: 2vmin;
+}
+
+.form-compte input {
+    margin-bottom: 0.5em;
+}
+
+.form-compte button {
+    align-self: center;
 }

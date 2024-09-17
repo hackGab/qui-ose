@@ -23,8 +23,27 @@ public abstract class UserApp  {
 
     private String lastName;
 
+    private String password;
+
+    private String passwordConfirm;
+
+    private String email;
+
+    private String phoneNumber;
+
+    private String role;
+
     @Embedded
     private Credentials credentials;
+
+    public UserApp(String firstName, String lastName, String email, String password, String phoneNumber, String role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
 
     public String getEmail(){
         return credentials.getEmail();

@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,9 +19,16 @@ import java.util.Collection;
 public abstract class UserApp {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     protected Long id;
+
+    @Column(name = "FIRST_NAME")
     protected String firstName;
+
+    @Column(name = "LAST_NAME")
     protected String lastName;
+
+    @Column(name = "PHONE_NUMBER")
     protected String phoneNumber;
 
     @Embedded
@@ -49,3 +57,4 @@ public abstract class UserApp {
         return credentials.getAuthorities();
     }
 }
+

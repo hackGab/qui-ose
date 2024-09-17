@@ -10,24 +10,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/etudiant")
 public class EtudiantController {
-    Logger logger = Logger.getLogger(EtudiantController.class.getName());
 
     private final EtudiantService etudiantService;
 
-    public  EtudiantController(EtudiantService etudiantService) {
+    public EtudiantController(EtudiantService etudiantService) {
         this.etudiantService = etudiantService;
     }
 
     @PostMapping("/creerEtudiant")
     public ResponseEntity<EtudiantDTO> creerEtudiant(@RequestBody EtudiantDTO newEtudiant) {
-        logger.info("post - creerEtudiant " + newEtudiant);
+        if (newEtudiant == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Optional<EtudiantDTO> etudiantDTO = etudiantService.creerEtudiant(newEtudiant);
+
         return etudiantDTO.map(etudiant -> ResponseEntity.status(HttpStatus.CREATED).body(etudiant))
-                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 }

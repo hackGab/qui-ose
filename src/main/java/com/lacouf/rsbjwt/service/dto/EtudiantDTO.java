@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EtudiantDTO extends UserDTO {
-    private CredentialDTO credentials; // Ajoutez cette ligne pour inclure les informations de connexion
+    private CredentialDTO credentials;
 
     public EtudiantDTO(String firstName, String lastName, Role role, CredentialDTO credentials) {
         super(firstName, lastName, role);

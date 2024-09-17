@@ -18,31 +18,27 @@ import java.util.Collection;
 public abstract class UserApp  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String firstName;
+    protected Long id;
+    protected String firstName;
 
-    private String lastName;
+    protected String lastName;
 
-    private String password;
+    protected String password;
 
-    private String passwordConfirm;
+    protected String passwordConfirm;
 
-    private String email;
+    protected String email;
 
-    private String phoneNumber;
-
-    private String role;
+    protected String phoneNumber;
 
     @Embedded
     private Credentials credentials;
 
-    public UserApp(String firstName, String lastName, String email, String password, String phoneNumber, String role) {
+    public UserApp(String firstName, String lastName, String email, String password, String phoneNumber, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
-        this.role = role;
+        this.credentials = new Credentials(email, password, role);
     }
 
     public String getEmail(){

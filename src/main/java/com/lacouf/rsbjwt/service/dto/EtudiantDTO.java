@@ -11,27 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EtudiantDTO {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
-    private Role role;
+public class EtudiantDTO extends UserDTO {
+    private CredentialDTO credentials; // Ajoutez cette ligne pour inclure les informations de connexion
 
-
-    public EtudiantDTO(String firstName, String lastName, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
+    public EtudiantDTO(String firstName, String lastName, Role role, CredentialDTO credentials) {
+        super(firstName, lastName, role);
+        this.credentials = credentials;
     }
 
     public EtudiantDTO(Etudiant etudiant) {
-        this.id = etudiant.getId();
-        this.firstName = etudiant.getFirstName();
-        this.lastName = etudiant.getLastName();
-        this.email = etudiant.getEmail();
-        this.phoneNumber = etudiant.getPhoneNumber();
-        this.role = etudiant.getRole();
+        super(etudiant);
+        this.credentials = new CredentialDTO(etudiant.getEmail(), etudiant.getPassword(), null); // Assurez-vous que vous n'exposez pas le mot de passe
     }
 }

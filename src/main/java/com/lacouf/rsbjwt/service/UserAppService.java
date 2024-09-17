@@ -31,9 +31,6 @@ public class UserAppService {
 //        String email = jwtTokenProvider.getEmailFromJWT(token);
 //        UserApp user = userAppRepository.findUserAppByEmail(email).orElseThrow(UserNotFoundException::new);
 //        return switch(user.getRole()){
-//            case EMPRUNTEUR -> getEmprunteurDto(user.getId());
-//            case PREPOSE -> getPreposeDto(user.getId());
-//            case GESTIONNAIRE -> getGestionnaireDto(user.getId());
 //        };
 //    }
 }

@@ -15,20 +15,12 @@ import java.util.Collection;
 @Getter
 @Setter
 @ToString
-public abstract class UserApp  {
+public abstract class UserApp {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     protected String firstName;
-
     protected String lastName;
-
-    protected String password;
-
-    protected String passwordConfirm;
-
-    protected String email;
-
     protected String phoneNumber;
 
     @Embedded
@@ -52,7 +44,6 @@ public abstract class UserApp  {
     public Role getRole(){
         return credentials.getRole();
     }
-
 
     public Collection<? extends GrantedAuthority> getAuthorities(){
         return credentials.getAuthorities();

@@ -3,7 +3,21 @@ import InputMask from 'react-input-mask';
 
 function Inscription() {
     return (
-        <form>
+        <form className='pt-0'>
+            <div className='row'>
+                <div>
+                    <div className='form-group' style={{ display: "inline-flex"}}>
+                        <label htmlFor='role' className='col-5 m-auto'>Je suis un*</label>
+                        &nbsp;
+                        <select className='form-control col-7' id='role' name='role' required>
+                            <option value='etudiant'>Étudiant</option>
+                            <option value='prof'>Professeur</option>
+                            <option value='employeur'>Employeur</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <legend>Champs obligatoires*</legend>
 
             <div className='row'>

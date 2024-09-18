@@ -20,6 +20,7 @@
     text-align: center;
     margin: auto;
     padding: 1em;
+    animation: fonduTitre 80s ease-in-out infinite alternate;
 }
 
 .App-header-connexion h1 {
@@ -68,6 +69,15 @@
     }
 }
 
+@keyframes fonduTitre {
+    0%, 80%, 100% {
+        color: black;
+    }
+    20%, 60% {
+        color: white;
+    }
+}
+
 
 
 /** Form **/
@@ -75,17 +85,21 @@
     background-color: lightgray;
     border: 0.3em solid black;
     border-radius: 1em;
+    overflow-y: auto;
+    max-height: 98vh;
 }
 
 .form-compte h2 {
     text-align: center;
     margin-top: 0.5em;
+    font-size: 3vmin;
 }
 
 .form-compte form {
     padding: 1em;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .form-compte legend {

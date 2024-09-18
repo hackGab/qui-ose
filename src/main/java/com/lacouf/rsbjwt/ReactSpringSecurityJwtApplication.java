@@ -15,14 +15,11 @@ import java.util.Optional;
 
 @SpringBootApplication
 public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
-    private final UserAppRepository userAppRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final EtudiantService etudiantService;
 
-    public ReactSpringSecurityJwtApplication(UserAppRepository userAppRepository, PasswordEncoder passwordEncoder, EtudiantService etudiantService) {
-        this.userAppRepository = userAppRepository;
+    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService) {
         this.passwordEncoder = passwordEncoder;
         this.etudiantService = etudiantService;
     }
@@ -33,7 +30,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Créer un nouvel étudiant DTO avec des informations de test
         EtudiantDTO etudiantDTO = new EtudiantDTO();
         etudiantDTO.setFirstName("John");
         etudiantDTO.setLastName("Doe");
@@ -45,7 +41,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
         Optional<EtudiantDTO> etudiantCree = etudiantService.creerEtudiant(etudiantDTO);
 
-        // Vérifier si l'étudiant a bien été créé et affiché dans la console
         if (etudiantCree.isPresent()) {
             System.out.println("Étudiant créé avec succès : " + etudiantCree.get());
         } else {

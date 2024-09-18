@@ -15,5 +15,4 @@ public interface UserAppRepository extends JpaRepository<UserApp, Long> {
         select u from UserApp u where trim(lower(u.credentials.email)) = :email
     """)
     Optional<UserApp> findUserAppByEmail(@Param("email") String email);
-
 }

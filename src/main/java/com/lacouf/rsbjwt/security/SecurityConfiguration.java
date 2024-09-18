@@ -45,21 +45,20 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/user/login").permitAll()
                         .requestMatchers(POST, "/emprunteur/register").permitAll()
                         .requestMatchers(POST, "/prepose/register").permitAll()
-                        .requestMatchers(toH2Console()).permitAll()
-
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(GET, "/user/*").hasAnyAuthority("EMPRUNTEUR", "PREPOSE", "GESTIONNAIRE")
                         .requestMatchers("/emprunteur/**").hasAuthority("EMPRUNTEUR")
                         .requestMatchers("/prepose/**").hasAuthority("PREPOSE")
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .anyRequest().denyAll()
                 )
-                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // for h2-console
-                .sessionManagement((secuManagement) -> {
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // pour h2-console en mode développement
+                .sessionManagement(secuManagement -> {
                     secuManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint))
-        ;
+                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint));
 
         return http.build();
     }

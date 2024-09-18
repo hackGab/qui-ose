@@ -56,4 +56,36 @@ class EtudiantServiceTest {
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
+
+    @Test
+    void shouldReturnEtudiantWhenFound() {
+        // Arrange
+        Long etudiantId = 1L;
+        EtudiantDTO foundEtudiant = new EtudiantDTO("Jane", "Doe", null, null);
+
+        when(etudiantService.getEtudiantById(etudiantId))
+                .thenReturn(Optional.of(foundEtudiant));
+
+        // Act
+        ResponseEntity<EtudiantDTO> response = etudiantController.getEtudiantById(etudiantId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(foundEtudiant, response.getBody());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenEtudiantNotFound() {
+        // Arrange
+        Long etudiantId = 1L;
+
+        when(etudiantService.getEtudiantById(etudiantId))
+                .thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<EtudiantDTO> response = etudiantController.getEtudiantById(etudiantId);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }

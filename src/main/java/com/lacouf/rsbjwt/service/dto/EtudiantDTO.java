@@ -21,6 +21,6 @@ public class EtudiantDTO extends UserDTO {
 
     public EtudiantDTO(Etudiant etudiant) {
         super(etudiant);
-        this.credentials = new CredentialDTO(etudiant.getEmail(), etudiant.getPassword(), null); // Assurez-vous que vous n'exposez pas le mot de passe
+        this.credentials = new CredentialDTO(etudiant.getEmail(), etudiant.getPassword(), null);
     }
 }

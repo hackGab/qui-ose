@@ -6,7 +6,6 @@ import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class EtudiantService {
@@ -31,5 +30,10 @@ public class EtudiantService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public Optional<EtudiantDTO> getEtudiantById(Long id) {
+        return etudiantRepository.findById(id)
+                .map(EtudiantDTO::new);
     }
 }

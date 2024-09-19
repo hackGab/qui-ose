@@ -20,8 +20,7 @@ function Formulaire(props) {
                 </div>
                 <hr/>
 
-                <Inscription title={title}/>
-
+                <Inscription/>
             </div>
 
         </div>

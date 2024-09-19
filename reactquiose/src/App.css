@@ -80,13 +80,25 @@
 
 
 
+/* xs */
+.form-compte  {
+    height: 85vh;
+}
+
+/* lg */
+@media (min-width: 1200px) {
+    .form-compte  {
+        height: 98vh;
+    }
+}
+
+
 /** Form **/
 .form-compte {
     background-color: lightgray;
     border: 0.3em solid black;
     border-radius: 1em;
     overflow-y: auto;
-    max-height: 98vh;
 }
 
 .form-compte h2 {

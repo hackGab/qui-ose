@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
-import { If, Then } from 'react-if';
+import {Else, If, Then} from 'react-if';
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -128,14 +128,23 @@ function Inscription() {
                         <Then>
                             <div className='col-lg-12 col-md-6 col-6 m-auto'>
                                 <div className="form-group">
-                                    <label htmlFor="nomEntreprise">Nom de l'entreprise</label>
+                                    <label htmlFor="nomEntreprise">Nom de l'entreprise*</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
-                                           placeholder="Nom de l'entreprise"
-                                           pattern={"[A-Za-z]+"}/>
+                                           placeholder="Ville de Montréal"
+                                           pattern={"[A-Za-z]+"}
+                                            required/>
                                 </div>
                             </div>
                         </Then>
+                        <Else>
+                            <div className="form-group">
+                                <label htmlFor="departement">Département*</label>
+                                <input type="text" className="form-control" id="departement" name="departement"
+
+                                       placeholder="Technique de l'informatique" required/>
+                            </div>
+                        </Else>
                     </If>
                 </div>
 

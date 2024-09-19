@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import InputMask from 'react-input-mask';
-import  {If, Then } from 'react-if';
-import Inscription from "./Inscription";
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -46,9 +43,6 @@ function Connexion() {
 
     return(
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-
-
-
             <div className='row' >
                 <div className="form-group">
                     <label htmlFor="email">Email*</label>
@@ -65,7 +59,6 @@ function Connexion() {
                 </div>
 
             </div>
-
 
             <button className="btn btn-primary w-50" type="submit">Connecter</button>
 

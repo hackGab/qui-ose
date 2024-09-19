@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import logo from '../images/logo.png';
 import Inscription from "./Inscription";
 import Connexion from "./Connexion";
-import {Else, If, Then} from "react-if";
+import {If, Then} from "react-if";
 import React from "react";
 
 function Formulaire(props) {

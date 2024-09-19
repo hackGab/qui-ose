@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -31,6 +33,7 @@ class EtudiantControllerTest {
     private EtudiantService etudiantService;
 
     @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
     public void shouldCreateEtudiant() throws Exception {
         EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null);
         Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
@@ -38,12 +41,14 @@ class EtudiantControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/etudiant/creerEtudiant")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .content(new ObjectMapper().writeValueAsString(etudiantDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(etudiantDTO)));
     }
+
 }
 
 

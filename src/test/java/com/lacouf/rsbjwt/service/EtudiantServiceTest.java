@@ -29,9 +29,9 @@ class EtudiantServiceTest {
 
     @BeforeEach
     void setUp() {
-        etudiantRepository = Mockito.mock(EtudiantRepository.class); // Mock du repository
-        etudiantService = new EtudiantService(etudiantRepository); // Utilisation réelle du service
-        etudiantController = new EtudiantController(etudiantService); // Utilisation du vrai service dans le controller
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        etudiantService = new EtudiantService(etudiantRepository);
+        etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
         newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials);

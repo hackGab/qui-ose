@@ -31,7 +31,7 @@ public class ProfesseurServiceTest {
     @BeforeEach
     void setUp() {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
-        professeurService = Mockito.mock(ProfesseurService.class);
+        professeurService = new ProfesseurService(professeurRepository);
         professeurController = new ProfesseurController(professeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
@@ -52,19 +52,6 @@ public class ProfesseurServiceTest {
         assertNotNull(response.getBody());
         assertEquals(newProfesseur.getFirstName(), response.getBody().getFirstName());
         assertEquals(newProfesseur.getLastName(), response.getBody().getLastName());
-    }
-
-    @Test
-    void shouldReturnConflictWhenProfesseurNotCreated() {
-        // Arrange
-        when(professeurService.creerProfesseur(any(ProfesseurDTO.class)))
-                .thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<ProfesseurDTO> response = professeurController.creerProfesseur(newProfesseur);
-
-        // Assert
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 
     @Test

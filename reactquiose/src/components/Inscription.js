@@ -84,8 +84,9 @@ function Inscription() {
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
             <div className='row'>
+                <legend>Champs obligatoires*</legend>
                 <div>
-                    <div className='form-group' style={{ display: "inline-flex"}}>
+                    <div className='form-group' style={{display: "inline-flex"}}>
                         <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
                         &nbsp;
                         <select
@@ -101,12 +102,12 @@ function Inscription() {
                         </select>
                     </div>
                 </div>
+
             </div>
 
-            <legend>Champs obligatoires*</legend>
 
             <div className='row'>
-                <div className="form-group">
+            <div className="form-group">
                     <label htmlFor="prenom">Prénom*</label>
                     <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
                            value={prenom} onChange={(e) => setPrenom(e.target.value)}

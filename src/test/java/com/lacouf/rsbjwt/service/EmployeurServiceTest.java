@@ -31,7 +31,7 @@ public class EmployeurServiceTest {
     @BeforeEach
     void setUp() {
         employeurRepository = Mockito.mock(EmployeurRepository.class);
-        employeurService = Mockito.mock(EmployeurService.class);
+        employeurService = new EmployeurService(employeurRepository);
         employeurController = new EmployeurController(employeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
@@ -43,17 +43,17 @@ public class EmployeurServiceTest {
     @Test
     void shouldCreateEmployeur() {
         // Arrange
-        EmployeurDTO savedEmployeur = new EmployeurDTO("John", "Doe", null, null, null, null);
-
-        when(employeurService.creerEmployeur(any(EmployeurDTO.class)))
-                .thenReturn(Optional.of(savedEmployeur));
+        when(employeurRepository.save(any(Employeur.class)))
+                .thenReturn(employeurEntity);
 
         // Act
         ResponseEntity<EmployeurDTO> response = employeurController.creerEmployeur(newEmployeur);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(savedEmployeur, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(newEmployeur.getFirstName(), response.getBody().getFirstName());
+        assertEquals(newEmployeur.getLastName(), response.getBody().getLastName());
     }
 
     @Test

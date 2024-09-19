@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
 import {Else, If, Then} from 'react-if';
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye'
+
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -11,6 +15,10 @@ function Inscription() {
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
     const [role, setRole] = useState('');
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
+    const [typeConf, setTypeConf] = useState('password');
+    const [iconConf, setIconConf] = useState(eyeOff);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -82,6 +90,30 @@ function Inscription() {
             });
     };
 
+
+    // Rendre le mot de passe visible ou non
+    const afficherMdp = () => {
+        if (type==='password'){
+            setIcon(eye);
+            setType('text')
+        } else {
+            setIcon(eyeOff)
+            setType('password')
+        }
+    }
+
+    const afficherMdpConf = () => {
+        if (typeConf==='password'){
+            setIconConf(eye);
+            setTypeConf('text')
+        } else {
+            setIconConf(eyeOff)
+            setTypeConf('password')
+        }
+    }
+
+
+
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
             <legend>Champs obligatoires*</legend>
@@ -133,7 +165,7 @@ function Inscription() {
                                            name="nomEntreprise"
                                            placeholder="Ville de Montréal"
                                            pattern={"[A-Za-z]+"}
-                                            required/>
+                                           required/>
                                 </div>
                             </div>
                         </Then>
@@ -171,17 +203,42 @@ function Inscription() {
 
                 <div className="form-group">
                     <label htmlFor="mpd">Mot de passe*</label>
-                    <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                           value={mpd} onChange={(e) => setMpd(e.target.value)}
-                           required/>
+                    <div className="input-group">
+                        <input type={type}
+                               className="form-control"
+                               id="mpd"
+                               name="mpd"
+                               placeholder="********"
+                               value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               autoComplete="current-password"
+                               required/>
+                        <div className="input-group-append">
+                            <span className="input-group-text" onClick={afficherMdp}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
-                    <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
-                           value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                           placeholder="********" required/>
+                    <label htmlFor="mpd">Confirmation du mot de passe*</label>
+                    <div className="input-group">
+                        <input type={typeConf}
+                               className="form-control"
+                               id="mpdConfirm"
+                               name="mpdConfirm"
+                               placeholder="********"
+                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                               autoComplete="current-password"
+                               required/>
+                        <div className="input-group-append">
+                            <span className="input-group-text" onClick={afficherMdpConf}>
+                                <Icon icon={iconConf} size={20}/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <button className="btn btn-primary w-50" type="submit">S'inscrire</button>

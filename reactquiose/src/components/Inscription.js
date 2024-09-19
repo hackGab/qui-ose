@@ -84,8 +84,9 @@ function Inscription() {
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
+            <legend>Champs obligatoires*</legend>
             <div className='row'>
-                <legend>Champs obligatoires*</legend>
+
                 <div>
                     <div className='form-group' style={{display: "inline-flex"}}>
                         <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
@@ -108,7 +109,7 @@ function Inscription() {
 
 
             <div className='row'>
-            <div className="form-group">
+                <div className="form-group">
                     <label htmlFor="prenom">Prénom*</label>
                     <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
                            value={prenom} onChange={(e) => setPrenom(e.target.value)}
@@ -121,22 +122,22 @@ function Inscription() {
                            value={nom} onChange={(e) => setNom(e.target.value)}
                            pattern={"[A-Za-z]+"} required/>
                 </div>
-                    <div>
-                        {/* Si le role est un employeur, ajouter ce champ */}
-                        <If condition={role === 'employeur'}>
-                            <Then>
-                                <div className='col-lg-12 col-md-6 col-6 m-auto'>
-                                    <div className="form-group">
-                                        <label htmlFor="nomEntreprise">Nom de l'entreprise</label>
-                                        <input type="text" className="form-control" id="nomEntreprise"
-                                               name="nomEntreprise"
-                                               placeholder="Nom de l'entreprise"
-                                               pattern={"[A-Za-z]+"}/>
-                                    </div>
+                <div>
+                    {/* Si le role est un employeur, ajouter ce champ */}
+                    <If condition={role === 'employeur'}>
+                        <Then>
+                            <div className='col-lg-12 col-md-6 col-6 m-auto'>
+                                <div className="form-group">
+                                    <label htmlFor="nomEntreprise">Nom de l'entreprise</label>
+                                    <input type="text" className="form-control" id="nomEntreprise"
+                                           name="nomEntreprise"
+                                           placeholder="Nom de l'entreprise"
+                                           pattern={"[A-Za-z]+"}/>
                                 </div>
-                            </Then>
-                        </If>
-                    </div>
+                            </div>
+                        </Then>
+                    </If>
+                </div>
 
                 <div className="form-group">
                     <label htmlFor="email">Email*</label>

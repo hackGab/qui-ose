@@ -2,12 +2,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import logo from '../images/logo.png';
 import Inscription from "./Inscription";
 import Connexion from "./Connexion";
-import {Else, If, Then} from "react-if";
+import {If, Then} from "react-if";
 import React from "react";
 
 function Formulaire(props) {
     const { title } = props;
-    const formHeith = title === 'Inscription' ? "85vh" : "46vh";
+    const formHeith = title === 'Inscription' ? "85vh" : "50vh";
     return (
         <div className='App-image row'>
             <div className='App-header-connexion col-lg-7 col-md-4 col-9 m-auto'>

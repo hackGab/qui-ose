@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
+import  {If, Then } from 'react-if';
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -114,6 +115,7 @@ function Inscription() {
                                pattern={"[A-Za-z]+"} autoFocus={true} required/>
                     </div>
 
+
                     <div className="form-group">
                         <label htmlFor="nom">Nom*</label>
                         <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
@@ -121,21 +123,21 @@ function Inscription() {
                                pattern={"[A-Za-z]+"} required/>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="mpd">Mot de passe*</label>
-                        <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                               value={mpd} onChange={(e) => setMpd(e.target.value)}
-                               required/>
-                    </div>
-                </div>
-
-                <div className='col-lg-12 col-md-6 col-6 m-auto'>
-
-                    <div className="form-group">
-                        <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
-                        <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
-                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                               placeholder="********" required/>
+                    <div>
+                        {/* Si le role est un employeur, ajouter ce champ */}
+                        <If condition={role === 'employeur'}>
+                            <Then>
+                                <div className='col-lg-12 col-md-6 col-6 m-auto'>
+                                    <div className="form-group">
+                                        <label htmlFor="nomEntreprise">Nom de l'entreprise</label>
+                                        <input type="text" className="form-control" id="nomEntreprise"
+                                               name="nomEntreprise"
+                                               placeholder="Nom de l'entreprise"
+                                               pattern={"[A-Za-z]+"}/>
+                                    </div>
+                                </div>
+                            </Then>
+                        </If>
                     </div>
 
                     <div className="form-group">
@@ -158,7 +160,21 @@ function Inscription() {
                             {(inputProps) => <input type="tel" {...inputProps} />}
                         </InputMask>
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="mpd">Mot de passe*</label>
+                        <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
+                               value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               required/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
+                        <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
+                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                               placeholder="********" required/>
+                    </div>
                 </div>
+
+                {/*<div className='col-lg-12 col-md-6 col-6 m-auto'>*/}
             </div>
 
             <button className="btn btn-primary w-50" type="submit">S'inscrire</button>

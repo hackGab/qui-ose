@@ -23,7 +23,7 @@ public class EtudiantService {
                     etudiantDTO.getLastName(),
                     etudiantDTO.getCredentials().getEmail(),
                     etudiantDTO.getCredentials().getPassword(),
-                    ""
+                    etudiantDTO.getPhoneNumber()
             );
             Etudiant savedEtudiant = etudiantRepository.save(etudiant);
             return Optional.of(new EtudiantDTO(savedEtudiant));

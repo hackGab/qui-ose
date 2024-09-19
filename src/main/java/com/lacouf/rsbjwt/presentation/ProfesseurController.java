@@ -21,7 +21,6 @@ public class ProfesseurController {
 
     @PostMapping("/creerProfesseur")
     public ResponseEntity<ProfesseurDTO> creerProfesseur(@RequestBody ProfesseurDTO newProfesseur) {
-        System.out.println("allop");
         if (newProfesseur == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

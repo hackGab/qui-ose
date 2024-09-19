@@ -19,10 +19,11 @@ public class UserDTO {
     private String phoneNumber;
     private Role role;
 
-    public UserDTO(String firstName, String lastName, Role role) {
+    public UserDTO(String firstName, String lastName, String phoneNumber, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.phoneNumber = phoneNumber;
     }
 
     public UserDTO(UserApp user) {

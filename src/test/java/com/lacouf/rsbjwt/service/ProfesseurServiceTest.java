@@ -28,8 +28,8 @@ public class ProfesseurServiceTest {
     @Test
     void shouldCreateProfesseur() {
         // Arrange
-        ProfesseurDTO newProfesseur = new ProfesseurDTO("John", "Doe", null, null);
-        ProfesseurDTO savedProfesseur = new ProfesseurDTO("John", "Doe", null, null);
+        ProfesseurDTO newProfesseur = new ProfesseurDTO("John", "Doe", null, null, null);
+        ProfesseurDTO savedProfesseur = new ProfesseurDTO("John", "Doe", null, null, null);
 
         when(professeurService.creerProfesseur(any(ProfesseurDTO.class)))
                 .thenReturn(Optional.of(savedProfesseur));
@@ -45,7 +45,7 @@ public class ProfesseurServiceTest {
     @Test
     void shouldReturnConflictWhenProfesseurNotCreated() {
         // Arrange
-        ProfesseurDTO newProfesseur = new ProfesseurDTO("John", "Doe", null, null);
+        ProfesseurDTO newProfesseur = new ProfesseurDTO("John", "Doe", null, null, null);
 
         when(professeurService.creerProfesseur(any(ProfesseurDTO.class)))
                 .thenReturn(Optional.empty());
@@ -61,7 +61,7 @@ public class ProfesseurServiceTest {
     void shouldReturnProfesseurWhenFound() {
         // Arrange
         Long professeurId = 1L;
-        ProfesseurDTO professeur = new ProfesseurDTO("John", "Doe", null, null);
+        ProfesseurDTO professeur = new ProfesseurDTO("John", "Doe", null, null, null);
 
         when(professeurService.getProfesseurById(professeurId))
                 .thenReturn(Optional.of(professeur));

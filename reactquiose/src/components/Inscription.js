@@ -31,7 +31,7 @@ function Inscription() {
         console.log('Données envoyées au backend:', etudiantData);
 
         // Envoi d'une requête POST au backend
-        fetch('http://localhost:8080/etudiant/creerEtudiant', {
+        fetch('http://localhost:8081/etudiant/creerEtudiant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,63 +62,87 @@ function Inscription() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='pt-0' onSubmit={handleSubmit}>
+            <div className='row'>
+                <div>
+                    <div className='form-group' style={{ display: "inline-flex"}}>
+                        <label htmlFor='role' className='col-5 m-auto'>Je suis un*</label>
+                        &nbsp;
+                        <select className='form-control col-7' id='role' name='role' required>
+                            <option value='etudiant'>Étudiant</option>
+                            <option value='prof'>Professeur</option>
+                            <option value='employeur'>Employeur</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <legend>Champs obligatoires*</legend>
 
-            <div className="form-group">
-                <label htmlFor="prenom">Prénom*</label>
-                <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
-                       value={prenom} onChange={(e) => setPrenom(e.target.value)}
-                       pattern="[A-Za-z]+" autoFocus={true} required/>
+            <div className='row'>
+                <div className='col-lg-12 col-md-4 col-4 m-auto'>
+                    <div className="form-group">
+                        <label htmlFor="prenom">Prénom*</label>
+                        <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
+                               value={prenom} onChange={(e) => setPrenom(e.target.value)}
+                               pattern={"[A-Za-z]+"} autoFocus={true} required/>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="nom">Nom*</label>
+                        <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
+                                 value={nom} onChange={(e) => setNom(e.target.value)}
+                               pattern={"[A-Za-z]+"} required/>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="mpd">Mot de passe*</label>
+                        <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
+                                 value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               required/>
+                    </div>
+                </div>
+
+                <div className='col-lg-12 col-md-6 col-6 m-auto'>
+
+                    <div className="form-group">
+                        <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
+                        <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
+                                 value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                               placeholder="********" required/>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email">Email*</label>
+                        <input type="email" className="form-control" id="email" name="email"
+                                 value={email} onChange={(e) => setEmail(e.target.value)}
+                               placeholder="johndoe@gmail.com" required/>
+                    </div>
+
+
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="num">Numéro de téléphone</label>
+                        <InputMask
+                            className="form-control"
+                            mask="(999)-999-9999"
+                            maskChar={null}
+                            id="num"
+                            placeholder="(514)-123-4567"
+                            value={num} onChange={(e) => setNum(e.target.value)}
+                            name="num">
+                            {(inputProps) => <input type="tel" {...inputProps} />}
+                        </InputMask>
+                    </div>
+                </div>
             </div>
 
-            <div className="form-group">
-                <label htmlFor="nom">Nom*</label>
-                <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
-                       value={nom} onChange={(e) => setNom(e.target.value)}
-                       pattern="[A-Za-z]+" required/>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="mpd">Mot de passe*</label>
-                <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                       value={mpd} onChange={(e) => setMpd(e.target.value)} required/>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
-                <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
-                       placeholder="********" value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                       required/>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="email">Email*</label>
-                <input type="email" className="form-control" id="email" name="email"
-                       value={email} onChange={(e) => setEmail(e.target.value)}
-                       placeholder="johndoe@gmail.com" required/>
-            </div>
-
-            <div className="form-group">
-                <label className="form-label" htmlFor="num">Numéro de téléphone</label>
-                <InputMask
-                    className="form-control"
-                    mask="(999)-999-9999"
-                    maskChar={null}
-                    id="num"
-                    placeholder="(514)-123-4567"
-                    value={num} onChange={(e) => setNum(e.target.value)}
-                    name="num"
-                >
-                    {(inputProps) => <input type="tel" {...inputProps} />}
-                </InputMask>
-            </div>
 
             <button className="btn btn-primary w-50" type="submit">S'inscrire</button>
-            <br/>
+
+
             <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
         </form>
-    );
+    )
 }
 
 export default Inscription;

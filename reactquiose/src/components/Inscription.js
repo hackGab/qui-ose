@@ -85,10 +85,10 @@ function Inscription() {
             <div className='row'>
                 <div>
                     <div className='form-group' style={{ display: "inline-flex"}}>
-                        <label htmlFor='role' className='col-5 m-auto'>Je suis un*</label>
+                        <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
                         &nbsp;
                         <select
-                            className='form-control col-7'
+                            className='form-control col-6'
                             id='role'
                             name='role'
                             value={role}

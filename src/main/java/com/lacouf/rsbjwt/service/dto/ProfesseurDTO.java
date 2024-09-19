@@ -2,7 +2,15 @@ package com.lacouf.rsbjwt.service.dto;
 
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ProfesseurDTO extends UserDTO {
     private CredentialDTO credentials;
 

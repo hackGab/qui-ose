@@ -9,6 +9,7 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
+    const [role, setRole] = useState('etudiant'); // Add state for role
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,10 +29,26 @@ function Inscription() {
             }
         };
 
+        let url;
+        switch (role) {
+            case 'etudiant':
+                url = 'http://localhost:8081/etudiant/creerEtudiant';
+                break;
+            case 'prof':
+                url = 'http://localhost:8081/professeur/creerProfesseur';
+                break;
+            case 'employeur':
+                url = 'http://localhost:8081/employeur/creerEmployeur';
+                break;
+            default:
+                console.error('Rôle inconnu');
+                return;
+        }
+
         console.log('Données envoyées au backend:', etudiantData);
 
         // Envoi d'une requête POST au backend
-        fetch('http://localhost:8081/etudiant/creerEtudiant', {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +69,7 @@ function Inscription() {
             })
             .then(data => {
                 if (data) {
-                    alert('Étudiant créé avec succès');
+                    alert('Utilisateur créé avec succès');
                     console.log('Données reçues du backend:', data);
                 }
             })
@@ -68,7 +85,14 @@ function Inscription() {
                     <div className='form-group' style={{ display: "inline-flex"}}>
                         <label htmlFor='role' className='col-5 m-auto'>Je suis un*</label>
                         &nbsp;
-                        <select className='form-control col-7' id='role' name='role' required>
+                        <select
+                            className='form-control col-7'
+                            id='role'
+                            name='role'
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            required
+                        >
                             <option value='etudiant'>Étudiant</option>
                             <option value='prof'>Professeur</option>
                             <option value='employeur'>Employeur</option>
@@ -91,14 +115,14 @@ function Inscription() {
                     <div className="form-group">
                         <label htmlFor="nom">Nom*</label>
                         <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
-                                 value={nom} onChange={(e) => setNom(e.target.value)}
+                               value={nom} onChange={(e) => setNom(e.target.value)}
                                pattern={"[A-Za-z]+"} required/>
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="mpd">Mot de passe*</label>
                         <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                                 value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               value={mpd} onChange={(e) => setMpd(e.target.value)}
                                required/>
                     </div>
                 </div>
@@ -108,17 +132,16 @@ function Inscription() {
                     <div className="form-group">
                         <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
                         <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
-                                 value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
                                placeholder="********" required/>
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="email">Email*</label>
                         <input type="email" className="form-control" id="email" name="email"
-                                 value={email} onChange={(e) => setEmail(e.target.value)}
+                               value={email} onChange={(e) => setEmail(e.target.value)}
                                placeholder="johndoe@gmail.com" required/>
                     </div>
-
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="num">Numéro de téléphone</label>
@@ -136,9 +159,7 @@ function Inscription() {
                 </div>
             </div>
 
-
             <button className="btn btn-primary w-50" type="submit">S'inscrire</button>
-
 
             <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
         </form>

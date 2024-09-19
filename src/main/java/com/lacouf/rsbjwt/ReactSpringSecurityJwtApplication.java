@@ -1,8 +1,10 @@
 package com.lacouf.rsbjwt;
 
+import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
+import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.boot.CommandLineRunner;
@@ -18,12 +20,17 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 //    private final PasswordEncoder passwordEncoder;
 //    private final EtudiantService etudiantService;
 //    private final ProfesseurService professeurService;
+    private final EmployeurService employeurService;
 //
 //    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService, ProfesseurService professeurService) {
 //        this.passwordEncoder = passwordEncoder;
 //        this.etudiantService = etudiantService;
 //        this.professeurService = professeurService;
 //    }
+
+    public ReactSpringSecurityJwtApplication(EmployeurService employeurService) {
+        this.employeurService = employeurService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(ReactSpringSecurityJwtApplication.class, args);
@@ -94,5 +101,39 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 //        } else {
 //            System.out.println("Échec de la création du professeur.");
 //        }
+
+        // Création d'un employeur
+        EmployeurDTO employeurDTO = new EmployeurDTO();
+        employeurDTO.setFirstName("John");
+        employeurDTO.setLastName("Doe");
+        employeurDTO.setEntreprise("ACME Inc.");
+        CredentialDTO credentialDTO = new CredentialDTO();
+        credentialDTO.setEmail("Titi@gmail.com");
+        credentialDTO.setPassword("password123");
+        credentialDTO.setPasswordConfirm("password123");
+        employeurDTO.setCredentials(credentialDTO);
+
+        Optional<EmployeurDTO> employeurCree = employeurService.creerEmployeur(employeurDTO);
+
+        if (employeurCree.isPresent()) {
+            System.out.println("Employeur créé avec succès : " + employeurCree.get());
+
+            // Récupération de l'employeur par ID
+            Long employeurId = employeurCree.get().getId(); // Assurez-vous que vous avez un getter pour l'ID dans EmployeurDTO
+            Optional<EmployeurDTO> employeurRecupere = employeurService.getEmployeurById(employeurId);
+
+            if (employeurRecupere.isPresent()) {
+                System.out.println("Employeur récupéré avec succès : ");
+                System.out.println("ID: " + employeurRecupere.get().getId());
+                System.out.println("Prénom: " + employeurRecupere.get().getFirstName());
+                System.out.println("Nom: " + employeurRecupere.get().getLastName());
+                System.out.println("Email: " + (employeurRecupere.get().getCredentials() != null ? employeurRecupere.get().getCredentials().getEmail() : "N/A"));
+                System.out.println("Entreprise: " + employeurRecupere.get().getEntreprise());
+            } else {
+                System.out.println("Employeur non trouvé avec ID : " + employeurId);
+            }
+        } else {
+            System.out.println("Échec de la création de l'employeur.");
+        }
     }
 }

@@ -9,7 +9,7 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
-    const [role, setRole] = useState('etudiant'); // Add state for role
+    const [role, setRole] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,7 +26,8 @@ function Inscription() {
             credentials: {
                 email,
                 password: mpd
-            }
+            },
+            phoneNumber: num,
         };
 
         let url;

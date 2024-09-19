@@ -28,8 +28,8 @@ class EtudiantServiceTest {
     @Test
     void shouldCreateEtudiant() {
         // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null);
-        EtudiantDTO savedEtudiant = new EtudiantDTO("John", "Doe", null, null);
+        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
+        EtudiantDTO savedEtudiant = new EtudiantDTO("John", "Doe", null, null, null );
 
         when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
                 .thenReturn(Optional.of(savedEtudiant));
@@ -45,7 +45,7 @@ class EtudiantServiceTest {
     @Test
     void shouldReturnConflictWhenEtudiantNotCreated() {
         // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null);
+        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
 
         when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
                 .thenReturn(Optional.empty());
@@ -61,7 +61,7 @@ class EtudiantServiceTest {
     void shouldReturnEtudiantWhenFound() {
         // Arrange
         Long etudiantId = 1L;
-        EtudiantDTO foundEtudiant = new EtudiantDTO("Jane", "Doe", null, null);
+        EtudiantDTO foundEtudiant = new EtudiantDTO("Jane", "Doe", null, null, null );
 
         when(etudiantService.getEtudiantById(etudiantId))
                 .thenReturn(Optional.of(foundEtudiant));

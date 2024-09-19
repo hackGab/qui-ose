@@ -22,7 +22,7 @@ public class ProfesseurService {
                     professeurDTO.getLastName(),
                     professeurDTO.getCredentials().getEmail(),
                     professeurDTO.getCredentials().getPassword(),
-                    ""
+                    professeurDTO.getPhoneNumber()
             );
             Professeur savedProfesseur = professeurRepository.save(professeur);
             return Optional.of(new ProfesseurDTO(savedProfesseur));

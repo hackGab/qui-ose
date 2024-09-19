@@ -14,8 +14,8 @@ import lombok.Setter;
 public class ProfesseurDTO extends UserDTO {
     private CredentialDTO credentials;
 
-    public ProfesseurDTO(String firstName, String lastName, Role role, CredentialDTO credentials) {
-        super(firstName, lastName, role);
+    public ProfesseurDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials) {
+        super(firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
     }
 

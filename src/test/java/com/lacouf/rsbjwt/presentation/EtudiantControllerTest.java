@@ -32,7 +32,7 @@ class EtudiantControllerTest {
 
     @Test
     public void shouldCreateEtudiant() throws Exception {
-        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null);
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null);
         Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
                 .thenReturn(Optional.of(etudiantDTO));
 

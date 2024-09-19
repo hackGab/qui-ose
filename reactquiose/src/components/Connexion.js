@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye'
 
 function Connexion() {
     const [email, setEmail] = useState('');
     const [mpd, setMpd] = useState('');
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
+
+    // Rendre le mot de passe visible ou non
+    const afficherMdp = () => {
+        if (type==='password'){
+            setIcon(eye);
+            setType('text')
+        } else {
+            setIcon(eyeOff)
+            setType('password')
+        }
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -43,7 +59,7 @@ function Connexion() {
 
     return(
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            <div className='row' >
+            <div className='row'>
                 <div className="form-group">
                     <label htmlFor="email">Email*</label>
                     <input type="email" className="form-control" id="email" name="email"
@@ -53,9 +69,21 @@ function Connexion() {
 
                 <div className="form-group">
                     <label htmlFor="mpd">Mot de passe*</label>
-                    <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                           value={mpd} onChange={(e) => setMpd(e.target.value)}
-                           required/>
+                    <div className="input-group">
+                        <input type={type}
+                               className="form-control"
+                               id="mpd"
+                               name="mpd"
+                               placeholder="********"
+                               value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               autoComplete="current-password"
+                               required/>
+                        <div className="input-group-append">
+                            <span className="input-group-text" onClick={afficherMdp}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
             </div>

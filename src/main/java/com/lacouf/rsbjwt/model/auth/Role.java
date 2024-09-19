@@ -5,6 +5,7 @@ import java.util.Set;
 
 public enum Role{
 	GESTIONNAIRE("ROLE_GESTIONNAIRE"),
+	PROFESSEUR("ROLE_PROFESSEUR"),
 	EMPLOYEUR("ROLE_EMPLOYEUR"),
 	ETUDIANT("ROLE_ETUDIANT"),
 	;
@@ -14,6 +15,7 @@ public enum Role{
 
 	static{
 		GESTIONNAIRE.managedRoles.add(EMPLOYEUR);
+		GESTIONNAIRE.managedRoles.add(PROFESSEUR);
 		GESTIONNAIRE.managedRoles.add(ETUDIANT);
 	}
 

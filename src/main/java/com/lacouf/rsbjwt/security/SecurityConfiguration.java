@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/prepose/register").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
+                        .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
                         .requestMatchers(GET, "/user/*").hasAnyAuthority("EMPRUNTEUR", "PREPOSE", "GESTIONNAIRE")
                         .requestMatchers("/emprunteur/**").hasAuthority("EMPRUNTEUR")
                         .requestMatchers("/prepose/**").hasAuthority("PREPOSE")

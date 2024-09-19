@@ -21,6 +21,7 @@ public class EtudiantController {
 
     @PostMapping("/creerEtudiant")
     public ResponseEntity<EtudiantDTO> creerEtudiant(@RequestBody EtudiantDTO newEtudiant) {
+        System.out.println("alloe");
         if (newEtudiant == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

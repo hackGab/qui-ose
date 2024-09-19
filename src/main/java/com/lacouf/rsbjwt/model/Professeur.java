@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Professeur extends UserApp {
 
     public Professeur(String firstName, String lastName, String email, String password, String phoneNumber) {
-        super(firstName, lastName, email, password, phoneNumber, Role.PROFESSEUR);
+        super(firstName, lastName, email, password, phoneNumber, Role.ETUDIANT);
     }
 
     @Override

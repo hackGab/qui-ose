@@ -101,7 +101,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 //        } else {
 //            System.out.println("Échec de la création du professeur.");
 //        }
-
+/*
         // Création d'un employeur
         EmployeurDTO employeurDTO = new EmployeurDTO();
         employeurDTO.setFirstName("John");
@@ -134,6 +134,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
             }
         } else {
             System.out.println("Échec de la création de l'employeur.");
-        }
+        }*/
     }
 }

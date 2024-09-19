@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public class ProfesseurService {
-    ProfesseurRepository professeurRepository;
+    private final ProfesseurRepository professeurRepository;
 
     public ProfesseurService(ProfesseurRepository professeurRepository) {
         this.professeurRepository = professeurRepository;

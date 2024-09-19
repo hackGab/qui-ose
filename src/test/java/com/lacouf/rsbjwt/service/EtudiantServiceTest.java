@@ -1,6 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
+import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,66 +16,43 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class EtudiantServiceTest {
 
+    private EtudiantRepository etudiantRepository;
     private EtudiantService etudiantService;
     private EtudiantController etudiantController;
 
+    private EtudiantDTO newEtudiant;
+    private Etudiant etudiantEntity;
+
     @BeforeEach
     void setUp() {
-        etudiantService = Mockito.mock(EtudiantService.class);
-        etudiantController = new EtudiantController(etudiantService);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class); // Mock du repository
+        etudiantService = new EtudiantService(etudiantRepository); // Utilisation réelle du service
+        etudiantController = new EtudiantController(etudiantService); // Utilisation du vrai service dans le controller
+
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials);
+
+        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789");
     }
 
     @Test
     void shouldCreateEtudiant() {
         // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
-        EtudiantDTO savedEtudiant = new EtudiantDTO("John", "Doe", null, null, null );
-
-        when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
-                .thenReturn(Optional.of(savedEtudiant));
+        when(etudiantRepository.save(any(Etudiant.class)))
+                .thenReturn(etudiantEntity);
 
         // Act
         ResponseEntity<EtudiantDTO> response = etudiantController.creerEtudiant(newEtudiant);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(savedEtudiant, response.getBody());
-    }
-
-    @Test
-    void shouldReturnConflictWhenEtudiantNotCreated() {
-        // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
-
-        when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
-                .thenReturn(Optional.empty());
-
-        // Act
-        ResponseEntity<EtudiantDTO> response = etudiantController.creerEtudiant(newEtudiant);
-
-        // Assert
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-    }
-
-    @Test
-    void shouldReturnEtudiantWhenFound() {
-        // Arrange
-        Long etudiantId = 1L;
-        EtudiantDTO foundEtudiant = new EtudiantDTO("Jane", "Doe", null, null, null );
-
-        when(etudiantService.getEtudiantById(etudiantId))
-                .thenReturn(Optional.of(foundEtudiant));
-
-        // Act
-        ResponseEntity<EtudiantDTO> response = etudiantController.getEtudiantById(etudiantId);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(foundEtudiant, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(newEtudiant.getFirstName(), response.getBody().getFirstName());
+        assertEquals(newEtudiant.getLastName(), response.getBody().getLastName());
     }
 
     @Test

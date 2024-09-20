@@ -14,8 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,10 +54,40 @@ public class ProfesseurServiceTest {
     }
 
     @Test
-    void shouldReturnNotFoundWhenProfesseurNotFound() {
+    void shouldReturnEmptyWhenExceptionIsThrown() {
+        // Arrange
+        when(professeurRepository.save(any(Professeur.class)))
+                .thenThrow(new RuntimeException("Database error"));
+
+        // Act
+        Optional<ProfesseurDTO> response = professeurService.creerProfesseur(newProfesseur);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+void shouldReturnProfesseurById() {
         // Arrange
         Long professeurId = 1L;
 
+        when(professeurRepository.findById(professeurId))
+                .thenReturn(Optional.of(professeurEntity));
+
+        // Act
+        Optional<ProfesseurDTO> response = professeurService.getProfesseurById(professeurId);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(professeurEntity.getFirstName(), response.get().getFirstName());
+        assertEquals(professeurEntity.getLastName(), response.get().getLastName());
+        assertEquals(professeurEntity.getEmail(), response.get().getCredentials().getEmail());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenProfesseurNotFound() {
+        // Arrange
+        Long professeurId = 1L;
         when(professeurService.getProfesseurById(professeurId))
                 .thenReturn(Optional.empty());
 

@@ -56,6 +56,37 @@ class EtudiantServiceTest {
     }
 
     @Test
+    void shouldReturnEmptyWhenExceptionIsThrown() {
+        // Arrange
+        when(etudiantRepository.save(any(Etudiant.class)))
+                .thenThrow(new RuntimeException("Database error"));
+
+        // Act
+        Optional<EtudiantDTO> response = etudiantService.creerEtudiant(newEtudiant);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEtudiantWhenFound() {
+        // Arrange
+        Long etudiantId = 1L;
+        when(etudiantRepository.findById(etudiantId))
+                .thenReturn(Optional.of(etudiantEntity));
+
+        // Act
+        Optional<EtudiantDTO> reponse = etudiantService.getEtudiantById(etudiantId);
+
+        // Assert
+        assertTrue(reponse.isPresent());
+        assertEquals(etudiantEntity.getFirstName(), reponse.get().getFirstName());
+        assertEquals(etudiantEntity.getLastName(), reponse.get().getLastName());
+        assertEquals(etudiantEntity.getCredentials().getEmail(), reponse.get().getCredentials().getEmail());
+    }
+
+
+    @Test
     void shouldReturnNotFoundWhenEtudiantNotFound() {
         // Arrange
         Long etudiantId = 1L;

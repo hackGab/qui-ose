@@ -15,8 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +53,37 @@ public class EmployeurServiceTest {
         assertNotNull(response.getBody());
         assertEquals(newEmployeur.getFirstName(), response.getBody().getFirstName());
         assertEquals(newEmployeur.getLastName(), response.getBody().getLastName());
+    }
+
+    @Test
+    void shouldReturnEmptyWhenExceptionIsThrown() {
+        // Arrange
+        when(employeurRepository.save(any(Employeur.class)))
+                .thenThrow(new RuntimeException("Database error"));
+
+        // Act
+        Optional<EmployeurDTO> response = employeurService.creerEmployeur(newEmployeur);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmployeurById() {
+        // Arrange
+        Long employeurId = 1L;
+
+        when(employeurRepository.findById(employeurId))
+                .thenReturn(Optional.of(employeurEntity));
+
+        // Act
+        Optional<EmployeurDTO> response = employeurService.getEmployeurById(employeurId);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(employeurEntity.getFirstName(), response.get().getFirstName());
+        assertEquals(employeurEntity.getLastName(), response.get().getLastName());
+        assertEquals(employeurEntity.getEntreprise(), response.get().getEntreprise());
     }
 
     @Test

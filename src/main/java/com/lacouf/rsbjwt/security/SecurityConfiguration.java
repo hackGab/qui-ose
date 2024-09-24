@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .anyRequest().denyAll()
                 )
-                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // pour h2-console en mode développement
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable())
                 .sessionManagement(secuManagement -> {
                     secuManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })

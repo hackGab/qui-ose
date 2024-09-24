@@ -59,6 +59,7 @@ function Connexion() {
 
     return(
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
+            <legend>Champs obligatoires*</legend>
             <div className='row'>
                 <div className="form-group">
                     <label htmlFor="email">Email*</label>

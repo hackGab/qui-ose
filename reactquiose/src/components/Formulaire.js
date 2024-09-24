@@ -7,7 +7,7 @@ import React from "react";
 
 function Formulaire(props) {
     const { title } = props;
-    const formHeith = title === 'Inscription' ? "85vh" : "50vh";
+    const formHeight = title === 'Inscription' ? "85vh" : "50vh";
     return (
         <div className='App-image row'>
             <div className='App-header-connexion col-lg-7 col-md-4 col-9 m-auto'>
@@ -15,7 +15,7 @@ function Formulaire(props) {
                 <p>La plateforme de gestion de stage</p>
             </div>
 
-            <div className='form-compte col-lg-4 col-md-6 col-9 m-auto' style={{height: formHeith}}>
+            <div className='form-compte col-lg-4 col-md-6 col-9 m-auto' style={{height: formHeight}}>
                 <div style={{ display: "inline-flex", paddingTop: "0.5em"}}>
                     <img src={logo} style={{width: '4em', borderRadius: '1em'}} alt='logo'/>
                     &nbsp;

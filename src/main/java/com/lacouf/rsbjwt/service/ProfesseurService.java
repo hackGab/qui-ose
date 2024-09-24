@@ -22,7 +22,8 @@ public class ProfesseurService {
                     professeurDTO.getLastName(),
                     professeurDTO.getCredentials().getEmail(),
                     professeurDTO.getCredentials().getPassword(),
-                    professeurDTO.getPhoneNumber()
+                    professeurDTO.getPhoneNumber(),
+                    professeurDTO.getDepartement()
             );
             Professeur savedProfesseur = professeurRepository.save(professeur);
             return Optional.of(new ProfesseurDTO(savedProfesseur));

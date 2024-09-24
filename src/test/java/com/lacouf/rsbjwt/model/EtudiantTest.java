@@ -9,7 +9,7 @@ class EtudiantTest {
     @Test
     void testToString() {
         // Arrange
-        Etudiant etudiant = new Etudiant("John", "Doe", "john@gmail.com", "password", "123456789");
+        Etudiant etudiant = new Etudiant("John", "Doe", "john@gmail.com", "password", "123456789", "departement");
 
         // Act
         String result = etudiant.toString();

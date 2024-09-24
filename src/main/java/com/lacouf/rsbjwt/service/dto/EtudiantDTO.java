@@ -13,14 +13,17 @@ import lombok.Setter;
 @Setter
 public class EtudiantDTO extends UserDTO {
     private CredentialDTO credentials;
+    private String departement;
 
-    public EtudiantDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials) {
+    public EtudiantDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
         super(firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
+        this.departement = departement;
     }
 
     public EtudiantDTO(Etudiant etudiant) {
         super(etudiant);
         this.credentials = new CredentialDTO(etudiant.getEmail(), etudiant.getPassword(), null);
+        this.departement = etudiant.getDepartement();
     }
 }

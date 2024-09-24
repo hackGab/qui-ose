@@ -31,7 +31,7 @@ function Connexion() {
         };
         console.log('Données envoyées au backend:', userData);
         // Envoi d'une requête POST au backend
-        fetch('http://localhost:8080/connexion', {
+        fetch('http://localhost:8080/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -39,6 +39,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
         EtudiantDTO etudiantDTO = new EtudiantDTO();
         etudiantDTO.setFirstName("John");
         etudiantDTO.setLastName("Doe");
+        etudiantDTO.setDepartement("Informatique");
         CredentialDTO credentialDTO = new CredentialDTO();
         credentialDTO.setEmail("john.doe@test.com");
         credentialDTO.setPassword(passwordEncoder.encode("password123"));
@@ -57,6 +58,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
         ProfesseurDTO professeurDTO = new ProfesseurDTO();
         professeurDTO.setFirstName("Jane");
         professeurDTO.setLastName("Doe");
+        professeurDTO.setDepartement("Informatique");
         CredentialDTO credentialProfDTO = new CredentialDTO();
         credentialProfDTO.setEmail("jane.doe@test.com");
         credentialProfDTO.setPassword(passwordEncoder.encode("password123"));

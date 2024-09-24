@@ -34,9 +34,8 @@ class EtudiantServiceTest {
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
-        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials);
-
-        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789");
+        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials,"departement");
+        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
     }
 
     @Test

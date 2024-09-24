@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
-import {Else, If, Then} from 'react-if';
-import {Icon} from 'react-icons-kit';
-import {eyeOff} from 'react-icons-kit/feather/eyeOff';
-import {eye} from 'react-icons-kit/feather/eye'
-
+import { Else, If, Then } from 'react-if';
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eye } from 'react-icons-kit/feather/eye';
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -14,18 +13,19 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('etudiant');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [typeConf, setTypeConf] = useState('password');
     const [iconConf, setIconConf] = useState(eyeOff);
+    const [departement, setDepartement] = useState('');
+    const [nomEntreprise, setNomEntreprise] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         if (mpd !== mpdConfirm) {
             alert('Les mots de passe ne correspondent pas.');
-            console.error('Les mots de passe ne correspondent pas.');
             return;
         }
 
@@ -37,10 +37,11 @@ function Inscription() {
                 password: mpd
             },
             phoneNumber: num,
+            departement: role === 'employeur' ? undefined : departement, // Only set for non-employers
+            nomEntreprise: role === 'employeur' ? nomEntreprise : undefined // Only set for employers
         };
 
         let url;
-        console.log('Role:', role);
         switch (role) {
             case 'etudiant':
                 url = 'http://localhost:8080/etudiant/creerEtudiant';
@@ -56,33 +57,26 @@ function Inscription() {
                 return;
         }
 
-        console.log('Données envoyées au backend:', userData);
-        console.log('URL:', url);
-        // Envoi d'une requête POST au backend
+        // Sending POST request to backend
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-
             },
             body: JSON.stringify(userData),
         })
             .then(response => {
-                console.log('Réponse du backend:', response.status);
                 if (response.status === 201) {
                     return response.json();
                 } else if (response.status === 409) {
                     alert("L'utilisateur existe déjà.");
-                    console.error("L'utilisateur existe déjà.");
                 } else {
-                    alert('Erreur lors de la création de l\'étudiant.');
-                    console.error('Erreur lors de la création de l\'étudiant.');
+                    alert('Erreur lors de la création de l\'utilisateur.');
                 }
             })
             .then(data => {
                 if (data) {
                     alert('Utilisateur créé avec succès');
-                    console.log('Données reçues du backend:', data);
                 }
             })
             .catch(error => {
@@ -90,55 +84,41 @@ function Inscription() {
             });
     };
 
-
-    // Rendre le mot de passe visible ou non
+    // Toggle password visibility
     const afficherMdp = () => {
-        if (type==='password'){
-            setIcon(eye);
-            setType('text')
-        } else {
-            setIcon(eyeOff)
-            setType('password')
-        }
-    }
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
+    };
 
     const afficherMdpConf = () => {
-        if (typeConf==='password'){
-            setIconConf(eye);
-            setTypeConf('text')
-        } else {
-            setIconConf(eyeOff)
-            setTypeConf('password')
-        }
-    }
-
-
+        setIconConf(typeConf === 'password' ? eye : eyeOff);
+        setTypeConf(typeConf === 'password' ? 'text' : 'password');
+    };
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
             <legend>Champs obligatoires*</legend>
             <div className='row'>
-
-                <div>
-                    <div className='form-group' style={{display: "inline-flex"}}>
-                        <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
-                        &nbsp;
-                        <select
-                            className='form-control col-6'
-                            id='role'
-                            name='role'
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required>
-                            <option value='etudiant'>Étudiant</option>
-                            <option value='prof'>Professeur</option>
-                            <option value='employeur'>Employeur</option>
-                        </select>
-                    </div>
+                <div className='form-group' style={{ display: "inline-flex" }}>
+                    <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
+                    &nbsp;
+                    <select
+                        className='form-control col-6'
+                        id='role'
+                        name='role'
+                        value={role}
+                        onChange={(e) => {
+                            setRole(e.target.value);
+                            setNomEntreprise(''); // Reset entreprise name on role change
+                            setDepartement(''); // Reset department on role change
+                        }}
+                        required>
+                        <option value='etudiant'>Étudiant</option>
+                        <option value='prof'>Professeur</option>
+                        <option value='employeur'>Employeur</option>
+                    </select>
                 </div>
-
             </div>
-
 
             <div className='row'>
                 <div className="form-group">
@@ -154,8 +134,8 @@ function Inscription() {
                            value={nom} onChange={(e) => setNom(e.target.value)}
                            pattern={"[A-Za-z]+"} required/>
                 </div>
+
                 <div>
-                    {/* Si le role est un employeur, ajouter ce champ */}
                     <If condition={role === 'employeur'}>
                         <Then>
                             <div className='col-lg-12 col-md-6 col-6 m-auto'>
@@ -163,8 +143,8 @@ function Inscription() {
                                     <label htmlFor="nomEntreprise">Nom de l'entreprise*</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
-                                           placeholder="Ville de Montréal"
-                                           pattern={"[A-Za-z]+"}
+                                           placeholder="Nom de l'entreprise"
+                                           value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                            required/>
                                 </div>
                             </div>
@@ -173,8 +153,9 @@ function Inscription() {
                             <div className="form-group">
                                 <label htmlFor="departement">Département*</label>
                                 <input type="text" className="form-control" id="departement" name="departement"
-
-                                       placeholder="Technique de l'informatique" required/>
+                                       placeholder="Technique de l'informatique"
+                                       value={departement} onChange={(e) => setDepartement(e.target.value)}
+                                       required/>
                             </div>
                         </Else>
                     </If>
@@ -221,7 +202,7 @@ function Inscription() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="mpd">Confirmation du mot de passe*</label>
+                    <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
                     <div className="input-group">
                         <input type={typeConf}
                                className="form-control"
@@ -239,13 +220,11 @@ function Inscription() {
                     </div>
                 </div>
 
+                <button type="submit" className="btn btn-primary">S'inscrire</button>
+                <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
             </div>
-
-            <button className="btn btn-primary w-50" type="submit">S'inscrire</button>
-
-            <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
         </form>
-    )
+    );
 }
 
 export default Inscription;

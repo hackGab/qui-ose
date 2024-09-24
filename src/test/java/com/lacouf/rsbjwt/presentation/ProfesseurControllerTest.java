@@ -39,7 +39,7 @@ public class ProfesseurControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"PROFESSEUR"})
     public void shouldCreateProfesseur() throws Exception {
-        ProfesseurDTO professeurDTO = new ProfesseurDTO("John", "Doe", null, null, null);
+        ProfesseurDTO professeurDTO = new ProfesseurDTO("John", "Doe", null, null, null,null);
         Mockito.when(professeurService.creerProfesseur(any(ProfesseurDTO.class)))
                 .thenReturn(Optional.of(professeurDTO));
 
@@ -56,7 +56,7 @@ public class ProfesseurControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"PROFESSEUR"})
     public void shouldReturnProfesseurWhenFound() throws Exception {
-        ProfesseurDTO professeurDTO = new ProfesseurDTO("John", "Doe", null, null, null);
+        ProfesseurDTO professeurDTO = new ProfesseurDTO("John", "Doe", null, null, null,null);
         Mockito.when(professeurService.getProfesseurById(1L))
                 .thenReturn(Optional.of(professeurDTO));
 

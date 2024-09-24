@@ -44,7 +44,7 @@ class EtudiantControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     public void shouldCreateEtudiant() throws Exception {
-        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null);
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null,null);
         Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
                 .thenReturn(Optional.of(etudiantDTO));
 
@@ -61,7 +61,7 @@ class EtudiantControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     public void shouldReturnEtudiantWhenFound() throws Exception {
-        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null);
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null,null);
         Mockito.when(etudiantService.getEtudiantById(1L))
                 .thenReturn(Optional.of(etudiantDTO));
 

@@ -242,14 +242,10 @@ function Inscription() {
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary">S'inscrire</button>
-                <small style={{marginTop: '10px'}}>Déjà un compte? <a href="/login">Connectez-vous</a></small>
+                <button type="submit" className="btn btn-primary">{t('Sinscrire')}</button>
+                <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
                 {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
             </div>
-
-            <button className="btn btn-primary w-50" type="submit">{t('Sinscrire')}</button>
-
-            <small>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
         </form>
     );
 }

@@ -10,7 +10,7 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('etudiant');
 
     const handleSubmit = (event) => {
         event.preventDefault();

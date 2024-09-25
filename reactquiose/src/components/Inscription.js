@@ -21,13 +21,15 @@ function Inscription() {
     const [iconConf, setIconConf] = useState(eyeOff);
     const [departement, setDepartement] = useState('');
     const [nomEntreprise, setNomEntreprise] = useState('');
+    const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setErrorMessages('');
 
         if (mpd !== mpdConfirm) {
-            alert('Les mots de passe ne correspondent pas.');
+            setErrorMessages('Les mots de passe ne sont pas identique.');
             return;
         }
 
@@ -71,19 +73,19 @@ function Inscription() {
                 if (response.status === 201) {
                     return response.json();
                 } else if (response.status === 409) {
-                    alert("L'utilisateur existe déjà.");
+                    setErrorMessages("L'utilisateur existe déjà.");
                 } else {
-                    alert('Erreur lors de la création de l\'utilisateur.');
+                    setErrorMessages('Erreur lors de la création de l\'utilisateur.');
                 }
             })
             .then(data => {
                 if (data) {
-                    alert('Utilisateur créé avec succès');
                     navigate('/login');
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
+                setErrorMessages('Erreur lors de la connexion au serveur.');
             });
     };
 
@@ -121,7 +123,6 @@ function Inscription() {
                     </select>
                 </div>
             </div>
-
             <div className='row'>
                 <div className="form-group">
                     <label htmlFor="prenom">Prénom*</label>
@@ -223,7 +224,8 @@ function Inscription() {
                 </div>
 
                 <button type="submit" className="btn btn-primary">S'inscrire</button>
-                <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
+                <small style={{marginTop: '10px'}}>Déjà un compte? <a href="/login">Connectez-vous</a></small>
+                {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
             </div>
         </form>
     );

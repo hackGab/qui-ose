@@ -10,6 +10,7 @@ function Connexion() {
     const [mpd, setMpd] = useState('');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
+    const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
 
     const afficherMdp = () => {
@@ -48,7 +49,7 @@ function Connexion() {
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);
-                alert('Erreur lors de la connexion');
+                setErrorMessages('Erreur lors de la connexion');
             });
     };
 
@@ -94,7 +95,8 @@ function Connexion() {
             </div>
 
             <button className="btn btn-primary w-50" type="submit">Connecter</button>
-            <small>Je n'ai pas de compte ? <a href="/signUp">S'inscrire</a></small>
+            <small style={{marginTop: '10px'}}>Je n'ai pas de compte ? <a href="/signUp">S'inscrire</a></small>
+            {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
         </form>
     );
 }

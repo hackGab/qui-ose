@@ -10,9 +10,8 @@ function Connexion() {
     const [mpd, setMpd] = useState('');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
-    const navigate = useNavigate(); // Hook pour rediriger
+    const navigate = useNavigate();
 
-    // Rendre le mot de passe visible ou non
     const afficherMdp = () => {
         if (type === 'password') {
             setIcon(eye);
@@ -45,8 +44,7 @@ function Connexion() {
             })
             .then((data) => {
                 console.log('Réponse du serveur:', data);
-                // Redirection vers la page d'accueil sans vérifier le rôle
-                navigate('/accueil'); // Changez '/accueil' par la route de votre page d'accueil
+                navigate('/accueil');
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);

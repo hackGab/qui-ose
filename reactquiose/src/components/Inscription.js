@@ -5,6 +5,7 @@ import { Else, If, Then } from 'react-if';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
+import {useNavigate} from "react-router-dom";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -20,6 +21,7 @@ function Inscription() {
     const [iconConf, setIconConf] = useState(eyeOff);
     const [departement, setDepartement] = useState('');
     const [nomEntreprise, setNomEntreprise] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -57,7 +59,6 @@ function Inscription() {
                 return;
         }
 
-        // Sending POST request to backend
         fetch(url, {
             method: 'POST',
             headers: {
@@ -78,6 +79,7 @@ function Inscription() {
             .then(data => {
                 if (data) {
                     alert('Utilisateur créé avec succès');
+                    navigate('/login');
                 }
             })
             .catch(error => {
@@ -85,7 +87,6 @@ function Inscription() {
             });
     };
 
-    // Toggle password visibility
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);
         setType(type === 'password' ? 'text' : 'password');
@@ -110,8 +111,8 @@ function Inscription() {
                         value={role}
                         onChange={(e) => {
                             setRole(e.target.value);
-                            setNomEntreprise(''); // Reset entreprise name on role change
-                            setDepartement(''); // Reset department on role change
+                            setNomEntreprise('');
+                            setDepartement('');
                         }}
                         required>
                         <option value='etudiant'>Étudiant</option>

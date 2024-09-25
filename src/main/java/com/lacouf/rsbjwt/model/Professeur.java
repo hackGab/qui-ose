@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.model;
 
 import com.lacouf.rsbjwt.model.auth.Role;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Professeur extends UserApp {
 
-    public Professeur(String firstName, String lastName, String email, String password, String phoneNumber) {
+    @Column(nullable = false, name = "DEPARTEMENT")
+    private String departement;
+
+    public Professeur(String firstName, String lastName, String email, String password, String phoneNumber, String departement) {
         super(firstName, lastName, email, password, phoneNumber, Role.PROFESSEUR);
+        this.departement = departement;
     }
 
     @Override
@@ -25,6 +30,7 @@ public class Professeur extends UserApp {
                 ", email='" + getEmail() + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", role='" + getRole() + '\'' +
+                ", departement='" + departement + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
+import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,67 +16,74 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class EtudiantServiceTest {
 
+    private EtudiantRepository etudiantRepository;
     private EtudiantService etudiantService;
     private EtudiantController etudiantController;
 
+    private EtudiantDTO newEtudiant;
+    private Etudiant etudiantEntity;
+
     @BeforeEach
     void setUp() {
-        etudiantService = Mockito.mock(EtudiantService.class);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        etudiantService = new EtudiantService(etudiantRepository);
         etudiantController = new EtudiantController(etudiantService);
+
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials,"departement");
+        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
     }
 
     @Test
     void shouldCreateEtudiant() {
         // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
-        EtudiantDTO savedEtudiant = new EtudiantDTO("John", "Doe", null, null, null );
-
-        when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
-                .thenReturn(Optional.of(savedEtudiant));
+        when(etudiantRepository.save(any(Etudiant.class)))
+                .thenReturn(etudiantEntity);
 
         // Act
         ResponseEntity<EtudiantDTO> response = etudiantController.creerEtudiant(newEtudiant);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(savedEtudiant, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(newEtudiant.getFirstName(), response.getBody().getFirstName());
+        assertEquals(newEtudiant.getLastName(), response.getBody().getLastName());
     }
 
     @Test
-    void shouldReturnConflictWhenEtudiantNotCreated() {
+    void shouldReturnEmptyWhenExceptionIsThrown() {
         // Arrange
-        EtudiantDTO newEtudiant = new EtudiantDTO("John", "Doe", null, null, null);
-
-        when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
-                .thenReturn(Optional.empty());
+        when(etudiantRepository.save(any(Etudiant.class)))
+                .thenThrow(new RuntimeException("Database error"));
 
         // Act
-        ResponseEntity<EtudiantDTO> response = etudiantController.creerEtudiant(newEtudiant);
+        Optional<EtudiantDTO> response = etudiantService.creerEtudiant(newEtudiant);
 
         // Assert
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertTrue(response.isEmpty());
     }
 
     @Test
     void shouldReturnEtudiantWhenFound() {
         // Arrange
         Long etudiantId = 1L;
-        EtudiantDTO foundEtudiant = new EtudiantDTO("Jane", "Doe", null, null, null );
-
-        when(etudiantService.getEtudiantById(etudiantId))
-                .thenReturn(Optional.of(foundEtudiant));
+        when(etudiantRepository.findById(etudiantId))
+                .thenReturn(Optional.of(etudiantEntity));
 
         // Act
-        ResponseEntity<EtudiantDTO> response = etudiantController.getEtudiantById(etudiantId);
+        Optional<EtudiantDTO> reponse = etudiantService.getEtudiantById(etudiantId);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(foundEtudiant, response.getBody());
+        assertTrue(reponse.isPresent());
+        assertEquals(etudiantEntity.getFirstName(), reponse.get().getFirstName());
+        assertEquals(etudiantEntity.getLastName(), reponse.get().getLastName());
+        assertEquals(etudiantEntity.getCredentials().getEmail(), reponse.get().getCredentials().getEmail());
     }
+
 
     @Test
     void shouldReturnNotFoundWhenEtudiantNotFound() {

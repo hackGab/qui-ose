@@ -25,7 +25,7 @@ public class UserAppService {
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         return jwtTokenProvider.generateToken(authentication);
     }
-
+//
 //    public UserDTO getMe(String token) {
 //        token = token.startsWith("Bearer") ? token.substring(7) : token;
 //        String email = jwtTokenProvider.getEmailFromJWT(token);

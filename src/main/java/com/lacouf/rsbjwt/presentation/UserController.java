@@ -16,22 +16,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
 	private final UserAppService userService;
 
-//	@PostMapping("/login")
-//	public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDTO loginDto){
-//		try {
-//			String accessToken = userService.authenticateUser(loginDto);
-//			final JWTAuthResponse authResponse = new JWTAuthResponse(accessToken);
-//			return ResponseEntity.accepted()
-//					.contentType(MediaType.APPLICATION_JSON)
-//					.body(authResponse);
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JWTAuthResponse());
-//		}
-//	}
+	@PostMapping("/login")
+	public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDTO loginDto){
+		try {
+			String accessToken = userService.authenticateUser(loginDto);
+			final JWTAuthResponse authResponse = new JWTAuthResponse(accessToken);
+			return ResponseEntity.accepted()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(authResponse);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JWTAuthResponse());
+		}
+	}
 
 //	@GetMapping("/me")
 //	public ResponseEntity<UserDTO> getMe(HttpServletRequest request){

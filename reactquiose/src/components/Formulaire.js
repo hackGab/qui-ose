@@ -4,15 +4,18 @@ import Inscription from "./Inscription";
 import Connexion from "./Connexion";
 import {If, Then} from "react-if";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 function Formulaire(props) {
     const { title } = props;
+    const {t, i18n} = useTranslation();
+
     const formHeight = title === 'Inscription' ? "85vh" : "50vh";
     return (
         <div className='App-image row'>
             <div className='App-header-connexion col-lg-7 col-md-4 col-9 m-auto'>
                 <h1>Qui-ose</h1>
-                <p>La plateforme de gestion de stage</p>
+                <p>{t('PlateForme')}</p>
             </div>
 
             <div className='form-compte col-lg-4 col-md-6 col-9 m-auto' style={{height: formHeight}}>

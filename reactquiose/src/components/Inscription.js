@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
 import {Else, If, Then} from 'react-if';
+import {useTranslation} from 'react-i18next';
+import {changeLanguage} from "i18next";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -11,6 +13,7 @@ function Inscription() {
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
     const [role, setRole] = useState('etudiant');
+    const {t, i18n} = useTranslation();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -29,6 +32,10 @@ function Inscription() {
                 password: mpd
             },
             phoneNumber: num,
+        };
+
+        const changeLanguage = (lng) => {
+            i18n.changeLanguage(lng);
         };
 
         let url;
@@ -84,12 +91,15 @@ function Inscription() {
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
-            <legend>Champs obligatoires*</legend>
+            <button onClick={() => changeLanguage('fr')}>FR</button>
+            <button onClick={() => changeLanguage('en')}>EN</button>
+            <legend>{t('ChampsObligatoires')} </legend>
+
             <div className='row'>
 
                 <div>
                     <div className='form-group' style={{display: "inline-flex"}}>
-                        <label htmlFor='role' className='col-6 m-auto'>Je suis un*</label>
+                        <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                         &nbsp;
                         <select
                             className='form-control col-6'
@@ -98,9 +108,9 @@ function Inscription() {
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             required>
-                            <option value='etudiant'>Étudiant</option>
-                            <option value='prof'>Professeur</option>
-                            <option value='employeur'>Employeur</option>
+                            <option value='etudiant'>{t('etudiant')}</option>
+                            <option value='prof'>{t('prof')}</option>
+                            <option value='employeur'>{t('employeur')}</option>
                         </select>
                     </div>
                 </div>
@@ -110,14 +120,14 @@ function Inscription() {
 
             <div className='row'>
                 <div className="form-group">
-                    <label htmlFor="prenom">Prénom*</label>
+                    <label htmlFor="prenom">{t('prenom')}</label>
                     <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
                            value={prenom} onChange={(e) => setPrenom(e.target.value)}
                            pattern={"[A-Za-z]+"} autoFocus={true} required/>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="nom">Nom*</label>
+                    <label htmlFor="nom">{t('nom')}</label>
                     <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
                            value={nom} onChange={(e) => setNom(e.target.value)}
                            pattern={"[A-Za-z]+"} required/>
@@ -128,35 +138,35 @@ function Inscription() {
                         <Then>
                             <div className='col-lg-12 col-md-6 col-6 m-auto'>
                                 <div className="form-group">
-                                    <label htmlFor="nomEntreprise">Nom de l'entreprise*</label>
+                                    <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
                                            placeholder="Ville de Montréal"
                                            pattern={"[A-Za-z]+"}
-                                            required/>
+                                           required/>
                                 </div>
                             </div>
                         </Then>
                         <Else>
                             <div className="form-group">
-                                <label htmlFor="departement">Département*</label>
+                                <label htmlFor="departement">{t('Departement')}</label>
                                 <input type="text" className="form-control" id="departement" name="departement"
 
-                                       placeholder="Technique de l'informatique" required/>
+                                       placeholder={t('PlaceHolderDepartement')} required/>
                             </div>
                         </Else>
                     </If>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="email">Email*</label>
+                    <label htmlFor="email">{t('Email')}</label>
                     <input type="email" className="form-control" id="email" name="email"
                            value={email} onChange={(e) => setEmail(e.target.value)}
                            placeholder="johndoe@gmail.com" required/>
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label" htmlFor="num">Numéro de téléphone</label>
+                    <label className="form-label" htmlFor="num">{t('Telephone')}</label>
                     <InputMask
                         className="form-control"
                         mask="(999)-999-9999"
@@ -170,23 +180,23 @@ function Inscription() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="mpd">Mot de passe*</label>
+                    <label htmlFor="mpd">{t('MotDePasse')}</label>
                     <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
                            value={mpd} onChange={(e) => setMpd(e.target.value)}
                            required/>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="mpdConfirm">Confirmation du mot de passe*</label>
+                    <label htmlFor="mpdConfirm">{t('ConfirmerMotDePasse')}</label>
                     <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
                            value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
                            placeholder="********" required/>
                 </div>
             </div>
 
-            <button className="btn btn-primary w-50" type="submit">S'inscrire</button>
+            <button className="btn btn-primary w-50" type="submit">{t('Sinscrire')}</button>
 
-            <small>Déjà un compte? <a href="/login">Connectez-vous</a></small>
+            <small>{t('DejaUnCompte')}<a href="/login">{t('connectezVous')}</a></small>
         </form>
     )
 }

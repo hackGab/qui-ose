@@ -1,0 +1,23 @@
+{
+  "ChampsObligatoires": "Required Fields *",
+  "Jesuisun" : "I am a *",
+  "etudiant": "Student",
+  "prof": "Teacher",
+  "employeur": "Employer",
+  "prenom": "First Name*",
+  "nom": "Last Name*",
+  "nomEntreprise": "Company Name *",
+  "Departement": "Department *",
+  "Email": "Email *",
+  "Telephone": "Phone Number *",
+  "MotDePasse": "Password *",
+  "ConfirmerMotDePasse": "Confirm Password *",
+  "Sinscrire": "Sign Up",
+  "DejaUnCompte": "Already have an account ? ",
+  "connectezVous": "Log In",
+  "PlaceHolderDepartement" : "Computer Science",
+  "Connecter": "Log In",
+  "Inscription": "Sign Up",
+  "PlateForme": "The internship management platform"
+
+}

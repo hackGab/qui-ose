@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import {useTranslation} from "react-i18next";
 
 function Connexion() {
     const [email, setEmail] = useState('');
     const [mpd, setMpd] = useState('');
+    const {t, i18n} = useTranslation();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -43,17 +45,17 @@ function Connexion() {
 
     return(
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            <legend>Champs obligatoires*</legend>
+            <legend>{t('ChampsObligatoires')}</legend>
             <div className='row'>
                 <div className="form-group">
-                    <label htmlFor="email">Email*</label>
+                    <label htmlFor="email">{t('Email')}</label>
                     <input type="email" className="form-control" id="email" name="email"
                            value={email} onChange={(e) => setEmail(e.target.value)}
                            placeholder="johndoe@gmail.com" required/>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="mpd">Mot de passe*</label>
+                    <label htmlFor="mpd">{t('MotDePasse')}</label>
                     <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
                            value={mpd} onChange={(e) => setMpd(e.target.value)}
                            required/>
@@ -61,9 +63,9 @@ function Connexion() {
 
             </div>
 
-            <button className="btn btn-primary w-50" type="submit">Connecter</button>
+            <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
 
-            <small>Je n'ai pas de compte ? <a href="/signUp">S'inscrire</a></small>
+            <small>{t('DejaUnCompte')} <a href="/signUp">{t('Sinscrire')}</a></small>
         </form>
     )
 }

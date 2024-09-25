@@ -1,0 +1,24 @@
+{
+  "ChampsObligatoires": "Champs Obligatoires *",
+  "Jesuisun" : "Je suis un *",
+  "etudiant": "Étudiant",
+  "prof": "Professeur",
+  "employeur": "Employeur",
+  "prenom": "Prenom *",
+  "nom": "Last Name*",
+  "nomEntreprise": "Nom de l'entreprise*",
+  "Departement": "Departement *",
+  "Email": "Courriel *",
+  "Telephone": "Numéro de téléphone *",
+  "MotDePasse": "Mot De Passe *",
+  "ConfirmerMotDePasse": "Confirmation du mot de passe *",
+  "Sinscrire": "S'inscrire",
+  "DejaUnCompte": "Déjà un compte? ",
+  "connectezVous": "Connectez-vous",
+  "PlaceHolderDepartement" : "Technique de l'informatique",
+  "Connecter": "Connecter",
+  "Inscription": "Inscription",
+  "PlateForme": "La plateforme de gestion de stage"
+
+
+}

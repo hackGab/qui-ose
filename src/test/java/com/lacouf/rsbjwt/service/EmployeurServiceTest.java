@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -26,11 +27,12 @@ public class EmployeurServiceTest {
 
     private EmployeurDTO newEmployeur;
     private Employeur employeurEntity;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         employeurRepository = Mockito.mock(EmployeurRepository.class);
-        employeurService = new EmployeurService(employeurRepository);
+        employeurService = new EmployeurService(employeurRepository, passwordEncoder);
         employeurController = new EmployeurController(employeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");

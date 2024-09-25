@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -26,11 +27,12 @@ public class ProfesseurServiceTest {
 
     private ProfesseurDTO newProfesseur;
     private Professeur professeurEntity;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
-        professeurService = new ProfesseurService(professeurRepository);
+        professeurService = new ProfesseurService(professeurRepository, passwordEncoder);
         professeurController = new ProfesseurController(professeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");

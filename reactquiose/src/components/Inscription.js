@@ -42,8 +42,10 @@ function Inscription() {
             },
             phoneNumber: num,
             departement: role === 'employeur' ? undefined : departement,
-            nomEntreprise: role === 'employeur' ? nomEntreprise : undefined
+            entreprise: role === 'employeur' ? nomEntreprise : undefined
         };
+
+        console.log(userData);
 
         let url;
         switch (role) {

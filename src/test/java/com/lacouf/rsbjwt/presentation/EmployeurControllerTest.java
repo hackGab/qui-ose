@@ -6,6 +6,7 @@ import com.lacouf.rsbjwt.presentation.EmployeurController;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
+import com.lacouf.rsbjwt.service.UserAppService;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,6 +41,9 @@ public class EmployeurControllerTest {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private UserAppService userService;
 
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})

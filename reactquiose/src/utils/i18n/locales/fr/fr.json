@@ -18,7 +18,11 @@
   "PlaceHolderDepartement" : "Technique de l'informatique",
   "Connecter": "Connecter",
   "Inscription": "Inscription",
-  "PlateForme": "La plateforme de gestion de stage"
+  "PlateForme": "La plateforme de gestion de stage",
+  "mpdNonIdentique": "Les mots de passe ne sont pas identiques",
+  "utilisateurExiste": "L'utilisateur existe déjà",
+  "erreurLorsCreationUser": "Erreur lors de la création de l'utilisateur",
+  "erreurConnexionServeur": "Erreur lors de la connexion au serveur"
 
 
 }

@@ -18,6 +18,10 @@
   "PlaceHolderDepartement" : "Computer Science",
   "Connecter": "Log In",
   "Inscription": "Sign Up",
-  "PlateForme": "The internship management platform"
+  "PlateForme": "The internship management platform",
+  "mpdNonIdentique": "Passwords are not identical",
+  "utilisateurExiste": "User already exists",
+  "erreurLorsCreationUser": "Error during user creation",
+  "erreurConnexionServeur": "Error connecting to the server"
 
 }

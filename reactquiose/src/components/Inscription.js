@@ -32,7 +32,7 @@ function Inscription() {
         setErrorMessages('');
 
         if (mpd !== mpdConfirm) {
-            setErrorMessages('Les mots de passe ne sont pas identique.');
+            setErrorMessages(t('mpdNonIdentique'));
             return;
         }
 
@@ -86,9 +86,9 @@ function Inscription() {
                 if (response.status === 201) {
                     return response.json();
                 } else if (response.status === 409) {
-                    setErrorMessages("L'utilisateur existe déjà.");
+                    setErrorMessages(t('utilisateurExiste'));
                 } else {
-                    setErrorMessages('Erreur lors de la création de l\'utilisateur.');
+                    setErrorMessages(t('erreurLorsCreationUser'));
                 }
             })
             .then(data => {
@@ -98,7 +98,7 @@ function Inscription() {
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                setErrorMessages('Erreur lors de la connexion au serveur.');
+                setErrorMessages(t('erreurConnexionServeur'));
             });
     };
 

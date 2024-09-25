@@ -5,7 +5,7 @@
   "prof": "Professeur",
   "employeur": "Employeur",
   "prenom": "Prenom *",
-  "nom": "Last Name*",
+  "nom": "Nom *",
   "nomEntreprise": "Nom de l'entreprise*",
   "Departement": "Departement *",
   "Email": "Courriel *",

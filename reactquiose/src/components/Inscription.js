@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
-import {Else, If, Then} from 'react-if';
+import { Else, If, Then } from 'react-if';
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eye } from 'react-icons-kit/feather/eye';
+import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
 import {changeLanguage} from "i18next";
 
@@ -13,14 +17,22 @@ function Inscription() {
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
     const [role, setRole] = useState('etudiant');
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
+    const [typeConf, setTypeConf] = useState('password');
+    const [iconConf, setIconConf] = useState(eyeOff);
+    const [departement, setDepartement] = useState('');
+    const [nomEntreprise, setNomEntreprise] = useState('');
+    const [errorMessages, setErrorMessages] = useState('');
+    const navigate = useNavigate();
     const {t, i18n} = useTranslation();
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setErrorMessages('');
 
         if (mpd !== mpdConfirm) {
-            alert('Les mots de passe ne correspondent pas.');
-            console.error('Les mots de passe ne correspondent pas.');
+            setErrorMessages('Les mots de passe ne sont pas identique.');
             return;
         }
 
@@ -32,6 +44,8 @@ function Inscription() {
                 password: mpd
             },
             phoneNumber: num,
+            departement: role === 'employeur' ? undefined : departement,
+            entreprise: role === 'employeur' ? nomEntreprise : undefined
         };
 
         const changeLanguage = (lng) => {
@@ -65,28 +79,37 @@ function Inscription() {
 
             },
             body: JSON.stringify(userData),
+            print: userData
         })
             .then(response => {
                 console.log('Réponse du backend:', response.status);
                 if (response.status === 201) {
                     return response.json();
                 } else if (response.status === 409) {
-                    alert("L'utilisateur existe déjà.");
-                    console.error("L'utilisateur existe déjà.");
+                    setErrorMessages("L'utilisateur existe déjà.");
                 } else {
-                    alert('Erreur lors de la création de l\'étudiant.');
-                    console.error('Erreur lors de la création de l\'étudiant.');
+                    setErrorMessages('Erreur lors de la création de l\'utilisateur.');
                 }
             })
             .then(data => {
                 if (data) {
-                    alert('Utilisateur créé avec succès');
-                    console.log('Données reçues du backend:', data);
+                    navigate('/login');
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
+                setErrorMessages('Erreur lors de la connexion au serveur.');
             });
+    };
+
+    const afficherMdp = () => {
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
+    };
+
+    const afficherMdpConf = () => {
+        setIconConf(typeConf === 'password' ? eye : eyeOff);
+        setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
     return (
@@ -94,25 +117,25 @@ function Inscription() {
             <button onClick={() => changeLanguage('fr')}>FR</button>
             <button onClick={() => changeLanguage('en')}>EN</button>
             <legend>{t('ChampsObligatoires')} </legend>
-
             <div className='row'>
-
-                <div>
-                    <div className='form-group' style={{display: "inline-flex"}}>
-                        <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
-                        &nbsp;
-                        <select
-                            className='form-control col-6'
-                            id='role'
-                            name='role'
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required>
-                            <option value='etudiant'>{t('etudiant')}</option>
-                            <option value='prof'>{t('prof')}</option>
-                            <option value='employeur'>{t('employeur')}</option>
-                        </select>
-                    </div>
+                <div className='form-group' style={{ display: "inline-flex" }}>
+                    <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
+                    &nbsp;
+                    <select
+                        className='form-control col-6'
+                        id='role'
+                        name='role'
+                        value={role}
+                        onChange={(e) => {
+                            setRole(e.target.value);
+                            setNomEntreprise('');
+                            setDepartement('');
+                        }}
+                        required>
+                        <option value='etudiant'>{t('etudiant')}</option>
+                        <option value='prof'>{t('prof')}</option>
+                        <option value='employeur'>{t('employeur')}</option>
+                    </select>
                 </div>
 
             </div>
@@ -132,6 +155,7 @@ function Inscription() {
                            value={nom} onChange={(e) => setNom(e.target.value)}
                            pattern={"[A-Za-z]+"} required/>
                 </div>
+
                 <div>
                     {/* Si le role est un employeur, ajouter ce champ */}
                     <If condition={role === 'employeur'}>
@@ -141,8 +165,8 @@ function Inscription() {
                                     <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
-                                           placeholder="Ville de Montréal"
-                                           pattern={"[A-Za-z]+"}
+                                           placeholder="Nom de l'entreprise"
+                                           value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                            required/>
                                 </div>
                             </div>
@@ -151,8 +175,9 @@ function Inscription() {
                             <div className="form-group">
                                 <label htmlFor="departement">{t('Departement')}</label>
                                 <input type="text" className="form-control" id="departement" name="departement"
-
-                                       placeholder={t('PlaceHolderDepartement')} required/>
+                                       placeholder={t('PlaceHolderDepartement')}
+                                       value={departement} onChange={(e) => setDepartement(e.target.value)}
+                                       required/>
                             </div>
                         </Else>
                     </If>
@@ -181,24 +206,52 @@ function Inscription() {
 
                 <div className="form-group">
                     <label htmlFor="mpd">{t('MotDePasse')}</label>
-                    <input type="password" className="form-control" id="mpd" name="mpd" placeholder="********"
-                           value={mpd} onChange={(e) => setMpd(e.target.value)}
-                           required/>
+                    <div className="input-group">
+                        <input type={type}
+                               className="form-control"
+                               id="mpd"
+                               name="mpd"
+                               placeholder="********"
+                               value={mpd} onChange={(e) => setMpd(e.target.value)}
+                               autoComplete="current-password"
+                               required/>
+                        <div className="input-group-append">
+                            <span className="input-group-text" onClick={afficherMdp}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="mpdConfirm">{t('ConfirmerMotDePasse')}</label>
-                    <input type="password" className="form-control" id="mpdConfirm" name="mpdConfirm"
-                           value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                           placeholder="********" required/>
+                    <div className="input-group">
+                        <input type={typeConf}
+                               className="form-control"
+                               id="mpdConfirm"
+                               name="mpdConfirm"
+                               placeholder="********"
+                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                               autoComplete="current-password"
+                               required/>
+                        <div className="input-group-append">
+                            <span className="input-group-text" onClick={afficherMdpConf}>
+                                <Icon icon={iconConf} size={20}/>
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
+                <button type="submit" className="btn btn-primary">S'inscrire</button>
+                <small style={{marginTop: '10px'}}>Déjà un compte? <a href="/login">Connectez-vous</a></small>
+                {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
             </div>
 
             <button className="btn btn-primary w-50" type="submit">{t('Sinscrire')}</button>
 
-            <small>{t('DejaUnCompte')}<a href="/login">{t('connectezVous')}</a></small>
+            <small>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
         </form>
-    )
+    );
 }
 
 export default Inscription;

@@ -43,12 +43,10 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(POST, "/user/login").permitAll()
-                        .requestMatchers(POST, "/emprunteur/register").permitAll()
-                        .requestMatchers(POST, "/prepose/register").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
-                        .requestMatchers(GET, "/user/*").hasAnyAuthority("EMPRUNTEUR", "PREPOSE", "GESTIONNAIRE")
+                        .requestMatchers(POST, "/employeur/creerEmployeur").permitAll()
                         .requestMatchers("/emprunteur/**").hasAuthority("EMPRUNTEUR")
                         .requestMatchers("/prepose/**").hasAuthority("PREPOSE")
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")

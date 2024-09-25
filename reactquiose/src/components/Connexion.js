@@ -24,13 +24,10 @@ function Connexion() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const userData = {
-            credentials: {
-                email,
-                password: mpd
-            }
+            email: email,
+            password: mpd.trim() // Trim the password here
         };
         console.log('Données envoyées au backend:', userData);
-        // Envoi d'une requête POST au backend
         fetch('http://localhost:8080/user/login', {
             method: 'POST',
             headers: {
@@ -46,14 +43,13 @@ function Connexion() {
             })
             .then((data) => {
                 console.log('Réponse du serveur:', data);
-                // Rediriger l'utilisateur vers la page d'accueil
-                window.location.href = '/';
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);
                 alert('Erreur lors de la connexion');
             });
     }
+
 
 
 

@@ -37,8 +37,8 @@ function Inscription() {
                 password: mpd
             },
             phoneNumber: num,
-            departement: role === 'employeur' ? undefined : departement, // Only set for non-employers
-            nomEntreprise: role === 'employeur' ? nomEntreprise : undefined // Only set for employers
+            departement: role === 'employeur' ? undefined : departement,
+            nomEntreprise: role === 'employeur' ? nomEntreprise : undefined
         };
 
         let url;
@@ -64,6 +64,7 @@ function Inscription() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
+            print: userData
         })
             .then(response => {
                 if (response.status === 201) {

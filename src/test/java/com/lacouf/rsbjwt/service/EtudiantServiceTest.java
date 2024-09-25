@@ -32,6 +32,7 @@ class EtudiantServiceTest {
     @BeforeEach
     void setUp() {
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
         etudiantService = new EtudiantService(etudiantRepository, passwordEncoder);
         etudiantController = new EtudiantController(etudiantService);
 

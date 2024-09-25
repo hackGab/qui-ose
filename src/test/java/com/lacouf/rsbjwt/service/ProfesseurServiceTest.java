@@ -32,6 +32,7 @@ public class ProfesseurServiceTest {
     @BeforeEach
     void setUp() {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
         professeurService = new ProfesseurService(professeurRepository, passwordEncoder);
         professeurController = new ProfesseurController(professeurService);
 

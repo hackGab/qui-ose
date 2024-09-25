@@ -32,6 +32,7 @@ public class EmployeurServiceTest {
     @BeforeEach
     void setUp() {
         employeurRepository = Mockito.mock(EmployeurRepository.class);
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
         employeurService = new EmployeurService(employeurRepository, passwordEncoder);
         employeurController = new EmployeurController(employeurService);
 

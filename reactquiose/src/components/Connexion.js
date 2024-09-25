@@ -43,7 +43,7 @@ function Connexion() {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Connexion échouée');
+                throw new Error(t('connexionEchouee'));
             })
             .then((data) => {
                 console.log('Réponse du serveur:', data);
@@ -51,7 +51,7 @@ function Connexion() {
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);
-                setErrorMessages('Erreur lors de la connexion');
+                setErrorMessages(t('erreurLorsConnexion'));
             });
     };
 

@@ -22,6 +22,8 @@
   "mpdNonIdentique": "Passwords are not identical",
   "utilisateurExiste": "User already exists",
   "erreurLorsCreationUser": "Error during user creation",
-  "erreurConnexionServeur": "Error connecting to the server"
+  "erreurConnexionServeur": "Error connecting to the server",
+  "connexionEchouee": "Connection failed",
+  "erreurLorsConnexion": "Error during connection"
 
 }

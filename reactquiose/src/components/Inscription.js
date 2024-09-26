@@ -7,6 +7,7 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
+import i18n from "i18next";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -52,13 +53,13 @@ function Inscription() {
         console.log('Role:', role);
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8080/etudiant/creerEtudiant';
+                url = 'http://localhost:8081/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8080/professeur/creerProfesseur';
+                url = 'http://localhost:8081/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8080/employeur/creerEmployeur';
+                url = 'http://localhost:8081/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');
@@ -108,9 +109,18 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
+
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
            <legend>{t('ChampsObligatoires')} </legend>
+            {/* Language Switcher */}
+            <div className="language-switcher">
+                <button type="button" onClick={() => changeLanguage('fr')} className="btn btn-secondary">Français</button>
+                <button type="button" onClick={() => changeLanguage('en')} className="btn btn-secondary">English</button>
+            </div>
             <div className='row'>
                 <div className='form-group' style={{ display: "inline-flex" }}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>

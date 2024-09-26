@@ -10,7 +10,17 @@ function Formulaire(props) {
     const { title } = props;
     const {t} = useTranslation();
 
-    const formHeight = title === 'Inscription' ? "95vh" : "50vh";
+    const getFormHeight = () => {
+        const windowWidth = window.innerWidth;
+        if (title === 'Inscription') {
+            return windowWidth < 1200 ? '85vh' : '98vh';
+        } else if (title === 'Connexion') {
+            return '55vh';
+        }
+    };
+
+    const formHeight = getFormHeight();
+
     return (
         <div className='App-image row'>
             <div className='App-header-connexion col-lg-7 col-md-4 col-9 m-auto'>

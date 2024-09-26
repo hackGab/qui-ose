@@ -109,18 +109,10 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
            <legend>{t('ChampsObligatoires')} </legend>
-            {/* Language Switcher */}
-            <div className="language-switcher">
-                <button type="button" onClick={() => changeLanguage('fr')} className="btn btn-secondary">Français</button>
-                <button type="button" onClick={() => changeLanguage('en')} className="btn btn-secondary">English</button>
-            </div>
             <div className='row'>
                 <div className='form-group' style={{ display: "inline-flex" }}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>

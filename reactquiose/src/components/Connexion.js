@@ -54,26 +54,11 @@ function Connexion() {
                 console.error('Erreur lors de la connexion:', error);
                 setErrorMessages(t('erreurLorsConnexion'));
             });
-
-
-
     };
-
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
-
 
     return (
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
             <legend>{t('ChampsObligatoires')}</legend>
-            <div className="form-group">
-                <label htmlFor="lang">{t('Langue')}</label>
-                <select className="form-control" id="lang" onChange={(e) => changeLanguage(e.target.value)}>
-                    <option value="fr">Français</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
             <div className='row'>
                 <div className="form-group">
                     <label htmlFor="email">{t('Email')}</label>

@@ -58,6 +58,7 @@ function Connexion() {
 
     return (
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center'}}>{errorMessages}</div>}
             <legend>{t('ChampsObligatoires')}</legend>
             <div className='row'>
                 <div className="form-group">
@@ -100,7 +101,6 @@ function Connexion() {
 
             <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
             <small style={{marginTop: '10px'}}>{t('DejaUnCompte')}<a href="/signUp">{t('Sinscrire')}</a></small>
-            {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
         </form>
     );
 }

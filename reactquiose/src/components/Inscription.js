@@ -113,6 +113,7 @@ function Inscription() {
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
            <legend>{t('ChampsObligatoires')} </legend>
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center'}}>{errorMessages}</div>}
             <div className='row'>
                 <div className='form-group' style={{ display: "inline-flex" }}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
@@ -240,7 +241,6 @@ function Inscription() {
 
                 <button type="submit" className="btn btn-primary">{t('Sinscrire')}</button>
                 <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
-                {errorMessages && <div className='alert alert-danger' style={{marginTop: '20px', textAlign: 'center'}}>{errorMessages}</div>}
             </div>
         </form>
     );

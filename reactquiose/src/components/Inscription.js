@@ -31,21 +31,31 @@ function Inscription() {
         event.preventDefault();
         setErrorMessages('');
 
-        if (mpd !== mpdConfirm) {
+        // Trim all input fields
+        const trimmedPrenom = prenom.trim();
+        const trimmedNom = nom.trim();
+        const trimmedEmail = email.trim();
+        const trimmedMpd = mpd.trim();
+        const trimmedMpdConfirm = mpdConfirm.trim();
+        const trimmedNum = num.trim();
+        const trimmedDepartement = departement.trim();
+        const trimmedNomEntreprise = nomEntreprise.trim();
+
+        if (trimmedMpd !== trimmedMpdConfirm) {
             setErrorMessages(t('mpdNonIdentique'));
             return;
         }
 
         const userData = {
-            firstName: prenom,
-            lastName: nom,
+            firstName: trimmedPrenom,
+            lastName: trimmedNom,
             credentials: {
-                email,
-                password: mpd
+                email: trimmedEmail,
+                password: trimmedMpd
             },
-            phoneNumber: num,
-            departement: role === 'employeur' ? undefined : departement,
-            entreprise: role === 'employeur' ? nomEntreprise : undefined
+            phoneNumber: trimmedNum,
+            departement: role === 'employeur' ? undefined : trimmedDepartement,
+            entreprise: role === 'employeur' ? trimmedNomEntreprise : undefined
         };
 
 
@@ -143,14 +153,14 @@ function Inscription() {
                     <label htmlFor="prenom">{t('prenom')}</label>
                     <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
                            value={prenom} onChange={(e) => setPrenom(e.target.value)}
-                           pattern={"[A-Za-z]+"} autoFocus={true} required/>
+                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} autoFocus={true} required/>
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="nom">{t('nom')}</label>
                     <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
                            value={nom} onChange={(e) => setNom(e.target.value)}
-                           pattern={"[A-Za-z]+"} required/>
+                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} required/>
                 </div>
 
                 <div>
@@ -164,6 +174,7 @@ function Inscription() {
                                            name="nomEntreprise"
                                            placeholder="Nom de l'entreprise"
                                            value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
+                                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                            required/>
                                 </div>
                             </div>
@@ -174,6 +185,7 @@ function Inscription() {
                                 <input type="text" className="form-control" id="departement" name="departement"
                                        placeholder={t('PlaceHolderDepartement')}
                                        value={departement} onChange={(e) => setDepartement(e.target.value)}
+                                       pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                        required/>
                             </div>
                         </Else>

@@ -167,7 +167,7 @@ function Inscription() {
                     {/* Si le role est un employeur, ajouter ce champ */}
                     <If condition={role === 'employeur'}>
                         <Then>
-                            <div className='col-lg-12 col-md-6 col-6 m-auto'>
+                            <div>
                                 <div className="form-group">
                                     <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
                                     <input type="text" className="form-control" id="nomEntreprise"

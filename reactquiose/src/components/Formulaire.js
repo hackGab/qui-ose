@@ -8,9 +8,9 @@ import {useTranslation} from "react-i18next";
 
 function Formulaire(props) {
     const { title } = props;
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
 
-    const formHeight = title === 'Inscription' ? "85vh" : "50vh";
+    const formHeight = title === 'Inscription' ? "95vh" : "50vh";
     return (
         <div className='App-image row'>
             <div className='App-header-connexion col-lg-7 col-md-4 col-9 m-auto'>

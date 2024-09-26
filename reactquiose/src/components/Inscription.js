@@ -7,7 +7,6 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
-import {changeLanguage} from "i18next";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -25,7 +24,7 @@ function Inscription() {
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -48,9 +47,6 @@ function Inscription() {
             entreprise: role === 'employeur' ? nomEntreprise : undefined
         };
 
-        const changeLanguage = (lng) => {
-            i18n.changeLanguage(lng);
-        };
 
         let url;
         console.log('Role:', role);
@@ -114,9 +110,7 @@ function Inscription() {
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
-            <button onClick={() => changeLanguage('fr')}>FR</button>
-            <button onClick={() => changeLanguage('en')}>EN</button>
-            <legend>{t('ChampsObligatoires')} </legend>
+           <legend>{t('ChampsObligatoires')} </legend>
             <div className='row'>
                 <div className='form-group' style={{ display: "inline-flex" }}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>

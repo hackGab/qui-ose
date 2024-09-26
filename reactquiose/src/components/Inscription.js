@@ -53,13 +53,13 @@ function Inscription() {
         console.log('Role:', role);
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8081/etudiant/creerEtudiant';
+                url = 'http://localhost:8080/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8081/professeur/creerProfesseur';
+                url = 'http://localhost:8080/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8081/employeur/creerEmployeur';
+                url = 'http://localhost:8080/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');

@@ -58,7 +58,7 @@ function Connexion() {
 
     return (
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center'}}>{errorMessages}</div>}
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
             <legend>{t('ChampsObligatoires')}</legend>
             <div className='row'>
                 <div className="form-group">

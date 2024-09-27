@@ -80,18 +80,6 @@
 
 
 
-/* xs */
-.form-compte  {
-    height: 85vh;
-}
-
-/* lg */
-@media (min-width: 1200px) {
-    .form-compte  {
-        height: 98vh;
-    }
-}
-
 
 /** Form **/
 .form-compte {

@@ -52,6 +52,7 @@ class EtudiantControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     public void shouldCreateEtudiant() throws Exception {
+        System.out.println("shouldCreateEtudiant");
         EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
         Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
                 .thenReturn(Optional.of(etudiantDTO));

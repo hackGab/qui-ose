@@ -5,7 +5,6 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {useTranslation} from "react-i18next";
-import i18n from "i18next";
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -34,7 +33,7 @@ function Connexion() {
         };
         console.log('Données envoyées au backend:', userData);
 
-        fetch('http://localhost:8080/user/login', {
+        fetch('http://localhost:8081/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +51,7 @@ function Connexion() {
                 const accessToken = data.accessToken;
 
                 // Récupérer l'utilisateur
-                return fetch('http://localhost:8080/user/me', {
+                return fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -100,6 +99,7 @@ function Connexion() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="johndoe@gmail.com"
+                        autoComplete={"off"}
                         required
                     />
                 </div>
@@ -115,7 +115,7 @@ function Connexion() {
                             placeholder="********"
                             value={mpd}
                             onChange={(e) => setMpd(e.target.value)}
-                            autoComplete="current-password"
+                            autoComplete={"new-password"}
                             required
                         />
                         <div className="input-group-append">

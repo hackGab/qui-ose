@@ -7,7 +7,6 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
-import i18n from "i18next";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -58,38 +57,31 @@ function Inscription() {
             entreprise: role === 'employeur' ? trimmedNomEntreprise : undefined
         };
 
-
         let url;
-        console.log('Role:', role);
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8080/etudiant/creerEtudiant';
+                url = 'http://localhost:8081/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8080/professeur/creerProfesseur';
+                url = 'http://localhost:8081/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8080/employeur/creerEmployeur';
+                url = 'http://localhost:8081/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');
                 return;
         }
 
-        console.log('Données envoyées au backend:', userData);
-        console.log('URL:', url);
-        // Envoi d'une requête POST au backend
+        // Envoi d'une requête POST au backend pour l'inscription
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-
             },
-            body: JSON.stringify(userData),
-            print: userData
+            body: JSON.stringify(userData)
         })
             .then(response => {
-                console.log('Réponse du backend:', response.status);
                 if (response.status === 201) {
                     return response.json();
                 } else if (response.status === 409) {
@@ -100,7 +92,54 @@ function Inscription() {
             })
             .then(data => {
                 if (data) {
-                    navigate('/login');
+                    console.log('Données utilisateur:', data);
+                    // Si l'inscription est réussie, effectuer une requête de connexion
+                    const loginData = {
+                        email: trimmedEmail,
+                        password: trimmedMpd
+                    };
+                    return fetch('http://localhost:8081/user/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(t('connexionEchouee'));
+            })
+            .then(loginResponse => {
+                const accessToken = loginResponse.accessToken;
+
+                // Requête pour récupérer les informations utilisateur
+                return fetch('http://localhost:8081/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(t('erreurLorsRecuperationUtilisateur'));
+            })
+            .then(userData => {
+                console.log('Données utilisateur:', userData);
+                console.log('Role:', userData.role);
+                // Redirection en fonction du rôle
+                if (userData.role === 'ETUDIANT') {
+                    navigate('/accueilEtudiant');
+                } else if (userData.role === 'PROFESSEUR') {
+                    navigate('/accueilProfesseur');
+                } else if (userData.role === 'EMPLOYEUR') {
+                    navigate('/accueilEmployeur');
                 }
             })
             .catch(error => {
@@ -108,6 +147,7 @@ function Inscription() {
                 setErrorMessages(t('erreurConnexionServeur'));
             });
     };
+
 
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);
@@ -175,6 +215,7 @@ function Inscription() {
                                            placeholder="Nom de l'entreprise"
                                            value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                            pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
+                                           autoComplete={"off"}
                                            required/>
                                 </div>
                             </div>
@@ -186,6 +227,7 @@ function Inscription() {
                                        placeholder={t('PlaceHolderDepartement')}
                                        value={departement} onChange={(e) => setDepartement(e.target.value)}
                                        pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
+                                       autoComplete={"off"}
                                        required/>
                             </div>
                         </Else>
@@ -195,8 +237,11 @@ function Inscription() {
                 <div className="form-group">
                     <label htmlFor="email">{t('Email')}</label>
                     <input type="email" className="form-control" id="email" name="email"
-                           value={email} onChange={(e) => setEmail(e.target.value)}
-                           placeholder="johndoe@gmail.com" required/>
+                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    placeholder="johndoe@gmail.com"
+                    autoComplete={"off"}
+                    required/>
+
                 </div>
 
                 <div className="form-group">
@@ -207,6 +252,7 @@ function Inscription() {
                         maskChar={null}
                         id="num"
                         placeholder="(514)-123-4567"
+                        autoComplete={"off"}
                         value={num} onChange={(e) => setNum(e.target.value)}
                         name="num">
                         {(inputProps) => <input type="tel" {...inputProps} />}
@@ -222,7 +268,7 @@ function Inscription() {
                                name="mpd"
                                placeholder="********"
                                value={mpd} onChange={(e) => setMpd(e.target.value)}
-                               autoComplete="current-password"
+                               autoComplete="new-password"
                                required/>
                         <div className="input-group-append">
                             <span className="input-group-text" onClick={afficherMdp}>
@@ -241,7 +287,7 @@ function Inscription() {
                                name="mpdConfirm"
                                placeholder="********"
                                value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                               autoComplete="current-password"
+                               autoComplete="new-password"
                                required/>
                         <div className="input-group-append">
                             <span className="input-group-text" onClick={afficherMdpConf}>

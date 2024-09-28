@@ -7,8 +7,10 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
+import {useAuth} from "../context/AuthProvider";
 
 function Inscription() {
+    const { login } = useAuth();
     const [prenom, setPrenom] = useState('');
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
@@ -93,7 +95,7 @@ function Inscription() {
             .then(data => {
                 if (data) {
                     console.log('Données utilisateur:', data);
-                    // Si l'inscription est réussie, effectuer une requête de connexion
+                    // Effectuer une requête de connexion immédiatement après l'inscription
                     const loginData = {
                         email: trimmedEmail,
                         password: trimmedMpd
@@ -133,6 +135,7 @@ function Inscription() {
             .then(userData => {
                 console.log('Données utilisateur:', userData);
                 console.log('Role:', userData.role);
+                login(userData); // Connexion de l'utilisateur
                 // Redirection en fonction du rôle
                 if (userData.role === 'ETUDIANT') {
                     navigate('/accueilEtudiant');
@@ -147,6 +150,7 @@ function Inscription() {
                 setErrorMessages(t('erreurConnexionServeur'));
             });
     };
+
 
 
     const afficherMdp = () => {

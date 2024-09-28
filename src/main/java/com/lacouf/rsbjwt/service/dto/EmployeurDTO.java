@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class EmployeurDTO extends UserDTO {
@@ -23,7 +22,13 @@ public class EmployeurDTO extends UserDTO {
 
     public EmployeurDTO(Employeur employeur) {
         super(employeur);
-        this.credentials = new CredentialDTO(employeur.getEmail(), employeur.getPassword(), null);
+        this.credentials = new CredentialDTO(employeur.getEmail(), employeur.getPassword());
         this.entreprise = employeur.getEntreprise();
+    }
+
+    public EmployeurDTO() {}
+
+    public static EmployeurDTO empty() {
+        return new EmployeurDTO();
     }
 }

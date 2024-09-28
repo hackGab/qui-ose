@@ -12,5 +12,4 @@ import lombok.Setter;
 public class CredentialDTO {
     private String email;
     private String password;
-    private String passwordConfirm;
 }

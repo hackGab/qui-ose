@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class ProfesseurDTO extends UserDTO {
@@ -23,7 +22,13 @@ public class ProfesseurDTO extends UserDTO {
 
     public ProfesseurDTO(Professeur professeur) {
         super(professeur);
-        this.credentials = new CredentialDTO(professeur.getEmail(), professeur.getPassword(), null);
+        this.credentials = new CredentialDTO(professeur.getEmail(), professeur.getPassword());
         this.departement = professeur.getDepartement();
+    }
+
+    public ProfesseurDTO() {}
+
+    public static ProfesseurDTO empty() {
+        return new ProfesseurDTO();
     }
 }

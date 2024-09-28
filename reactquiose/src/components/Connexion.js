@@ -33,6 +33,7 @@ function Connexion() {
             password: mpd.trim(),
         };
         console.log('Données envoyées au backend:', userData);
+
         fetch('http://localhost:8080/user/login', {
             method: 'POST',
             headers: {
@@ -48,7 +49,35 @@ function Connexion() {
             })
             .then((data) => {
                 console.log('Réponse du serveur:', data);
-                navigate('/accueil');
+                const accessToken = data.accessToken;
+
+                // Récupérer l'utilisateur
+                return fetch('http://localhost:8080/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json(); // Récupérer les données utilisateur
+                }
+                throw new Error(t('erreurLorsRecuperationUtilisateur')); // Gérer les erreurs
+            })
+            .then((userData) => {
+                console.log('Données utilisateur:', userData);
+                // Redirection en fonction du rôle
+                if (userData.role === 'ETUDIANT') {
+                    navigate('/accueilEtudiant');
+                } else if (userData.role === 'EMPLOYEUR') {
+                    navigate('/accueilEmployeur');
+                } else if (userData.role === 'GESTIONNAIRE') {
+                    navigate('/accueilGestionnaire');
+                } else if (userData.role === 'PROFESSEUR') {
+                    navigate('/accueilProfesseur');
+                }
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);

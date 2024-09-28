@@ -5,10 +5,10 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../context/AuthProvider";
+import {useAuth} from "../context/AuthProvider";
 
 function Connexion() {
-    const { login } = useAuth();
+    const {login} = useAuth();
     const [email, setEmail] = useState('');
     const [mpd, setMpd] = useState('');
     const [type, setType] = useState('password');
@@ -57,7 +57,10 @@ function Connexion() {
             })
             .then((userData) => {
                 login(userData);
-                navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' : userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' : userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' : 'accueilProfesseur'}`);
+                console.log('Utilisateur connecté:', userData);
+                navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' : userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' : userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' : 'accueilProfesseur'}`, {
+                    state: { userData }
+                });
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);

@@ -1,63 +1,51 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
+import { FaEnvelope, FaPhone } from 'react-icons/fa';
 
 function ListeEtudiants() {
-    // Exemple de données d'étudiants
     const etudiants = [
         {
             id: 1,
             email: 'etudiant1@example.com',
-            password: 'password1',
-            role: 'Étudiant',
             first_name: 'Jean',
             last_name: 'Dupont',
             phone_number: '123-456-7890',
-            departement: 'Informatique'
+            departement: 'Informatique',
         },
         {
             id: 2,
             email: 'etudiant2@example.com',
-            password: 'password2',
-            role: 'Étudiant',
             first_name: 'Marie',
             last_name: 'Curie',
             phone_number: '098-765-4321',
-            departement: 'Chimie'
+            departement: 'Chimie',
         },
-        // Ajoutez plus d'étudiants ici
     ];
 
     return (
         <div className="container mt-5">
-            <h1 className="mb-4">Liste des étudiants</h1>
-            <table className="table table-striped table-bordered">
-                <thead className="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Rôle</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Téléphone</th>
-                    <th>Département</th>
-                </tr>
-                </thead>
-                <tbody>
+            <h1 className="mb-4 text-center">Liste des Étudiants</h1>
+            <p className="text-center mb-4">Voici la liste des étudiants inscrits à notre programme de stages.</p>
+            <div className="row">
                 {etudiants.map((etudiant) => (
-                    <tr key={etudiant.id}>
-                        <td>{etudiant.id}</td>
-                        <td>{etudiant.email}</td>
-                        <td>{etudiant.password}</td>
-                        <td>{etudiant.role}</td>
-                        <td>{etudiant.first_name}</td>
-                        <td>{etudiant.last_name}</td>
-                        <td>{etudiant.phone_number}</td>
-                        <td>{etudiant.departement}</td>
-                    </tr>
+                    <div className="col-md-4 mb-4" key={etudiant.id}>
+                        <Link to={`/details/${etudiant.id}`} className="text-decoration-none">
+                            <div className="card shadow">
+                                <div className="card-body">
+                                    <h5 className="card-title">{`${etudiant.first_name} ${etudiant.last_name}`}</h5>
+                                    <h6 className="card-subtitle mb-2 text-muted">{etudiant.role}</h6>
+                                    <p className="card-text">
+                                        <FaEnvelope /> {etudiant.email}<br />
+                                        <FaPhone /> {etudiant.phone_number}<br />
+                                        <span className="badge bg-info">{etudiant.departement}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
                 ))}
-                </tbody>
-            </table>
+            </div>
         </div>
     );
 }

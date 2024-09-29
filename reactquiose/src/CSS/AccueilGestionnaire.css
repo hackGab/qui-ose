@@ -1,0 +1,87 @@
+.accueil-gestionnaire {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f4f7f6;
+    font-family: 'Roboto', sans-serif;
+}
+
+.accueil-gestionnaire h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.section {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    height: 300px;
+    border-radius: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #d1e3ff, #e4f2ff);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: inherit;
+}
+
+.section:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #333;
+    font-size: 56px;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.section-title {
+    font-size: 24px;
+    color: #555;
+    font-weight: 600;
+    margin-top: 60px;
+    text-align: right;
+    z-index: 1;
+}
+
+.section-image {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.section-image:hover {
+    opacity: 1;
+}
+
+@media (max-width: 776px) {
+    .section {
+        height: 200px;
+    }
+
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image {
+        width: 60px;
+    }
+}

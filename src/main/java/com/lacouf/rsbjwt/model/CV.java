@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public class CV {
     @Column(nullable = false)
     private Date uploadDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = Integer.MAX_VALUE)
     private String data;
 
     @Column(nullable = false)
@@ -47,7 +48,6 @@ public class CV {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", uploadDate=" + uploadDate +
-                ", data='" + data + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }

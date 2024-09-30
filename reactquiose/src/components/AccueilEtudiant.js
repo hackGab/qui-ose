@@ -8,6 +8,7 @@ function AccueilEtudiant() {
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [fileData, setFileData] = useState("");
+    const [message, setMessage] = useState(""); // Nouveau state pour afficher le message de réponse
 
     const afficherAjoutCV = () => {
         setShowModal(true);
@@ -15,6 +16,7 @@ function AccueilEtudiant() {
 
     const fermerAffichageCV = () => {
         setShowModal(false);
+        setMessage("");
     };
 
     // Fonction de gestion de changement de fichier
@@ -37,11 +39,37 @@ function AccueilEtudiant() {
     // Fonction pour soumettre le fichier
     const handleSubmit = () => {
         if (file) {
-            console.log("Nom du fichier:", file.name);
-            console.log("Type de fichier:", file.type);
-            console.log("Jour de remise:", new Date().toLocaleDateString());
-            //console.log("Contenu du fichier (Base64):", fileData);
-            console.log("État: en attente");
+            const donnesCV = {
+                name: file.name,
+                type: file.type,
+                uploadDate: new Date(),
+                data: fileData,
+                status: "Attente"
+            };
+
+            const url = `http://localhost:8080/cv/creerCV`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(donnesCV),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la requête: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setMessage("CV envoyé avec succès !");
+                    console.log('Réponse du serveur:', data);
+                })
+                .catch(error => {
+                    setMessage(`Erreur lors de l'envoi: ${error.message}`);
+                    console.error('Erreur:', error);
+                });
 
             setShowModal(false);
         } else {
@@ -118,6 +146,13 @@ function AccueilEtudiant() {
                     <button className="btn btn-info" onClick={openFile}>
                         Voir le fichier PDF
                     </button>
+                </div>
+            )}
+
+            {/* Affichage du message de réponse */}
+            {message && (
+                <div className="mt-3 alert alert-info text-center">
+                    {message}
                 </div>
             )}
         </div>

@@ -51,7 +51,7 @@ public class EtudiantService {
                 .map(EtudiantDTO::new);
     }
 
-    public Optional<CVDTO> creerCV(CVDTO cvDTO, EtudiantDTO etudiantDTO) {
+    public Optional<CVDTO> creerCV(CVDTO cvDTO, Long idEtudiant) {
         try {
             CV cv = new CV(
                     cvDTO.getName(),
@@ -62,7 +62,7 @@ public class EtudiantService {
             );
 
             CV savedCV = cvRepository.save(cv);
-            Etudiant etudiant = etudiantRepository.findById(etudiantDTO.getId()).get();
+            Etudiant etudiant = etudiantRepository.findById(idEtudiant).get();
             etudiant.setCv(savedCV);
             etudiantRepository.save(etudiant);
 

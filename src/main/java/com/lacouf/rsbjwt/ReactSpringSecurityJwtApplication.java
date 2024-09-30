@@ -2,6 +2,9 @@ package com.lacouf.rsbjwt;
 
 import com.lacouf.rsbjwt.model.Gestionnaire;
 import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.repository.CVRepository;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
+import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.boot.CommandLineRunner;
@@ -53,5 +56,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
         System.out.println("User: " + userDTO.toString());
         System.out.println("User Role: " + userDTO.getRole());
+
     }
 }

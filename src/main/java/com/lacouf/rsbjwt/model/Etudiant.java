@@ -35,6 +35,7 @@ public class Etudiant extends UserApp {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", role='" + getRole() + '\'' +
                 ", departement='" + departement + '\'' +
+                ", cv=" + cv +
                 '}';
     }
 }

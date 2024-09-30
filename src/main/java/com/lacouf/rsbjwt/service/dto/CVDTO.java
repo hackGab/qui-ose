@@ -1,38 +1,26 @@
-package com.lacouf.rsbjwt.model;
+package com.lacouf.rsbjwt.service.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.lacouf.rsbjwt.model.CV;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class CV {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
+@Getter
+@Setter
+public class CVDTO {
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String type;
-
-    @Column(nullable = false)
     private Date uploadDate;
-
-    @Column(nullable = false)
     private String data;
-
-    @Column(nullable = false)
     private String status;
 
-    public CV(String name, String type, Date uploadDate, String data, String status) {
+    public CVDTO(String name, String type, Date uploadDate, String data, String status) {
         this.name = name;
         this.type = type;
         this.uploadDate = uploadDate;
@@ -40,9 +28,18 @@ public class CV {
         this.status = status;
     }
 
+    public CVDTO(CV cv) {
+        this.id = cv.getId();
+        this.name = cv.getName();
+        this.type = cv.getType();
+        this.uploadDate = cv.getUploadDate();
+        this.data = cv.getData();
+        this.status = cv.getStatus();
+    }
+
     @Override
     public String toString() {
-        return "CV{" +
+        return "CVDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +

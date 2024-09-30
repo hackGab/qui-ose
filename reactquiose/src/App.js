@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider"; // Chemin d'importation mis à jour
+import { AuthProvider } from "./context/AuthProvider"; // Import path updated
 import Formulaire from "./components/Formulaire";
 import AccueilEtudiant from "./components/AccueilEtudiant";
 import AccueilEmployeur from "./components/AccueilEmployeur";
 import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
-import PrivateRoute from "./components/PrivateRoute"; // Chemin d'importation mis à jour
+import PrivateRoute from "./components/PrivateRoute"; // Import path updated
 
 function App() {
     return (
@@ -19,7 +19,7 @@ function App() {
                         <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                         <Route path="/login" element={<Formulaire title="Connexion" />} />
 
-                        {/* Route pour les étudiants */}
+                        {/* Routes for different user roles */}
                         <Route
                             path="/accueilEtudiant"
                             element={
@@ -29,7 +29,6 @@ function App() {
                             }
                         />
 
-                        {/* Route pour les employeurs */}
                         <Route
                             path="/accueilEmployeur"
                             element={
@@ -39,7 +38,6 @@ function App() {
                             }
                         />
 
-                        {/* Route pour les gestionnaires */}
                         <Route
                             path="/accueilGestionnaire"
                             element={
@@ -49,7 +47,6 @@ function App() {
                             }
                         />
 
-                        {/* Route pour les professeurs */}
                         <Route
                             path="/accueilProfesseur"
                             element={
@@ -59,7 +56,6 @@ function App() {
                             }
                         />
 
-                        {/* Route pour soumettre une offre */}
                         <Route
                             path="/soumettre-offre"
                             element={
@@ -68,6 +64,9 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+
+                        {/* Route for unauthorized access */}
+                        <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     </Routes>
                 </div>
             </Router>

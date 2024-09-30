@@ -4,13 +4,13 @@ import { useAuth } from '../context/AuthProvider'; // Access authState from cont
 
 const PrivateRoute = ({ children, allowedRoles }) => {
     const { authState } = useAuth();
-    const { isAuthenticated, userData } = authState;
+    const { isAuthenticated, role } = authState; // Access role directly from authState
 
-    if (!isAuthenticated || !userData) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
 
-    if (!allowedRoles.includes(userData.role)) {
+    if (role && !allowedRoles.includes(role)) {
         return <Navigate to="/nonAutorise" replace />;
     }
 

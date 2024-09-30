@@ -6,24 +6,28 @@ export const AuthProvider = ({ children }) => {
     const [authState, setAuthState] = useState(() => {
         try {
             const storedAuth = localStorage.getItem("authState");
-            return storedAuth ? JSON.parse(storedAuth) : { isAuthenticated: false, userData: null, accessToken: null };
+            return storedAuth ? JSON.parse(storedAuth) : { isAuthenticated: false, role: null, accessToken: null };
         } catch (error) {
             console.error("Error parsing localStorage data:", error);
-            return { isAuthenticated: false, userData: null, accessToken: null };
+            return { isAuthenticated: false, role: null, accessToken: null };
         }
     });
 
     useEffect(() => {
         try {
-            localStorage.setItem("authState", JSON.stringify(authState));
+            localStorage.setItem("authState", JSON.stringify({
+                isAuthenticated: authState.isAuthenticated,
+                role: authState.role,
+                accessToken: authState.accessToken,
+            }));
         } catch (error) {
             console.error("Error setting localStorage data:", error);
         }
     }, [authState]);
 
     const login = (userDataWithToken) => {
-        if (userDataWithToken && userDataWithToken.role) {
-            setAuthState({ isAuthenticated: true, userData: userDataWithToken });
+        if (userDataWithToken && userDataWithToken.role && userDataWithToken.accessToken) {
+            setAuthState({ isAuthenticated: true, role: userDataWithToken.role, accessToken: userDataWithToken.accessToken });
             console.log("User logged in:", userDataWithToken);
             return true;
         } else {
@@ -32,12 +36,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-
     const logout = () => {
-        setAuthState({ isAuthenticated: false, userData: null, accessToken: null });
+        setAuthState({ isAuthenticated: false, role: null, accessToken: null });
         localStorage.removeItem("authState");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("userData");
         console.log("User logged out");
     };
 

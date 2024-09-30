@@ -24,8 +24,12 @@ public class CV {
     private String type;
 
     @Column(nullable = false)
-    private byte[] data;
+    private Date uploadDate;
 
     @Column(nullable = false)
-    private Date uploadDate;
+    private String data;
+
+    @Column(nullable = false)
+    private String status;
+
 }

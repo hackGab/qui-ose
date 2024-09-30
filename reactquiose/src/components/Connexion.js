@@ -70,7 +70,7 @@ function Connexion() {
                 console.log('Données utilisateur:', userData);
                 // Redirection en fonction du rôle
                 if (userData.role === 'ETUDIANT') {
-                    navigate('/accueilEtudiant');
+                    navigate('/accueilEtudiant', { state: { userData } });
                 } else if (userData.role === 'EMPLOYEUR') {
                     navigate('/accueilEmployeur');
                 } else if (userData.role === 'GESTIONNAIRE') {

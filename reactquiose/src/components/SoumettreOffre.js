@@ -10,7 +10,6 @@ function SoumettreOffre() {
         duree: "",
         remuneration: "",
     });
-    const navigate = useNavigate();
 
     const [errors, setErrors] = useState({});
 
@@ -22,10 +21,6 @@ function SoumettreOffre() {
         });
     };
 
-    const handleClickGoBack = (e) => {
-
-        navigate("/accueilEmployeur")
-    }
 
     const validateForm = () => {
         const newErrors = {};
@@ -136,7 +131,6 @@ function SoumettreOffre() {
                 <button type="submit" className="btn btn-primary">
                     Soumettre l'offre
                 </button>
-                <button className="btn btn-success" onClick={handleClickGoBack}>revenir</button>
             </form>
         </div>
     );

@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
-import { Else, If, Then } from 'react-if';
-import { Icon } from 'react-icons-kit';
-import { eyeOff } from 'react-icons-kit/feather/eyeOff';
-import { eye } from 'react-icons-kit/feather/eye';
+import {Else, If, Then} from 'react-if';
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from 'react-i18next';
 import {useAuth} from "../context/AuthProvider";
 
 function Inscription() {
-    const { login } = useAuth();
     const [prenom, setPrenom] = useState('');
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
@@ -27,12 +26,13 @@ function Inscription() {
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
     const {t} = useTranslation();
+    const {login} = useAuth();
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setErrorMessages('');
 
-        // Trim all input fields
         const trimmedPrenom = prenom.trim();
         const trimmedNom = nom.trim();
         const trimmedEmail = email.trim();
@@ -95,62 +95,53 @@ function Inscription() {
             .then(data => {
                 if (data) {
                     console.log('Données utilisateur:', data);
+
                     // Effectuer une requête de connexion immédiatement après l'inscription
                     const loginData = {
                         email: trimmedEmail,
                         password: trimmedMpd
                     };
+
                     return fetch('http://localhost:8081/user/login', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(loginData)
-                    });
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(loginData)  // Utiliser loginData ici
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();  // Récupérer la réponse contenant l'accessToken
+                            }
+                            throw new Error(t('connexionEchouee'));
+                        })
+                        .then((data) => {
+                            const accessToken = data.accessToken;  // Récupérer l'accessToken ici
+                            return fetch('http://localhost:8081/user/me', {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${accessToken}`  // Utiliser l'accessToken ici
+                                }
+                            })
+                                .then((response) => response.json())
+                                .then((userData) => ({userData, accessToken}));  // Retourner userData et accessToken ensemble
+                        })
+                        .then(({userData, accessToken}) => {
+                            // Utiliser la méthode login du contexte pour définir l'état d'authentification
+                            if (login({...userData, accessToken})) {
+                                navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                                        userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                                            userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+                                                'accueilProfesseur'}`,
+                                    {state: {userData}});
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Erreur lors de la connexion:', error);
+                            setErrorMessages(error.message || t('erreurLorsConnexion'));
+                        });
                 }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error(t('connexionEchouee'));
-            })
-            .then(loginResponse => {
-                const accessToken = loginResponse.accessToken;
-
-                // Requête pour récupérer les informations utilisateur
-                return fetch('http://localhost:8081/user/me', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error(t('erreurLorsRecuperationUtilisateur'));
-            })
-            .then(userData => {
-                console.log('Données utilisateur:', userData);
-                console.log('Role:', userData.role);
-                login(userData); // Connexion de l'utilisateur
-                // Redirection en fonction du rôle
-                if (userData.role === 'ETUDIANT') {
-                    navigate('/accueilEtudiant');
-                } else if (userData.role === 'PROFESSEUR') {
-                    navigate('/accueilProfesseur');
-                } else if (userData.role === 'EMPLOYEUR') {
-                    navigate('/accueilEmployeur');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                setErrorMessages(t('erreurConnexionServeur'));
             });
-    };
-
+    }
 
 
     const afficherMdp = () => {
@@ -166,10 +157,11 @@ function Inscription() {
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
-           <legend>{t('ChampsObligatoires')} </legend>
-            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
+            <legend>{t('ChampsObligatoires')} </legend>
+            {errorMessages && <div className='alert alert-danger'
+                                   style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
             <div className='row'>
-                <div className='form-group' style={{ display: "inline-flex" }}>
+                <div className='form-group' style={{display: "inline-flex"}}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                     &nbsp;
                     <select
@@ -241,10 +233,10 @@ function Inscription() {
                 <div className="form-group">
                     <label htmlFor="email">{t('Email')}</label>
                     <input type="email" className="form-control" id="email" name="email"
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    placeholder="johndoe@gmail.com"
-                    autoComplete={"off"}
-                    required/>
+                           value={email} onChange={(e) => setEmail(e.target.value)}
+                           placeholder="johndoe@gmail.com"
+                           autoComplete={"off"}
+                           required/>
 
                 </div>
 

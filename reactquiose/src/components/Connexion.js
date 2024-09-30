@@ -5,10 +5,9 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useTranslation } from "react-i18next";
-import {useAuth} from "../context/AuthProvider";
+import { useAuth } from '../context/AuthProvider';
 
 function Connexion() {
-    const {login} = useAuth();
     const [email, setEmail] = useState('');
     const [mpd, setMpd] = useState('');
     const [type, setType] = useState('password');
@@ -16,6 +15,7 @@ function Connexion() {
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const { login } = useAuth();
 
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);
@@ -34,37 +34,34 @@ function Connexion() {
         })
             .then((response) => {
                 if (response.ok) {
-                    return response.json();
+                    return response.json();  // First API call
                 }
                 throw new Error(t('connexionEchouee'));
             })
             .then((data) => {
-                const accessToken = data.accessToken;
-                localStorage.setItem('accessToken', accessToken);
+                const accessToken = data.accessToken;  // Define accessToken here
                 return fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${accessToken}`  // Use accessToken here
                     }
-                });
+                }).then((response) => response.json())
+                    .then((userData) => ({ userData, accessToken }));  // Return userData and accessToken together
             })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
+            .then(({ userData, accessToken }) => {
+                // Use context's login method to set authState
+                if (login({ ...userData, accessToken })) {
+                    navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                            userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                                userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+                                    'accueilProfesseur'}`,
+                        { state: { userData } });
                 }
-                throw new Error(t('erreurLorsRecuperationUtilisateur'));
-            })
-            .then((userData) => {
-                login(userData);
-                console.log('Utilisateur connecté:', userData);
-                navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' : userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' : userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' : 'accueilProfesseur'}`, {
-                    state: { userData }
-                });
             })
             .catch((error) => {
                 console.error('Erreur lors de la connexion:', error);
-                setErrorMessages(t('erreurLorsConnexion'));
+                setErrorMessages(error.message || t('erreurLorsConnexion'));
             });
     };
 

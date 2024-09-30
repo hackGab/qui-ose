@@ -1,15 +1,20 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider'; // Access authState from context
 
 const PrivateRoute = ({ children, allowedRoles }) => {
     const { authState } = useAuth();
-    const { isAuthenticated, role } = authState;
+    const { isAuthenticated, userData } = authState;
 
-    console.log("Is Authenticated:", isAuthenticated, "Role:", role); // Debugging
+    if (!isAuthenticated || !userData) {
+        return <Navigate to="/login" replace />;
+    }
 
-    // Check if the user is authenticated and has one of the allowed roles
-    return isAuthenticated && allowedRoles.includes(role) ? children : <Navigate to="/" />;
+    if (!allowedRoles.includes(userData.role)) {
+        return <Navigate to="/nonAutorise" replace />;
+    }
+
+    return children;
 };
 
 export default PrivateRoute;

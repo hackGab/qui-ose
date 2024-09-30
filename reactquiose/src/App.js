@@ -1,5 +1,3 @@
-// App.js
-
 import React from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider"; // Chemin d'importation mis à jour
@@ -20,6 +18,8 @@ function App() {
                         <Route path="/" element={<Navigate to="/login" />} />
                         <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                         <Route path="/login" element={<Formulaire title="Connexion" />} />
+
+                        {/* Route pour les étudiants */}
                         <Route
                             path="/accueilEtudiant"
                             element={
@@ -28,6 +28,8 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+
+                        {/* Route pour les employeurs */}
                         <Route
                             path="/accueilEmployeur"
                             element={
@@ -36,6 +38,8 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+
+                        {/* Route pour les gestionnaires */}
                         <Route
                             path="/accueilGestionnaire"
                             element={
@@ -44,6 +48,8 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+
+                        {/* Route pour les professeurs */}
                         <Route
                             path="/accueilProfesseur"
                             element={
@@ -52,6 +58,8 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+
+                        {/* Route pour soumettre une offre */}
                         <Route
                             path="/soumettre-offre"
                             element={

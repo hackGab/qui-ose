@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'react-router-dom';
 import '../CSS/DetailsEtudiants.css';
+import GestionnaireHeader from "./GestionnaireHeader"; // Import du header
 
 function DetailsEtudiants() {
     const { id } = useParams();
@@ -39,7 +40,9 @@ function DetailsEtudiants() {
 
     return (
         <div className="details-container">
-            <h1 className="mb-4">Détails de l'Étudiant</h1>
+            <GestionnaireHeader />
+
+            <h1 className="mb-4 detail-title">Détails de l'Étudiant</h1>
             <h5>Informations Personnelles</h5>
             <div className="details-info">
                 <p><strong>Nom :</strong> {student.first_name} {student.last_name}</p>

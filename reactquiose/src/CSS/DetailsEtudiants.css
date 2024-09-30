@@ -14,6 +14,11 @@ body {
     width: 100%;
     max-height: 100vh;
     overflow-y: auto;
+
+}
+
+.detail-title {
+    margin-top: 100px;
 }
 
 .details-info {
@@ -43,53 +48,51 @@ body {
     color: #555;
     font-weight: 600;
     margin: 15px 0 10px;
-    text-align: left; /* Alignement à gauche pour les sous-titres */
+    text-align: left;
 }
 
 .details-container p {
     font-size: 16px;
     color: #666;
     margin: 5px 0;
-    text-align: left; /* Alignement à gauche pour le texte */
+    text-align: left;
 }
 
 .details-info {
-    border: 1px solid #e0e0e0; /* Ajout d'une bordure pour le contraste */
+    border: 1px solid #e0e0e0;
 }
 
 .btn-group-vertical .btn {
-    border-radius: 30px; /* Bordures arrondies */
-    padding: 10px 20px; /* Espacement interne */
-    font-size: 16px; /* Taille de police */
-    font-weight: 600; /* Épaisseur de la police */
-    transition: all 0.3s ease; /* Transition douce pour les effets */
-    border: none; /* Supprimer les bordures par défaut */
-    color: white; /* Couleur du texte */
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
 }
 
 .btn-success {
-    background-color: #28a745; /* Couleur verte */
+    background-color: #28a745;
 }
 
 .btn-danger {
-    background-color: #dc3545; /* Couleur rouge */
+    background-color: #dc3545;
 }
 
 .btn-primary {
-    background-color: #007bff; /* Couleur bleue */
+    background-color: #007bff;
 }
 
 .btn-group-vertical .btn:hover {
-    transform: translateY(-5px); /* Légère élévation au survol */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombre au survol */
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-group-vertical .btn:focus {
-    outline: none; /* Supprimer l'outline par défaut */
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Ombre lors de la mise au point */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
 }
-
-
 
 .button-container {
     display: flex;

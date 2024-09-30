@@ -29,35 +29,10 @@
     color: inherit;
 }
 
-.section:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-
-.notification-badge {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: #333;
-    font-size: 56px;
-    font-weight: 700;
-    opacity: 0.8;
-}
-
-.section-title {
-    font-size: 24px;
-    color: #555;
-    font-weight: 600;
-    margin-top: 60px;
-    text-align: right;
-    z-index: 1;
-}
-
 .section-image {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    width: 80px;
     height: auto;
     opacity: 0.85;
     transition: opacity 0.3s ease;
@@ -67,9 +42,82 @@
     opacity: 1;
 }
 
+.section:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notification-badge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.section:hover .notification-badge {
+    transform: translateY(-10px);
+}
+
+
+.section-title-outside {
+    font-size: 24px;
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: left;
+    width: 100%;
+}
+
+
+.section-title {
+    font-size: 24px;
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: right;
+    z-index: 1;
+}
+
+.section-image-étudiant {
+    width: 300px;
+    height: auto;
+    bottom: 0;
+    right: 100px;
+}
+
+.section-image-professeur {
+    width: 500px;
+    height: auto;
+    bottom: 0;
+    right: 0;
+}
+
+.section-image-employeur {
+    width: 600px;
+    height: auto;
+    bottom: 0;
+    right: 0;
+}
+
 @media (max-width: 776px) {
     .section {
-        height: 200px;
+        height: 90px;
     }
 
     .section-title {
@@ -81,7 +129,108 @@
         font-size: 48px;
     }
 
-    .section-image {
-        width: 60px;
+    .section-image,
+    .section-image-étudiant,
+    .section-image-professeur,
+    .section-image-employeur {
+        display: none;
+    }
+}
+
+@media (max-width: 990px) {
+
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur{
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 550px;
+        height: auto;
+        bottom: 0;
+        left: -150px;
+    }
+}
+
+@media (max-width: 1490px) {
+
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur{
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 600px;
+        height: auto;
+        bottom: 0;
+        left: -150px;
+    }
+}
+
+@media (max-width: 1190px) {
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur{
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 550px;
+        height: auto;
+        bottom: 0;
+        left: -180px;
     }
 }

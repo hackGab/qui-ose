@@ -43,29 +43,36 @@ function DetailsEtudiants() {
             <GestionnaireHeader />
 
             <h1 className="mb-4 detail-title">Détails de l'Étudiant</h1>
-            <h5>Informations Personnelles</h5>
-            <div className="details-info">
-                <p><strong>Nom :</strong> {student.first_name} {student.last_name}</p>
-                <p><strong>Email :</strong> {student.email}</p>
-                <p><strong>Téléphone :</strong> {student.phone_number}</p>
-                <p><strong>Département :</strong> {student.departement}</p>
-            </div>
 
-            <h5 className="mb-3">CV de l'Étudiant</h5>
-            <div className="iframe-container">
-                <iframe
-                    src={student.cvUrl}
-                    title="CV de l'étudiant"
-                    className="cv-frame"
-                ></iframe>
-            </div>
+            <div className="row">
+                <div className="col-md-6">
+                    <h5>Informations Personnelles</h5>
+                    <div className="details-info">
+                        <p><strong>Nom :</strong> {student.first_name} {student.last_name}</p>
+                        <p><strong>Email :</strong> {student.email}</p>
+                        <p><strong>Téléphone :</strong> {student.phone_number}</p>
+                        <p><strong>Département :</strong> {student.departement}</p>
+                    </div>
+                </div>
 
-            <div className="mt-4">
-                <h5>Actions</h5>
-                <div className="btn-group-vertical w-100">
-                    <button className="btn btn-success mb-2">Valider</button>
-                    <button className="btn btn-danger mb-2">Rejeter</button>
-                    <button className="btn btn-primary">Confirmer</button>
+                <div className="col-md-6">
+                    <h5 className="mb-3">CV de l'Étudiant</h5>
+                    <div className="iframe-container">
+                        <iframe
+                            src={student.cvUrl}
+                            title="CV de l'étudiant"
+                            className="cv-frame"
+                        ></iframe>
+                    </div>
+
+                    <div className="mt-4">
+                        <h5>Actions</h5>
+                        <div className="btn-group-vertical w-100">
+                            <button className="btn btn-success mb-2">Valider</button>
+                            <button className="btn btn-danger mb-2">Rejeter</button>
+                            <button className="btn btn-primary">Confirmer</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

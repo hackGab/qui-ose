@@ -14,6 +14,7 @@ function ListeEtudiants() {
             last_name: 'Dupont',
             phone_number: '123-456-7890',
             departement: 'Informatique',
+            status: 'validé',
         },
         {
             id: 2,
@@ -22,6 +23,16 @@ function ListeEtudiants() {
             last_name: 'Curie',
             phone_number: '098-765-4321',
             departement: 'Chimie',
+            status: 'refusé',
+        },
+        {
+            id: 3,
+            email: 'etudiant3@example.com',
+            first_name: 'Paul',
+            last_name: 'Martin',
+            phone_number: '321-654-0987',
+            departement: 'Mathématiques',
+            status: 'en attente',
         },
     ];
 
@@ -33,9 +44,9 @@ function ListeEtudiants() {
                 <p className="text-center mb-4">Voici la liste des étudiants inscrits à notre programme de stages.</p>
                 <div className="row">
                     {etudiants.map((etudiant) => (
-                        <div className="col-12 mb-4" key={etudiant.id}>
+                        <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
                             <Link to={`/details/${etudiant.id}`} className="text-decoration-none">
-                                <div className="card shadow w-100">
+                                <div className={`card shadow w-100 ${etudiant.status}`}> {/* Ajout de la classe de statut */}
                                     <div className="card-body">
                                         <h5 className="card-title">{`${etudiant.first_name} ${etudiant.last_name}`}</h5>
                                         <p className="card-text">

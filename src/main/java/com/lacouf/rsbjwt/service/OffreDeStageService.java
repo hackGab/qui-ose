@@ -43,11 +43,12 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
     }
 
-    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
-        return offreDeStageRepository.findByEmployeurId(employeurId)
+    public Optional<List<OffreDeStageDTO>> trierParEmployeur(Long employeurId) {
+        List<OffreDeStageDTO> result = offreDeStageRepository.findByEmployeurId(employeurId)
                 .stream()
                 .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
                 .collect(Collectors.toList());
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     public List<OffreDeStageDTO> getOffreDeStages() {

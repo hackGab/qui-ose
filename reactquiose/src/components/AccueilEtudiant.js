@@ -28,6 +28,9 @@ function AccueilEtudiant() {
                         setFileData(data.cv.data);
                         console.log('Réponse du serveur:', data);
                     }
+                    else{
+                        alert("VEUILLEZ AJOUTER VOTRE CV");
+                    }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
@@ -89,6 +92,8 @@ function AccueilEtudiant() {
                 })
                 .then((data) => {
                     setMessage("CV envoyé avec succès !");
+                    setFile(data);
+                    setFileData(data.data);
                     console.log("Réponse du serveur:", data);
                 })
                 .catch((error) => {

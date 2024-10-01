@@ -4,6 +4,8 @@ import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OffreDeStageService {
 
@@ -15,5 +17,21 @@ public class OffreDeStageService {
 
     public OffreDeStage creerOffreDeStage(OffreDeStage offre) {
         return offreDeStageRepository.save(offre);
+    }
+
+    public List<OffreDeStage> obtenirOffresParEmployeur(Long employeurId) {
+        return offreDeStageRepository.findByEmployeurId(employeurId);
+    }
+
+    public List<OffreDeStage> obtenirToutesLesOffres() {
+        return offreDeStageRepository.findAll();
+    }
+
+    public void supprimerOffre(Long id) {
+        offreDeStageRepository.deleteById(id);
+    }
+
+    public OffreDeStage obtenirOffreParId(Long id) {
+        return offreDeStageRepository.findById(id).orElse(null);
     }
 }

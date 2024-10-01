@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/user/login").permitAll()
                         .requestMatchers(GET, "/user/me").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/cv/creerCV").permitAll()
+                        .requestMatchers("/cv/creerCV/**").permitAll()
                         .requestMatchers("/etudiant/**").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()

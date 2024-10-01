@@ -2,12 +2,33 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'react-router-dom';
 import '../CSS/DetailsEtudiants.css';
-import GestionnaireHeader from "./GestionnaireHeader"; // Import du header
+import GestionnaireHeader from "./GestionnaireHeader";
 
 function DetailsEtudiants() {
     const { id } = useParams();
     const [student, setStudent] = useState(null);
+    const [error, setError] = useState(null);
 
+    // Commenter le fetch pour utiliser des données hardcodées
+    /*
+    useEffect(() => {
+        fetch(`https://backend.com/api/etudiants/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setStudent(data);
+            })
+            .catch(error => {
+                setError(error.message);
+            });
+    }, [id]);
+    */
+
+    // Hardcodez les étudiants pour le test
     const etudiants = [
         {
             id: 1,
@@ -29,13 +50,18 @@ function DetailsEtudiants() {
         },
     ];
 
+    // Trouvez l'étudiant correspondant à l'ID hardcodé
     useEffect(() => {
         const foundStudent = etudiants.find(student => student.id === parseInt(id));
         setStudent(foundStudent);
-    }, [id]);
+    }, [id, etudiants]);
+
+    if (error) {
+        return <div className="text-danger">Erreur: {error}</div>;
+    }
 
     if (!student) {
-        return <div>Loading...</div>;
+        return <div>Aucun étudiant trouvé.</div>;
     }
 
     return (

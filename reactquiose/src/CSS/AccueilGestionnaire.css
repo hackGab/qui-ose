@@ -1,7 +1,7 @@
 .accueil-gestionnaire {
     text-align: center;
     padding: 40px 20px;
-    background-color: #f4f7f6;
+    background-color: #e7f1ff;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -19,7 +19,7 @@
     height: 300px;
     border-radius: 20px;
     padding: 20px;
-    background: linear-gradient(135deg, #d1e3ff, #e4f2ff);
+    background: linear-gradient(135deg, #cce7ff, #b3d9ff);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
@@ -53,7 +53,7 @@
     left: 20px;
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    background: linear-gradient(135deg, #0066cc, #003366);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -80,21 +80,11 @@
 
 .section-title-outside {
     font-size: 24px;
-    color: #555;
+    color: #333;
     font-weight: 600;
     margin-bottom: 10px;
     text-align: left;
     width: 100%;
-}
-
-
-.section-title {
-    font-size: 24px;
-    color: #555;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: right;
-    z-index: 1;
 }
 
 .section-image-étudiant {
@@ -142,7 +132,7 @@
     .section-title-inside {
         display: block;
         font-size: 44px;
-        color: #555;
+        color: #333;
         font-weight: 600;
         margin-bottom: 20px;
         text-align: center;
@@ -155,7 +145,6 @@
 }
 
 @media (max-width: 990px) {
-
     .section-title {
         margin-top: 40px;
         font-size: 20px;
@@ -172,7 +161,7 @@
         left: 0;
     }
 
-    .section-image-professeur{
+    .section-image-professeur {
         width: 500px;
         height: auto;
         bottom: 0;
@@ -188,7 +177,6 @@
 }
 
 @media (max-width: 1490px) {
-
     .section-title {
         margin-top: 40px;
         font-size: 20px;
@@ -205,7 +193,7 @@
         left: 0;
     }
 
-    .section-image-professeur{
+    .section-image-professeur {
         width: 500px;
         height: auto;
         bottom: 0;
@@ -237,7 +225,7 @@
         left: 0;
     }
 
-    .section-image-professeur{
+    .section-image-professeur {
         width: 500px;
         height: auto;
         bottom: 0;

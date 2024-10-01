@@ -1,35 +1,68 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import '../CSS/GestionnaireHeader.css';
-
 import logo from '../images/logo.png';
 
 function GestionnaireHeader() {
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const location = useLocation();
+    const [activeLink, setActiveLink] = useState(location.pathname);
+
+    const toggleProfileMenu = () => {
+        setProfileMenuOpen(!profileMenuOpen);
+    };
+
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
+    };
+
     return (
-        <header className="gestionnaire-header bg-dark text-white">
-            <nav className="navbar navbar-expand-lg navbar-dark">
-                <div className="container-fluid">
-                    <Link className="navbar-brand" to="/accueilGestionnaire">
-                        <img src={logo} alt="Logo" className="header-logo" />
-                        Tableau de Bord
+        <header className="gestionnaire-header">
+            <nav className="navbar">
+                <div className="logo">
+                    <img src={logo} alt="Logo" className="header-logo" />
+                    <Link to="/accueilGestionnaire" className="logo-link">
+                        <div className="logo-text">Qui-Ose</div>
                     </Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav ms-auto">
-                            <li className="nav-item">
-                                <Link className="nav-link custom-button" to="/listeEtudiants">Étudiant</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link custom-button" to="/role/professeur">Professeur</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link custom-button" to="/role/employeur">Employeur</Link>
-                            </li>
-                        </ul>
+                </div>
+                <div className="nav-links">
+                    <Link
+                        className={`nav-link ${activeLink === '/listeEtudiants' ? 'active' : ''}`}
+                        to="/listeEtudiants"
+                        onClick={() => handleLinkClick('/listeEtudiants')}
+                    >
+                        Étudiant
+                    </Link>
+                    <Link
+                        className={`nav-link ${activeLink === '/role/professeur' ? 'active' : ''}`}
+                        to="/role/professeur"
+                        onClick={() => handleLinkClick('/role/professeur')}
+                    >
+                        Professeur
+                    </Link>
+                    <Link
+                        className={`nav-link ${activeLink === '/role/employeur' ? 'active' : ''}`}
+                        to="/role/employeur"
+                        onClick={() => handleLinkClick('/role/employeur')}
+                    >
+                        Employeur
+                    </Link>
+                </div>
+                <div className="profile-menu">
+                    <div className="notification-icon">🔔</div>
+                    <div
+                        className="profile-button"
+                        onClick={toggleProfileMenu}
+                    >
+                        Profil ▼
                     </div>
+                    {profileMenuOpen && (
+                        <div className="profile-dropdown">
+                            <Link className="dropdown-link" to="/profile">Mon Profil</Link>
+                            <Link className="dropdown-link" to="/settings">Paramètres</Link>
+                            <Link className="dropdown-link" to="/logout">Déconnexion</Link>
+                        </div>
+                    )}
                 </div>
             </nav>
         </header>

@@ -6,10 +6,48 @@ import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeEtudiants.css';
 
 function ListeEtudiants() {
-    const [etudiants, setEtudiants] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [etudiants, setEtudiants] = useState([
+        {
+            id: 1,
+            email: 'jean.dupont@example.com',
+            first_name: 'Jean',
+            last_name: 'Dupont',
+            phone_number: '123-456-7890',
+            departement: 'Informatique',
+            status: 'validé',
+        },
+        {
+            id: 2,
+            email: 'marie.curie@example.com',
+            first_name: 'Marie',
+            last_name: 'Curie',
+            phone_number: '098-765-4321',
+            departement: 'Chimie',
+            status: 'refusé',
+        },
+        {
+            id: 3,
+            email: 'paul.martin@example.com',
+            first_name: 'Paul',
+            last_name: 'Martin',
+            phone_number: '321-654-0987',
+            departement: 'Mathématiques',
+            status: 'en attente',
+        },
+        {
+            id: 4,
+            email: 'lisa.simpson@example.com',
+            first_name: 'Lisa',
+            last_name: 'Simpson',
+            phone_number: '456-789-0123',
+            departement: 'Physique',
+            status: 'validé',
+        }
+    ]);
+
     const [error, setError] = useState(null);
 
+    /*
     useEffect(() => {
         fetch('https://backend.com/api/etudiants')
             .then(response => {
@@ -27,6 +65,7 @@ function ListeEtudiants() {
                 setLoading(false);
             });
     }, []);
+    */
 
     if (error) {
         return <p className="text-center mt-5 text-danger">Erreur: {error}</p>;

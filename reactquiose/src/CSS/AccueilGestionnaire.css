@@ -74,6 +74,9 @@
     transform: translateY(-10px);
 }
 
+.section-title-inside {
+    display: none;
+}
 
 .section-title-outside {
     font-size: 24px;
@@ -98,21 +101,21 @@
     width: 300px;
     height: auto;
     bottom: 0;
-    right: 100px;
+    left: 90px;
 }
 
 .section-image-professeur {
     width: 500px;
     height: auto;
     bottom: 0;
-    right: 0;
+    left: 0;
 }
 
 .section-image-employeur {
     width: 600px;
     height: auto;
     bottom: 0;
-    right: 0;
+    right: -50px;
 }
 
 @media (max-width: 776px) {
@@ -133,6 +136,20 @@
     .section-image-étudiant,
     .section-image-professeur,
     .section-image-employeur {
+        display: none;
+    }
+
+    .section-title-inside {
+        display: block;
+        font-size: 44px;
+        color: #555;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .section-title-outside {
         display: none;
     }
 }

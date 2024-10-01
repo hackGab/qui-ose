@@ -71,4 +71,8 @@ public class EtudiantService {
             return Optional.empty();
         }
     }
+
+    public void supprimerCV(Long id) {
+        cvRepository.deleteById(id);
+    }
 }

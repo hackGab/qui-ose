@@ -27,11 +27,20 @@ public class CVController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        System.out.println("CV: " + newCV);
-
         Optional<CVDTO> cvDTO = etudiantService.creerCV(newCV, id);
 
         return cvDTO.map(cv -> new ResponseEntity<>(cv, HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
+    }
+
+    @DeleteMapping("/supprimerCV/{id}")
+    public ResponseEntity<Void> supprimerCV(@PathVariable Long id) {
+        if (id == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        etudiantService.supprimerCV(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

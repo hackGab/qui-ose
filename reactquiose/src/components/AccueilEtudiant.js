@@ -7,6 +7,7 @@ function AccueilEtudiant() {
 
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
+    const [temporaryFile, setTemporaryFile] = useState(null); // Temporary file state
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
 
@@ -38,16 +39,18 @@ function AccueilEtudiant() {
 
     const afficherAjoutCV = () => {
         setShowModal(true);
+        setTemporaryFile(file ? { ...file } : null);
     };
 
     const fermerAffichageCV = () => {
         setShowModal(false);
+        setTemporaryFile(null);
     };
 
     const handleFileChange = (event) => {
         const uploadedFile = event.target.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
-            setFile(uploadedFile);
+            setTemporaryFile(uploadedFile);
             const reader = new FileReader();
             reader.onload = (e) => {
                 setFileData(e.target.result);
@@ -82,18 +85,20 @@ function AccueilEtudiant() {
     };
 
     const handleSubmit = () => {
-        if (file) {
+        if (temporaryFile) {
             const donnesCV = {
-                name: file.name,
-                type: file.type,
+                name: temporaryFile.name,
+                type: temporaryFile.type,
                 uploadDate: new Date(),
                 data: fileData,
                 status: "Attente",
             };
 
-            const url = `http://localhost:8080/cv/creerCV/${userData.id}`;
+            const urlAjout = `http://localhost:8080/cv/creerCV/${userData.id}`;
 
-            fetch(url, {
+            let ancienId = file ? file.id : null;
+
+            fetch(urlAjout, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -112,12 +117,37 @@ function AccueilEtudiant() {
                     setFileData(data.data);
                     console.log("Réponse du serveur:", data);
                 })
+                .then(() => {
+                    if (ancienId) {
+                        const urlDestruction = `http://localhost:8080/cv/supprimerCV/${ancienId}`;
+
+                        fetch(urlDestruction, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`Erreur lors de la requête: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                console.log("Réponse du serveur:", data);
+                            })
+                            .catch((error) => {
+                                console.error("Erreur:", error);
+                            });
+                    }
+                })
                 .catch((error) => {
                     alert(`Erreur lors de l'envoi: ${error.message}`);
                     console.error("Erreur:", error);
                 });
 
             setShowModal(false);
+            setTemporaryFile(null);
         } else {
             alert("Veuillez d'abord charger un fichier.");
         }
@@ -178,7 +208,6 @@ function AccueilEtudiant() {
                                     <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
                                 </div>
                                 <div className="modal-body">
-                                    {/* Zone de dépôt Drag-and-Drop */}
                                     <div
                                         onDragEnter={handleDrag}
                                         onDragOver={handleDrag}
@@ -205,12 +234,12 @@ function AccueilEtudiant() {
                                             style={{ display: "none" }}
                                         />
                                     </div>
-                                    {file && (
+                                    {temporaryFile && (
                                         <div className="mt-3">
-                                            <p className="text-success">Fichier sélectionné : {file.name}</p>
-                                            <p className="text-secondary">Nom : {file.name}</p>
-                                            <p className="text-secondary">Type : {file.type}</p>
-                                            <p className="text-secondary">Taille : {file.size} bytes</p>
+                                            <p className="text-success">Fichier sélectionné : {temporaryFile.name}</p>
+                                            <p className="text-secondary">Type : {temporaryFile.type}</p>
+                                            <p className="text-secondary">Date : {temporaryFile.uploadDate ? temporaryFile.uploadDate : "Non remis"}</p>
+                                            <p className="text-secondary">Status : {temporaryFile.status ? temporaryFile.status : "Non remis"}</p>
                                         </div>
                                     )}
                                 </div>

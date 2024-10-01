@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function AccueilEtudiant() {
@@ -8,7 +8,30 @@ function AccueilEtudiant() {
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [fileData, setFileData] = useState("");
-    const [message, setMessage] = useState(""); // Nouveau state pour afficher le message de réponse
+    const [message, setMessage] = useState("");
+
+    // Effect to fetch student data when the component mounts or when userData changes
+    useEffect(() => {
+        if (userData && userData.id) {
+            const url = `http://localhost:8080/etudiant/${userData.id}`;
+
+            fetch(url)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la requête: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    setFile(data.cv);
+                    setFileData(data.cv.data);
+                    console.log('Réponse du serveur:', data);
+                })
+                .catch((error) => {
+                    console.error('Erreur:', error);
+                });
+        }
+    }, [userData]);
 
     const afficherAjoutCV = () => {
         setShowModal(true);
@@ -19,13 +42,13 @@ function AccueilEtudiant() {
         setMessage("");
     };
 
-    // Fonction de gestion de changement de fichier
+    // Function to handle file change
     const handleFileChange = (event) => {
         const uploadedFile = event.target.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             setFile(uploadedFile);
 
-            // Lire le contenu du fichier comme base64
+            // Read the file content as base64
             const reader = new FileReader();
             reader.onload = (e) => {
                 setFileData(e.target.result);
@@ -36,7 +59,7 @@ function AccueilEtudiant() {
         }
     };
 
-    // Fonction pour soumettre le fichier
+    // Function to submit the file
     const handleSubmit = () => {
         if (file) {
             const donnesCV = {
@@ -44,31 +67,31 @@ function AccueilEtudiant() {
                 type: file.type,
                 uploadDate: new Date(),
                 data: fileData,
-                status: "Attente"
+                status: "Attente",
             };
 
             const url = `http://localhost:8080/cv/creerCV`;
 
             fetch(url, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(donnesCV),
             })
-                .then(response => {
+                .then((response) => {
                     if (!response.ok) {
                         throw new Error(`Erreur lors de la requête: ${response.status}`);
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then((data) => {
                     setMessage("CV envoyé avec succès !");
-                    console.log('Réponse du serveur:', data);
+                    console.log("Réponse du serveur:", data);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setMessage(`Erreur lors de l'envoi: ${error.message}`);
-                    console.error('Erreur:', error);
+                    console.error("Erreur:", error);
                 });
 
             setShowModal(false);
@@ -77,9 +100,10 @@ function AccueilEtudiant() {
         }
     };
 
-    // Fonction pour afficher le fichier PDF dans un nouvel onglet
+    // Function to open the file in a new window
     const openFile = () => {
-        if (fileData) {
+        if (file) {
+
             const pdfWindow = window.open();
             pdfWindow.document.write(
                 `<iframe src="${fileData}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
@@ -141,7 +165,7 @@ function AccueilEtudiant() {
                 </div>
             )}
 
-            {fileData && (
+            {file && (
                 <div className="mt-5 text-center">
                     <button className="btn btn-info" onClick={openFile}>
                         Voir le fichier PDF
@@ -149,7 +173,7 @@ function AccueilEtudiant() {
                 </div>
             )}
 
-            {/* Affichage du message de réponse */}
+            {/* Display response message */}
             {message && (
                 <div className="mt-3 alert alert-info text-center">
                     {message}

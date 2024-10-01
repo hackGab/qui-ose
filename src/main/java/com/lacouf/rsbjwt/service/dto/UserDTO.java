@@ -19,7 +19,8 @@ public class UserDTO {
     private String phoneNumber;
     private Role role;
 
-    public UserDTO(String firstName, String lastName, String phoneNumber, Role role) {
+    public UserDTO(Long id, String firstName, String lastName, String phoneNumber, Role role) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;

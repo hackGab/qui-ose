@@ -56,6 +56,7 @@ public class UserAppService {
         final Optional<Etudiant> etudiantOptional = etudiantRepository.findById(id);
 
         return etudiantOptional.map(etudiant -> new EtudiantDTO(
+                etudiant.getId(),
                 etudiant.getFirstName(),
                 etudiant.getLastName(),
                 etudiant.getRole(),
@@ -69,6 +70,7 @@ public class UserAppService {
         final Optional<Professeur> professeurOptional = professeurRepository.findById(id);
 
         return professeurOptional.map(professeur -> new ProfesseurDTO(
+                professeur.getId(),
                 professeur.getFirstName(),
                 professeur.getLastName(),
                 professeur.getRole(),
@@ -82,6 +84,7 @@ public class UserAppService {
         final Optional<Employeur> employeurOptional = employeurRepository.findById(id);
 
         return employeurOptional.map(employeur -> new EmployeurDTO(
+                employeur.getId(),
                 employeur.getFirstName(),
                 employeur.getLastName(),
                 employeur.getPhoneNumber(),
@@ -95,6 +98,7 @@ public class UserAppService {
         final Optional<Gestionnaire> gestionnaireOptional = gestionnaireRepository.findById(id);
 
         return gestionnaireOptional.map(gestionnaire -> new GestionnaireDTO(
+                gestionnaire.getId(),
                 gestionnaire.getFirstName(),
                 gestionnaire.getLastName(),
                 gestionnaire.getPhoneNumber(),

@@ -14,8 +14,8 @@ public class EmployeurDTO extends UserDTO {
     private CredentialDTO credentials;
     private String entreprise;
 
-    public EmployeurDTO(String firstName, String lastName, String phoneNumber, Role role, CredentialDTO credentials, String entreprise) {
-        super(firstName, lastName, phoneNumber, role);
+    public EmployeurDTO(Long id, String firstName, String lastName, String phoneNumber, Role role, CredentialDTO credentials, String entreprise) {
+        super(id, firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
         this.entreprise = entreprise;
     }

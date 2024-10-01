@@ -27,7 +27,9 @@ public class CVController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<CVDTO> cvDTO = etudiantService.creerCV(newCV, 3253L);
+        System.out.println("CV: " + newCV);
+
+        Optional<CVDTO> cvDTO = etudiantService.creerCV(newCV, 3853L);
 
         return cvDTO.map(cv -> new ResponseEntity<>(cv, HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));

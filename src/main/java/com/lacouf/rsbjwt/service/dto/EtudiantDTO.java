@@ -13,9 +13,10 @@ import lombok.Setter;
 public class EtudiantDTO extends UserDTO {
     private CredentialDTO credentials;
     private String departement;
+    private CVDTO cv;
 
-    public EtudiantDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
-        super(firstName, lastName, phoneNumber, role);
+    public EtudiantDTO(Long id, String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
+        super(id, firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
         this.departement = departement;
     }
@@ -24,6 +25,9 @@ public class EtudiantDTO extends UserDTO {
         super(etudiant);
         this.credentials = new CredentialDTO(etudiant.getEmail(), etudiant.getPassword());
         this.departement = etudiant.getDepartement();
+        if (etudiant.getCv() != null) {
+            this.cv = new CVDTO(etudiant.getCv());
+        }
     }
 
     public EtudiantDTO() {}

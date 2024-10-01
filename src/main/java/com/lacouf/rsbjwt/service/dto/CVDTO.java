@@ -45,7 +45,7 @@ public class CVDTO {
                 ", type='" + type + '\'' +
                 ", uploadDate=" + uploadDate +
                 ", status='" + status + '\'' +
-                ", data='" + data + '\'' +
+                ", data='" + "Good" + '\'' +
                 '}';
     }
 }

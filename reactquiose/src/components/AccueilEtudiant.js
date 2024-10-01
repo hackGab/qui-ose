@@ -8,9 +8,8 @@ function AccueilEtudiant() {
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [fileData, setFileData] = useState("");
-    const [message, setMessage] = useState("");
+    const [dragActive, setDragActive] = useState(false);
 
-    // Effect to fetch student data when the component mounts or when userData changes
     useEffect(() => {
         if (userData && userData.id) {
             const url = `http://localhost:8080/etudiant/${userData.id}`;
@@ -27,8 +26,7 @@ function AccueilEtudiant() {
                         setFile(data.cv);
                         setFileData(data.cv.data);
                         console.log('Réponse du serveur:', data);
-                    }
-                    else{
+                    } else {
                         alert("VEUILLEZ AJOUTER VOTRE CV");
                     }
                 })
@@ -44,16 +42,12 @@ function AccueilEtudiant() {
 
     const fermerAffichageCV = () => {
         setShowModal(false);
-        setMessage("");
     };
 
-    // Function to handle file change
     const handleFileChange = (event) => {
         const uploadedFile = event.target.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             setFile(uploadedFile);
-
-            // Read the file content as base64
             const reader = new FileReader();
             reader.onload = (e) => {
                 setFileData(e.target.result);
@@ -64,7 +58,29 @@ function AccueilEtudiant() {
         }
     };
 
-    // Function to submit the file
+    // Gestion du drag-and-drop
+    const handleDrag = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.type === "dragenter" || event.type === "dragover") {
+            setDragActive(true);
+        } else if (event.type === "dragleave") {
+            setDragActive(false);
+        }
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDragActive(false);
+        const uploadedFile = event.dataTransfer.files[0];
+        if (uploadedFile && uploadedFile.type === "application/pdf") {
+            handleFileChange({ target: { files: [uploadedFile] } });
+        } else {
+            alert("Veuillez déposer un fichier PDF uniquement.");
+        }
+    };
+
     const handleSubmit = () => {
         if (file) {
             const donnesCV = {
@@ -91,13 +107,13 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
-                    setMessage("CV envoyé avec succès !");
+                    alert("CV envoyé avec succès !");
                     setFile(data);
                     setFileData(data.data);
                     console.log("Réponse du serveur:", data);
                 })
                 .catch((error) => {
-                    setMessage(`Erreur lors de l'envoi: ${error.message}`);
+                    alert(`Erreur lors de l'envoi: ${error.message}`);
                     console.error("Erreur:", error);
                 });
 
@@ -107,7 +123,6 @@ function AccueilEtudiant() {
         }
     };
 
-    // Function to open the file in a new window
     const openFile = () => {
         if (file) {
             const pdfWindow = window.open();
@@ -119,79 +134,97 @@ function AccueilEtudiant() {
         }
     };
 
-    return (
-        <div className="container-fluid p-3">
-            {userData && (
-                <div className="alert alert-info">
-                    <h5>Bienvenue, {userData.firstName} {userData.lastName} !</h5>
-                    <p>Email : {userData.credentials.email}</p>
-                    <p>Rôle : {userData.role}</p>
-                </div>
-            )}
+    const handleClick = () => {
+        document.getElementById("fileInput").click();
+    };
 
-            <div className="d-flex justify-content-start">
+    return (
+        <div className="container-fluid p-3" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", paddingTop: "10px" }}>
+            <nav className="navbar navbar-expand-lg navbar-light bg-info mb-4" style={{ width: "100%" }}>
+                <div className="container-fluid">
+                    <span className="navbar-brand mb-0 h1">
+                        {userData ? `Bienvenu(e), ${userData.firstName} ${userData.lastName}` : "Bienvenue"}
+                    </span>
+                </div>
+            </nav>
+
+            <div className="d-flex justify-content-between align-items-center" style={{ marginTop: "10px" }}>
                 <button
-                    className={`btn btn-lg rounded-pill ${file == null ? 'btn-primary' : 
-                                                        file.status === 'Attente' ? 'btn-warning' : 
-                                                        file.status === 'Aprouvé' ? 'btn-success' : 
-                                                        file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                    className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
+                        file.status === 'Attente' ? 'btn-warning' :
+                            file.status === 'Aprouvé' ? 'btn-success' :
+                                file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
                 >
                     {file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? 'CV en attente' :
                             file.status === 'Aprouvé' ? 'CV Approuvé' :
-                                file.status === 'Rejeté' ? 'CV Rejeté' : 'btn-primary'}
+                                file.status === 'Rejeté' ? 'CV Rejeté' : 'CV non remis'}
                 </button>
+
+                {file && (
+                    <button className="btn btn-info" onClick={openFile}>
+                        Voir mon CV
+                    </button>
+                )}
             </div>
 
             {showModal && (
-                <div className="modal show d-block" tabIndex="-1" role="dialog">
-                    <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
-                            </div>
-                            <div className="modal-body">
-                                <p>Déposez votre fichier PDF ci-dessous :</p>
-                                <input
-                                    type="file"
-                                    className="form-control-file"
-                                    accept="application/pdf"
-                                    onChange={handleFileChange}
-                                />
-                                {file && (
-                                    <div className="mt-3">
-                                        <p className="text-success">Fichier sélectionné : {file.name}</p>
-                                        <p className="text-secondary">Taille : {file.name} bytes</p>
-                                        <p className="text-secondary">Type : {file.type}</p>
+                <div className="custom-modal-overlay">
+                    <div className="modal show d-block modal-custom" tabIndex="-1" role="dialog">
+                        <div className="modal-dialog modal-dialog-centered" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Zone de dépôt Drag-and-Drop */}
+                                    <div
+                                        onDragEnter={handleDrag}
+                                        onDragOver={handleDrag}
+                                        onDragLeave={handleDrag}
+                                        onDrop={handleDrop}
+                                        onClick={handleClick}
+                                        style={{
+                                            border: dragActive ? "2px dashed #00aaff" : "2px dashed #ddd",
+                                            borderRadius: "10px",
+                                            padding: "40px",
+                                            textAlign: "center",
+                                            cursor: "pointer",
+                                            backgroundColor: dragActive ? "#f0f8ff" : "#fafafa",
+                                            transition: "background-color 0.3s ease",
+                                        }}
+                                    >
+                                        <p>Déposez votre fichier PDF ici ou cliquez pour le télécharger.</p>
+                                        <input
+                                            type="file"
+                                            id="fileInput"
+                                            className="form-control-file"
+                                            accept="application/pdf"
+                                            onChange={handleFileChange}
+                                            style={{ display: "none" }}
+                                        />
                                     </div>
-                                )}
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
-                                    Fermer
-                                </button>
-                                <button type="button" className="btn btn-primary" onClick={handleSubmit}>
-                                    Soumettre
-                                </button>
+                                    {file && (
+                                        <div className="mt-3">
+                                            <p className="text-success">Fichier sélectionné : {file.name}</p>
+                                            <p className="text-secondary">Nom : {file.name}</p>
+                                            <p className="text-secondary">Type : {file.type}</p>
+                                            <p className="text-secondary">Taille : {file.size} bytes</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
+                                        Fermer
+                                    </button>
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+                                        Soumettre
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-
-            {file && (
-                <div className="mt-5 text-center">
-                    <button className="btn btn-info" onClick={openFile}>
-                        Voir le fichier PDF
-                    </button>
-                </div>
-            )}
-
-            {/* Display response message */}
-            {message && (
-                <div className="mt-3 alert alert-info text-center">
-                    {message}
                 </div>
             )}
         </div>

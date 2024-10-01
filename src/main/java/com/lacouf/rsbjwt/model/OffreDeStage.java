@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class OffreDeStage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +29,7 @@ public class OffreDeStage {
     @ManyToOne
     @JoinColumn(name = "employeur_id")
     private Employeur employeur;
+
+    public OffreDeStage(String titre, String description, String responsabilites, String qualifications, String duree, String localisation, String salaire, LocalDate dateLimite) {
+    }
 }

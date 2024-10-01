@@ -42,4 +42,7 @@ public class OffreDeStageDTO {
     public static OffreDeStageDTO empty() {
         return new OffreDeStageDTO();
     }
+
+
+
 }

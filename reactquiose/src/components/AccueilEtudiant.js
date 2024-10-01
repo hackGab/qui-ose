@@ -23,9 +23,11 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
-                    setFile(data.cv);
-                    setFileData(data.cv.data);
-                    console.log('Réponse du serveur:', data);
+                    if (data.cv) {
+                        setFile(data.cv);
+                        setFileData(data.cv.data);
+                        console.log('Réponse du serveur:', data);
+                    }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
@@ -70,7 +72,7 @@ function AccueilEtudiant() {
                 status: "Attente",
             };
 
-            const url = `http://localhost:8080/cv/creerCV`;
+            const url = `http://localhost:8080/cv/creerCV/${userData.id}`;
 
             fetch(url, {
                 method: "POST",
@@ -103,7 +105,6 @@ function AccueilEtudiant() {
     // Function to open the file in a new window
     const openFile = () => {
         if (file) {
-
             const pdfWindow = window.open();
             pdfWindow.document.write(
                 `<iframe src="${fileData}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
@@ -124,15 +125,24 @@ function AccueilEtudiant() {
             )}
 
             <div className="d-flex justify-content-start">
-                <button className="btn btn-primary btn-lg rounded-pill" onClick={afficherAjoutCV}>
-                    Ajouter un CV
+                <button
+                    className={`btn btn-lg rounded-pill ${file == null ? 'btn-primary' : 
+                                                        file.status === 'Attente' ? 'btn-warning' : 
+                                                        file.status === 'Aprouvé' ? 'btn-success' : 
+                                                        file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                    onClick={afficherAjoutCV}
+                >
+                    {file == null ? 'Ajouter CV' :
+                        file.status === 'Attente' ? 'CV en attente' :
+                            file.status === 'Aprouvé' ? 'CV Approuvé' :
+                                file.status === 'Rejeté' ? 'CV Rejeté' : 'btn-primary'}
                 </button>
             </div>
 
             {showModal && (
                 <div className="modal show d-block" tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
-                        <div className="modal-content">
+                    <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
                             </div>
@@ -147,7 +157,7 @@ function AccueilEtudiant() {
                                 {file && (
                                     <div className="mt-3">
                                         <p className="text-success">Fichier sélectionné : {file.name}</p>
-                                        <p className="text-secondary">Taille : {file.size} bytes</p>
+                                        <p className="text-secondary">Taille : {file.name} bytes</p>
                                         <p className="text-secondary">Type : {file.type}</p>
                                     </div>
                                 )}

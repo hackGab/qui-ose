@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
-import {Else, If, Then} from 'react-if';
-import {Icon} from 'react-icons-kit';
-import {eyeOff} from 'react-icons-kit/feather/eyeOff';
-import {eye} from 'react-icons-kit/feather/eye';
-import {useNavigate} from "react-router-dom";
-import {useTranslation} from 'react-i18next';
-import {useAuth} from "../context/AuthProvider";
+import { Else, If, Then } from 'react-if';
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eye } from 'react-icons-kit/feather/eye';
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import { useAuth } from "../context/AuthProvider";
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -25,11 +25,10 @@ function Inscription() {
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const {t} = useTranslation();
-    const {login} = useAuth();
+    const { t } = useTranslation();
+    const { login } = useAuth();
 
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessages('');
 
@@ -42,6 +41,7 @@ function Inscription() {
         const trimmedDepartement = departement.trim();
         const trimmedNomEntreprise = nomEntreprise.trim();
 
+        // Validation du mot de passe
         if (trimmedMpd !== trimmedMpdConfirm) {
             setErrorMessages(t('mpdNonIdentique'));
             return;
@@ -75,74 +75,73 @@ function Inscription() {
                 return;
         }
 
-        // Envoi d'une requête POST au backend pour l'inscription
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData)
-        })
-            .then(response => {
-                if (response.status === 201) {
-                    return response.json();
-                } else if (response.status === 409) {
-                    setErrorMessages(t('utilisateurExiste'));
-                } else {
-                    setErrorMessages(t('erreurLorsCreationUser'));
-                }
-            })
-            .then(data => {
-                if (data) {
-                    console.log('Données utilisateur:', data);
-
-                    // Effectuer une requête de connexion immédiatement après l'inscription
-                    const loginData = {
-                        email: trimmedEmail,
-                        password: trimmedMpd
-                    };
-
-                    return fetch('http://localhost:8081/user/login', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(loginData)  // Utiliser loginData ici
-                    })
-                        .then((response) => {
-                            if (response.ok) {
-                                return response.json();  // Récupérer la réponse contenant l'accessToken
-                            }
-                            throw new Error(t('connexionEchouee'));
-                        })
-                        .then((data) => {
-                            const accessToken = data.accessToken;  // Récupérer l'accessToken ici
-                            return fetch('http://localhost:8081/user/me', {
-                                method: 'GET',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${accessToken}`  // Utiliser l'accessToken ici
-                                }
-                            })
-                                .then((response) => response.json())
-                                .then((userData) => ({userData, accessToken}));  // Retourner userData et accessToken ensemble
-                        })
-                        .then(({userData, accessToken}) => {
-                            // Utiliser la méthode login du contexte pour définir l'état d'authentification
-                            if (login({...userData, accessToken})) {
-                                navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
-                                        userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
-                                            userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
-                                                'accueilProfesseur'}`,
-                                    {state: {userData}});
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Erreur lors de la connexion:', error);
-                            setErrorMessages(error.message || t('erreurLorsConnexion'));
-                        });
-                }
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
             });
-    }
 
+            if (response.status === 201) {
+                const data = await response.json();
+                console.log('Utilisateur créé:', data);
+
+                // Connexion automatique après inscription
+                const loginData = {
+                    email: trimmedEmail,
+                    password: trimmedMpd
+                };
+
+                try {
+                    const loginResponse = await fetch('http://localhost:8081/user/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+
+                    if (loginResponse.ok) {
+                        const loginResult = await loginResponse.json();
+                        const accessToken = loginResult.accessToken;
+
+                        // Récupérer les détails de l'utilisateur
+                        const userDetailsResponse = await fetch('http://localhost:8081/user/me', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        });
+
+                        const userData = await userDetailsResponse.json();
+
+                        // Connecter l'utilisateur et rediriger en fonction du rôle
+                        if (login({ ...userData, accessToken })) {
+                            navigate(`/${userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+                                        'accueilProfesseur'}`, { state: { userData } });
+                        }
+                    } else {
+                        throw new Error(t('connexionEchouee'));
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la connexion:', error);
+                    setErrorMessages(t('erreurLorsConnexion'));
+                }
+            } else if (response.status === 409) {
+                setErrorMessages(t('utilisateurExiste'));
+            } else {
+                setErrorMessages(t('erreurLorsCreationUser'));
+            }
+        } catch (error) {
+            console.error('Erreur lors de l\'inscription:', error);
+            setErrorMessages(error.message || t('erreurLorsInscription'));
+        }
+    };
 
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);
@@ -154,12 +153,12 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
-
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
             <legend>{t('ChampsObligatoires')} </legend>
-            {errorMessages && <div className='alert alert-danger'
-                                   style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>
+                {errorMessages}
+            </div>}
             <div className='row'>
                 <div className='form-group' style={{display: "inline-flex"}}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
@@ -180,9 +179,10 @@ function Inscription() {
                         <option value='employeur'>{t('employeur')}</option>
                     </select>
                 </div>
-
             </div>
 
+            {/* Rest of the form */}
+            {/* Include the form fields for prenom, nom, email, etc. */}
 
             <div className='row'>
                 <div className="form-group">
@@ -255,6 +255,7 @@ function Inscription() {
                     </InputMask>
                 </div>
 
+
                 <div className="form-group">
                     <label htmlFor="mpd">{t('MotDePasse')}</label>
                     <div className="input-group">
@@ -292,10 +293,11 @@ function Inscription() {
                         </div>
                     </div>
                 </div>
-
-                <button type="submit" className="btn btn-primary">{t('Sinscrire')}</button>
-                <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
             </div>
+
+
+            <button type="submit" className="btn btn-primary">{t('Sinscrire')}</button>
+            <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
         </form>
     );
 }

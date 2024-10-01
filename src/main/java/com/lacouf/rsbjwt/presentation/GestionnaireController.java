@@ -1,2 +1,4 @@
-package com.lacouf.rsbjwt.presentation;public class GestionnaireController {
+package com.lacouf.rsbjwt.presentation;
+
+public class GestionnaireController {
 }

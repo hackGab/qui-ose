@@ -39,8 +39,6 @@ public class OffreDeStageDTO {
         this.salaire = offre.getSalaire();
         this.dateLimite = offre.getDateLimite();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
-        this.status = offre.getStatus();
-        this.isCheked = offre.isCheked();
     }
 
     public static OffreDeStageDTO empty() {

@@ -36,7 +36,7 @@ class EtudiantServiceTest {
         etudiantService = new EtudiantService(etudiantRepository, passwordEncoder);
         etudiantController = new EtudiantController(etudiantService);
 
-        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials,"departement");
         etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
     }

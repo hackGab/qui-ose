@@ -1,9 +1,7 @@
 package com.lacouf.rsbjwt.presentation;
 
-import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
-import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,11 +40,7 @@ public class OffreDeStageController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<OffreDeStageDTO> deleteOffreDeStage(@PathVariable Long id) {
-        if(id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<OffreDeStageDTO> deleteOffreDeStage(@PathVariable Long id) {
@@ -60,9 +54,6 @@ public class OffreDeStageController {
 //                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 //    }
 
-        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
 
 //    @PutMapping("/{id}")
 //    public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {

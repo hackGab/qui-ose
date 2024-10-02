@@ -39,11 +39,8 @@ public class OffreDeStageService {
                 );
 
 
-
                 // Associer l'employeur à l'offre de stage
                 offreDeStage.setEmployeur(employeur);// Assurez-vous que cette méthode existe dans votre entité OffreDeStage
-                offreDeStage.setStatus("En attente");
-                offreDeStage.setCheked(false);
                 OffreDeStage savedOffre = offreDeStageRepository.save(offreDeStage);
                 return Optional.of(new OffreDeStageDTO(savedOffre));
 

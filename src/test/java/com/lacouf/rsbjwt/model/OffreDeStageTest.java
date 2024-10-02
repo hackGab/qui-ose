@@ -9,29 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OffreDeStageTest {
 
-    /*@Test
-    void testToString() {
-        // Arrange
-        OffreDeStage offreDeStage = new OffreDeStage("Java Developer", "TechCorp", "Paris", "Stage de 6 mois", "2021-06-01", "2021-12-01", "Java, Spring, Hibernate", "Bac+2", "Développement d'une application web");
-
-        // Act
-        String result = offreDeStage.toString();
-
-        // Assert
-        String expected = "OffreDeStage{" +
-                "id=null" +
-                ", titre='Java Developer'" +
-                ", entreprise='TechCorp'" +
-                ", localisation='Paris'" +
-                ", description='Stage de 6 mois'" +
-                ", dateDebut='2021-06-01'" +
-                ", dateFin='2021-12-01'" +
-                ", competences='Java, Spring, Hibernate'" +
-                ", niveauEtude='Bac+2'" +
-                ", mission='Développement d'une application web'" +
-                '}';
-        assertEquals(expected, result);
-    }*/
 
     @Test
     public void test_create_offre_de_stage_with_all_fields() {
@@ -49,5 +26,51 @@ public class OffreDeStageTest {
         assertEquals("$3000", offre.getSalaire());
         assertEquals(LocalDate.of(2023, 12, 31), offre.getDateLimite());
         assertEquals(employeur, offre.getEmployeur());
+    }
+
+    @Test
+    public void testNoArgsConstructor() {
+        OffreDeStage offre = new OffreDeStage();
+        assertNotNull(offre);
+    }
+
+
+    @Test
+    public void test_ToString() {
+        OffreDeStage offre = new OffreDeStage(
+                "Software Engineer Intern",
+                "Develop and maintain software",
+                "Coding, Testing",
+                "Java, Spring",
+                "6 months",
+                "New York",
+                "$3000/month",
+                LocalDate.of(2023, 12, 31)
+        );
+
+        Employeur employeur = new Employeur("John", "Doe", "john.doe@example.com", "password", "1234567890", "TechCorp");
+        offre.setEmployeur(employeur);
+
+        String expected = "OffreDeStage{" +
+                "id=null," +
+                " titre='Software Engineer Intern'," +
+                " description='Develop and maintain software'," +
+                " responsabilites='Coding, Testing'," +
+                " qualifications='Java, Spring'," +
+                " duree='6 months'," +
+                " localisation='New York'," +
+                " salaire='$3000/month'," +
+                " dateLimite=2023-12-31'," +
+                " employeur='" + employeur +
+                "}";
+        assertEquals(expected, offre.toString());
+    }
+
+
+    @Test
+    public void testIdCoverage() {
+        OffreDeStage offre = new OffreDeStage();
+        offre.setId(1L);
+        assertEquals(1L, offre.getId());
     }
 }

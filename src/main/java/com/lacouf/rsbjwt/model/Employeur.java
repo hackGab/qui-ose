@@ -20,6 +20,8 @@ public class Employeur extends UserApp{
         this.entreprise = entreprise;
     }
 
+
+
     @Override
     public String toString() {
         return "Employeur{" +

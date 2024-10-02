@@ -24,6 +24,8 @@ public class OffreDeStageDTO {
     private String salaire;
     private LocalDate dateLimite;
     private EmployeurDTO employeur;
+    private String status;
+    private boolean isCheked;
 
 
     public OffreDeStageDTO(OffreDeStage offre) {
@@ -37,6 +39,8 @@ public class OffreDeStageDTO {
         this.salaire = offre.getSalaire();
         this.dateLimite = offre.getDateLimite();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
+        this.status = offre.getStatus();
+        this.isCheked = offre.isCheked();
     }
 
     public static OffreDeStageDTO empty() {

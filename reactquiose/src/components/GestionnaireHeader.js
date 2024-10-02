@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../CSS/GestionnaireHeader.css';
 import logo from '../images/logo.png';
 
 function GestionnaireHeader() {
+    const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
@@ -31,21 +33,21 @@ function GestionnaireHeader() {
                         to="/listeEtudiants"
                         onClick={() => handleLinkClick('/listeEtudiants')}
                     >
-                        Étudiant
+                        {t('etudiant')}
                     </Link>
                     <Link
                         className={`nav-link ${activeLink === '/role/professeur' ? 'active' : ''}`}
                         to="/role/professeur"
                         onClick={() => handleLinkClick('/role/professeur')}
                     >
-                        Professeur
+                        {t('prof')}
                     </Link>
                     <Link
                         className={`nav-link ${activeLink === '/role/employeur' ? 'active' : ''}`}
                         to="/role/employeur"
                         onClick={() => handleLinkClick('/role/employeur')}
                     >
-                        Employeur
+                        {t('employeur')}
                     </Link>
                 </div>
                 <div className="profile-menu">
@@ -54,13 +56,13 @@ function GestionnaireHeader() {
                         className="profile-button"
                         onClick={toggleProfileMenu}
                     >
-                        Profil ▼
+                        {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
                         <div className="profile-dropdown">
-                            <Link className="dropdown-link" to="/profile">Mon Profil</Link>
-                            <Link className="dropdown-link" to="/settings">Paramètres</Link>
-                            <Link className="dropdown-link" to="/logout">Déconnexion</Link>
+                            <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
+                            <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
+                            <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
                         </div>
                     )}
                 </div>

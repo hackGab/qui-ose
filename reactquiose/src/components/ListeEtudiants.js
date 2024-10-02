@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeEtudiants.css';
 
 function ListeEtudiants() {
+    const { t } = useTranslation();
     const [etudiants, setEtudiants] = useState([
         {
             id: 1,
@@ -14,7 +16,7 @@ function ListeEtudiants() {
             last_name: 'Dupont',
             phone_number: '123-456-7890',
             departement: 'Informatique',
-            status: 'validé',
+            status: 'validated',
         },
         {
             id: 2,
@@ -23,7 +25,7 @@ function ListeEtudiants() {
             last_name: 'Curie',
             phone_number: '098-765-4321',
             departement: 'Chimie',
-            status: 'refusé',
+            status: 'rejected',
         },
         {
             id: 3,
@@ -32,7 +34,7 @@ function ListeEtudiants() {
             last_name: 'Martin',
             phone_number: '321-654-0987',
             departement: 'Mathématiques',
-            status: 'en attente',
+            status: 'pending',
         },
         {
             id: 4,
@@ -41,7 +43,7 @@ function ListeEtudiants() {
             last_name: 'Simpson',
             phone_number: '456-789-0123',
             departement: 'Physique',
-            status: 'validé',
+            status: 'validated',
         }
     ]);
 
@@ -75,8 +77,8 @@ function ListeEtudiants() {
         <div className="container-fluid d-flex flex-column min-vh-100">
             <GestionnaireHeader />
             <div className="container flex-grow-1 pt-5 mt-5">
-                <h1 className="mb-4 text-center">Liste des Étudiants</h1>
-                <p className="text-center mb-4">Voici la liste des étudiants inscrits à notre programme de stages.</p>
+                <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
+                <p className="text-center mb-4">{t('studentListSubtitle')}</p>
                 <div className="row">
                     {etudiants.map((etudiant) => (
                         <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
@@ -87,7 +89,7 @@ function ListeEtudiants() {
                                         <p className="card-text">
                                             <FaEnvelope /> {etudiant.email}<br />
                                             <FaPhone /> {etudiant.phone_number}<br />
-                                            <span className="badge bg-info">{etudiant.departement}</span>
+                                            <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
                                         </p>
                                     </div>
                                 </div>

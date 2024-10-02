@@ -31,5 +31,29 @@ public class OffreDeStage {
     private Employeur employeur;
 
     public OffreDeStage(String titre, String description, String responsabilites, String qualifications, String duree, String localisation, String salaire, LocalDate dateLimite) {
+        this.titre = titre;
+        this.description = description;
+        this.responsabilites = responsabilites;
+        this.qualifications = qualifications;
+        this.duree = duree;
+        this.localisation = localisation;
+        this.salaire = salaire;
+        this.dateLimite = dateLimite;
+    }
+
+    
+    @Override
+    public String toString() {
+        return "OffreDeStage{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", description='" + description + '\'' +
+                ", responsabilites='" + responsabilites + '\'' +
+                ", qualifications='" + qualifications + '\'' +
+                ", duree='" + duree + '\'' +
+                ", localisation='" + localisation + '\'' +
+                ", salaire='" + salaire + '\'' +
+                ", dateLimite=" + dateLimite +
+                '}';
     }
 }

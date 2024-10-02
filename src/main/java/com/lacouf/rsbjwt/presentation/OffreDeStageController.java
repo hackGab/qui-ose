@@ -38,10 +38,9 @@ public class OffreDeStageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.deleteOffreDeStage(id);
+        offreDeStageService.deleteOffreDeStage(id);
 
-        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
@@ -71,7 +70,7 @@ public class OffreDeStageController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/tous")
+    /*@GetMapping("/tous")
     public ResponseEntity<OffreDeStageDTO> getOffreDeStages() {
         Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.getOffreDeStages();
 
@@ -134,5 +133,5 @@ public class OffreDeStageController {
 
         return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+    }*/
 }

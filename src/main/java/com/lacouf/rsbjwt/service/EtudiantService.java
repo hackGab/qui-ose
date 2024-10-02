@@ -80,6 +80,10 @@ public class EtudiantService {
 
     public Optional<EtudiantDTO> getEtudiantByEmail(String email) {
         Optional<UserApp> utilisateur = userAppRepository.findUserAppByEmail(email);
+
+        if (utilisateur.isEmpty()) {
+            return Optional.empty();
+        }
         Etudiant etudiant = (Etudiant) utilisateur.get();
 
         System.out.println(etudiant);

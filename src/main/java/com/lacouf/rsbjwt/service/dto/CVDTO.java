@@ -19,7 +19,7 @@ public class CVDTO {
     private String data;
     private String status;
 
-    public CVDTO(Long id, String name, String type, Date uploadDate, String data, String status) {
+    public CVDTO(String name, String type, Date uploadDate, String data, String status) {
         this.name = name;
         this.type = type;
         this.uploadDate = uploadDate;

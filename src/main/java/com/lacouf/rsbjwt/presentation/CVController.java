@@ -21,13 +21,13 @@ public class CVController {
         this.etudiantService = etudiantService;
     }
 
-    @PostMapping("/creerCV/{id}")
-    public ResponseEntity<CVDTO> creerCV(@RequestBody CVDTO newCV, @PathVariable Long id) {
+    @PostMapping("/creerCV/{email}")
+    public ResponseEntity<CVDTO> creerCV(@RequestBody CVDTO newCV, @PathVariable String email) {
         if (newCV == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<CVDTO> cvDTO = etudiantService.creerCV(newCV, id);
+        Optional<CVDTO> cvDTO = etudiantService.creerCV(newCV, email);
 
         return cvDTO.map(cv -> new ResponseEntity<>(cv, HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));

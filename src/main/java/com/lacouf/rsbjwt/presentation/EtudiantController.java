@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,18 @@ public class EtudiantController {
         }
 
         Optional<EtudiantDTO> etudiantDTO = etudiantService.getEtudiantById(id);
+
+        return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/credentials/{email}")
+    public ResponseEntity<EtudiantDTO> getEtudiantByEmail(@PathVariable String email) {
+        if(email == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<EtudiantDTO> etudiantDTO = etudiantService.getEtudiantByEmail(email);
 
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

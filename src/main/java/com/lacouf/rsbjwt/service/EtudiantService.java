@@ -51,7 +51,7 @@ public class EtudiantService {
                 .map(EtudiantDTO::new);
     }
 
-    public Optional<CVDTO> creerCV(CVDTO cvDTO, Long idEtudiant) {
+    public Optional<CVDTO> creerCV(CVDTO cvDTO, String email) {
         try {
             CV cv = new CV(
                     cvDTO.getName(),
@@ -62,7 +62,9 @@ public class EtudiantService {
             );
 
             CV savedCV = cvRepository.save(cv);
-            Etudiant etudiant = etudiantRepository.findById(idEtudiant).get();
+            Etudiant etudiant = userAppRepository.findUserAppByEmail(email)
+                    .map(userApp -> (Etudiant) userApp)
+                    .get();
             etudiant.setCv(savedCV);
             etudiantRepository.save(etudiant);
 
@@ -74,5 +76,13 @@ public class EtudiantService {
 
     public void supprimerCV(Long id) {
         cvRepository.deleteById(id);
+    }
+
+    public Optional<EtudiantDTO> getEtudiantByEmail(String email) {
+        Optional<UserApp> utilisateur = userAppRepository.findUserAppByEmail(email);
+        Etudiant etudiant = (Etudiant) utilisateur.get();
+
+        System.out.println(etudiant);
+        return Optional.of(new EtudiantDTO(etudiant));
     }
 }

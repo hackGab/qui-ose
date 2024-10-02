@@ -7,13 +7,13 @@ function AccueilEtudiant() {
 
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
-    const [temporaryFile, setTemporaryFile] = useState(null); // Temporary file state
+    const [temporaryFile, setTemporaryFile] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
 
     useEffect(() => {
-        if (userData && userData.id) {
-            const url = `http://localhost:8080/etudiant/${userData.id}`;
+        if (userData) {
+            const url = `http://localhost:8080/etudiant/credentials/${userData.credentials.email}`;
 
             fetch(url)
                 .then((response) => {
@@ -94,7 +94,7 @@ function AccueilEtudiant() {
                 status: "Attente",
             };
 
-            const urlAjout = `http://localhost:8080/cv/creerCV/${userData.id}`;
+            const urlAjout = `http://localhost:8080/cv/creerCV/${userData.credentials.email}`;
 
             let ancienId = file ? file.id : null;
 
@@ -127,15 +127,6 @@ function AccueilEtudiant() {
                                 "Content-Type": "application/json",
                             },
                         })
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error(`Erreur lors de la requête: ${response.status}`);
-                                }
-                                return response.json();
-                            })
-                            .then((data) => {
-                                console.log("Réponse du serveur:", data);
-                            })
                             .catch((error) => {
                                 console.error("Erreur:", error);
                             });

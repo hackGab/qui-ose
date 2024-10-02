@@ -2,8 +2,10 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
+import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,9 @@ class EtudiantServiceTest {
     private EtudiantService etudiantService;
     private EtudiantController etudiantController;
 
+    private UserAppRepository userAppRepository;
+    private CVRepository cvRepository;
+
     private EtudiantDTO newEtudiant;
     private Etudiant etudiantEntity;
     private PasswordEncoder passwordEncoder;
@@ -33,10 +38,10 @@ class EtudiantServiceTest {
     void setUp() {
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        etudiantService = new EtudiantService(etudiantRepository, passwordEncoder);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository);
         etudiantController = new EtudiantController(etudiantService);
 
-        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials,"departement");
         etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
     }

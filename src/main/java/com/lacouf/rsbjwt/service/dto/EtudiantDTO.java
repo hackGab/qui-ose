@@ -15,8 +15,8 @@ public class EtudiantDTO extends UserDTO {
     private String departement;
     private CVDTO cv;
 
-    public EtudiantDTO(Long id, String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
-        super(id, firstName, lastName, phoneNumber, role);
+    public EtudiantDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
+        super(firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
         this.departement = departement;
     }

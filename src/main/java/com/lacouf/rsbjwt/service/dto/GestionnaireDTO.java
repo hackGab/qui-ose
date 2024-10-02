@@ -14,8 +14,8 @@ public class GestionnaireDTO extends UserDTO {
 
     public GestionnaireDTO() {}
 
-    public GestionnaireDTO(Long id, String firstName, String lastName, String phoneNumber, Role role, CredentialDTO credentials) {
-        super(id, firstName, lastName, phoneNumber, role);
+    public GestionnaireDTO(String firstName, String lastName, String phoneNumber, Role role, CredentialDTO credentials) {
+        super(firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
     }
 
@@ -31,7 +31,6 @@ public class GestionnaireDTO extends UserDTO {
     @Override
     public String toString() {
         return "GestionnaireDTO{" +
-                "id=" + getId() +
                 ", firstName='" + getFirstName() + '\'' +
                 ", lastName='" + getLastName() + '\'' +
                 ", phoneNumber='" + getPhoneNumber() + '\'' +

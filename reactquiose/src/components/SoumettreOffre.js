@@ -1,17 +1,30 @@
-import React, { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function SoumettreOffre() {
     const [formData, setFormData] = useState({
         titre: "",
         description: "",
-        entreprise: "",
-        lieu: "",
+        responsabilites: "",
+        qualifications: "",
         duree: "",
-        remuneration: "",
+        localisation: "",
+        salaire: "",
+        dateLimite: "", // Cette valeur n'est pas nécessaire ici car elle est calculée dans le handleSubmit
     });
 
+    const [employeurEmail, setEmployeurEmail] = useState(null); // State to hold employer email
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation(); // Hook to access passed state
+
+    // Retrieve the employer's email from the state passed during navigation
+    useEffect(() => {
+        if (location.state && location.state.employeurEmail) {
+            setEmployeurEmail(location.state.employeurEmail); // Set email to state
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,23 +34,55 @@ function SoumettreOffre() {
         });
     };
 
-
     const validateForm = () => {
         const newErrors = {};
         if (!formData.titre) newErrors.titre = "Le titre est requis";
         if (!formData.description) newErrors.description = "La description est requise";
-        if (!formData.entreprise) newErrors.entreprise = "Le nom de l'entreprise est requis";
-        if (!formData.lieu) newErrors.lieu = "Le lieu est requis";
+        if (!formData.localisation) newErrors.localisation = "Le lieu est requis"; // Corrected to 'localisation'
         if (!formData.duree || formData.duree <= 0) newErrors.duree = "La durée doit être positive";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        console.log("Soumettre l'offre" + JSON.stringify(formData)); // Use JSON.stringify for better logging
         e.preventDefault();
         if (validateForm()) {
-            // Envoyer les données au backend ou API
-            console.log("Formulaire soumis:", formData);
+            setLoading(true);
+            try {
+                const url = `http://localhost:8081/offreDeStage/creerOffreDeStage/${employeurEmail}`;
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        titre: formData.titre,
+                        description: formData.description,
+                        responsabilites: formData.responsabilites, // Corrected to 'responsabilites'
+                        qualifications: formData.qualifications,
+                        duree: formData.duree,
+                        localisation: formData.localisation,
+                        salaire: formData.salaire,
+                        dateLimite: new Date().toISOString().split("T")[0],
+                        employeur: null,
+                       // Example: today's date
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to submit the offer");
+                }
+
+                const result = await response.json();
+                console.log("Offre soumise avec succès:", result);
+
+            } catch (error) {
+                console.error("Erreur lors de la soumission:", error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -74,31 +119,31 @@ function SoumettreOffre() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="entreprise">Entreprise *</label>
+                    <label htmlFor="responsabilites">Responsabilites *</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="entreprise"
-                        name="entreprise"
-                        value={formData.entreprise}
+                        id="responsabilites"
+                        name="responsabilites"
+                        value={formData.responsabilites} // Ensure this is part of formData
                         onChange={handleChange}
                         required
                     />
-                    {errors.entreprise && <small className="text-danger">{errors.entreprise}</small>}
+                    {errors.responsabilites && <small className="text-danger">{errors.responsabilites}</small>}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="lieu">Lieu du stage *</label>
+                    <label htmlFor="qualifications">Qualifications *</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="lieu"
-                        name="lieu"
-                        value={formData.lieu}
+                        id="qualifications"
+                        name="qualifications" // Corrected to 'localisation'
+                        value={formData.qualifications}
                         onChange={handleChange}
                         required
                     />
-                    {errors.lieu && <small className="text-danger">{errors.lieu}</small>}
+                    {errors.qualifications && <small className="text-danger">{errors.qualifications}</small>}
                 </div>
 
                 <div className="form-group">
@@ -117,19 +162,43 @@ function SoumettreOffre() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="remuneration">Rémunération (facultatif)</label>
+                    <label htmlFor="localisation">Localisation *</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="remuneration"
-                        name="remuneration"
-                        value={formData.remuneration}
+                        id="localisation"
+                        name="localisation" // Change to match formData
+                        value={formData.localisation}
                         onChange={handleChange}
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                    Soumettre l'offre
+                <div className="form-group">
+                    <label htmlFor="salaire">Salaire</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="salaire"
+                        name="salaire"
+                        value={formData.salaire}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="dateLimite">Date limite</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="dateLimite"
+                        name="dateLimite"
+                        value={formData.dateLimite}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? "Soumission en cours..." : "Soumettre l'offre"}
                 </button>
             </form>
         </div>

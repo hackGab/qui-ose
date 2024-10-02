@@ -32,6 +32,7 @@ function AccueilEmployeur() {
                 }
 
                 const data = await response.json();
+
                 setUserData(data); // Store user data in the state
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -45,9 +46,10 @@ function AccueilEmployeur() {
     }, [navigate, token]); // Added token to dependency array
 
     const handleClick = () => {
-        navigate("/soumettre-offre");
+        if (userData?.credentials?.email) {
+            navigate("/soumettre-offre", { state: { employeurEmail: userData.credentials.email } });
+        }
     };
-
     const handleProfileClick = () => {
         navigate("/profil-employeur");
     };

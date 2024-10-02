@@ -60,38 +60,38 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
     }
 
-    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
-        List<OffreDeStageDTO> result = offreDeStageRepository.findByEmployeurId(employeurId)
-                .stream()
-                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-                .collect(Collectors.toList());
-        return result;  // Ne pas envelopper dans Optional
-    }
-
-    public List<OffreDeStageDTO> getOffreDeStages() {
-        return offreDeStageRepository.findAll()
-                .stream()
-                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-                .collect(Collectors.toList());
-    }
-
-    public void deleteOffreDeStage(Long id) {
-        offreDeStageRepository.deleteById(id);
-    }
-
-    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
-        return offreDeStageRepository.findById(id)
-                .map(offre -> {
-                    offre.setTitre(offreDeStageDTO.getTitre());
-                    offre.setDescription(offreDeStageDTO.getDescription());
-                    offre.setResponsabilites(offreDeStageDTO.getResponsabilites());
-                    offre.setQualifications(offreDeStageDTO.getQualifications());
-                    offre.setDuree(offreDeStageDTO.getDuree());
-                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
-                    offre.setSalaire(offreDeStageDTO.getSalaire());
-                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
-                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
-                    return new OffreDeStageDTO(savedOffre);
-                });
-    }
+//    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
+//        List<OffreDeStageDTO> result = offreDeStageRepository.findByEmployeurId(employeurId)
+//                .stream()
+//                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+//                .collect(Collectors.toList());
+//        return result;  // Ne pas envelopper dans Optional
+//    }
+//
+//    public List<OffreDeStageDTO> getOffreDeStages() {
+//        return offreDeStageRepository.findAll()
+//                .stream()
+//                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+//                .collect(Collectors.toList());
+//    }
+//
+//    public void deleteOffreDeStage(Long id) {
+//        offreDeStageRepository.deleteById(id);
+//    }
+//
+//    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
+//        return offreDeStageRepository.findById(id)
+//                .map(offre -> {
+//                    offre.setTitre(offreDeStageDTO.getTitre());
+//                    offre.setDescription(offreDeStageDTO.getDescription());
+//                    offre.setResponsabilites(offreDeStageDTO.getResponsabilites());
+//                    offre.setQualifications(offreDeStageDTO.getQualifications());
+//                    offre.setDuree(offreDeStageDTO.getDuree());
+//                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
+//                    offre.setSalaire(offreDeStageDTO.getSalaire());
+//                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
+//                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
+//                    return new OffreDeStageDTO(savedOffre);
+//                });
+//    }
 }

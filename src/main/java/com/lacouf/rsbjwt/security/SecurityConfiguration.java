@@ -48,6 +48,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
                         .requestMatchers(POST, "/employeur/creerEmployeur").permitAll()
+                        .requestMatchers(POST, "/offreDeStage/creerOffreDeStage/**").permitAll()
                         .requestMatchers("/emprunteur/**").hasAuthority("EMPRUNTEUR")
                         .requestMatchers("/prepose/**").hasAuthority("PREPOSE")
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")

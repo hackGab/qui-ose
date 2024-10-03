@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,30 +43,29 @@ public class OffreDeStageController {
 
 
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<OffreDeStageDTO> deleteOffreDeStage(@PathVariable Long id) {
-//        if(id == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.deleteOffreDeStage(id);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<OffreDeStageDTO> deleteOffreDeStage(@PathVariable Long id) {
+        if(id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        offreDeStageService.deleteOffreDeStage(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {
-//        if(id == null || offreDeStageDTO == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        Optional<OffreDeStageDTO> offreDeStageDTOUpdated = offreDeStageService.updateOffreDeStage(id, offreDeStageDTO);
-//
-//        return offreDeStageDTOUpdated.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {
+        if(id == null || offreDeStageDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<OffreDeStageDTO> offreDeStageDTOUpdated = offreDeStageService.updateOffreDeStage(id, offreDeStageDTO);
+
+        return offreDeStageDTOUpdated.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
 
     @GetMapping("/{id}")
@@ -81,68 +81,13 @@ public class OffreDeStageController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-//    @GetMapping("/tous")
-//    public ResponseEntity<OffreDeStageDTO> getOffreDeStages() {
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.getOffreDeStages();
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
+    @GetMapping("/tous")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffreDeStages() {
+        Optional<List<OffreDeStageDTO>> offreDeStageDTOList = offreDeStageService.getOffreDeStages();
+
+        return offreDeStageDTOList.map(offreDeStageList -> ResponseEntity.ok().body(offreDeStageList))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
 
-    // Liste des fonctions de tries
-//    @GetMapping("/trierParEmployeur/{id}")
-//    public ResponseEntity<OffreDeStageDTO> trierParEmployeur(@PathVariable Long id) {
-//        if(id == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.trierParEmployeur(id);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
-//    @GetMapping("/trierParDuréeStage/{nbSemaines}")
-//    public ResponseEntity<OffreDeStageDTO> trierParDureeStage(@PathVariable Long nbSemaines) {
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.trierParDureeStage(nbSemaines);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
-//
-//    @GetMapping("/trierParSalaire/{salaire}")
-//    public ResponseEntity<OffreDeStageDTO> trierParSalaire(@PathVariable Long salaire) {
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.trierParSalaire(salaire);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-//
-//
-//    @GetMapping("/trierParDispo/{dispo}")
-//    public ResponseEntity<OffreDeStageDTO> trierParDispo(@PathVariable String dispo) {
-//        if (dispo == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.trierParDispo(dispo);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-//
-//
-//    @GetMapping("/trierParLocalisation/{localisation}")
-//    public ResponseEntity<OffreDeStageDTO> trierParLocalisation(@PathVariable String localisation) {
-//        if (localisation == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.trierParLocalisation(localisation);
-//
-//        return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
 }

@@ -60,19 +60,13 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
     }
 
-//    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
-//        return offreDeStageRepository.findByEmployeurId(employeurId)
-//                .stream()
-//                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-//                .collect(Collectors.toList());
-//        return result.isEmpty() ? Optional.empty() : Optional.of(result);
-//    }
 
-    public List<OffreDeStageDTO> getOffreDeStages() {
-        return offreDeStageRepository.findAll()
+    public Optional<List<OffreDeStageDTO>> getOffreDeStages() {
+        List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
                 .stream()
-                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+                .map(OffreDeStageDTO::new)
                 .collect(Collectors.toList());
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     public void deleteOffreDeStage(Long id) {

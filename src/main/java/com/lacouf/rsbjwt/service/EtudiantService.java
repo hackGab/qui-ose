@@ -56,7 +56,6 @@ public class EtudiantService {
             CV cv = new CV(
                     cvDTO.getName(),
                     cvDTO.getType(),
-                    cvDTO.getUploadDate(),
                     cvDTO.getData(),
                     cvDTO.getStatus()
             );

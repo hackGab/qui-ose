@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -16,14 +18,15 @@ public class CVDTO {
     private Long id;
     private String name;
     private String type;
-    private Date uploadDate;
+    private LocalDate uploadDate;
     private String data;
     private String status;
 
-    public CVDTO(String name, String type, Date uploadDate, String data, String status) {
+    public CVDTO(String name, String type, String data, String status) {
         this.name = name;
         this.type = type;
-        this.uploadDate = uploadDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.uploadDate = LocalDate.parse(LocalDate.now().format(formatter), formatter);
         this.data = data;
         this.status = status;
     }

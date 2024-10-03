@@ -5,7 +5,9 @@ import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OffreDeStageService {
@@ -19,7 +21,7 @@ public class OffreDeStageService {
     }
 
     public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, String email) {
-        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
+        Optional<Employeur> employeurOpt = employeurService.findByEmail(email);
 
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
@@ -29,11 +31,11 @@ public class OffreDeStageService {
                         offreDeStageDTO.getDescription(),
                         offreDeStageDTO.getDuree(),
                         offreDeStageDTO.getLocalisation(),
-                        offreDeStageDTO.getExigences(),
-                        offreDeStageDTO.getDateDebutSouhaitee(),
-                        offreDeStageDTO.getTypeRemuneration(),
-                        offreDeStageDTO.getSalaire(),
-                        offreDeStageDTO.getDisponibilite(),
+                        offreDeStageDTO.getExigences(),  // Nouveau champ
+                        offreDeStageDTO.getDateDebutSouhaitee(),  // Nouveau champ
+                        offreDeStageDTO.getTypeRemuneration(),  // Nouveau champ
+                        offreDeStageDTO.getSalaire(),  // Nouveau champ
+                        offreDeStageDTO.getDisponibilite(),  // Nouveau champ
                         offreDeStageDTO.getDateLimite(),
                         offreDeStageDTO.getQualification(),
                         offreDeStageDTO.getContactInfo()
@@ -58,23 +60,23 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
     }
 
-//    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
-//        return (employeurId)
-//                .stream()
-//                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-//                .collect(Collectors.toList());
-//    }
+    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
+        return offreDeStageRepository.findByEmployeurId(employeurId)
+                .stream()
+                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+                .collect(Collectors.toList());
+    }
 
-//    public List<OffreDeStageDTO> getOffreDeStages() {
-//        return offreDeStageRepository.findAll()
-//                .stream()
-//                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-//                .collect(Collectors.toList());
-//    }
+    public List<OffreDeStageDTO> getOffreDeStages() {
+        return offreDeStageRepository.findAll()
+                .stream()
+                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+                .collect(Collectors.toList());
+    }
 
-//    public void deleteOffreDeStage(Long id) {
-//        offreDeStageRepository.deleteById(id);
-//    }
+    public void deleteOffreDeStage(Long id) {
+        offreDeStageRepository.deleteById(id);
+    }
 
 //    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
 //        return offreDeStageRepository.findById(id)

@@ -41,4 +41,9 @@ public class EmployeurService {
         return employeurRepository.findById(id)
                 .map(EmployeurDTO::new);
     }
+
+
+    public Optional<Employeur> findByEmail(String email) {
+        return employeurRepository.findByCredentials_Email(email);
+    }
 }

@@ -17,41 +17,40 @@ public class OffreDeStageDTO {
     private Long id;
     private String titre;
     private String description;
-    private String responsabilites;
-    private String qualifications;
-    private Long duree;
-    private String localisation;
-    private Double salaire;
+    private String duree;
+    private String localisation;  // Modifié pour refléter les changements
+    private String exigences;  // Modifié pour refléter les changements
+    private LocalDate dateDebutSouhaitee;  // Modifié pour refléter les changements
+    private String typeRemuneration;  // Modifié pour refléter les changements
+    private String salaire;  // Modifié pour refléter les changements
+    private String disponibilite;  // Modifié pour refléter les changements
     private LocalDate dateLimite;
+    private String qualification;
+    private String contactInfo;
     private EmployeurDTO employeur;
 
-
+    // Constructeur qui prend en paramètre un objet OffreDeStage
     public OffreDeStageDTO(OffreDeStage offre) {
         this.id = offre.getId();
         this.titre = offre.getTitre();
         this.description = offre.getDescription();
-        this.responsabilites = offre.getResponsabilites();
-        this.qualifications = offre.getQualifications();
         this.duree = offre.getDuree();
         this.localisation = offre.getLocalisation();
-        this.salaire = offre.getSalaire();
+        this.exigences = offre.getExigences();  // Modifié pour refléter les changements
+        this.dateDebutSouhaitee = offre.getDateDebutSouhaitee();  // Modifié pour refléter les changements
+        this.typeRemuneration = offre.getTypeRemuneration();  // Modifié pour refléter les changements
+        this.salaire = offre.getSalaire();  // Modifié pour refléter les changements
+        this.disponibilite = offre.getDisponibilite();  // Modifié pour refléter les changements
         this.dateLimite = offre.getDateLimite();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
+        this.qualification = offre.getQualification();
+        this.contactInfo = offre.getContactInfo();
     }
 
     public static OffreDeStageDTO empty() {
         return new OffreDeStageDTO();
     }
 
-    public OffreDeStageDTO (String titre, String description, String responsabilites, String qualifications, Long duree, String localisation, Double salaire, LocalDate dateLimite) {
-        this.titre = titre;
-        this.description = description;
-        this.responsabilites = responsabilites;
-        this.qualifications = qualifications;
-        this.duree = duree;
-        this.localisation = localisation;
-        this.salaire = salaire;
-        this.dateLimite = dateLimite;
-    }
+
 
 }

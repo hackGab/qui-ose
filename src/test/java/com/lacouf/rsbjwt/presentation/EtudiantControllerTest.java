@@ -2,10 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
-import com.lacouf.rsbjwt.service.EmployeurService;
-import com.lacouf.rsbjwt.service.EtudiantService;
-import com.lacouf.rsbjwt.service.ProfesseurService;
-import com.lacouf.rsbjwt.service.UserAppService;
+import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +39,10 @@ class EtudiantControllerTest {
 
     @MockBean
     private EmployeurService employeurService;
+
+    @MockBean
+
+    private GestionnaireService gestionnaireService;
 
     @MockBean
     private PasswordEncoder passwordEncoder;

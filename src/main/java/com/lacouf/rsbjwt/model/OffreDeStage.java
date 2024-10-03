@@ -1,10 +1,7 @@
 package com.lacouf.rsbjwt.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -19,16 +16,56 @@ public class OffreDeStage {
     private Long id;
     private String titre;
     private String description;
-    private String responsabilites;
-    private String qualifications;
-    private Long duree;
-    private String localisation;
-    private Double salaire;
+    private String duree;
+    private String localisation;  // Modifié pour refléter les changements
+    private String exigences;  // Modifié pour refléter les changements
+    private LocalDate dateDebutSouhaitee;  // Modifié pour refléter les changements
+    private String typeRemuneration;  // Modifié pour refléter les changements
+    private String salaire;  // Modifié pour refléter les changements
+    private String disponibilite;  // Modifié pour refléter les changements
     private LocalDate dateLimite;
+    private String qualification;
+    private String contactInfo;
 
+    // Relation avec l'employeur
     @ManyToOne
     @JoinColumn(name = "employeur_id")
     private Employeur employeur;
 
+    // Constructeur pour initialiser tous les champs
+    public OffreDeStage(String titre, String description, String duree, String localisation, String exigences,
+                        LocalDate dateDebutSouhaitee, String typeRemuneration,String salaire, String disponibilite, LocalDate dateLimite,String qualification,String contactInfo) {
+        this.titre = titre;
+        this.description = description;
+        this.duree = duree;
+        this.localisation = localisation;
+        this.exigences = exigences;
+        this.dateDebutSouhaitee = dateDebutSouhaitee;
+        this.typeRemuneration = typeRemuneration;
+        this.salaire = salaire;
+        this.disponibilite = disponibilite;
+        this.dateLimite = dateLimite;
+        this.qualification = qualification;
+        this.contactInfo = contactInfo;
+    }
 
+    @Override
+    public String toString() {
+        return "OffreDeStage{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", description='" + description + '\'' +
+                ", duree='" + duree + '\'' +
+                ", localisation='" + localisation + '\'' +
+                ", exigences='" + exigences + '\'' +
+                ", qualifications='" + qualification + '\'' +
+                ", dateDebutSouhaitee='" + dateDebutSouhaitee + '\'' +
+                ", typeRemuneration='" + typeRemuneration + '\'' +
+                ", salaire='" + salaire + '\'' +
+                ", disponibilite='" + disponibilite + '\'' +
+                ", dateLimite='" + dateLimite + '\'' +
+                ", contactInfo='" + contactInfo + '\'' +
+                ", employeur='" + employeur + '\'' +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
@@ -34,8 +35,12 @@ public class OffreDeStageControllerTest {
         OffreDeStageDTO newOffre = new OffreDeStageDTO();
         newOffre.setTitre("Internship");
         String email = "employer@example.com";
+        Employeur employeur = new Employeur("John", "Doe", email, "password", "123456789", "Entreprise");
 
-        Mockito.when(offreDeStageService.creerOffreDeStage(Mockito.any(), Mockito.eq(email)))
+
+        Mockito.when(employeurService.findByCredentials_Email(email))
+                .thenReturn(Optional.of(employeur));
+        Mockito.when(offreDeStageService.creerOffreDeStage(Mockito.any(), Mockito.eq(Optional.of(employeur))))
                 .thenReturn(Optional.of(newOffre));
 
         ResponseEntity<OffreDeStageDTO> response = controller.creerOffreDeStage(email, newOffre);

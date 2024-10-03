@@ -4,49 +4,37 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class OffreDeStage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titre;
-    private String description;
-    private String duree;
     private String localisation;
-    private String exigences;
-    private LocalDate dateDebutSouhaitee;
-    private String typeRemuneration;
-    private String salaire;
-    private String disponibilite;
     private LocalDate dateLimite;
-    private String qualification;
-    private String contactInfo;
+    private LocalDate datePublication;
+    private String data;
+    private int nbCandidats;
 
-    // Relation avec l'employeur
     @ManyToOne
     @JoinColumn(name = "employeur_id")
     private Employeur employeur;
 
-    // Constructeur pour initialiser tous les champs
-    public OffreDeStage(String titre, String description, String duree, String localisation, String exigences,
-                        LocalDate dateDebutSouhaitee, String typeRemuneration,String salaire, String disponibilite, LocalDate dateLimite,String qualification,String contactInfo) {
+
+    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats) {
         this.titre = titre;
-        this.description = description;
-        this.duree = duree;
         this.localisation = localisation;
-        this.exigences = exigences;
-        this.dateDebutSouhaitee = dateDebutSouhaitee;
-        this.typeRemuneration = typeRemuneration;
-        this.salaire = salaire;
-        this.disponibilite = disponibilite;
-        this.dateLimite = dateLimite;
-        this.qualification = qualification;
-        this.contactInfo = contactInfo;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.dateLimite = LocalDate.parse(dateLimite.format(formatter), formatter);
+        this.datePublication = LocalDate.parse(LocalDate.now().format(formatter), formatter);
+        this.data = data;
+        this.nbCandidats = nbCandidats;
     }
 
     
@@ -56,18 +44,12 @@ public class OffreDeStage {
         return "OffreDeStage{" +
                 "id=" + id +
                 ", titre='" + titre + '\'' +
-                ", description='" + description + '\'' +
-                ", duree='" + duree + '\'' +
                 ", localisation='" + localisation + '\'' +
-                ", exigences='" + exigences + '\'' +
-                ", qualifications='" + qualification + '\'' +
-                ", dateDebutSouhaitee='" + dateDebutSouhaitee + '\'' +
-                ", typeRemuneration='" + typeRemuneration + '\'' +
-                ", salaire='" + salaire + '\'' +
-                ", disponibilite='" + disponibilite + '\'' +
                 ", dateLimite='" + dateLimite + '\'' +
-                ", contactInfo='" + contactInfo + '\'' +
                 ", employeur='" + employeur + '\'' +
+                ", datePublication='" + datePublication + '\'' +
+                ", data='" + data + '\'' +
+                ", nbCandidats='" + nbCandidats + '\'' +
                 '}';
     }
 }

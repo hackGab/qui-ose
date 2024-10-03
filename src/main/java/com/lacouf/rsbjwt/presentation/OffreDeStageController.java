@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
@@ -32,8 +33,8 @@ public class OffreDeStageController {
         if (newOffreDeStageDTO == null || email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.creerOffreDeStage(newOffreDeStageDTO,email);
+        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
+        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.creerOffreDeStage(newOffreDeStageDTO,employeurOpt);
 
         return offreDeStageDTO
                 .map(offreDeStage -> ResponseEntity.status(HttpStatus.CREATED).body(offreDeStage))

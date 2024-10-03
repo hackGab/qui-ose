@@ -10,21 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OffreDeStageTest {
     private static final String TITRE = "Software Engineer Intern";
-    private static final String DESCRIPTION = "Develop software";
-    private static final String EXIGENCES = "Coding";
-    private static final String QUALIFICATIONS = "Java";
-    private static final String DUREE = "6 months";
     private static final String LOCALISATION = "New York";
-    private static final String SALAIRE = "$3000";
-    private static final LocalDate DATE_LIMITE = LocalDate.of(2023, 12, 31);
+    private static final LocalDate DATE_LIMITE = LocalDate.of(2023, 12, 3);
+    private static final String DATA = "dataOffreDeStage";
+    private static final LocalDate DATE_JOUR = LocalDate.now();
+    private static final int NB_CANDIDATS = 3;
 
-    private static final LocalDate DATE_DEBUT_SOUHAITEE = LocalDate.of(2023, 11, 01);
-
-    private static final String DISPONIBILITE = "Full-Time";
-
-    private static final String TYPE_REMUNERATION = "Monthly";
-
-    private static final String CONTACT_INFO = "Contact Info";
 
     private static final Employeur EMPLOYEUR = new Employeur(
             "John",
@@ -41,17 +32,10 @@ public class OffreDeStageTest {
     public void setUp() {
         offre = new OffreDeStage(
                 TITRE,
-                DESCRIPTION,
-                DUREE,
                 LOCALISATION,
-                EXIGENCES,
-                DATE_DEBUT_SOUHAITEE,
-                TYPE_REMUNERATION,
-                SALAIRE,
-                DISPONIBILITE,
                 DATE_LIMITE,
-                QUALIFICATIONS,
-                CONTACT_INFO
+                DATA,
+                NB_CANDIDATS
         );
         offre.setEmployeur(EMPLOYEUR);
     }
@@ -61,18 +45,12 @@ public class OffreDeStageTest {
     public void test_create_offre_de_stage_with_all_fields() {
         assertNotNull(offre);
         assertEquals(TITRE, offre.getTitre());
-        assertEquals(DESCRIPTION, offre.getDescription());
-        assertEquals(EXIGENCES, offre.getExigences());
-        assertEquals(QUALIFICATIONS, offre.getQualification());
-        assertEquals(DUREE, offre.getDuree());
         assertEquals(LOCALISATION, offre.getLocalisation());
-        assertEquals(SALAIRE, offre.getSalaire());
         assertEquals(DATE_LIMITE, offre.getDateLimite());
         assertEquals(EMPLOYEUR, offre.getEmployeur());
-        assertEquals(DATE_DEBUT_SOUHAITEE, offre.getDateDebutSouhaitee());
-        assertEquals(TYPE_REMUNERATION, offre.getTypeRemuneration());
-        assertEquals(DISPONIBILITE, offre.getDisponibilite());
-        assertEquals(CONTACT_INFO, offre.getContactInfo());
+        assertEquals(DATA, offre.getData());
+        assertEquals(NB_CANDIDATS, offre.getNbCandidats());
+        assertEquals(DATE_JOUR, offre.getDatePublication());
     }
 
     @Test
@@ -83,39 +61,15 @@ public class OffreDeStageTest {
 
     @Test
     public void test_ToString() {
-
-//        "OffreDeStage{" +
-//                "id=" + id +
-//                ", titre='" + titre + '\'' +
-//                ", description='" + description + '\'' +
-//                ", duree='" + duree + '\'' +
-//                ", localisation='" + localisation + '\'' +
-//                ", exigences='" + exigences + '\'' +
-//                ", qualification='" + qualification + '\'' +
-//                ", dateDebutSouhaitee='" + dateDebutSouhaitee + '\'' +
-//                ", typeRemuneration='" + typeRemuneration + '\'' +
-//                ", disponibilite='" + disponibilite + '\'' +
-//                ", dateLimite='" + dateLimite + '\'' +
-//                ", contactInfo='" + contactInfo + '\'' +
-//                ", employeur='" + employeur + '\'' +
-//                '}';
-
-
         String expected = "OffreDeStage{" +
                 "id=null" +
                 ", titre='" + TITRE + '\'' +
-                ", description='" + DESCRIPTION + '\'' +
-                ", duree='" + DUREE + '\'' +
                 ", localisation='" + LOCALISATION + '\'' +
-                ", exigences='" + EXIGENCES + '\'' +
-                ", qualifications='" + QUALIFICATIONS + '\'' +
-                ", dateDebutSouhaitee='" + DATE_DEBUT_SOUHAITEE + '\'' +
-                ", typeRemuneration='" + TYPE_REMUNERATION + '\'' +
-                ", salaire='" + SALAIRE + '\'' +
-                ", disponibilite='" + DISPONIBILITE + '\'' +
                 ", dateLimite='" + DATE_LIMITE + '\'' +
-                ", contactInfo='" + CONTACT_INFO + '\'' +
                 ", employeur='" + EMPLOYEUR + '\'' +
+                ", datePublication='" + DATE_JOUR + '\'' +
+                ", data='" + DATA + '\'' +
+                ", nbCandidats='" + NB_CANDIDATS + '\'' +
                 "}";
         assertEquals(expected, offre.toString());
     }

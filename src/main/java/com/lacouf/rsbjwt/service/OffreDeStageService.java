@@ -5,6 +5,7 @@ import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,33 +14,22 @@ import java.util.stream.Collectors;
 public class OffreDeStageService {
 
     private final OffreDeStageRepository offreDeStageRepository;
-    private final EmployeurService employeurService;
 
-    public OffreDeStageService(OffreDeStageRepository offreDeStageRepository, EmployeurService employeurService) {
+    public OffreDeStageService(OffreDeStageRepository offreDeStageRepository) {
         this.offreDeStageRepository = offreDeStageRepository;
-        this.employeurService = employeurService;
     }
 
-    public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, String email) {
-        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
+    public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, Optional<Employeur> employeurOpt) {
 
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
             try {
                 OffreDeStage offreDeStage = new OffreDeStage(
                         offreDeStageDTO.getTitre(),
-                        offreDeStageDTO.getDescription(),
-                        offreDeStageDTO.getDuree(),
                         offreDeStageDTO.getLocalisation(),
-                        offreDeStageDTO.getExigences(),
-                        offreDeStageDTO.getDateDebutSouhaitee(),
-                        offreDeStageDTO.getTypeRemuneration(),
-                        offreDeStageDTO.getSalaire(),
-                        offreDeStageDTO.getDisponibilite(),
                         offreDeStageDTO.getDateLimite(),
-                        offreDeStageDTO.getQualification(),
-                        offreDeStageDTO.getContactInfo()
-
+                        offreDeStageDTO.getData(),
+                        offreDeStageDTO.getNbCandidats()
                 );
 
                 // Associer l'employeur à l'offre de stage
@@ -77,16 +67,10 @@ public class OffreDeStageService {
         return offreDeStageRepository.findById(id)
                 .flatMap(offre -> {
                     offre.setTitre(offreDeStageDTO.getTitre());
-                    offre.setDescription(offreDeStageDTO.getDescription());
-                    offre.setDuree(offreDeStageDTO.getDuree());
                     offre.setLocalisation(offreDeStageDTO.getLocalisation());
-                    offre.setExigences(offreDeStageDTO.getExigences());
-                    offre.setDateDebutSouhaitee(offreDeStageDTO.getDateDebutSouhaitee());
-                    offre.setTypeRemuneration(offreDeStageDTO.getTypeRemuneration());
-                    offre.setSalaire(offreDeStageDTO.getSalaire());
-                    offre.setDisponibilite(offreDeStageDTO.getDisponibilite());
                     offre.setDateLimite(offreDeStageDTO.getDateLimite());
-                    offre.setQualification(offreDeStageDTO.getQualification());
+                    offre.setData(offreDeStageDTO.getData());
+                    offre.setNbCandidats(offreDeStageDTO.getNbCandidats());
                     OffreDeStage savedOffre = offreDeStageRepository.save(offre);
                     return Optional.of(new OffreDeStageDTO(savedOffre));
                 });

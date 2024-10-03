@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
+import { useTranslation } from 'react-i18next';
 
 import etudiantImage from '../images/Etudiant.png';
 import professeurImage from '../images/Professeur.png';
 import employeurImage from '../images/Employeur.png';
 
 function AccueilGestionnaire() {
+    const { t } = useTranslation();
     const [etudiants, setEtudiants] = useState([]);
     const [refusNotification, setRefusNotification] = useState(0);
 
@@ -23,14 +25,14 @@ function AccueilGestionnaire() {
     }, []);
 
     const sections = [
-        { title: "Étudiant", notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
-        { title: "Professeur", notifications: 0, image: professeurImage },
-        { title: "Employeur", notifications: 0, image: employeurImage },
+        { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
+        { title: t("prof"), notifications: 0, image: professeurImage },
+        { title: t("employeur"), notifications: 0, image: employeurImage },
     ];
 
     return (
         <div className="container accueil-gestionnaire">
-            <h1>Tableau de Bord</h1>
+            <h1>{t("Dashboard")}</h1>
             <div className="row justify-content-center">
                 {sections.map((section, index) => (
                     <div className="col-lg-4 col-md-6 mb-4 d-flex flex-column align-items-center" key={index}>

@@ -5,8 +5,8 @@ import AccueilEtudiant from "./components/AccueilEtudiant";
 import AccueilEmployeur from "./components/AccueilEmployeur";
 import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
-import ListeEtudiants from './components/ListeEtudiants'; // Importez ListeEtudiants
-import DetailsEtudiants from './components/DetailsEtudiants'; // Importez le composant de détails
+import ListeEtudiants from './components/ListeEtudiants';
+import DetailsEtudiants from './components/DetailsEtudiants';
 
 function App() {
     return (
@@ -20,8 +20,8 @@ function App() {
                     <Route path='/accueilEmployeur' element={<AccueilEmployeur />} />
                     <Route path='/accueilGestionnaire' element={<AccueilGestionnaire />} />
                     <Route path='/accueilProfesseur' element={<AccueilProfesseur />} />
-                    <Route path='/listeEtudiants' element={<ListeEtudiants />} /> {/* Route pour la liste des étudiants */}
-                    <Route path='/details/:id' element={<DetailsEtudiants />} /> {/* Route pour les détails de l'étudiant */}
+                    <Route path='/listeEtudiants' element={<ListeEtudiants />} />
+                    <Route path='/details/:id' element={<DetailsEtudiants />} />
                 </Routes>
             </div>
         </Router>

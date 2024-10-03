@@ -36,7 +36,7 @@ public class ProfesseurServiceTest {
         professeurService = new ProfesseurService(professeurRepository, passwordEncoder);
         professeurController = new ProfesseurController(professeurService);
 
-        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, "departement");
         professeurEntity = new Professeur("John", "Doe", "email@gmail.com", "password", "23456789","departement");
     }

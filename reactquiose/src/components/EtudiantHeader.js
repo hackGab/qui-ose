@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import '../CSS/GestionnaireHeader.css';
 import logo from '../images/logo.png';
 
-function GestionnaireHeader() {
+function EtudiantHeader() {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const location = useLocation();
@@ -28,27 +28,7 @@ function GestionnaireHeader() {
                     </Link>
                 </div>
                 <div className="nav-links">
-                    <Link
-                        className={`nav-link ${activeLink === '/listeEtudiants' ? 'active' : ''}`}
-                        to="/listeEtudiants"
-                        onClick={() => handleLinkClick('/listeEtudiants')}
-                    >
-                        {t('etudiant')}
-                    </Link>
-                    <Link
-                        className={`nav-link ${activeLink === '/role/professeur' ? 'active' : ''}`}
-                        to="/role/professeur"
-                        onClick={() => handleLinkClick('/role/professeur')}
-                    >
-                        {t('prof')}
-                    </Link>
-                    <Link
-                        className={`nav-link ${activeLink === '/role/employeur' ? 'active' : ''}`}
-                        to="/role/employeur"
-                        onClick={() => handleLinkClick('/role/employeur')}
-                    >
-                        {t('employeur')}
-                    </Link>
+
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
@@ -62,7 +42,7 @@ function GestionnaireHeader() {
                         <div className="profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
+                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
                         </div>
                     )}
                 </div>
@@ -71,4 +51,4 @@ function GestionnaireHeader() {
     );
 }
 
-export default GestionnaireHeader;
+export default EtudiantHeader;

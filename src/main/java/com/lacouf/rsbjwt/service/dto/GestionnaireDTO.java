@@ -31,7 +31,6 @@ public class GestionnaireDTO extends UserDTO {
     @Override
     public String toString() {
         return "GestionnaireDTO{" +
-                "id=" + getId() +
                 ", firstName='" + getFirstName() + '\'' +
                 ", lastName='" + getLastName() + '\'' +
                 ", phoneNumber='" + getPhoneNumber() + '\'' +

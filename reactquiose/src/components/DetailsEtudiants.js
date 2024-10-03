@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../CSS/DetailsEtudiants.css';
 import GestionnaireHeader from "./GestionnaireHeader";
 
 function DetailsEtudiants() {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [student, setStudent] = useState(null);
     const [error, setError] = useState(null);
 
-    // Commenter le fetch pour utiliser des données hardcodées
     /*
     useEffect(() => {
         fetch(`https://backend.com/api/etudiants/${id}`)
@@ -50,53 +51,52 @@ function DetailsEtudiants() {
         },
     ];
 
-    // Trouvez l'étudiant correspondant à l'ID hardcodé
     useEffect(() => {
         const foundStudent = etudiants.find(student => student.id === parseInt(id));
         setStudent(foundStudent);
     }, [id, etudiants]);
 
     if (error) {
-        return <div className="text-danger">Erreur: {error}</div>;
+        return <div className="text-danger">{t('error')}: {error}</div>;
     }
 
     if (!student) {
-        return <div>Aucun étudiant trouvé.</div>;
+        return <div>{t('studentNotFound')}</div>;
     }
 
     return (
         <div className="details-container">
             <GestionnaireHeader />
 
-            <h1 className="mb-4 detail-title">Détails de l'Étudiant</h1>
+            <h1 className="mb-4 detail-title">{t('studentDetailsTitle')}</h1>
 
             <div className="row">
                 <div className="col-md-6">
-                    <h5>Informations Personnelles</h5>
+                    <h5>{t('personalInfo')}</h5>
                     <div className="details-info">
-                        <p><strong>Nom :</strong> {student.first_name} {student.last_name}</p>
-                        <p><strong>Email :</strong> {student.email}</p>
-                        <p><strong>Téléphone :</strong> {student.phone_number}</p>
-                        <p><strong>Département :</strong> {student.departement}</p>
+                        <p><strong>{t('nomDetail')}:</strong> {student.first_name} {student.last_name}</p>
+                        <p><strong>{t('emailDetail')}:</strong> {student.email}</p>
+                        <p><strong>{t('telephoneDetail')}:</strong> {student.phone_number}</p>
+                        <p><strong>{t('departmentDetail')}:</strong> {student.departement}</p>
                     </div>
                 </div>
 
                 <div className="col-md-6">
-                    <h5 className="mb-3">CV de l'Étudiant</h5>
+                    <h5 className="mb-3">{t('studentCV')}</h5>
                     <div className="iframe-container">
                         <iframe
                             src={student.cvUrl}
-                            title="CV de l'étudiant"
+                            title={t('studentCV')}
                             className="cv-frame"
                         ></iframe>
                     </div>
 
                     <div className="mt-4">
-                        <h5>Actions</h5>
+                        <h5>{t('actions')}</h5>
                         <div className="btn-group-vertical w-100">
-                            <button className="btn btn-success mb-2">Valider</button>
-                            <button className="btn btn-danger mb-2">Rejeter</button>
-                            <button className="btn btn-primary">Confirmer</button>
+                            <button className="btn btn-success mb-2">{t('validate')}</button>
+                            <button className="btn btn-danger mb-2">{t('reject')}</button>
+                            <button className="btn btn-primary">{t('confirm')}</button>
                         </div>
                     </div>
                 </div>

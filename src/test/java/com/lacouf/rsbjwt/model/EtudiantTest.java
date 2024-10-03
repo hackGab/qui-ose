@@ -23,6 +23,7 @@ class EtudiantTest {
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_ETUDIANT'" +
                 ", departement='departement'" +
+                ", cv=null" +
                 '}';
         assertEquals(expected, result);
     }

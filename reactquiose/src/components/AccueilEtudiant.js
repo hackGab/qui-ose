@@ -10,6 +10,7 @@ function AccueilEtudiant() {
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);
+    const [temporaryFileData, setTemporaryFileData] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [internships, setInternships] = useState([]);
@@ -31,7 +32,6 @@ function AccueilEtudiant() {
                         setFileData(data.cv.data);
                         console.log('Réponse du serveur:', data);
                     } else {
-                        alert("VEUILLEZ AJOUTER VOTRE CV");
                     }
 
                     const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
@@ -71,11 +71,10 @@ function AccueilEtudiant() {
             setTemporaryFile(uploadedFile);
             const reader = new FileReader();
             reader.onload = (e) => {
-                setFileData(e.target.result);
+                setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
         } else {
-            alert("Veuillez déposer un fichier PDF uniquement.");
         }
     };
 
@@ -97,7 +96,6 @@ function AccueilEtudiant() {
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({ target: { files: [uploadedFile] } });
         } else {
-            alert("Veuillez déposer un fichier PDF uniquement.");
         }
     };
 
@@ -107,7 +105,7 @@ function AccueilEtudiant() {
                 name: temporaryFile.name,
                 type: temporaryFile.type,
                 uploadDate: new Date(),
-                data: fileData,
+                data: temporaryFileData,
                 status: "Attente",
             };
 
@@ -128,7 +126,6 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
-                    alert("CV envoyé avec succès !");
                     setFile(data);
                     setFileData(data.data);
                     console.log("Réponse du serveur:", data);
@@ -149,14 +146,12 @@ function AccueilEtudiant() {
                     }
                 })
                 .catch((error) => {
-                    alert(`Erreur lors de l'envoi: ${error.message}`);
                     console.error("Erreur:", error);
                 });
 
             setShowModal(false);
             setTemporaryFile(null);
         } else {
-            alert("Veuillez d'abord charger un fichier.");
         }
     };
 

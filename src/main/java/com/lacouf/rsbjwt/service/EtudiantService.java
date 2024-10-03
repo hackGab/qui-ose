@@ -88,4 +88,10 @@ public class EtudiantService {
         System.out.println(etudiant);
         return Optional.of(new EtudiantDTO(etudiant));
     }
+
+    public Iterable<EtudiantDTO> getAllEtudiants() {
+        return etudiantRepository.findAll().stream()
+                .map(EtudiantDTO::new)
+                .toList();
+    }
 }

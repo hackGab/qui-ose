@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
@@ -8,50 +8,17 @@ import '../CSS/ListeEtudiants.css';
 
 function ListeEtudiants() {
     const { t } = useTranslation();
-    const [etudiants, setEtudiants] = useState([
-        {
-            id: 1,
-            email: 'jean.dupont@example.com',
-            first_name: 'Jean',
-            last_name: 'Dupont',
-            phone_number: '123-456-7890',
-            departement: 'Informatique',
-            status: 'validated',
-        },
-        {
-            id: 2,
-            email: 'marie.curie@example.com',
-            first_name: 'Marie',
-            last_name: 'Curie',
-            phone_number: '098-765-4321',
-            departement: 'Chimie',
-            status: 'rejected',
-        },
-        {
-            id: 3,
-            email: 'paul.martin@example.com',
-            first_name: 'Paul',
-            last_name: 'Martin',
-            phone_number: '321-654-0987',
-            departement: 'Mathématiques',
-            status: 'pending',
-        },
-        {
-            id: 4,
-            email: 'lisa.simpson@example.com',
-            first_name: 'Lisa',
-            last_name: 'Simpson',
-            phone_number: '456-789-0123',
-            departement: 'Physique',
-            status: 'validated',
-        }
-    ]);
-
+    const [etudiants, setEtudiants] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    /*
     useEffect(() => {
-        fetch('https://backend.com/api/etudiants')
+        fetch('http://localhost:8080/etudiant/all', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Erreur lors de la récupération des données');
@@ -67,7 +34,10 @@ function ListeEtudiants() {
                 setLoading(false);
             });
     }, []);
-    */
+
+    if (loading) {
+        return <p className="text-center mt-5">{t('loading')}</p>;
+    }
 
     if (error) {
         return <p className="text-center mt-5 text-danger">Erreur: {error}</p>;
@@ -85,10 +55,10 @@ function ListeEtudiants() {
                             <Link to={`/details/${etudiant.id}`} className="text-decoration-none">
                                 <div className={`card shadow w-100 ${etudiant.status}`}>
                                     <div className="card-body">
-                                        <h5 className="card-title">{`${etudiant.first_name} ${etudiant.last_name}`}</h5>
+                                        <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                         <p className="card-text">
-                                            <FaEnvelope /> {etudiant.email}<br />
-                                            <FaPhone /> {etudiant.phone_number}<br />
+                                            <FaEnvelope /> {etudiant.credentials.email}<br />
+                                            <FaPhone /> {etudiant.phoneNumber}<br />
                                             <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
                                         </p>
                                     </div>

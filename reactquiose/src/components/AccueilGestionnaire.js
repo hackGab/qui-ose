@@ -13,17 +13,6 @@ function AccueilGestionnaire() {
     const [etudiants, setEtudiants] = useState([]);
     const [refusNotification, setRefusNotification] = useState(0);
 
-    useEffect(() => {
-        fetch('https://backend.com/api/etudiants')
-            .then(response => response.json())
-            .then(data => {
-                setEtudiants(data);
-                const refusCount = data.filter(etudiant => etudiant.status === 'refusé').length;
-                setRefusNotification(refusCount);
-            })
-            .catch(error => console.error('Erreur lors de la récupération des étudiants', error));
-    }, []);
-
     const sections = [
         { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
         { title: t("prof"), notifications: 0, image: professeurImage },

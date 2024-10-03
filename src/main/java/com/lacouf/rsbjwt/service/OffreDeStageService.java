@@ -5,6 +5,7 @@ import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,11 +52,12 @@ public class OffreDeStageService {
         return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
-    public List<OffreDeStageDTO> getOffreDeStages() {
-        return offreDeStageRepository.findAll()
+    public Optional<List<OffreDeStageDTO>> getOffreDeStages() {
+        List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
                 .stream()
                 .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
                 .collect(Collectors.toList());
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     public void deleteOffreDeStage(Long id) {
@@ -76,6 +78,22 @@ public class OffreDeStageService {
                     OffreDeStage savedOffre = offreDeStageRepository.save(offre);
                     return new OffreDeStageDTO(savedOffre);
                 });
+    }
+
+
+    public Optional<List<OffreDeStageDTO>> trierParSalaire(Long salaireMin) {
+        List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
+                .stream()
+                .filter(offre -> {
+                    // Assurez-vous que le salaire est bien converti en Double pour la comparaison
+                    Double salaireOffre = Double.parseDouble(offre.getSalaire());
+                    return salaireOffre >= salaireMin;
+                })
+                .sorted(Comparator.comparingDouble(offre -> Double.parseDouble(offre.getSalaire()))) // Trier par salaire
+                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+                .collect(Collectors.toList());
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
 

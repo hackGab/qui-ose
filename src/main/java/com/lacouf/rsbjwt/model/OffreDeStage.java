@@ -21,15 +21,14 @@ public class OffreDeStage {
     private String description;
     private String responsabilites;
     private String qualifications;
-    private String duree;
+    private Long duree;
     private String localisation;
-    private String salaire;
+    private Double salaire;
     private LocalDate dateLimite;
 
     @ManyToOne
     @JoinColumn(name = "employeur_id")
     private Employeur employeur;
 
-    public OffreDeStage(String titre, String description, String responsabilites, String qualifications, String duree, String localisation, String salaire, LocalDate dateLimite) {
-    }
+
 }

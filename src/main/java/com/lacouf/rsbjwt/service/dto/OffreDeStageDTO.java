@@ -19,9 +19,9 @@ public class OffreDeStageDTO {
     private String description;
     private String responsabilites;
     private String qualifications;
-    private String duree;
+    private Long duree;
     private String localisation;
-    private String salaire;
+    private Double salaire;
     private LocalDate dateLimite;
     private EmployeurDTO employeur;
 
@@ -43,6 +43,15 @@ public class OffreDeStageDTO {
         return new OffreDeStageDTO();
     }
 
-
+    public OffreDeStageDTO (String titre, String description, String responsabilites, String qualifications, Long duree, String localisation, Double salaire, LocalDate dateLimite) {
+        this.titre = titre;
+        this.description = description;
+        this.responsabilites = responsabilites;
+        this.qualifications = qualifications;
+        this.duree = duree;
+        this.localisation = localisation;
+        this.salaire = salaire;
+        this.dateLimite = dateLimite;
+    }
 
 }

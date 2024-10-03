@@ -12,9 +12,6 @@ function AccueilEmployeur() {
             navigate("/soumettre-offre", { state: { employeurEmail: userData.credentials.email } });
         }
     };
-    const handleProfileClick = () => {
-        navigate("/profil-employeur");
-    };
 
 
     return (
@@ -39,9 +36,6 @@ function AccueilEmployeur() {
                             <h5 className="card-title">Bienvenue, {userData?.firstName}</h5>
                             <p className="card-text">Email: {userData?.credentials?.email}</p>
                             <p className="card-text">Rôle: {userData?.role}</p>
-                            <button className="btn btn-outline-primary mt-3" onClick={handleProfileClick}>
-                                Voir mon profil
-                            </button>
                         </div>
                     </div>
                 </div>

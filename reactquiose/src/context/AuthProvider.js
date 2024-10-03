@@ -6,6 +6,7 @@ const AuthContext = createContext();
 // AuthProvider component
 export const AuthProvider = () => {
 
+
 };
 
 // Custom hook to use the AuthContext

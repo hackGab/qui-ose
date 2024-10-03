@@ -1,0 +1,15 @@
+.container {
+    max-width: 600px; /* Limiter la largeur pour une meilleure présentation */
+}
+
+.form-control {
+    border-radius: 0.25rem; /* Arrondi des bords des champs de saisie */
+}
+
+.btn-primary {
+    transition: background-color 0.3s ease; /* Transition pour le changement de couleur du bouton */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Couleur au survol */
+}

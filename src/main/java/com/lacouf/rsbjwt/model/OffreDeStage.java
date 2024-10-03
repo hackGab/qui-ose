@@ -17,12 +17,12 @@ public class OffreDeStage {
     private String titre;
     private String description;
     private String duree;
-    private String localisation;  // Modifié pour refléter les changements
-    private String exigences;  // Modifié pour refléter les changements
-    private LocalDate dateDebutSouhaitee;  // Modifié pour refléter les changements
-    private String typeRemuneration;  // Modifié pour refléter les changements
-    private String salaire;  // Modifié pour refléter les changements
-    private String disponibilite;  // Modifié pour refléter les changements
+    private String localisation;
+    private String exigences;
+    private LocalDate dateDebutSouhaitee;
+    private String typeRemuneration;
+    private String salaire;
+    private String disponibilite;
     private LocalDate dateLimite;
     private String qualification;
     private String contactInfo;

@@ -252,6 +252,14 @@ function AccueilEtudiant() {
                                             style={{ display: "none" }}
                                         />
                                     </div>
+
+                                    {temporaryFile && (
+                                        <div className="file-details mt-3">
+                                            <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>
+                                            <h6><strong>Type du fichier :</strong> {temporaryFile.type}</h6>
+                                            <h6><strong>Date de remise :</strong> {new Date().toLocaleDateString()}</h6>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="modal-footer">
                                     <button className="btn btn-primary" onClick={handleSubmit}>

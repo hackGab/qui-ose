@@ -36,16 +36,16 @@ function GestionnaireHeader() {
                         {t('etudiant')}
                     </Link>
                     <Link
-                        className={`nav-link ${activeLink === '/role/professeur' ? 'active' : ''}`}
-                        to="/role/professeur"
-                        onClick={() => handleLinkClick('/role/professeur')}
+                        className={`nav-link ${activeLink === '/listeProfesseurs' ? 'active' : ''}`}
+                        to="/listeProfesseurs"
+                        onClick={() => handleLinkClick('/listeProfesseurs')}
                     >
                         {t('prof')}
                     </Link>
                     <Link
-                        className={`nav-link ${activeLink === '/role/employeur' ? 'active' : ''}`}
-                        to="/role/employeur"
-                        onClick={() => handleLinkClick('/role/employeur')}
+                        className={`nav-link ${activeLink === '/listeEmployeurs' ? 'active' : ''}`}
+                        to="/listeEmployeurs"
+                        onClick={() => handleLinkClick('/listeEmployeurs')}
                     >
                         {t('employeur')}
                     </Link>

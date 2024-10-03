@@ -82,7 +82,7 @@ function ListeEtudiants() {
                 <div className="row">
                     {etudiants.map((etudiant) => (
                         <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
-                            <Link to={`/details/${etudiant.id}`} className="text-decoration-none">
+                            <Link to={`/detailsEtudiant/${etudiant.id}`} className="text-decoration-none">
                                 <div className={`card shadow w-100 ${etudiant.status}`}>
                                     <div className="card-body">
                                         <h5 className="card-title">{`${etudiant.first_name} ${etudiant.last_name}`}</h5>

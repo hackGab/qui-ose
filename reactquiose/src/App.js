@@ -7,6 +7,8 @@ import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
 import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
+import ListeEmployeurs from "./components/ListeEmployeurs";
+import DetailsEmployeurs from "./components/DetailsEmployeur";
 
 function App() {
     return (
@@ -21,7 +23,9 @@ function App() {
                     <Route path='/accueilGestionnaire' element={<AccueilGestionnaire />} />
                     <Route path='/accueilProfesseur' element={<AccueilProfesseur />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
-                    <Route path='/details/:id' element={<DetailsEtudiants />} />
+                    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
+                    <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
+                    <Route path='detailsEmployeur/:id' element={<DetailsEmployeurs />} />
                 </Routes>
             </div>
         </Router>

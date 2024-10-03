@@ -1,0 +1,242 @@
+.accueil-gestionnaire {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #e7f1ff;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 20px;
+}
+
+.accueil-gestionnaire h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.section {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    height: 300px;
+    border-radius: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: inherit;
+}
+
+.section-image {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    height: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.section-image:hover {
+    opacity: 1;
+}
+
+.section:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #0066cc, #003366);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notification-badge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.section:hover .notification-badge {
+    transform: translateY(-10px);
+}
+
+.section-title-inside {
+    display: none;
+}
+
+.section-title-outside {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: left;
+    width: 100%;
+}
+
+.section-image-étudiant {
+    width: 300px;
+    height: auto;
+    bottom: 0;
+    left: 90px;
+}
+
+.section-image-professeur {
+    width: 500px;
+    height: auto;
+    bottom: 0;
+    left: 0;
+}
+
+.section-image-employeur {
+    width: 600px;
+    height: auto;
+    bottom: 0;
+    right: -50px;
+}
+
+@media (max-width: 776px) {
+    .section {
+        height: 90px;
+    }
+
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image,
+    .section-image-étudiant,
+    .section-image-professeur,
+    .section-image-employeur {
+        display: none;
+    }
+
+    .section-title-inside {
+        display: block;
+        font-size: 44px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .section-title-outside {
+        display: none;
+    }
+}
+
+@media (max-width: 990px) {
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur {
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 550px;
+        height: auto;
+        bottom: 0;
+        left: -150px;
+    }
+}
+
+@media (max-width: 1490px) {
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur {
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 600px;
+        height: auto;
+        bottom: 0;
+        left: -150px;
+    }
+}
+
+@media (max-width: 1190px) {
+    .section-title {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        font-size: 48px;
+    }
+
+    .section-image-étudiant {
+        width: 300px;
+        height: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .section-image-professeur {
+        width: 500px;
+        height: auto;
+        bottom: 0;
+        left: -80px;
+    }
+
+    .section-image-employeur {
+        width: 550px;
+        height: auto;
+        bottom: 0;
+        left: -180px;
+    }
+}

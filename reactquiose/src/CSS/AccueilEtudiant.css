@@ -1,0 +1,45 @@
+.custom-btn {
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.drop-zone {
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    padding: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.drop-zone.active {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.custom-modal-overlay {
+    position: fixed; /* Positionne l'overlay par rapport à la fenêtre */
+    top: 0; /* Aligne le haut de l'overlay avec le haut de la fenêtre */
+    left: 0; /* Aligne le côté gauche de l'overlay avec le côté gauche de la fenêtre */
+    width: 100%; /* Prend toute la largeur de la fenêtre */
+    height: 100%; /* Prend toute la hauteur de la fenêtre */
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    display: flex; /* Utilise Flexbox pour centrer le contenu */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    z-index: 1050; /* Assure que l'overlay est au-dessus des autres éléments */
+}
+
+.modal-custom {
+    width: 100%; /* Prend toute la largeur disponible jusqu'à max-width */
+    border-radius: 8px; /* Arrondir les coins de la modale */
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+
+

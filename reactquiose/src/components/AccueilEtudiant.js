@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import EtudiantHeader from "./EtudiantHeader";
+import "../CSS/AccueilEtudiant.css";
 
 function AccueilEtudiant() {
     const location = useLocation();
@@ -10,6 +12,7 @@ function AccueilEtudiant() {
     const [temporaryFile, setTemporaryFile] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
+    const [internships, setInternships] = useState([]);
 
     useEffect(() => {
         if (userData) {
@@ -30,6 +33,21 @@ function AccueilEtudiant() {
                     } else {
                         alert("VEUILLEZ AJOUTER VOTRE CV");
                     }
+
+                    const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
+                    fetch(internshipsUrl)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur lors de la requête: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            setInternships(data);
+                        })
+                        .catch((error) => {
+                            console.error('Erreur lors de la récupération des stages:', error);
+                        });
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
@@ -61,7 +79,6 @@ function AccueilEtudiant() {
         }
     };
 
-    // Gestion du drag-and-drop
     const handleDrag = (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -95,7 +112,6 @@ function AccueilEtudiant() {
             };
 
             const urlAjout = `http://localhost:8080/cv/creerCV/${userData.credentials.email}`;
-
             let ancienId = file ? file.id : null;
 
             fetch(urlAjout, {
@@ -148,7 +164,7 @@ function AccueilEtudiant() {
         if (file) {
             const pdfWindow = window.open();
             pdfWindow.document.write(
-                `<iframe src="${fileData}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
+                `<iframe src="${fileData}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
             );
         } else {
             alert("Aucun fichier à afficher !");
@@ -160,16 +176,18 @@ function AccueilEtudiant() {
     };
 
     return (
-        <div className="container-fluid p-3" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", paddingTop: "10px" }}>
-            <nav className="navbar navbar-expand-lg navbar-light bg-info mb-4" style={{ width: "100%" }}>
-                <div className="container-fluid">
-                    <span className="navbar-brand mb-0 h1">
-                        {userData ? `Bienvenu(e), ${userData.firstName} ${userData.lastName}` : "Bienvenue"}
-                    </span>
-                </div>
-            </nav>
+        <div className="container-fluid p-4">
+            <EtudiantHeader />
 
-            <div className="d-flex justify-content-between align-items-center" style={{ marginTop: "10px" }}>
+            <div className="text-center my-4">
+                {file ? (
+                    <h2>Votre CV est chargé !</h2>
+                ) : (
+                    <h2 className="text-warning">Veuillez ajouter votre CV pour continuer.</h2>
+                )}
+            </div>
+
+            <div className="d-flex justify-content-center my-3">
                 <button
                     className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
@@ -178,22 +196,41 @@ function AccueilEtudiant() {
                     onClick={afficherAjoutCV}
                 >
                     {file == null ? 'Ajouter CV' :
-                        file.status === 'Attente' ? 'CV en attente' :
+                        file.status === 'Attente' ? 'CV en attente de confirmation' :
                             file.status === 'Aprouvé' ? 'CV Approuvé' :
                                 file.status === 'Rejeté' ? 'CV Rejeté' : 'CV non remis'}
                 </button>
+            </div>
 
-                {file && (
+            {file && (
+                <div className="d-flex justify-content-center my-3">
                     <button className="btn btn-info" onClick={openFile}>
                         Voir mon CV
                     </button>
-                )}
+                </div>
+            )}
+
+            <div className="text-center my-4">
+                <h3>Stages</h3>
+                <div className="d-flex justify-content-center">
+                    {internships.length > 0 ? (
+                        <ul className="list-unstyled">
+                            {internships.map((internship, index) => (
+                                <li key={index}>
+                                    {internship.title} - {internship.company} ({internship.duration})
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>Aucun stage à afficher.</p>
+                    )}
+                </div>
             </div>
 
             {showModal && (
                 <div className="custom-modal-overlay">
-                    <div className="modal show d-block modal-custom" tabIndex="-1" role="dialog">
-                        <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal modal-custom" tabIndex="-1" role="dialog">
+                        <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
@@ -205,41 +242,23 @@ function AccueilEtudiant() {
                                         onDragLeave={handleDrag}
                                         onDrop={handleDrop}
                                         onClick={handleClick}
-                                        style={{
-                                            border: dragActive ? "2px dashed #00aaff" : "2px dashed #ddd",
-                                            borderRadius: "10px",
-                                            padding: "40px",
-                                            textAlign: "center",
-                                            cursor: "pointer",
-                                            backgroundColor: dragActive ? "#f0f8ff" : "#fafafa",
-                                            transition: "background-color 0.3s ease",
-                                        }}
+                                        className={`drop-zone ${dragActive ? "active" : ""}`}
                                     >
                                         <p>Déposez votre fichier PDF ici ou cliquez pour le télécharger.</p>
                                         <input
                                             type="file"
                                             id="fileInput"
-                                            className="form-control-file"
-                                            accept="application/pdf"
                                             onChange={handleFileChange}
                                             style={{ display: "none" }}
                                         />
                                     </div>
-                                    {temporaryFile && (
-                                        <div className="mt-3">
-                                            <p className="text-success">Fichier sélectionné : {temporaryFile.name}</p>
-                                            <p className="text-secondary">Type : {temporaryFile.type}</p>
-                                            <p className="text-secondary">Date : {temporaryFile.uploadDate ? temporaryFile.uploadDate : "Non remis"}</p>
-                                            <p className="text-secondary">Status : {temporaryFile.status ? temporaryFile.status : "Non remis"}</p>
-                                        </div>
-                                    )}
                                 </div>
                                 <div className="modal-footer">
+                                    <button className="btn btn-primary" onClick={handleSubmit}>
+                                        Soumettre
+                                    </button>
                                     <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
                                         Fermer
-                                    </button>
-                                    <button type="button" className="btn btn-primary" onClick={handleSubmit}>
-                                        Soumettre
                                     </button>
                                 </div>
                             </div>
@@ -247,6 +266,7 @@ function AccueilEtudiant() {
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

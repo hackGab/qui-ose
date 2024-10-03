@@ -80,20 +80,22 @@ public class OffreDeStageService {
         offreDeStageRepository.deleteById(id);
     }
 
-//    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
-//        return offreDeStageRepository.findById(id)
-//                .map(offre -> {
-//                    offre.setTitre(offreDeStageDTO.getTitre());
-//                    offre.setDescription(offreDeStageDTO.getDescription());
-//                    offre.setDuree(offreDeStageDTO.getDuree());
-//                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
-//                    offre.setExigences(offreDeStageDTO.getExigences());  // Nouveau champ
-//                    offre.setDateDebutSouhaitee(offreDeStageDTO.getDateDebutSouhaitee());  // Nouveau champ
-//                    offre.setTypeRemuneration(offreDeStageDTO.getTypeRemuneration());  // Nouveau champ
-//                    offre.setDisponibilite(offreDeStageDTO.getDisponibilite());  // Nouveau champ
-//                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
-//                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
-//                    return Optional.of(new OffreDeStageDTO(savedOffre));  // Retourne le DTO mis à jour
-//                });
-//    }
+    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
+        return offreDeStageRepository.findById(id)
+                .flatMap(offre -> {
+                    offre.setTitre(offreDeStageDTO.getTitre());
+                    offre.setDescription(offreDeStageDTO.getDescription());
+                    offre.setDuree(offreDeStageDTO.getDuree());
+                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
+                    offre.setExigences(offreDeStageDTO.getExigences());
+                    offre.setDateDebutSouhaitee(offreDeStageDTO.getDateDebutSouhaitee());
+                    offre.setTypeRemuneration(offreDeStageDTO.getTypeRemuneration());
+                    offre.setSalaire(offreDeStageDTO.getSalaire());
+                    offre.setDisponibilite(offreDeStageDTO.getDisponibilite());
+                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
+                    offre.setQualification(offreDeStageDTO.getQualification());
+                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
+                    return Optional.of(new OffreDeStageDTO(savedOffre));
+                });
+    }
 }

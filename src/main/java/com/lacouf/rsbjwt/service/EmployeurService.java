@@ -43,7 +43,7 @@ public class EmployeurService {
     }
 
 
-    public Optional<Employeur> findByEmail(String email) {
-        return employeurRepository.findByCredentials_Email(email);
+    public Optional<Employeur> findByCredentials_Email(String email) {
+        return employeurRepository.findByCredentials_email(email);
     }
 }

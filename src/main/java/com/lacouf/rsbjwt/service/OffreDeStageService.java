@@ -5,7 +5,6 @@ import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class OffreDeStageService {
     }
 
     public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, String email) {
-        Optional<Employeur> employeurOpt = employeurService.findByEmail(email);
+        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
 
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
@@ -32,11 +31,11 @@ public class OffreDeStageService {
                         offreDeStageDTO.getDescription(),
                         offreDeStageDTO.getDuree(),
                         offreDeStageDTO.getLocalisation(),
-                        offreDeStageDTO.getExigences(),  // Nouveau champ
-                        offreDeStageDTO.getDateDebutSouhaitee(),  // Nouveau champ
-                        offreDeStageDTO.getTypeRemuneration(),  // Nouveau champ
-                        offreDeStageDTO.getSalaire(),  // Nouveau champ
-                        offreDeStageDTO.getDisponibilite(),  // Nouveau champ
+                        offreDeStageDTO.getExigences(),
+                        offreDeStageDTO.getDateDebutSouhaitee(),
+                        offreDeStageDTO.getTypeRemuneration(),
+                        offreDeStageDTO.getSalaire(),
+                        offreDeStageDTO.getDisponibilite(),
                         offreDeStageDTO.getDateLimite(),
                         offreDeStageDTO.getQualification(),
                         offreDeStageDTO.getContactInfo()

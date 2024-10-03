@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -8,41 +9,70 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OffreDeStageTest {
+    private static final String TITRE = "Software Engineer Intern";
+    private static final String DESCRIPTION = "Develop software";
+    private static final String EXIGENCES = "Coding";
+    private static final String QUALIFICATIONS = "Java";
+    private static final String DUREE = "6 months";
+    private static final String LOCALISATION = "New York";
+    private static final String SALAIRE = "$3000";
+    private static final LocalDate DATE_LIMITE = LocalDate.of(2023, 12, 31);
+
+    private static final LocalDate DATE_DEBUT_SOUHAITEE = LocalDate.of(2023, 11, 01);
+
+    private static final String DISPONIBILITE = "Full-Time";
+
+    private static final String TYPE_REMUNERATION = "Monthly";
+
+    private static final String CONTACT_INFO = "Contact Info";
+
+    private static final Employeur EMPLOYEUR = new Employeur(
+            "John",
+            "Doe",
+            "john.doe@example.com",
+            "password",
+            "1234567890",
+            "TechCorp"
+    );
+
+    private OffreDeStage offre;
+
+    @BeforeEach
+    public void setUp() {
+        offre = new OffreDeStage(
+                TITRE,
+                DESCRIPTION,
+                DUREE,
+                LOCALISATION,
+                EXIGENCES,
+                DATE_DEBUT_SOUHAITEE,
+                TYPE_REMUNERATION,
+                SALAIRE,
+                DISPONIBILITE,
+                DATE_LIMITE,
+                QUALIFICATIONS,
+                CONTACT_INFO
+        );
+        offre.setEmployeur(EMPLOYEUR);
+    }
+
 
     @Test
     public void test_create_offre_de_stage_with_all_fields() {
-        // Créer un employeur pour associer à l'offre de stage
-        Employeur employeur = new Employeur("John", "Doe", "john.doe@example.com", "password", "1234567890", "TechCorp");
-
-        // Créer l'offre de stage avec tous les champs requis
-        OffreDeStage offre = new OffreDeStage(
-                "Software Engineer Intern",
-                "Develop software",
-                "6 months",
-                "New York",
-                "Experience with Java",
-                LocalDate.of(2023, 11, 01), // dateDebutSouhaitee
-                "Monthly", // typeRemuneration
-                "3000$",
-                "Full-Time", // disponibilite
-                LocalDate.of(2023, 12, 31), // dateLimite
-                "Qualification",
-                "Contact Info"
-        );
-        offre.setEmployeur(employeur); // Associer l'employeur
-
-        // Vérifications avec assertions
         assertNotNull(offre);
-        assertEquals("Software Engineer Intern", offre.getTitre());
-        assertEquals("Develop software", offre.getDescription());
-        assertEquals("6 months", offre.getDuree());
-        assertEquals("New York", offre.getLocalisation());
-        assertEquals("Experience with Java", offre.getExigences()); // Vérification du champ exigences
-        assertEquals(LocalDate.of(2023, 11, 01), offre.getDateDebutSouhaitee()); // Vérification du champ dateDebutSouhaitee
-        assertEquals("Monthly", offre.getTypeRemuneration()); // Vérification du champ typeRemuneration
-        assertEquals("Full-Time", offre.getDisponibilite()); // Vérification du champ disponibilite
-        assertEquals(LocalDate.of(2023, 12, 31), offre.getDateLimite()); // Vérification du champ dateLimite
-        assertEquals(employeur, offre.getEmployeur());
+        assertEquals(TITRE, offre.getTitre());
+        assertEquals(DESCRIPTION, offre.getDescription());
+        assertEquals(EXIGENCES, offre.getExigences());
+        assertEquals(QUALIFICATIONS, offre.getQualification());
+        assertEquals(DUREE, offre.getDuree());
+        assertEquals(LOCALISATION, offre.getLocalisation());
+        assertEquals(SALAIRE, offre.getSalaire());
+        assertEquals(DATE_LIMITE, offre.getDateLimite());
+        assertEquals(EMPLOYEUR, offre.getEmployeur());
+        assertEquals(DATE_DEBUT_SOUHAITEE, offre.getDateDebutSouhaitee());
+        assertEquals(TYPE_REMUNERATION, offre.getTypeRemuneration());
+        assertEquals(DISPONIBILITE, offre.getDisponibilite());
+        assertEquals(CONTACT_INFO, offre.getContactInfo());
     }
 
     @Test
@@ -53,42 +83,40 @@ public class OffreDeStageTest {
 
     @Test
     public void test_ToString() {
-        // Créer un employeur pour associer à l'offre de stage
-        Employeur employeur = new Employeur("John", "Doe", "john.doe@example.com", "password", "1234567890", "TechCorp");
 
-        // Créer l'offre de stage avec tous les champs requis
-        OffreDeStage offre = new OffreDeStage(
-                "Software Engineer Intern",
-                "Develop and maintain software",
-                "6 months",
-                "New York",
-                "Experience with Java",
-                LocalDate.of(2023, 11, 01), // dateDebutSouhaitee
-                "Monthly", // typeRemuneration
-                "3000$",
-                "Full-Time", // disponibilite
-                LocalDate.of(2023, 12, 31), // dateLimite
-                "Qualification",
-                "Contact Info"
-        );
-        offre.setEmployeur(employeur); // Associer l'employeur
+//        "OffreDeStage{" +
+//                "id=" + id +
+//                ", titre='" + titre + '\'' +
+//                ", description='" + description + '\'' +
+//                ", duree='" + duree + '\'' +
+//                ", localisation='" + localisation + '\'' +
+//                ", exigences='" + exigences + '\'' +
+//                ", qualification='" + qualification + '\'' +
+//                ", dateDebutSouhaitee='" + dateDebutSouhaitee + '\'' +
+//                ", typeRemuneration='" + typeRemuneration + '\'' +
+//                ", disponibilite='" + disponibilite + '\'' +
+//                ", dateLimite='" + dateLimite + '\'' +
+//                ", contactInfo='" + contactInfo + '\'' +
+//                ", employeur='" + employeur + '\'' +
+//                '}';
 
-        // Chaîne de caractères attendue pour toString
+
         String expected = "OffreDeStage{" +
-                "id=null," +
-                " titre='Software Engineer Intern'," +
-                " description='Develop and maintain software'," +
-                " duree='6 months'," +
-                " localisation='New York'," +
-                " exigences='Experience with Java'," +
-                " dateDebutSouhaitee=2023-11-01," +
-                " typeRemuneration='Monthly'," +
-                " disponibilite='Full-Time'," +
-                " dateLimite=2023-12-31," +
-                " employeur=" + employeur +
-                '}';
-
-        // Vérification de l'égalité entre les chaînes
+                "id=null" +
+                ", titre='" + TITRE + '\'' +
+                ", description='" + DESCRIPTION + '\'' +
+                ", duree='" + DUREE + '\'' +
+                ", localisation='" + LOCALISATION + '\'' +
+                ", exigences='" + EXIGENCES + '\'' +
+                ", qualifications='" + QUALIFICATIONS + '\'' +
+                ", dateDebutSouhaitee='" + DATE_DEBUT_SOUHAITEE + '\'' +
+                ", typeRemuneration='" + TYPE_REMUNERATION + '\'' +
+                ", salaire='" + SALAIRE + '\'' +
+                ", disponibilite='" + DISPONIBILITE + '\'' +
+                ", dateLimite='" + DATE_LIMITE + '\'' +
+                ", contactInfo='" + CONTACT_INFO + '\'' +
+                ", employeur='" + EMPLOYEUR + '\'' +
+                "}";
         assertEquals(expected, offre.toString());
     }
 

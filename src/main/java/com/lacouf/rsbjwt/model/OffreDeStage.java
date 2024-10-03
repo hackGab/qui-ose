@@ -49,6 +49,8 @@ public class OffreDeStage {
         this.contactInfo = contactInfo;
     }
 
+    
+
     @Override
     public String toString() {
         return "OffreDeStage{" +

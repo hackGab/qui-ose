@@ -13,7 +13,38 @@ function AccueilEtudiant() {
     const [temporaryFileData, setTemporaryFileData] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
-    const [internships, setInternships] = useState([]);
+    const [internships, setInternships] = useState([{
+        titre: "Stage 1",
+        localisation: "Paris",
+        dateLimite: new Date(),
+        datePublication: new Date(),
+        data: "Yessir",
+        nbCandidats: 10
+    },
+        {
+            titre: "Stage 2",
+            localisation: "Lyon",
+            dateLimite: new Date(),
+            datePublication: new Date(),
+            data: "No Mane",
+            nbCandidats: 20
+        },
+        {
+            titre: "Stage 3",
+            localisation: "Marseille",
+            dateLimite: new Date(),
+            datePublication: new Date(),
+            data: "Medium mane",
+            nbCandidats: 5
+        }, {
+            titre: "Stage 4",
+            localisation: "Toulouse",
+            dateLimite: new Date(),
+            datePublication: new Date(),
+            data: "Big Mane",
+            nbCandidats: 50
+        }
+    ]);
 
     useEffect(() => {
         if (userData) {
@@ -35,7 +66,7 @@ function AccueilEtudiant() {
                     }
 
                     const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
-                    fetch(internshipsUrl)
+ /*                   fetch(internshipsUrl)
                         .then((response) => {
                             if (!response.ok) {
                                 throw new Error(`Erreur lors de la requête: ${response.status}`);
@@ -47,11 +78,14 @@ function AccueilEtudiant() {
                         })
                         .catch((error) => {
                             console.error('Erreur lors de la récupération des stages:', error);
-                        });
+                        });*/
+                    console.log(internships);
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
                 });
+
+
         }
     }, [userData]);
 

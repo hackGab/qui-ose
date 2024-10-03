@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.w3c.dom.Text;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -11,7 +13,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class CV {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +26,8 @@ public class CV {
     private String type;
 
     @Column(nullable = false)
-    private Date uploadDate;
+    private LocalDate uploadDate;
+
 
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private String data;
@@ -33,10 +35,11 @@ public class CV {
     @Column(nullable = false)
     private String status;
 
-    public CV(String name, String type, Date uploadDate, String data, String status) {
+    public CV(String name, String type,  String data, String status) {
         this.name = name;
         this.type = type;
-        this.uploadDate = uploadDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.uploadDate = LocalDate.parse(LocalDate.now().format(formatter), formatter);
         this.data = data;
         this.status = status;
     }

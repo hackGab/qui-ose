@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -50,7 +51,7 @@ class EtudiantServiceTest {
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials,"departement");
         etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
-        cvEntity = new CV("cvName", "cvType", new Date(), "cvData", "cvStatus");
+        cvEntity = new CV("cvName", "cvType", "cvData", "cvStatus");
     }
 
     @Test
@@ -150,7 +151,7 @@ class EtudiantServiceTest {
     void shouldCreerUnCV() {
         // Arrange
         String email = "email@gmail.com";
-        CVDTO cvDTO = new CVDTO("cvName", "cvType", new Date(), "cvData", "cvStatus");
+        CVDTO cvDTO = new CVDTO("cvName", "cvType", "cvData", "cvStatus");
         when(cvRepository.save(any(CV.class)))
                 .thenReturn(cvEntity);
         when(userAppRepository.findUserAppByEmail(email))
@@ -171,7 +172,7 @@ class EtudiantServiceTest {
     void shouldReturnEmptyWhenExceptionIsThrownWhileCreatingCV() {
         // Arrange
         String email = "null@gmail.com";
-        CVDTO cvDTO = new CVDTO("cvName", "cvType", new Date(), "cvData", "cvStatus");
+        CVDTO cvDTO = new CVDTO("cvName", "cvType",  "cvData", "cvStatus");
         when(cvRepository.save(any(CV.class)))
                 .thenThrow(new RuntimeException("Database error"));
         when(userAppRepository.findUserAppByEmail(email))

@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,7 +12,7 @@ public class CVTest {
     @Test
     void testToString() {
         // Arrange
-        CV cv = new CV("cv.pdf", "application/pdf", new Date(), "data", "pending");
+        CV cv = new CV("cv.pdf", "application/pdf", "data", "pending");
 
         // Act
         String result = cv.toString();

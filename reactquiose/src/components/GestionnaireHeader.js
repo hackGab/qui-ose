@@ -51,7 +51,7 @@ function GestionnaireHeader() {
                     </Link>
                 </div>
                 <div className="profile-menu">
-                    <div className="notification-icon">🔔</div>
+                    <div className="notification-icon">🕭</div>
                     <div
                         className="profile-button"
                         onClick={toggleProfileMenu}

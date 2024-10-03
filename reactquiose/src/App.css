@@ -27,12 +27,14 @@
     font-size: 5vmax;
     margin: 0;
     padding: 0;
+    color: white;
 }
 
 .App-header-connexion p {
     font-size: 2vmax;
     margin: 0;
     padding: 0;
+    color: white;
 }
 
 

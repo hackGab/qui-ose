@@ -8,7 +8,7 @@ body {
 
 .details-container {
     text-align: center;
-    padding: 40px 20px;
+    padding: 40px 300px 20px;
     background-color: #eaf7ff;
     font-family: 'Roboto', sans-serif;
     width: 100%;
@@ -157,11 +157,33 @@ body {
 }
 
 @media (max-width: 600px) {
+    .details-container {
+        text-align: center;
+        padding: 40px 0 20px;
+        background-color: #eaf7ff;
+        font-family: 'Roboto', sans-serif;
+        width: 100%;
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+
     .details-info {
         padding: 10px;
     }
 
     .cv-frame {
         height: 300px;
+    }
+}
+
+@media (max-width: 1500px){
+    .details-container {
+        text-align: center;
+        padding: 40px 10px 20px;
+        background-color: #eaf7ff;
+        font-family: 'Roboto', sans-serif;
+        width: 100%;
+        max-height: 100vh;
+        overflow-y: auto;
     }
 }

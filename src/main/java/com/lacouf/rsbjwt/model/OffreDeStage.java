@@ -9,42 +9,22 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class OffreDeStage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Titre du stage
     private String titre;
-
-    // Description détaillée
     private String description;
-
-    // Durée du stage (ex: "3 mois", "6 semaines")
     private String duree;
-
-    // Localisation du stage
-    private String localisation;
-
-    // Exigences du stage (compétences techniques, qualifications)
-    private String exigences;
-
-    private String qualification;
-
-    // Date de début souhaitée
-    private LocalDate dateDebutSouhaitee;
-
-    // Type de rémunération
-    private String typeRemuneration;
-
-    private String salaire;
-
-    // Disponibilité (temps plein, temps partiel)
-    private String disponibilite;
-
-    // Date limite de candidature
+    private String localisation;  // Modifié pour refléter les changements
+    private String exigences;  // Modifié pour refléter les changements
+    private LocalDate dateDebutSouhaitee;  // Modifié pour refléter les changements
+    private String typeRemuneration;  // Modifié pour refléter les changements
+    private String salaire;  // Modifié pour refléter les changements
+    private String disponibilite;  // Modifié pour refléter les changements
     private LocalDate dateLimite;
-
+    private String qualification;
     private String contactInfo;
 
     // Relation avec l'employeur

@@ -21,7 +21,7 @@ public class OffreDeStageService {
     }
 
     public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, String email) {
-        Optional<Employeur> employeurOpt = employeurService.findByEmail(email);
+        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
 
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
@@ -31,11 +31,11 @@ public class OffreDeStageService {
                         offreDeStageDTO.getDescription(),
                         offreDeStageDTO.getDuree(),
                         offreDeStageDTO.getLocalisation(),
-                        offreDeStageDTO.getExigences(),  // Nouveau champ
-                        offreDeStageDTO.getDateDebutSouhaitee(),  // Nouveau champ
-                        offreDeStageDTO.getTypeRemuneration(),  // Nouveau champ
-                        offreDeStageDTO.getSalaire(),  // Nouveau champ
-                        offreDeStageDTO.getDisponibilite(),  // Nouveau champ
+                        offreDeStageDTO.getExigences(),
+                        offreDeStageDTO.getDateDebutSouhaitee(),
+                        offreDeStageDTO.getTypeRemuneration(),
+                        offreDeStageDTO.getSalaire(),
+                        offreDeStageDTO.getDisponibilite(),
                         offreDeStageDTO.getDateLimite(),
                         offreDeStageDTO.getQualification(),
                         offreDeStageDTO.getContactInfo()
@@ -60,38 +60,35 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
     }
 
-    public List<OffreDeStageDTO> trierParEmployeur(Long employeurId) {
-        return offreDeStageRepository.findByEmployeurId(employeurId)
-                .stream()
-                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
-                .collect(Collectors.toList());
-    }
 
-    public List<OffreDeStageDTO> getOffreDeStages() {
-        return offreDeStageRepository.findAll()
+    public Optional<List<OffreDeStageDTO>> getOffreDeStages() {
+        List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
                 .stream()
-                .map(OffreDeStageDTO::new)  // Convertir chaque entité en DTO
+                .map(OffreDeStageDTO::new)
                 .collect(Collectors.toList());
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     public void deleteOffreDeStage(Long id) {
         offreDeStageRepository.deleteById(id);
     }
 
-//    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
-//        return offreDeStageRepository.findById(id)
-//                .map(offre -> {
-//                    offre.setTitre(offreDeStageDTO.getTitre());
-//                    offre.setDescription(offreDeStageDTO.getDescription());
-//                    offre.setDuree(offreDeStageDTO.getDuree());
-//                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
-//                    offre.setExigences(offreDeStageDTO.getExigences());  // Nouveau champ
-//                    offre.setDateDebutSouhaitee(offreDeStageDTO.getDateDebutSouhaitee());  // Nouveau champ
-//                    offre.setTypeRemuneration(offreDeStageDTO.getTypeRemuneration());  // Nouveau champ
-//                    offre.setDisponibilite(offreDeStageDTO.getDisponibilite());  // Nouveau champ
-//                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
-//                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
-//                    return Optional.of(new OffreDeStageDTO(savedOffre));  // Retourne le DTO mis à jour
-//                });
-//    }
+    public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
+        return offreDeStageRepository.findById(id)
+                .flatMap(offre -> {
+                    offre.setTitre(offreDeStageDTO.getTitre());
+                    offre.setDescription(offreDeStageDTO.getDescription());
+                    offre.setDuree(offreDeStageDTO.getDuree());
+                    offre.setLocalisation(offreDeStageDTO.getLocalisation());
+                    offre.setExigences(offreDeStageDTO.getExigences());
+                    offre.setDateDebutSouhaitee(offreDeStageDTO.getDateDebutSouhaitee());
+                    offre.setTypeRemuneration(offreDeStageDTO.getTypeRemuneration());
+                    offre.setSalaire(offreDeStageDTO.getSalaire());
+                    offre.setDisponibilite(offreDeStageDTO.getDisponibilite());
+                    offre.setDateLimite(offreDeStageDTO.getDateLimite());
+                    offre.setQualification(offreDeStageDTO.getQualification());
+                    OffreDeStage savedOffre = offreDeStageRepository.save(offre);
+                    return Optional.of(new OffreDeStageDTO(savedOffre));
+                });
+    }
 }

@@ -17,7 +17,7 @@ public class OffreDeStageDTO {
     private Long id;
     private String titre;
     private String description;
-    private String duree;  // Modifié pour refléter les changements
+    private String duree;
     private String localisation;  // Modifié pour refléter les changements
     private String exigences;  // Modifié pour refléter les changements
     private LocalDate dateDebutSouhaitee;  // Modifié pour refléter les changements
@@ -50,4 +50,7 @@ public class OffreDeStageDTO {
     public static OffreDeStageDTO empty() {
         return new OffreDeStageDTO();
     }
+
+
+
 }

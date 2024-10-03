@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Assurez-vous que Bootstrap est importé
+import "../CSS/SoumettreOffre.css";
+import EmployeurHeader from "./EmployeurHeader";
 
 function SoumettreOffre() {
     const [formData, setFormData] = useState({
         titre: "",
         description: "",
         responsabilites: "",
-        qualifications: "",
+        qualification: "",
         duree: "",
         localisation: "",
-        salaire: "",
-        dateLimite: "", // Cette valeur n'est pas nécessaire ici car elle est calculée dans le handleSubmit
+        exigences: "",
+        dateDebutSouhaitee: "",
+        typeRemuneration: "",
+        disponibilite: "",
+        contactInfo: "",
     });
 
-    const [employeurEmail, setEmployeurEmail] = useState(null); // State to hold employer email
+    const [employeurEmail, setEmployeurEmail] = useState(null);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation(); // Hook to access passed state
+    const location = useLocation();
 
-    // Retrieve the employer's email from the state passed during navigation
     useEffect(() => {
         if (location.state && location.state.employeurEmail) {
-            setEmployeurEmail(location.state.employeurEmail); // Set email to state
+            setEmployeurEmail(location.state.employeurEmail);
         }
     }, [location.state]);
 
@@ -38,14 +43,17 @@ function SoumettreOffre() {
         const newErrors = {};
         if (!formData.titre) newErrors.titre = "Le titre est requis";
         if (!formData.description) newErrors.description = "La description est requise";
-        if (!formData.localisation) newErrors.localisation = "Le lieu est requis"; // Corrected to 'localisation'
+        if (!formData.localisation) newErrors.localisation = "Le lieu est requis";
         if (!formData.duree || formData.duree <= 0) newErrors.duree = "La durée doit être positive";
+        if (!formData.exigences) newErrors.exigences = "Les exigences sont requises";
+        if (!formData.dateDebutSouhaitee) newErrors.dateDebutSouhaitee = "La date de début souhaitée est requise";
+        if (!formData.typeRemuneration) newErrors.typeRemuneration = "Le type de rémunération est requis";
+        if (!formData.disponibilite) newErrors.disponibilite = "La disponibilité est requise";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
-        console.log("Soumettre l'offre" + JSON.stringify(formData)); // Use JSON.stringify for better logging
         e.preventDefault();
         if (validateForm()) {
             setLoading(true);
@@ -60,23 +68,27 @@ function SoumettreOffre() {
                     body: JSON.stringify({
                         titre: formData.titre,
                         description: formData.description,
-                        responsabilites: formData.responsabilites, // Corrected to 'responsabilites'
-                        qualifications: formData.qualifications,
+                        responsabilites: formData.responsabilites,
+                        qualification: formData.qualification,
                         duree: formData.duree,
                         localisation: formData.localisation,
-                        salaire: formData.salaire,
+                        exigences: formData.exigences,
+                        dateDebutSouhaitee: formData.dateDebutSouhaitee,
+                        typeRemuneration: formData.typeRemuneration,
+                        disponibilite: formData.disponibilite,
                         dateLimite: new Date().toISOString().split("T")[0],
-                        employeur: null,
-                       // Example: today's date
+                        salaire: formData.salaire,
+                        contactInfo: formData.contactInfo,
                     }),
                 });
 
                 if (!response.ok) {
-                    throw new Error("Failed to submit the offer");
+                    throw new Error("Échec de la soumission de l'offre");
                 }
 
                 const result = await response.json();
                 console.log("Offre soumise avec succès:", result);
+                // Optionnel : naviguer vers une autre page ou réinitialiser le formulaire
 
             } catch (error) {
                 console.error("Erreur lors de la soumission:", error);
@@ -87,10 +99,21 @@ function SoumettreOffre() {
     };
 
     return (
+        <div className="container-fluid d-flex flex-column min-vh-100">
+            <EmployeurHeader />
+
         <div className="container mt-5">
-            <h2>Soumettre une Offre de Stage</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
+            <h2 className="text-center mt-5">Soumettre une Offre de Stage</h2>
+            <form onSubmit={handleSubmit} className="p-4 border rounded shadow">
+                {Object.keys(errors).length > 0 && (
+                    <div className="alert alert-danger" role="alert">
+                        {Object.values(errors).map((error, index) => (
+                            <div key={index}>{error}</div>
+                        ))}
+                    </div>
+                )}
+
+                <div className="form-group mb-3">
                     <label htmlFor="titre">Titre de l'offre *</label>
                     <input
                         type="text"
@@ -101,10 +124,9 @@ function SoumettreOffre() {
                         onChange={handleChange}
                         required
                     />
-                    {errors.titre && <small className="text-danger">{errors.titre}</small>}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label htmlFor="description">Description *</label>
                     <textarea
                         className="form-control"
@@ -115,38 +137,35 @@ function SoumettreOffre() {
                         onChange={handleChange}
                         required
                     ></textarea>
-                    {errors.description && <small className="text-danger">{errors.description}</small>}
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="responsabilites">Responsabilites *</label>
+                <div className="form-group mb-3">
+                    <label htmlFor="responsabilites">Responsabilités *</label>
                     <input
                         type="text"
                         className="form-control"
                         id="responsabilites"
                         name="responsabilites"
-                        value={formData.responsabilites} // Ensure this is part of formData
+                        value={formData.responsabilites}
                         onChange={handleChange}
                         required
                     />
-                    {errors.responsabilites && <small className="text-danger">{errors.responsabilites}</small>}
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="qualifications">Qualifications *</label>
+                <div className="form-group mb-3">
+                    <label htmlFor="qualification">Qualifications *</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="qualifications"
-                        name="qualifications" // Corrected to 'localisation'
-                        value={formData.qualifications}
+                        id="qualification"
+                        name="qualification"
+                        value={formData.qualification}
                         onChange={handleChange}
                         required
                     />
-                    {errors.qualifications && <small className="text-danger">{errors.qualifications}</small>}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label htmlFor="duree">Durée (en mois) *</label>
                     <input
                         type="number"
@@ -158,23 +177,23 @@ function SoumettreOffre() {
                         onChange={handleChange}
                         required
                     />
-                    {errors.duree && <small className="text-danger">{errors.duree}</small>}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label htmlFor="localisation">Localisation *</label>
                     <input
                         type="text"
                         className="form-control"
                         id="localisation"
-                        name="localisation" // Change to match formData
+                        name="localisation"
                         value={formData.localisation}
                         onChange={handleChange}
+                        required
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="salaire">Salaire</label>
+                <div className="form-group mb-3">
+                    <label htmlFor="salaire">Salaire *</label>
                     <input
                         type="text"
                         className="form-control"
@@ -185,23 +204,76 @@ function SoumettreOffre() {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="dateLimite">Date limite</label>
+                <div className="form-group mb-3">
+                    <label htmlFor="exigences">Exigences *</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exigences"
+                        name="exigences"
+                        value={formData.exigences}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group mb-3">
+                    <label htmlFor="dateDebutSouhaitee">Date de début souhaitée *</label>
                     <input
                         type="date"
                         className="form-control"
-                        id="dateLimite"
-                        name="dateLimite"
-                        value={formData.dateLimite}
+                        id="dateDebutSouhaitee"
+                        name="dateDebutSouhaitee"
+                        value={formData.dateDebutSouhaitee}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group mb-3">
+                    <label htmlFor="typeRemuneration">Type de rémunération *</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="typeRemuneration"
+                        name="typeRemuneration"
+                        value={formData.typeRemuneration}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group mb-3">
+                    <label htmlFor="disponibilite">Disponibilité *</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="disponibilite"
+                        name="disponibilite"
+                        value={formData.disponibilite}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group mb-3">
+                    <label htmlFor="contactInfo">Informations de contact *</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="contactInfo"
+                        name="contactInfo"
+                        value={formData.contactInfo}
                         onChange={handleChange}
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
                     {loading ? "Soumission en cours..." : "Soumettre l'offre"}
                 </button>
             </form>
         </div>
+    </div>
     );
 }
 

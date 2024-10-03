@@ -10,8 +10,9 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 public class OffreDeStageServiceTest {
@@ -20,39 +21,105 @@ public class OffreDeStageServiceTest {
     private EmployeurService employeurService;
     private OffreDeStageService offreDeStageService;
 
+    private Employeur employeurEntity;
 
     @BeforeEach
     public void setUp() {
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         employeurService = Mockito.mock(EmployeurService.class);
         offreDeStageService = new OffreDeStageService(offreDeStageRepository, employeurService);
+
+        employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
+
     }
 
 
     @Test
-    public void test_create_offre_de_stage_with_valid_data() {
-        String email = "employer@example.com";
-        Employeur employeur = new Employeur(
-                "John",
-                "Doe",
-                email,
-                "password",
-                "1234567890",
-                "TechCorp"
-        );
+    public void test_creerOffreDeStage() {
+        // Arrange
+        OffreDeStage newOffre = new OffreDeStage();
+        newOffre.setTitre("Internship");
+        String email = employeurEntity.getEmail();
 
-        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
-        offreDeStageDTO.setTitre("Internship");
+        when(employeurService.findByCredentials_Email(email))
+                .thenReturn(Optional.of(employeurEntity));
 
-        Mockito.when(employeurService.findByEmail(email)).thenReturn(Optional.of(employeur));
-        Mockito.when(offreDeStageRepository.save(Mockito.any(OffreDeStage.class))).thenReturn(new OffreDeStage());
+        Optional<Employeur> employeur = employeurService.findByCredentials_Email(email);
 
-        Optional<OffreDeStageDTO> result = offreDeStageService.creerOffreDeStage(offreDeStageDTO, email);
+        when(offreDeStageRepository.save(any(OffreDeStage.class)))
+                .thenReturn(newOffre);
 
-        assertTrue(result.isPresent());
-        assertEquals("Internship", result.get().getTitre());
+        newOffre.setEmployeur(employeur.get());
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO(newOffre);
+
+        when(offreDeStageService.creerOffreDeStage(offreDeStageDTO, email))
+                .thenReturn(Optional.of(offreDeStageDTO));
+
+        // Act
+        Optional<OffreDeStageDTO> response = offreDeStageService.creerOffreDeStage(offreDeStageDTO, email);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(newOffre.getTitre(), response.get().getTitre());
     }
 
 
+    @Test
+    public void test_creerOffreDeStage_catchBlock() {
+        // Arrange
+        OffreDeStageDTO newOffreDTO = new OffreDeStageDTO();
+        String email = employeurEntity.getEmail();
+
+        when(employeurService.findByCredentials_Email(email))
+                .thenReturn(Optional.of(employeurEntity));
+
+        when(offreDeStageRepository.save(any(OffreDeStage.class)))
+                .thenThrow(new RuntimeException());
+
+        // Act
+        Optional<OffreDeStageDTO> response = offreDeStageService.creerOffreDeStage(newOffreDTO, email);
+
+        // Assert
+        assertFalse(response.isPresent());
+    }
+
+    @Test
+    public void test_creerOffreDeStage_elseBlock() {
+        // Arrange
+        OffreDeStageDTO newOffreDTO = new OffreDeStageDTO();
+        String email = employeurEntity.getEmail();
+
+        when(employeurService.findByCredentials_Email(email))
+                .thenReturn(Optional.empty());
+
+        // Act
+        Optional<OffreDeStageDTO> response = offreDeStageService.creerOffreDeStage(newOffreDTO, email);
+
+        // Assert
+        assertFalse(response.isPresent());
+    }
+
+
+
+    @Test
+    public void test_getOffreDeStageById() {
+        // Arrange
+        OffreDeStage newOffre = new OffreDeStage();
+        newOffre.setTitre("Internship");
+        Long id = 1L;
+
+        Employeur employeur = employeurEntity;
+        newOffre.setEmployeur(employeur);
+
+        when(offreDeStageRepository.findById(id))
+                .thenReturn(Optional.of(newOffre));
+
+        // Act
+        Optional<OffreDeStageDTO> response = offreDeStageService.getOffreDeStageById(id);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(newOffre.getTitre(), response.get().getTitre());
+    }
 
 }

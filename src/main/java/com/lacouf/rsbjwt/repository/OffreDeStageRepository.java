@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface OffreDeStageRepository extends JpaRepository<OffreDeStage, Long> {
-    List<OffreDeStage> findByEmployeurId(Long employeurId);
+//    List<OffreDeStage> findByEmployeurId(Long employeurId);
+
+
 }

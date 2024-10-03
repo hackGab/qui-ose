@@ -1,5 +1,9 @@
+/* SoumettreOffre.css */
+
 .container {
     max-width: 600px; /* Limiter la largeur pour une meilleure présentation */
+    margin: 0 auto; /* Centrer le conteneur */
+    padding: 20px; /* Ajouter du padding autour du conteneur */
 }
 
 .form-control {
@@ -12,4 +16,13 @@
 
 .btn-primary:hover {
     background-color: #0056b3; /* Couleur au survol */
+}
+
+.alert {
+    margin-bottom: 20px; /* Espacement en bas de l'alerte */
+}
+
+/* Optional: adjust button height for better aesthetics */
+.btn {
+    height: 45px; /* Uniformiser la hauteur du bouton */
 }

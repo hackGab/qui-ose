@@ -6,6 +6,7 @@ import AccueilEmployeur from "./components/AccueilEmployeur";
 import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
+import "./App.css";
 
 function App() {
     return (

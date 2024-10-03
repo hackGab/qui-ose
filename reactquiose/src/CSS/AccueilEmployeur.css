@@ -1,0 +1,10 @@
+.clickable-card {
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s; /* Transition for smooth effect */
+    padding: 20px; /* Increase padding for larger hover area */
+}
+
+.clickable-card:hover {
+    transform: scale(1.05); /* Scale up the card on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+}

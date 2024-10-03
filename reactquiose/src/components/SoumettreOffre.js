@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Assurez-vous que Bootstrap est importé
-import '../SoumettreOffre.css'; // Assurez-vous d'importer votre CSS
+import "../CSS/SoumettreOffre.css";
+import EmployeurHeader from "./EmployeurHeader";
 
 function SoumettreOffre() {
     const [formData, setFormData] = useState({
@@ -98,8 +99,11 @@ function SoumettreOffre() {
     };
 
     return (
+        <div className="container-fluid d-flex flex-column min-vh-100">
+            <EmployeurHeader />
+
         <div className="container mt-5">
-            <h2 className="text-center mb-4">Soumettre une Offre de Stage</h2>
+            <h2 className="text-center mt-5">Soumettre une Offre de Stage</h2>
             <form onSubmit={handleSubmit} className="p-4 border rounded shadow">
                 {Object.keys(errors).length > 0 && (
                     <div className="alert alert-danger" role="alert">
@@ -189,7 +193,7 @@ function SoumettreOffre() {
                 </div>
 
                 <div className="form-group mb-3">
-                    <label htmlFor="salaire">Salaire</label>
+                    <label htmlFor="salaire">Salaire *</label>
                     <input
                         type="text"
                         className="form-control"
@@ -253,7 +257,7 @@ function SoumettreOffre() {
                 </div>
 
                 <div className="form-group mb-3">
-                    <label htmlFor="contactInfo">Informations de contact</label>
+                    <label htmlFor="contactInfo">Informations de contact *</label>
                     <input
                         type="text"
                         className="form-control"
@@ -269,6 +273,7 @@ function SoumettreOffre() {
                 </button>
             </form>
         </div>
+    </div>
     );
 }
 

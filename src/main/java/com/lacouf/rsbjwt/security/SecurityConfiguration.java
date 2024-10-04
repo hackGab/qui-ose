@@ -43,7 +43,6 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(GET, "/user/me").permitAll()
-                        .requestMatchers(GET, "/user/login").permitAll()
                         .requestMatchers(POST, "/user/login").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()

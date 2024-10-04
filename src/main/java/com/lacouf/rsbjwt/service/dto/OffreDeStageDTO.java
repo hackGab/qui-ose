@@ -18,9 +18,10 @@ public class OffreDeStageDTO {
     private LocalDate datePublication;
     private String data;
     private int nbCandidats;
+    private String status;
     private EmployeurDTO employeur;
 
-    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, EmployeurDTO employeur) {
+    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats,String status, EmployeurDTO employeur) {
         this.id = id;
         this.titre = titre;
         this.localisation = localisation;
@@ -28,6 +29,7 @@ public class OffreDeStageDTO {
         this.datePublication = datePublication;
         this.data = data;
         this.nbCandidats = nbCandidats;
+        this.status = status;
         this.employeur = employeur;
     }
 
@@ -39,6 +41,7 @@ public class OffreDeStageDTO {
         this.datePublication = offre.getDatePublication();
         this.data = offre.getData();
         this.nbCandidats = offre.getNbCandidats();
+        this.status = offre.getStatus();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
     }
 

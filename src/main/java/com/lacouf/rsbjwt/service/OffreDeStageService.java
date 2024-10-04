@@ -29,7 +29,8 @@ public class OffreDeStageService {
                         offreDeStageDTO.getLocalisation(),
                         offreDeStageDTO.getDateLimite(),
                         offreDeStageDTO.getData(),
-                        offreDeStageDTO.getNbCandidats()
+                        offreDeStageDTO.getNbCandidats(),
+                        offreDeStageDTO.getStatus()
                 );
 
                 offreDeStage.setEmployeur(employeur);

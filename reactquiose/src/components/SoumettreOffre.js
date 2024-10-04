@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/SoumettreOffre.css";
 
@@ -13,6 +13,11 @@ function SoumettreOffre() {
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [internships, setInternships] = useState([]);
+    const [titre, setTitre] = useState("");
+    const [localisation, setLocalisation] = useState("");
+    const [nbCandidats, setNbCandidats] = useState(0);
+    const [dateLimite, setDateLimite] = useState("");
+    const [datePublication, setPublication] = useState("");
 
     useEffect(() => {
         console.log("Email de l'employeur:", employeurEmail);
@@ -21,7 +26,7 @@ function SoumettreOffre() {
     const afficherAjoutOffre = () => {
         console.log("Affichage de l'ajout d'offre");
         setShowModal(true);
-        setTemporaryFile(file ? { ...file } : null);
+        setTemporaryFile(file ? {...file} : null);
     };
 
     const fermerAffichageOffre = () => {
@@ -57,21 +62,25 @@ function SoumettreOffre() {
         setDragActive(false);
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
-            handleFileChange({ target: { files: [uploadedFile] } });
+            handleFileChange({target: {files: [uploadedFile]}});
         }
     };
 
     const handleSubmit = () => {
         if (temporaryFile) {
             const donnesOffre = {
+                titre,
+                localisation,
+                nbCandidats,
+                dateLimite,
+                datePublication: new Date(),
                 name: temporaryFile.name,
                 type: temporaryFile.type,
-                uploadDate: new Date(),
                 data: temporaryFileData,
                 status: "Attente",
             };
-
-            const urlAjout = `http://localhost:8080/offre/creerOffre/${employeurEmail}`;
+            console.log("Données de l'offre:", donnesOffre);
+            const urlAjout = `http://localhost:8081/offreDeStage/creerOffreDeStage/${employeurEmail}`;
             let ancienId = file ? file.id : null;
 
             fetch(urlAjout, {
@@ -115,6 +124,7 @@ function SoumettreOffre() {
         }
     };
 
+
     const openFile = () => {
         if (file) {
             const pdfWindow = window.open();
@@ -131,11 +141,11 @@ function SoumettreOffre() {
     };
 
     return (
-         <div className="container-fluid p-4">
-             <EmployeurHeader />
+        <div className="container-fluid p-4">
+            <EmployeurHeader/>
 
-             <div className="text-center my-4">
-                 {file ? (
+            <div className="text-center my-4">
+                {file ? (
                     <h2>Votre offre d'emploi est chargée !</h2>
                 ) : (
                     <h2 className="text-warning">Veuillez ajouter votre offre d'emploi pour continuer.</h2>
@@ -165,22 +175,6 @@ function SoumettreOffre() {
                 </div>
             )}
 
-            <div className="text-center my-4">
-                <h3>Stages</h3>
-                <div className="d-flex justify-content-center">
-                    {internships.length > 0 ? (
-                        <ul className="list-unstyled">
-                            {internships.map((internship, index) => (
-                                <li key={index}>
-                                    {internship.title} - {internship.company} ({internship.duration})
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Aucun stage à afficher.</p>
-                    )}
-                </div>
-            </div>
 
             {showModal && (
                 <div className="custom-modal-overlay">
@@ -191,6 +185,7 @@ function SoumettreOffre() {
                                     <h5 className="modal-title">Soumettre une offre d'emploi</h5>
                                 </div>
                                 <div className="modal-body">
+                                    {/* Existing file upload input */}
                                     <div
                                         onDragEnter={handleDrag}
                                         onDragOver={handleDrag}
@@ -204,18 +199,66 @@ function SoumettreOffre() {
                                             type="file"
                                             id="fileInput"
                                             onChange={handleFileChange}
-                                            style={{ display: "none" }}
+                                            style={{display: "none"}}
                                         />
                                     </div>
 
+                                    {/* New fields */}
+                                    <div className="form-group mt-3">
+                                        <label htmlFor="titre">Titre de l'offre</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="titre"
+                                            value={titre}
+                                            onChange={(e) => setTitre(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="form-group mt-3">
+                                        <label htmlFor="localisation">Localisation</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="localisation"
+                                            value={localisation}
+                                            onChange={(e) => setLocalisation(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="form-group mt-3">
+                                        <label htmlFor="nbCandidats">Nombre de candidats</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            id="nbCandidats"
+                                            value={nbCandidats}
+                                            onChange={(e) => setNbCandidats(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="form-group mt-3">
+                                        <label htmlFor="dateLimite">Date limite</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            id="dateLimite"
+                                            value={dateLimite}
+                                            onChange={(e) => setDateLimite(e.target.value)}
+                                        />
+                                    </div>
+
+                                    {/* Existing file details section */}
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
                                             <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>
                                             <h6><strong>Type du fichier :</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>Date de soumission :</strong> {new Date().toLocaleDateString()}</h6>
+                                            <h6><strong>Date de soumission :</strong> {new Date().toLocaleDateString()}
+                                            </h6>
                                         </div>
                                     )}
                                 </div>
+
                                 <div className="modal-footer">
                                     <button className="btn btn-primary" onClick={handleSubmit}>
                                         Soumettre

@@ -40,8 +40,8 @@ public class OffreDeStageServiceTest {
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeurDTO = new EmployeurDTO("John", "Doe", "email@gmail.com", Role.EMPLOYEUR, credentials, "Entreprise");
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
-        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5, newEmployeurDTO);
-        offreDeStageEntity = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5);
+        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5,"", newEmployeurDTO);
+        offreDeStageEntity = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5, "status");
     }
 
 
@@ -64,6 +64,7 @@ public class OffreDeStageServiceTest {
         assertEquals(newOffreDTO.getNbCandidats(), response.get().getNbCandidats());
         assertEquals(newOffreDTO.getEmployeur().getFirstName(), response.get().getEmployeur().getFirstName());
         assertEquals(newOffreDTO.getEmployeur().getLastName(), response.get().getEmployeur().getLastName());
+
     }
 
     @Test
@@ -108,7 +109,7 @@ public class OffreDeStageServiceTest {
     public void test_deleteOffreDeStage() {
         // Arrange
         Long offreId = 1L;
-        OffreDeStage offreDeStage = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5);
+        OffreDeStage offreDeStage = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5, "status");
         offreDeStage.setId(offreId);
 
         // Act

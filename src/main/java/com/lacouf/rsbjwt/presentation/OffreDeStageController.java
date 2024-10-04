@@ -30,6 +30,9 @@ public class OffreDeStageController {
             @PathVariable String email,
             @RequestBody OffreDeStageDTO newOffreDeStageDTO) {
 
+        System.out.println("email: " + email);
+        System.out.println("newOffreDeStageDTO: " + newOffreDeStageDTO.getData());
+
         if (newOffreDeStageDTO == null || email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

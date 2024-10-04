@@ -16,6 +16,8 @@ public class OffreDeStageTest {
     private static final LocalDate DATE_JOUR = LocalDate.now();
     private static final int NB_CANDIDATS = 3;
 
+    private static final String STATUS = "status";
+
 
     private static final Employeur EMPLOYEUR = new Employeur(
             "John",
@@ -35,7 +37,8 @@ public class OffreDeStageTest {
                 LOCALISATION,
                 DATE_LIMITE,
                 DATA,
-                NB_CANDIDATS
+                NB_CANDIDATS,
+                STATUS
         );
         offre.setEmployeur(EMPLOYEUR);
     }

@@ -18,21 +18,27 @@ public class OffreDeStage {
     private String localisation;
     private LocalDate dateLimite;
     private LocalDate datePublication;
+
+    @Column(nullable = false, length = Integer.MAX_VALUE)
     private String data;
+
     private int nbCandidats;
+    private String status;
+
 
     @ManyToOne
     @JoinColumn(name = "EMPLOYEUR_ID")
     private Employeur employeur;
 
 
-    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats) {
+    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats,String status) {
         this.titre = titre;
         this.localisation = localisation;
         this.dateLimite = dateLimite;
         this.datePublication = LocalDate.now();
         this.data = data;
         this.nbCandidats = nbCandidats;
+        this.status = status;
     }
     @Override
     public String toString() {
@@ -43,7 +49,6 @@ public class OffreDeStage {
                 ", dateLimite='" + dateLimite + '\'' +
                 ", employeur='" + employeur + '\'' +
                 ", datePublication='" + datePublication + '\'' +
-                ", data='" + data + '\'' +
                 ", nbCandidats='" + nbCandidats + '\'' +
                 '}';
     }

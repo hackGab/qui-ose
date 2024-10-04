@@ -32,22 +32,24 @@ public class OffreDeStageService {
                         offreDeStageDTO.getNbCandidats()
                 );
 
-                // Associer l'employeur à l'offre de stage
                 offreDeStage.setEmployeur(employeur);
+
                 OffreDeStage savedOffre = offreDeStageRepository.save(offreDeStage);
+
                 return Optional.of(new OffreDeStageDTO(savedOffre));
 
             } catch (Exception e) {
                 return Optional.empty();
             }
         } else {
-            return Optional.empty(); // Employeur non trouvé
+            return Optional.empty();
         }
     }
 
+
     public Optional<OffreDeStageDTO> getOffreDeStageById(Long id) {
         return offreDeStageRepository.findById(id)
-                .map(OffreDeStageDTO::new);  // Convertir l'entité en DTO si trouvée
+                .map(OffreDeStageDTO::new);
     }
 
 

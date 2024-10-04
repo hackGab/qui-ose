@@ -1,19 +1,16 @@
 package com.lacouf.rsbjwt.service.dto;
 
 import com.lacouf.rsbjwt.model.OffreDeStage;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
 public class OffreDeStageDTO {
-
     private Long id;
     private String titre;
     private String localisation;
@@ -23,8 +20,17 @@ public class OffreDeStageDTO {
     private int nbCandidats;
     private EmployeurDTO employeur;
 
+    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, EmployeurDTO employeur) {
+        this.id = id;
+        this.titre = titre;
+        this.localisation = localisation;
+        this.dateLimite = dateLimite;
+        this.datePublication = datePublication;
+        this.data = data;
+        this.nbCandidats = nbCandidats;
+        this.employeur = employeur;
+    }
 
-    // Constructeur qui prend en paramètre un objet OffreDeStage
     public OffreDeStageDTO(OffreDeStage offre) {
         this.id = offre.getId();
         this.titre = offre.getTitre();
@@ -39,7 +45,4 @@ public class OffreDeStageDTO {
     public static OffreDeStageDTO empty() {
         return new OffreDeStageDTO();
     }
-
-
-
 }

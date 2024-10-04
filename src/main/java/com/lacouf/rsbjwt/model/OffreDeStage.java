@@ -22,23 +22,18 @@ public class OffreDeStage {
     private int nbCandidats;
 
     @ManyToOne
-    @JoinColumn(name = "employeur_id")
+    @JoinColumn(name = "EMPLOYEUR_ID")
     private Employeur employeur;
 
 
     public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats) {
         this.titre = titre;
         this.localisation = localisation;
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        this.dateLimite = LocalDate.parse(dateLimite.format(formatter), formatter);
-        this.datePublication = LocalDate.parse(LocalDate.now().format(formatter), formatter);
+        this.dateLimite = dateLimite;
+        this.datePublication = LocalDate.now();
         this.data = data;
         this.nbCandidats = nbCandidats;
     }
-
-    
-
     @Override
     public String toString() {
         return "OffreDeStage{" +

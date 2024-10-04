@@ -1,7 +1,11 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.CV;
 import com.lacouf.rsbjwt.model.Gestionnaire;
+import com.lacouf.rsbjwt.repository.CVRepository;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.GestionnaireRepository;
+import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,11 +15,15 @@ import java.util.Optional;
 @Service
 public class GestionnaireService {
     private final GestionnaireRepository gestionnaireRepository;
-
+    private final CVRepository cvRepository;
+    private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, PasswordEncoder passwordEncoder) {
+
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository ,  PasswordEncoder passwordEncoder) {
         this.gestionnaireRepository = gestionnaireRepository;
+        this.cvRepository = cvRepository;
+        this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -34,5 +42,18 @@ public class GestionnaireService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public Optional<CVDTO> validerOuRejeterCV(Long cvId, String status) {
+        Optional<CV> cvOptional = cvRepository.findById(cvId);
+
+        if (cvOptional.isPresent()) {
+            CV cv = cvOptional.get();
+            cv.setStatus(status);  // "accepté" ou "rejeté"
+            cvRepository.save(cv);
+            return Optional.of(new CVDTO(cv));
+        }
+
+        return Optional.empty();
     }
 }

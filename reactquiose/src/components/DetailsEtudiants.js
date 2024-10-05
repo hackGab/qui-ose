@@ -8,27 +8,25 @@ import '../CSS/DetailsEtudiants.css';
 function DetailsEtudiants() {
     const { t } = useTranslation();
     const location = useLocation();
-    const student = location.state?.student;  // Récupère les détails de l'étudiant depuis l'état de location
+    const student = location.state?.student;
     console.log('Student details:', student);
 
-    // Fonction pour valider ou rejeter un CV
     const updateCVStatus = (status) => {
-        const token = localStorage.getItem('authToken'); // Récupérer le token d'authentification
+        const token = localStorage.getItem('authToken');
 
         fetch(`http://localhost:8080/gestionnaire/validerOuRejeterCV/${student.cv.id}?status=${status}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Ajouter le token d'authentification
             }
         })
             .then(response => {
-                console.log('Response status:', response.status);  // Log pour le statut de la réponse
+                console.log('Response status:', response.status);
                 if (response.ok) {
-                    alert(t('cvStatusUpdated'));  // Afficher un message de succès
+                    alert(t('cvStatusUpdated'));
                 } else {
-                    alert(t('cvStatusUpdateFailed'));  // Afficher un message d'erreur
-                    console.error('Error details:', response.statusText); // Log les détails de l'erreur
+                    alert(t('cvStatusUpdateFailed'));
+                    console.error('Error details:', response.statusText);
                 }
             })
             .catch(error => {
@@ -63,10 +61,10 @@ function DetailsEtudiants() {
                     <h5 className="mb-3">{t('studentCV')}</h5>
                     <div className="iframe-container">
                         {isCvMissing ? (
-                            <p className="text-danger text-center">{t('cvNotSubmitted')}</p>  // Affiche un message si le CV est manquant
+                            <p className="text-danger text-center">{t('cvNotSubmitted')}</p>
                         ) : (
                             <iframe
-                                src={student.cv.data}  // Utilisez la propriété data pour afficher le CV PDF
+                                src={student.cv.data}
                                 title={t('studentCV')}
                                 className="cv-frame"
                             ></iframe>

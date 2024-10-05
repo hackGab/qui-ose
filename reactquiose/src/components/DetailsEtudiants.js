@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ function DetailsEtudiants() {
     const { t } = useTranslation();
     const location = useLocation();
     const student = location.state?.student;
+    const [selectedStatus, setSelectedStatus] = useState(null); // État pour suivre le statut sélectionné
     console.log('Student details:', student);
 
     const updateCVStatus = (status) => {
@@ -32,6 +33,18 @@ function DetailsEtudiants() {
             .catch(error => {
                 console.error('Erreur lors de la mise à jour du CV:', error);
             });
+    };
+
+    const handleStatusSelect = (status) => {
+        setSelectedStatus(status); // Met à jour le statut sélectionné
+    };
+
+    const handleConfirm = () => {
+        if (selectedStatus) {
+            updateCVStatus(selectedStatus); // Appelle la fonction de mise à jour avec le statut sélectionné
+        } else {
+            alert(t('pleaseSelectStatus')); // Alerte si aucun statut n'est sélectionné
+        }
     };
 
     if (!student) {
@@ -74,13 +87,21 @@ function DetailsEtudiants() {
                     <div className="mt-4">
                         <h5>{t('actions')}</h5>
                         <div className="btn-group-vertical w-100">
-                            <button className="btn btn-success mb-2" onClick={() => updateCVStatus('validé')}>
+                            <button
+                                className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('validé')}
+                            >
                                 {t('validate')}
                             </button>
-                            <button className="btn btn-danger mb-2" onClick={() => updateCVStatus('rejeté')}>
+                            <button
+                                className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('rejeté')}
+                            >
                                 {t('reject')}
                             </button>
-                            <button className="btn btn-primary">{t('confirm')}</button>
+                            <button className="btn btn-primary" onClick={handleConfirm}>
+                                {t('confirm')}
+                            </button>
                         </div>
                     </div>
                 </div>

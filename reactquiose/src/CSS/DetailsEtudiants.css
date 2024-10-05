@@ -187,3 +187,13 @@ body {
         overflow-y: auto;
     }
 }
+
+.btn-gray {
+    background-color: gray;
+    color: white; /* Changez cela selon vos besoins */
+}
+
+.btn-gray:hover {
+    background-color: darkgray; /* Couleur de fond au survol */
+    color: white; /* Couleur du texte au survol */
+}

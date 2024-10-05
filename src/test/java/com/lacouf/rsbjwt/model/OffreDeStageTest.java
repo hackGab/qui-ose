@@ -71,7 +71,6 @@ public class OffreDeStageTest {
                 ", dateLimite='" + DATE_LIMITE + '\'' +
                 ", employeur='" + EMPLOYEUR + '\'' +
                 ", datePublication='" + DATE_JOUR + '\'' +
-                ", data='" + DATA + '\'' +
                 ", nbCandidats='" + NB_CANDIDATS + '\'' +
                 "}";
         assertEquals(expected, offre.toString());

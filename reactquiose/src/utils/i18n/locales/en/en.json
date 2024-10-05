@@ -47,5 +47,6 @@
   "reject": "Reject",
   "confirm": "Confirm",
   "actions": "Actions",
-  "studentCV": "Student CV"
+  "studentCV": "Student CV",
+  "cvNotSubmitted": "CV NOT SUBMITTED"
 }

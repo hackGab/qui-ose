@@ -26,6 +26,7 @@ function ListeEtudiants() {
                 return response.json();
             })
             .then(data => {
+                console.log(data);
                 setEtudiants(data);
                 setLoading(false);
             })
@@ -52,7 +53,12 @@ function ListeEtudiants() {
                 <div className="row">
                     {etudiants.map((etudiant) => (
                         <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
-                            <Link to={`/details/${etudiant.id}`} className="text-decoration-none">
+                            {/* Passer les détails de l'étudiant via le state */}
+                            <Link
+                                to={`/detailsEtudiant/${etudiant.id}`}
+                                className="text-decoration-none"
+                                state={{ student: etudiant }}
+                            >
                                 <div className={`card shadow w-100 ${etudiant.status}`}>
                                     <div className="card-body">
                                         <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>

@@ -51,27 +51,29 @@ function ListeEtudiants() {
                 <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
                 <p className="text-center mb-4">{t('studentListSubtitle')}</p>
                 <div className="row">
-                    {etudiants.map((etudiant) => (
-                        <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
-                            {/* Passer les détails de l'étudiant via le state */}
-                            <Link
-                                to={`/detailsEtudiant/${etudiant.id}`}
-                                className="text-decoration-none"
-                                state={{ student: etudiant }}
-                            >
-                                <div className={`card shadow w-100 ${etudiant.status}`}>
-                                    <div className="card-body">
-                                        <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
-                                        <p className="card-text">
-                                            <FaEnvelope /> {etudiant.credentials.email}<br />
-                                            <FaPhone /> {etudiant.phoneNumber}<br />
-                                            <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
-                                        </p>
+                    {etudiants.map((etudiant) => {
+                        const status = etudiant.cv ? etudiant.cv.status : null; // Vérification si le CV existe
+                        return (
+                            <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
+                                <Link
+                                    to={`/detailsEtudiant/${etudiant.id}`}
+                                    className="text-decoration-none"
+                                    state={{ student: etudiant }}
+                                >
+                                    <div className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                        <div className="card-body">
+                                            <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
+                                            <p className="card-text">
+                                                <FaEnvelope /> {etudiant.credentials.email}<br />
+                                                <FaPhone /> {etudiant.phoneNumber}<br />
+                                                <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
+                                </Link>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>

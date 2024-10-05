@@ -62,7 +62,7 @@ function GestionnaireHeader() {
                         <div className="profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
+                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
                         </div>
                     )}
                 </div>

@@ -9,13 +9,37 @@ function DetailsEtudiants() {
     const { t } = useTranslation();
     const location = useLocation();
     const student = location.state?.student;  // Récupère les détails de l'étudiant depuis l'état de location
+    console.log('Student details:', student);
 
-    // Vérification si les données de l'étudiant existent
+    // Fonction pour valider ou rejeter un CV
+    const updateCVStatus = (status) => {
+        const token = localStorage.getItem('authToken'); // Récupérer le token d'authentification
+
+        fetch(`http://localhost:8080/gestionnaire/validerOuRejeterCV/${student.cv.id}?status=${status}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Ajouter le token d'authentification
+            }
+        })
+            .then(response => {
+                console.log('Response status:', response.status);  // Log pour le statut de la réponse
+                if (response.ok) {
+                    alert(t('cvStatusUpdated'));  // Afficher un message de succès
+                } else {
+                    alert(t('cvStatusUpdateFailed'));  // Afficher un message d'erreur
+                    console.error('Error details:', response.statusText); // Log les détails de l'erreur
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour du CV:', error);
+            });
+    };
+
     if (!student) {
         return <div>{t('studentNotFound')}</div>;
     }
 
-    // Vérification si seulement le CV est manquant
     const isCvMissing = !student.cv?.data;
 
     return (
@@ -52,8 +76,12 @@ function DetailsEtudiants() {
                     <div className="mt-4">
                         <h5>{t('actions')}</h5>
                         <div className="btn-group-vertical w-100">
-                            <button className="btn btn-success mb-2">{t('validate')}</button>
-                            <button className="btn btn-danger mb-2">{t('reject')}</button>
+                            <button className="btn btn-success mb-2" onClick={() => updateCVStatus('validé')}>
+                                {t('validate')}
+                            </button>
+                            <button className="btn btn-danger mb-2" onClick={() => updateCVStatus('rejeté')}>
+                                {t('reject')}
+                            </button>
                             <button className="btn btn-primary">{t('confirm')}</button>
                         </div>
                     </div>

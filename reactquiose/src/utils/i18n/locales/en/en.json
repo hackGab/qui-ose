@@ -48,5 +48,7 @@
   "confirm": "Confirm",
   "actions": "Actions",
   "studentCV": "Student CV",
-  "cvNotSubmitted": "CV NOT SUBMITTED"
+  "cvNotSubmitted": "CV NOT SUBMITTED",
+  "cvStatusUpdated": "The CV status has been updated successfully.",
+  "cvStatusUpdateFailed": "Failed to update the CV status."
 }

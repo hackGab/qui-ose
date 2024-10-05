@@ -48,5 +48,7 @@
   "confirm": "Confirmer",
   "actions": "Actions",
   "studentCV": "CV de l'Étudiant",
-  "cvNotSubmitted": "CV NON REMIS"
+  "cvNotSubmitted": "CV NON REMIS",
+  "cvStatusUpdated": "Le statut du CV a été mis à jour avec succès.",
+  "cvStatusUpdateFailed": "Échec de la mise à jour du statut du CV."
 }

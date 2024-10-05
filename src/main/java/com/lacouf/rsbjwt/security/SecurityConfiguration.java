@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/etudiant/all").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
                         .requestMatchers(POST, "/employeur/creerEmployeur").permitAll()
+                        .requestMatchers(PUT,"/validerOuRejeterCV/{cvId}").permitAll()
                         .requestMatchers("/emprunteur/**").hasAuthority("EMPRUNTEUR")
                         .requestMatchers("/prepose/**").hasAuthority("PREPOSE")
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")

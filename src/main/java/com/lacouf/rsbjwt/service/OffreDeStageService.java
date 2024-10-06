@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,14 @@ import java.util.stream.Collectors;
 public class OffreDeStageService {
 
     private final OffreDeStageRepository offreDeStageRepository;
+    private final EmployeurRepository employeurRepository;
 
-    public OffreDeStageService(OffreDeStageRepository offreDeStageRepository) {
+    public OffreDeStageService(OffreDeStageRepository offreDeStageRepository, EmployeurRepository employeurRepository) {
         this.offreDeStageRepository = offreDeStageRepository;
+        this.employeurRepository = employeurRepository;
     }
 
     public Optional<OffreDeStageDTO> creerOffreDeStage(OffreDeStageDTO offreDeStageDTO, Optional<Employeur> employeurOpt) {
-
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
             try {
@@ -32,13 +34,9 @@ public class OffreDeStageService {
                         offreDeStageDTO.getNbCandidats(),
                         offreDeStageDTO.getStatus()
                 );
-
                 offreDeStage.setEmployeur(employeur);
-
                 OffreDeStage savedOffre = offreDeStageRepository.save(offreDeStage);
-
                 return Optional.of(new OffreDeStageDTO(savedOffre));
-
             } catch (Exception e) {
                 return Optional.empty();
             }
@@ -47,12 +45,10 @@ public class OffreDeStageService {
         }
     }
 
-
     public Optional<OffreDeStageDTO> getOffreDeStageById(Long id) {
         return offreDeStageRepository.findById(id)
                 .map(OffreDeStageDTO::new);
     }
-
 
     public Optional<List<OffreDeStageDTO>> getOffreDeStages() {
         List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
@@ -78,4 +74,13 @@ public class OffreDeStageService {
                     return Optional.of(new OffreDeStageDTO(savedOffre));
                 });
     }
+
+    public Optional<List<OffreDeStageDTO>> getOffresEmployeur(Employeur employeur) {
+        List<OffreDeStage> offres = offreDeStageRepository.findByEmployeur(employeur);
+        List<OffreDeStageDTO> offresDTO = offres.stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+        return offresDTO.isEmpty() ? Optional.empty() : Optional.of(offresDTO);
+    }
 }
+

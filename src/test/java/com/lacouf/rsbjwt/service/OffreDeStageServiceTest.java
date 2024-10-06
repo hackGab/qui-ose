@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.service;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
@@ -27,7 +28,10 @@ public class OffreDeStageServiceTest {
     private OffreDeStageRepository offreDeStageRepository;
     private OffreDeStageService offreDeStageService;
 
+    private EmployeurRepository employeurRepository;
+
     private Employeur employeurEntity;
+
     private OffreDeStage offreDeStageEntity;
     private OffreDeStageDTO newOffreDTO;
     private EmployeurDTO newEmployeurDTO;
@@ -35,7 +39,8 @@ public class OffreDeStageServiceTest {
     @BeforeEach
     public void setUp() {
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
-        offreDeStageService = new OffreDeStageService(offreDeStageRepository);
+        employeurRepository = Mockito.mock(EmployeurRepository.class);
+        offreDeStageService = new OffreDeStageService(offreDeStageRepository, employeurRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeurDTO = new EmployeurDTO("John", "Doe", "email@gmail.com", Role.EMPLOYEUR, credentials, "Entreprise");

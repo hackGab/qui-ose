@@ -8,9 +8,15 @@ function AccueilEmployeur() {
     const location = useLocation();
     const [userData, setUserData] = useState(location.state?.userData || null);
 
-    const handleClick = () => {
+    const handleClickSubmit = () => {
         if (userData?.credentials?.email) {
             navigate("/soumettre-offre", { state: { employeurEmail: userData.credentials.email } });
+        }
+    };
+
+    const handleClickView = () => {
+        if (userData?.credentials?.email) {
+            navigate("/visualiser-offres", { state: { employeurEmail: userData.credentials.email } });
         }
     };
 
@@ -18,22 +24,30 @@ function AccueilEmployeur() {
         <div className="container-fluid d-flex flex-column min-vh-100">
             <EmployeurHeader />
 
-        <div className="container mt-5">
-            <h1 className="text-center mt-5 mb-4">Accueil Employeur</h1>
+            <div className="container mt-5">
+                <h1 className="text-center mt-5 mb-4">Accueil Employeur</h1>
 
-            {/* Dashboard Section */}
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="card mb-3 text-center clickable-card" onClick={handleClick}>
-                        <div className="card-body">
-                            <h5 className="card-title">Soumettre une offre d'emploi</h5>
-                            <p className="card-text">Cliquez ici pour soumettre une nouvelle offre d'emploi.</p>
+                {/* Dashboard Section */}
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <div className="card mb-3 text-center clickable-card" onClick={handleClickSubmit}>
+                            <div className="card-body">
+                                <h5 className="card-title">Soumettre une offre d'emploi</h5>
+                                <p className="card-text">Cliquez ici pour soumettre une nouvelle offre d'emploi.</p>
+                            </div>
+                        </div>
+
+                        {/* New Card for Viewing Offers */}
+                        <div className="card mb-3 text-center clickable-card" onClick={handleClickView}>
+                            <div className="card-body">
+                                <h5 className="card-title">Visualiser les offres d'emploi</h5>
+                                <p className="card-text">Cliquez ici pour visualiser les offres d'emploi que vous avez soumises.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     );
 }
 

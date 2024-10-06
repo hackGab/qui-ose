@@ -17,7 +17,6 @@ import java.util.Optional;
 public class OffreDeStageController {
 
     private final OffreDeStageService offreDeStageService;
-
     private final EmployeurService employeurService;
 
     public OffreDeStageController(OffreDeStageService offreDeStageService, EmployeurService employeurService) {
@@ -29,25 +28,38 @@ public class OffreDeStageController {
     public ResponseEntity<OffreDeStageDTO> creerOffreDeStage(
             @PathVariable String email,
             @RequestBody OffreDeStageDTO newOffreDeStageDTO) {
-
-
         if (newOffreDeStageDTO == null || email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
-        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.creerOffreDeStage(newOffreDeStageDTO,employeurOpt);
+        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.creerOffreDeStage(newOffreDeStageDTO, employeurOpt);
 
         return offreDeStageDTO
                 .map(offreDeStage -> ResponseEntity.status(HttpStatus.CREATED).body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
+    @GetMapping("/offresEmployeur/{email}")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresEmployeur(@PathVariable String email) {
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
+        Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
+        if (employeurOpt.isPresent()) {
+            Optional<List<OffreDeStageDTO>> offreDeStageDTOList = offreDeStageService.getOffresEmployeur(employeurOpt.get());
 
+            return offreDeStageDTOList.map(offreDeStageList -> ResponseEntity.ok().body(offreDeStageList))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<OffreDeStageDTO> deleteOffreDeStage(@PathVariable Long id) {
-        if(id == null) {
+    public ResponseEntity<Void> deleteOffreDeStage(@PathVariable Long id) {
+        if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -56,10 +68,9 @@ public class OffreDeStageController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {
-        if(id == null || offreDeStageDTO == null) {
+        if (id == null || offreDeStageDTO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -69,11 +80,9 @@ public class OffreDeStageController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<OffreDeStageDTO> getOffreDeStageById(@PathVariable Long id) {
-        // TODO: Check if id is null... Faut véfirifier si le id existe bien dans la bd..
-        if(id == null) {
+        if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -90,6 +99,5 @@ public class OffreDeStageController {
         return offreDeStageDTOList.map(offreDeStageList -> ResponseEntity.ok().body(offreDeStageList))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
-
 }
+

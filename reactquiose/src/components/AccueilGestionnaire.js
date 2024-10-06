@@ -10,7 +10,6 @@ import employeurImage from '../images/Employeur.png';
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();
-    const [etudiants, setEtudiants] = useState([]);
     const [refusNotification, setRefusNotification] = useState(0);
 
     const sections = [

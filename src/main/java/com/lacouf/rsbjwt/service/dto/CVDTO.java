@@ -21,6 +21,7 @@ public class CVDTO {
     private LocalDate uploadDate;
     private String data;
     private String status;
+    private String rejetMessage;
 
     public CVDTO(String name, String type, String data, String status) {
         this.name = name;
@@ -29,6 +30,7 @@ public class CVDTO {
         this.uploadDate = LocalDate.parse(LocalDate.now().format(formatter), formatter);
         this.data = data;
         this.status = status;
+        this.rejetMessage = "";
     }
 
     public CVDTO(CV cv) {
@@ -38,6 +40,7 @@ public class CVDTO {
         this.uploadDate = cv.getUploadDate();
         this.data = cv.getData();
         this.status = cv.getStatus();
+        this.rejetMessage = cv.getRejetMessage();
     }
 
     @Override
@@ -48,7 +51,7 @@ public class CVDTO {
                 ", type='" + type + '\'' +
                 ", uploadDate=" + uploadDate +
                 ", status='" + status + '\'' +
-                ", data='" + "Good" + '\'' +
+                ", messageDeRejet='" + rejetMessage + '\'' +
                 '}';
     }
 }

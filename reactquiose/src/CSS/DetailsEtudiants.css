@@ -190,10 +190,14 @@ body {
 
 .btn-gray {
     background-color: gray;
-    color: white; /* Changez cela selon vos besoins */
+    color: white;
 }
 
 .btn-gray:hover {
-    background-color: darkgray; /* Couleur de fond au survol */
-    color: white; /* Couleur du texte au survol */
+    background-color: darkgray;
+    color: white;
+}
+
+.rejection-reason {
+    width: 100%;
 }

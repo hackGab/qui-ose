@@ -14,6 +14,7 @@ function AccueilEtudiant() {
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [internships, setInternships] = useState([]);
+    const [rejectionMessage, setRejectionMessage] = useState("");
 
     useEffect(() => {
         if (userData) {
@@ -31,9 +32,16 @@ function AccueilEtudiant() {
                         setFile(data.cv);
                         setFileData(data.cv.data);
                         console.log('Réponse du serveur:', data);
-                    } else {
+                        console.log('CV:', data.cv.rejetMessage);
+
+                        if (data.cv.status === 'rejeté') {
+                            setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
+                        } else {
+                            setRejectionMessage("");
+                        }
                     }
 
+                    // Récupération des stages
                     const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
                     fetch(internshipsUrl)
                         .then((response) => {
@@ -182,18 +190,24 @@ function AccueilEtudiant() {
                 )}
             </div>
 
+            {rejectionMessage && (
+                <div className="alert alert-danger text-center error-text">
+                    {rejectionMessage}
+                </div>
+            )}
+
             <div className="d-flex justify-content-center my-3">
                 <button
                     className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'Aprouvé' ? 'btn-success' :
-                                file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                            file.status === 'validé' ? 'btn-success' :
+                                file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
                 >
                     {file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? 'CV en attente de confirmation' :
-                            file.status === 'Aprouvé' ? 'CV Approuvé' :
-                                file.status === 'Rejeté' ? 'CV Rejeté' : 'CV non remis'}
+                            file.status === 'validé' ? 'CV Approuvé' :
+                                file.status === 'rejeté' ? 'CV Rejeté' : 'CV refusé'}
                 </button>
             </div>
 
@@ -206,21 +220,26 @@ function AccueilEtudiant() {
             )}
 
             <div className="text-center my-4">
-                <h3>Stages</h3>
-                <div className="d-flex justify-content-center">
-                    {internships.length > 0 ? (
-                        <ul className="list-unstyled">
-                            {internships.map((internship, index) => (
-                                <li key={index}>
-                                    {internship.title} - {internship.company} ({internship.duration})
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Aucun stage à afficher.</p>
-                    )}
-                </div>
+                {file && file.status !== 'rejeté' && (
+                    <>
+                        <h3>Stages</h3>
+                        <div className="d-flex justify-content-center">
+                            {internships.length > 0 ? (
+                                <ul className="list-unstyled">
+                                    {internships.map((internship, index) => (
+                                        <li key={index}>
+                                            {internship.title} - {internship.company} ({internship.duration})
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>Aucun stage à afficher.</p>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
+
 
             {showModal && (
                 <div className="custom-modal-overlay">

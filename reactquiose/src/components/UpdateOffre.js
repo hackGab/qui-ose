@@ -65,7 +65,10 @@ function UpdateOffre() {
             datePublication: formData.get("datePublication"),
             data: formData.get("data"),
         };
-        console.log(data);
+
+        if (data.data === null) {
+            data.data = offre.data;
+        }
 
         try {
             const response = await fetch(`http://localhost:8081/offreDeStage/${offre.id}`, {

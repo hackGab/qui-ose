@@ -2,8 +2,12 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lacouf.rsbjwt.service.*;
+import com.lacouf.rsbjwt.service.EmployeurService;
+import com.lacouf.rsbjwt.service.EtudiantService;
+import com.lacouf.rsbjwt.service.ProfesseurService;
+import com.lacouf.rsbjwt.service.UserAppService;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
+import jakarta.persistence.GeneratedValue;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +33,6 @@ public class ProfesseurControllerTest {
     @MockBean
     private ProfesseurService professeurService;
 
-
     @MockBean
     private EtudiantService etudiantService;
 
@@ -37,10 +40,13 @@ public class ProfesseurControllerTest {
     private EmployeurService employeurService;
 
     @MockBean
-    private UserAppService userService;
+    private GestionnaireService gestionnaireService;
 
     @MockBean
-    private GestionnaireService gestionnaireService;
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private UserAppService userService;
 
     @MockBean
     private PasswordEncoder passwordEncoder;

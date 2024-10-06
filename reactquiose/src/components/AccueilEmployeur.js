@@ -9,6 +9,7 @@ function AccueilEmployeur() {
     const [userData, setUserData] = useState(location.state?.userData || null);
 
     const handleClickSubmit = () => {
+        console.log("Soumettre une offre d'emploi");
         if (userData?.credentials?.email) {
             navigate("/soumettre-offre", { state: { employeurEmail: userData.credentials.email } });
         }

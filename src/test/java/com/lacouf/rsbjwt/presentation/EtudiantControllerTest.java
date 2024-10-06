@@ -35,6 +35,9 @@ class EtudiantControllerTest {
     private EtudiantService etudiantService;
 
     @MockBean
+    private GestionnaireService gestionnaireService;
+
+    @MockBean
     private ProfesseurService professeurService;
 
     @MockBean

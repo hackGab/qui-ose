@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import "../CSS/VisualiserOffres.css";
-import EmployeurHeader from "./EmployeurHeader"; // Assurez-vous de mettre à jour le CSS
+import EmployeurHeader from "./EmployeurHeader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function VisualiserOffres() {
     const location = useLocation();
+    const navigate = useNavigate();
     const employeurEmail = location.state?.employeurEmail;
     const [offres, setOffres] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedOffre, setSelectedOffre] = useState(null); // Gérer l'offre sélectionnée
+    const [selectedOffre, setSelectedOffre] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
 
     useEffect(() => {
         const fetchOffres = async () => {
@@ -21,11 +25,18 @@ function VisualiserOffres() {
 
             try {
                 const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}`);
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des offres");
+                if (response.status === 404){
+                    setOffres([]);
+                    return;
                 }
+
                 const data = await response.json();
-                setOffres(data);
+
+                if (data.length === 0) {
+                    setOffres([]);
+                } else {
+                    setOffres(data);
+                }
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -36,7 +47,6 @@ function VisualiserOffres() {
         fetchOffres();
     }, [employeurEmail]);
 
-    // Fonction pour définir la classe CSS en fonction du statut
     const getStatusClass = (status) => {
         switch (status) {
             case "Accepter":
@@ -49,9 +59,7 @@ function VisualiserOffres() {
         }
     };
 
-    // Fonction pour gérer le clic sur une offre
     const handleOffreClick = (index) => {
-        // Si on clique sur la même offre, la désélectionner
         if (selectedOffre === index) {
             setSelectedOffre(null);
         } else {
@@ -59,12 +67,37 @@ function VisualiserOffres() {
         }
     };
 
-    // Fonction pour ouvrir le PDF dans une nouvelle fenêtre
     const openPDF = (data) => {
         const pdfWindow = window.open();
         pdfWindow.document.write(
             `<iframe src="${data}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
         );
+    };
+
+    const deleteOffre = async (id) => {
+        const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette offre ?");
+        if (confirmDelete) {
+            setDeletingId(id);
+            try {
+                const response = await fetch(`http://localhost:8081/offreDeStage/${id}`, {
+                    method: "DELETE",
+                });
+                if (response.status === 204) {
+                    setOffres(offres.filter((offre) => offre.id !== id));
+                    setSelectedOffre(null);
+                } else {
+                    setError("Erreur lors de la suppression de l'offre");
+                }
+            } catch (error) {
+                setError("Erreur lors de la suppression de l'offre");
+            } finally {
+                setDeletingId(null);
+            }
+        }
+    };
+
+    const handleUpdateClick = (offre, employeurEmail) => {
+        navigate("/update-offre", { state: { offre,employeurEmail } });
     };
 
     if (isLoading) {
@@ -89,8 +122,8 @@ function VisualiserOffres() {
                         {offres.map((offre, index) => (
                             <div
                                 key={index}
-                                className={`card offre-card ${selectedOffre === index ? "hovered" : ""}`}
-                                onClick={() => handleOffreClick(index)} // Gérer le clic ici
+                                className={`card offre-card ${selectedOffre === index ? "hovered" : ""} ${deletingId === offre.id ? "fade-out" : ""}`}
+                                onClick={() => handleOffreClick(index)}
                             >
                                 <div className="card-body">
                                     <h5 className="card-title">{offre.titre}</h5>
@@ -107,16 +140,43 @@ function VisualiserOffres() {
                                     </div>
 
                                     {selectedOffre === index && (
-                                        <div
-                                            className="card pdf-card mt-4"
-                                            style={{ backgroundColor: "#f0f0f0" }} // Couleur de fond gris
-                                            onClick={() => openPDF(offre.data)} // Remplacez "data" par le champ correspondant au PDF
-                                        >
-                                            <div className="card-body text-center">
-                                                <h5 className="card-title">Voir le fichier PDF</h5>
-                                                <p className="card-text">Cliquez ici pour ouvrir le PDF de l'offre sélectionnée.</p>
+                                        <>
+                                            <div
+                                                className="card pdf-card mt-4"
+                                                style={{ backgroundColor: "#f0f0f0" }}
+                                                onClick={() => openPDF(offre.data)}
+                                            >
+                                                <div className="card-body text-center">
+                                                    <h5 className="card-title">Voir le fichier PDF</h5>
+                                                    <p className="card-text">Cliquez ici pour ouvrir le PDF de l'offre sélectionnée.</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div className="d-flex justify-content-between mt-4">
+                                                {/* Icône de modification */}
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                    size="2x"
+                                                    className="text-warning"
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleUpdateClick(offre,employeurEmail);
+                                                    }}
+                                                />
+
+                                                {/* Icône de suppression */}
+                                                <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    size="2x"
+                                                    className="text-danger"
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        deleteOffre(offre.id);
+                                                    }}
+                                                />
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </div>

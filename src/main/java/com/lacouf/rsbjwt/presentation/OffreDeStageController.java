@@ -59,6 +59,7 @@ public class OffreDeStageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOffreDeStage(@PathVariable Long id) {
+        System.out.println("id = " + id);
         if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -70,6 +71,9 @@ public class OffreDeStageController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {
+        System.out.println("id = " + id);
+
+
         if (id == null || offreDeStageDTO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -89,14 +93,6 @@ public class OffreDeStageController {
         Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.getOffreDeStageById(id);
 
         return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @GetMapping("/tous")
-    public ResponseEntity<List<OffreDeStageDTO>> getOffreDeStages() {
-        Optional<List<OffreDeStageDTO>> offreDeStageDTOList = offreDeStageService.getOffreDeStages();
-
-        return offreDeStageDTOList.map(offreDeStageList -> ResponseEntity.ok().body(offreDeStageList))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

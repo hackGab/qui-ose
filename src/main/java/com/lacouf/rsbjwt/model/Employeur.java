@@ -25,13 +25,14 @@ public class Employeur extends UserApp{
     @Override
     public String toString() {
         return "Employeur{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", role='" + getRole() + '\'' +
-                ", entreprise='" + entreprise + '\'' +
+                "id=" + (id != null ? id : "null") +
+                ", firstName='" + (firstName != null ? firstName : "null") + '\'' +
+                ", lastName='" + (lastName != null ? lastName : "null") + '\'' +
+                ", email='" + (getEmail() != null ? getEmail() : "null") + '\'' +
+                ", phoneNumber='" + (phoneNumber != null ? phoneNumber : "null") + '\'' +
+                ", role='" + (getRole() != null ? getRole() : "null") + '\'' +
+                ", entreprise='" + (entreprise != null ? entreprise : "null") + '\'' +
                 '}';
     }
+
 }

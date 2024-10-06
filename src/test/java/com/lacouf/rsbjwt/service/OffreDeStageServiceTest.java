@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
@@ -122,5 +123,92 @@ public class OffreDeStageServiceTest {
 
         // Assert
         Mockito.verify(offreDeStageRepository).deleteById(offreId);
+    }
+
+    @Test
+    void getOffresEmployeur_ShouldReturnOffres_WhenEmployeurHasOffres() {
+        // Arrange
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setTitre("Stage en développement");
+        offreDeStage.setLocalisation("Paris");
+        offreDeStage.setDateLimite(LocalDate.now().plusDays(30));
+        offreDeStage.setData("Description du stage");
+        offreDeStage.setNbCandidats(10);
+        offreDeStage.setStatus("Ouvert");
+        offreDeStage.setEmployeur(employeurEntity);
+
+        List<OffreDeStage> offresList = List.of(offreDeStage);
+
+
+        Employeur employeurEntity = new Employeur();
+        employeurEntity.setId(1L);
+        employeurEntity.setFirstName("John");
+        employeurEntity.setLastName("Doe");
+        employeurEntity.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
+
+        when(offreDeStageRepository.findByEmployeur(employeurEntity)).thenReturn(offresList);
+
+        // Act
+        Optional<List<OffreDeStageDTO>> response = offreDeStageService.getOffresEmployeur(employeurEntity);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(1, response.get().size());
+
+        OffreDeStageDTO returnedOffre = response.get().getFirst();
+        assertEquals(offreDeStage.getTitre(), returnedOffre.getTitre());
+        assertEquals(offreDeStage.getLocalisation(), returnedOffre.getLocalisation());
+        assertEquals(offreDeStage.getDateLimite(), returnedOffre.getDateLimite());
+        assertEquals(offreDeStage.getData(), returnedOffre.getData());
+        assertEquals(offreDeStage.getNbCandidats(), returnedOffre.getNbCandidats());
+        assertEquals(offreDeStage.getStatus(), returnedOffre.getStatus());
+    }
+
+    @Test
+    void getOffresEmployeur_ShouldThrowException_WhenEmployeurEmailIsNull() {
+        // Arrange
+        Employeur employeurEntity = new Employeur();
+        employeurEntity.setId(1L);
+        employeurEntity.setFirstName("John");
+        employeurEntity.setLastName("Doe");
+        employeurEntity.setPhoneNumber("1234567890");
+        employeurEntity.setEntreprise("Tech Company");
+
+        Credentials credentials = new Credentials("", "password", Role.EMPLOYEUR);
+        employeurEntity.setCredentials(credentials);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> offreDeStageService.getOffresEmployeur(employeurEntity));
+    }
+
+    @Test
+    void updateOffreDeStage() {
+        // Arrange
+        OffreDeStageDTO updatedOffreDTO = new OffreDeStageDTO(1L, "Stage en développement", "Paris", LocalDate.now().plusDays(30), LocalDate.now().plusDays(60), "Description du stage", 10, "Ouvert", newEmployeurDTO);
+
+        OffreDeStage updatedOffre = new OffreDeStage();
+        updatedOffre.setId(1L);
+        updatedOffre.setTitre("Stage en développement");
+        updatedOffre.setLocalisation("Paris");
+        updatedOffre.setDateLimite(LocalDate.now().plusDays(30));
+        updatedOffre.setData("Description du stage");
+        updatedOffre.setNbCandidats(10);
+        updatedOffre.setStatus("Ouvert");
+        updatedOffre.setEmployeur(employeurEntity);
+
+        when(offreDeStageRepository.findById(1L)).thenReturn(Optional.of(offreDeStageEntity));
+        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(updatedOffre);
+
+        // Act
+        Optional<OffreDeStageDTO> response = offreDeStageService.updateOffreDeStage(1L, updatedOffreDTO);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(updatedOffreDTO.getTitre(), response.get().getTitre());
+        assertEquals(updatedOffreDTO.getLocalisation(), response.get().getLocalisation());
+        assertEquals(updatedOffreDTO.getDateLimite(), response.get().getDateLimite());
+        assertEquals(updatedOffreDTO.getData(), response.get().getData());
+        assertEquals(updatedOffreDTO.getNbCandidats(), response.get().getNbCandidats());
+        assertEquals(updatedOffreDTO.getStatus(), response.get().getStatus());
     }
 }

@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,6 +77,62 @@ public class OffreDeStageControllerTest {
     }
 
 
+    @Test
+    void getOffresEmployeur() {
+        String email = "s@d.com";
+        Employeur employeur = new Employeur("John", "Doe", email, "password", "123456789", "Entreprise");
+
+        Mockito.when(employeurService.findByCredentials_Email(email))
+                .thenReturn(Optional.of(employeur));
+
+        Mockito.when(offreDeStageService.getOffresEmployeur(employeur)).thenReturn(Optional.of(List.of(new OffreDeStageDTO())));
+
+        ResponseEntity<List<OffreDeStageDTO>> response = controller.getOffresEmployeur(email);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    void getOffresEmployeur_with_no_email() {
+        ResponseEntity<List<OffreDeStageDTO>> response = controller.getOffresEmployeur(null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
 
+
+    @Test
+    void deleteOffreDeStage() {
+        Long id = 1L;
+        ResponseEntity<Void> response = controller.deleteOffreDeStage(id);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    void try_to_deleteOffreDeStage_with_no_id() {
+        ResponseEntity<Void> response = controller.deleteOffreDeStage(null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void updateOffreDeStage() {
+        Long id = 1L;
+        OffreDeStageDTO updatedOffre = new OffreDeStageDTO();
+        Mockito.when(offreDeStageService.updateOffreDeStage(id, updatedOffre)).thenReturn(Optional.of(updatedOffre));
+
+        ResponseEntity<OffreDeStageDTO> response = controller.updateOffreDeStage(id, updatedOffre);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedOffre, response.getBody());
+    }
+
+    @Test
+    void try_to_updateOffreDeStage_with_no_id() {
+        ResponseEntity<OffreDeStageDTO> response = controller.updateOffreDeStage(null, null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 }

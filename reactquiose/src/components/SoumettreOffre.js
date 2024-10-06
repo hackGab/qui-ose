@@ -20,11 +20,9 @@ function SoumettreOffre() {
     const [datePublication, setPublication] = useState("");
 
     useEffect(() => {
-        console.log("Email de l'employeur:", employeurEmail);
     }, [employeurEmail]);
 
     const afficherAjoutOffre = () => {
-        console.log("Affichage de l'ajout d'offre");
         setShowModal(true);
         setTemporaryFile(file ? {...file} : null);
     };
@@ -99,7 +97,6 @@ function SoumettreOffre() {
                 .then((data) => {
                     setFile(data);
                     setFileData(data.data);
-                    console.log("Réponse du serveur:", data);
                 })
                 .then(() => {
                     if (ancienId) {

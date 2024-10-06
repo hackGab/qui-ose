@@ -8,6 +8,7 @@ import AccueilProfesseur from "./components/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
 import VisualiserOffres from "./components/VisualiserOffres";
 import "./App.css";
+import UpdateOffre from "./components/UpdateOffre";
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />
                     <Route path="/soumettre-offre" element={<SoumettreOffre />} />
                     <Route path="visualiser-offres" element={<VisualiserOffres />} />
+                    <Route path="/update-offre" element={<UpdateOffre />} />
 
                     {/* Unauthorized Access */}
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />

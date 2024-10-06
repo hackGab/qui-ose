@@ -50,13 +50,7 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);
     }
 
-    public Optional<List<OffreDeStageDTO>> getOffreDeStages() {
-        List<OffreDeStageDTO> result = offreDeStageRepository.findAll()
-                .stream()
-                .map(OffreDeStageDTO::new)
-                .collect(Collectors.toList());
-        return result.isEmpty() ? Optional.empty() : Optional.of(result);
-    }
+
 
     public void deleteOffreDeStage(Long id) {
         offreDeStageRepository.deleteById(id);
@@ -71,11 +65,15 @@ public class OffreDeStageService {
                     offre.setData(offreDeStageDTO.getData());
                     offre.setNbCandidats(offreDeStageDTO.getNbCandidats());
                     OffreDeStage savedOffre = offreDeStageRepository.save(offre);
+                    System.out.println("savedOffre = " + savedOffre);
                     return Optional.of(new OffreDeStageDTO(savedOffre));
                 });
     }
 
     public Optional<List<OffreDeStageDTO>> getOffresEmployeur(Employeur employeur) {
+        if (employeur.getEmail() == null || employeur.getEmail().isEmpty() || employeur.getEmail().isBlank()) {
+            throw  new IllegalArgumentException("Employeur email is required");
+        }
         List<OffreDeStage> offres = offreDeStageRepository.findByEmployeur(employeur);
         List<OffreDeStageDTO> offresDTO = offres.stream()
                 .map(OffreDeStageDTO::new)

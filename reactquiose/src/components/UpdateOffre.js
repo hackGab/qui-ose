@@ -1,4 +1,3 @@
-// src/components/UpdateOffre.js
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -12,7 +11,7 @@ function UpdateOffre() {
     const [nbCandidats, setNbCandidats] = useState(offre?.nbCandidats || 0);
     const [status, setStatus] = useState(offre?.status || "Attente");
     const [dateLimite, setDateLimite] = useState(offre?.dateLimite || "");
-    const [pdfFile, setPdfFile] = useState(null); // État pour le fichier PDF
+    const [pdfFile, setPdfFile] = useState(null);
     const [dragActive, setDragActive] = useState(false);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ function UpdateOffre() {
 
         const formData = new FormData();
 
-        // Ajout des données de l'offre à formData
         formData.append("titre", titre);
         formData.append("localisation", localisation);
         formData.append("nbCandidats", nbCandidats);
@@ -35,23 +33,20 @@ function UpdateOffre() {
         formData.append("employeur", offre.employeur);
         formData.append("datePublication", offre.datePublication);
 
-        // Gestion du fichier PDF
         if (pdfFile) {
             const reader = new FileReader();
             reader.onloadend = async () => {
-                const base64data = reader.result; // Cette valeur sera une chaîne de caractères au format "data:application/pdf;base64,..."
-                formData.append("data", base64data); // Ajouter le fichier PDF en Base64
+                const base64data = reader.result;
+                formData.append("data", base64data);
                 await sendUpdateRequest(formData);
             };
-            reader.readAsDataURL(pdfFile); // Lire le fichier en tant que Data URL
+            reader.readAsDataURL(pdfFile);
         } else {
-            // Si aucun fichier n'est sélectionné, envoyer les autres données sans fichier
             await sendUpdateRequest(formData);
         }
     };
 
     const sendUpdateRequest = async (formData) => {
-
         console.log(formData.get("titre"));
         console.log(formData.get("localisation"));
         console.log(formData.get("nbCandidats"));
@@ -69,12 +64,15 @@ function UpdateOffre() {
             employeur: offre.employeur,
             datePublication: formData.get("datePublication"),
             data: formData.get("data"),
-        }
+        };
         console.log(data);
 
         try {
             const response = await fetch(`http://localhost:8081/offreDeStage/${offre.id}`, {
                 method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(data),
             });
 
@@ -104,7 +102,7 @@ function UpdateOffre() {
         setDragActive(false);
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
-            setPdfFile(uploadedFile); // Mettre à jour l'état avec le fichier PDF
+            setPdfFile(uploadedFile);
         }
     };
 
@@ -158,10 +156,10 @@ function UpdateOffre() {
                         type="file"
                         className="form-control"
                         accept="application/pdf"
-                        onChange={(e) => setPdfFile(e.target.files[0])} // Mettre à jour l'état avec le fichier PDF sélectionné
+                        onChange={(e) => setPdfFile(e.target.files[0])}
                     />
                     {pdfFile && (
-                        <p>Fichier sélectionné : {pdfFile.name}</p> // Afficher le nom du fichier sélectionné
+                        <p>Fichier sélectionné : {pdfFile.name}</p>
                     )}
                 </div>
                 <button type="submit" className="btn btn-primary mt-3">Mettre à jour l'offre</button>

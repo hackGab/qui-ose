@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
+import {useTranslation} from "react-i18next";
 
 function AccueilEtudiant() {
+    const { t } = useTranslation();
     const location = useLocation();
     const userData = location.state?.userData;
 
@@ -82,7 +84,6 @@ function AccueilEtudiant() {
                 setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
-        } else {
         }
     };
 
@@ -103,7 +104,6 @@ function AccueilEtudiant() {
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({ target: { files: [uploadedFile] } });
-        } else {
         }
     };
 
@@ -159,7 +159,6 @@ function AccueilEtudiant() {
 
             setShowModal(false);
             setTemporaryFile(null);
-        } else {
         }
     };
 
@@ -184,15 +183,16 @@ function AccueilEtudiant() {
 
             <div className="text-center my-4">
                 {file ? (
-                    <h2>Votre CV est chargé !</h2>
+                    <h2>{t('cvLoaded')}</h2>
                 ) : (
-                    <h2 className="text-warning">Veuillez ajouter votre CV pour continuer.</h2>
+                    <h2 className="text-warning">{t('pleaseAddCV')}</h2>
                 )}
             </div>
 
             {rejectionMessage && (
-                <div className="alert alert-danger text-center error-text">
-                    {rejectionMessage}
+                <div className="alert alert-danger text-center error-text" style={{ fontSize: "1.25rem" }}>
+                    <h5>{t('rejectionReason')}</h5>
+                    <p>{rejectionMessage}</p>
                 </div>
             )}
 
@@ -205,16 +205,16 @@ function AccueilEtudiant() {
                     onClick={afficherAjoutCV}
                 >
                     {file == null ? 'Ajouter CV' :
-                        file.status === 'Attente' ? 'CV en attente de confirmation' :
-                            file.status === 'validé' ? 'CV Approuvé' :
-                                file.status === 'rejeté' ? 'CV Rejeté' : 'CV refusé'}
+                        file.status === 'Attente' ? t('cvPending') :
+                            file.status === 'validé' ? t('cvApproved') :
+                                file.status === 'rejeté' ? t('cvRejected') : t('cvRefused')}
                 </button>
             </div>
 
             {file && (
                 <div className="d-flex justify-content-center my-3">
                     <button className="btn btn-info" onClick={openFile}>
-                        Voir mon CV
+                        {t('viewMyCV')}
                     </button>
                 </div>
             )}
@@ -233,7 +233,7 @@ function AccueilEtudiant() {
                                     ))}
                                 </ul>
                             ) : (
-                                <p>Aucun stage à afficher.</p>
+                                <p>{t('noInternships')}</p>
                             )}
                         </div>
                     </>
@@ -247,7 +247,7 @@ function AccueilEtudiant() {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
+                                    <h5 className="modal-title">{t('manipulateCV')}</h5>
                                 </div>
                                 <div className="modal-body">
                                     <div
@@ -258,29 +258,30 @@ function AccueilEtudiant() {
                                         onClick={handleClick}
                                         className={`drop-zone ${dragActive ? "active" : ""}`}
                                     >
-                                        <p>Déposez votre fichier PDF ici ou cliquez pour le télécharger.</p>
+                                        <p>{t('dragOrClick')}</p>
                                         <input
                                             type="file"
                                             id="fileInput"
                                             onChange={handleFileChange}
-                                            style={{ display: "none" }}
+                                            style={{display: "none"}}
                                         />
                                     </div>
 
+
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
-                                            <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>
-                                            <h6><strong>Type du fichier :</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>Date de remise :</strong> {new Date().toLocaleDateString()}</h6>
+                                            <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                            <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}</h6>
                                         </div>
                                     )}
                                 </div>
                                 <div className="modal-footer">
                                     <button className="btn btn-primary" onClick={handleSubmit}>
-                                        Soumettre
+                                        {t('submit')}
                                     </button>
                                     <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
-                                        Fermer
+                                        {t('close')}
                                     </button>
                                 </div>
                             </div>
@@ -288,7 +289,6 @@ function AccueilEtudiant() {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.security.JwtTokenProvider;
 import com.lacouf.rsbjwt.service.dto.LoginDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,14 +20,11 @@ class UserAppServiceTest {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
     private UserAppService userAppService;
-
     private UserAppRepository userAppRepository;
     private EtudiantRepository etudiantRepository;
     private ProfesseurRepository professeurRepository;
     private EmployeurRepository employeurRepository;
     private GestionnaireRepository gestionnaireRepository;
-
-    private UserAppService userAppService;
     private LoginDTO loginDto;
 
     @BeforeEach

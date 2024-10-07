@@ -17,14 +17,11 @@ function App() {
         <Router>
             <div className="App-body">
                 <Routes>
-                    {/* Default Route */}
                     <Route path="/" element={<Navigate to="/login" />} />
 
-                    {/* Public Routes */}
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
 
-                    {/* Direct Access Routes */}
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />
@@ -35,10 +32,8 @@ function App() {
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/details/:id' element={<DetailsEtudiants />} />
 
-                    {/* Unauthorized Access */}
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
 
-                    {/* Catch-All Route */}
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>
             </div>

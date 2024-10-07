@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 public class OffreDeStageControllerTest {
-
-
     private OffreDeStageService offreDeStageService;
     private EmployeurService employeurService;
     private OffreDeStageController controller;

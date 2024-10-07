@@ -18,6 +18,7 @@
   "departmentDetail": "Départment",
   "Sinscrire": "S'inscrire",
   "DejaUnCompte": "Déjà un compte? ",
+  "NoAccount": "Pas de compte? ",
   "connectezVous": "Connectez-vous",
   "PlaceHolderDepartement" : "Technique de l'informatique",
   "Connecter": "Connecter",
@@ -47,5 +48,7 @@
   "reject": "Rejeter",
   "confirm": "Confirmer",
   "actions": "Actions",
-  "studentCV": "CV de l'Étudiant"
+  "studentCV": "CV de l'Étudiant",
+  "PlaceHolderMdp": "Entrez votre mot de passe",
+  "PlaceHolderConfMdp": "Confirmez votre mot de passe"
 }

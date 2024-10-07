@@ -109,19 +109,17 @@ function VisualiserOffres() {
     }
 
     return (
-        <div className="container-fluid d-flex flex-column min-vh-100">
+        <div className="container mt-5">
             <EmployeurHeader />
+            <h1 className="text-center mt-5">Vos offres d'emploi</h1>
 
-            <div className="container mt-5">
-                <h1 className="text-center mt-5">Vos offres d'emploi</h1>
-
-                {offres.length === 0 ? (
-                    <div className="alert alert-info mt-3">Aucune offre trouvée</div>
-                ) : (
-                    <div className="list-group mt-3">
-                        {offres.map((offre, index) => (
+            {offres.length === 0 ? (
+                <div className="alert alert-info mt-3">Aucune offre trouvée</div>
+            ) : (
+                <div className="row mt-3">
+                    {offres.map((offre, index) => (
+                        <div key={index} className="col-md-4 mb-4">
                             <div
-                                key={index}
                                 className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`}
                                 onClick={() => handleOffreClick(index)}
                             >
@@ -180,10 +178,10 @@ function VisualiserOffres() {
                                     )}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

@@ -39,7 +39,6 @@ function Inscription() {
         const trimmedDepartement = departement.trim();
         const trimmedNomEntreprise = nomEntreprise.trim();
 
-        // Validation du mot de passe
         if (trimmedMpd !== trimmedMpdConfirm) {
             setErrorMessages(t('mpdNonIdentique'));
             return;
@@ -81,27 +80,26 @@ function Inscription() {
                 });
 
                 if (!response.ok) {
-                    throw new Error(t('connexionEchouee'));  // If the login fails
+                    throw new Error(t('connexionEchouee'));
                 }
 
-                const data = await response.json();  // Parse JSON response
-                const accessToken = data.accessToken;  // Extract accessToken from response
+                const data = await response.json();
+                const accessToken = data.accessToken;
 
-                // Fetch user data with the accessToken
                 const userResponse = await fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`  // Use the accessToken
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
 
                 const userDataResponse = await userResponse.json();
 
-                return { userData: userDataResponse, accessToken };  // Return user data with token
+                return { userData: userDataResponse, accessToken };
 
             } catch (error) {
-                console.error('Erreur lors de la connexion:', error);  // Handle errors
+                console.error('Erreur lors de la connexion:', error);
                 throw new Error(error.message || t('erreurLorsConnexion'));
             }
         };
@@ -116,7 +114,6 @@ function Inscription() {
             });
 
             if (response.status === 201) {
-                // Automatic login after registration
                 const loginData = {
                     email: trimmedEmail,
                     password: trimmedMpd
@@ -124,7 +121,7 @@ function Inscription() {
 
                 try {
                     const { userData: fetchedUserData } = await handleLogin(loginData);
-                    navigateToDashboard(fetchedUserData);  // Navigate to the appropriate dashboard
+                    navigateToDashboard(fetchedUserData);
 
                 } catch (error) {
                     console.error('Erreur lors de la connexion:', error);
@@ -164,11 +161,11 @@ function Inscription() {
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
             <legend>{t('ChampsObligatoires')} </legend>
-            {errorMessages && <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>
                 {errorMessages}
             </div>}
             <div className='row'>
-                <div className='form-group' style={{ display: "inline-flex" }}>
+                <div className='form-group' style={{display: "inline-flex"}}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                     &nbsp;
                     <select
@@ -194,14 +191,14 @@ function Inscription() {
                     <label htmlFor="prenom">{t('prenom')}</label>
                     <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
                            value={prenom} onChange={(e) => setPrenom(e.target.value)}
-                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} autoFocus={true} required />
+                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} autoFocus={true} required/>
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="nom">{t('nom')}</label>
                     <input type="text" className="form-control" id="nom" name="nom" placeholder="Doe"
                            value={nom} onChange={(e) => setNom(e.target.value)}
-                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} required />
+                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"} required/>
                 </div>
 
                 <div>
@@ -215,7 +212,7 @@ function Inscription() {
                                        value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                        pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                        autoComplete={"off"}
-                                       required />
+                                       required/>
                             </div>
                         </Then>
                         <Else>
@@ -226,7 +223,7 @@ function Inscription() {
                                        value={departement} onChange={(e) => setDepartement(e.target.value)}
                                        pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                        autoComplete={"off"}
-                                       required />
+                                       required/>
                             </div>
                         </Else>
                     </If>
@@ -238,7 +235,7 @@ function Inscription() {
                            value={email} onChange={(e) => setEmail(e.target.value)}
                            placeholder="johndoe@gmail.com"
                            autoComplete={"off"}
-                           required />
+                           required/>
                 </div>
 
                 <div className="form-group">
@@ -255,31 +252,34 @@ function Inscription() {
                     />
                 </div>
 
+                <span className='password-icon' onClick={afficherMdp}>
+                        <Icon icon={icon} size={20}/>
+                </span>
                 <div className="form-group">
                     <label htmlFor="mpd">{t('MotDePasse')}</label>
                     <input type={type} className="form-control" id="mpd" name="mpd"
                            placeholder={t('PlaceHolderMdp')}
                            value={mpd} onChange={(e) => setMpd(e.target.value)}
-                           required />
-                    <span className='password-icon' onClick={afficherMdp}>
-                        <Icon icon={icon} size={20} />
-                    </span>
+                           required/>
                 </div>
 
+                <span className='password-icon' onClick={afficherMdpConf}>
+                        <Icon icon={iconConf} size={20}/>
+                </span>
                 <div className="form-group">
-                    <label htmlFor="mpdConfirm">{t('ConfirmationMdp')}</label>
+                    <label htmlFor="mpdConfirm">{t('ConfirmerMotDePasse')}</label>
                     <input type={typeConf} className="form-control" id="mpdConfirm" name="mpdConfirm"
                            placeholder={t('PlaceHolderConfMdp')}
                            value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                           required />
-                    <span className='password-icon' onClick={afficherMdpConf}>
-                        <Icon icon={iconConf} size={20} />
-                    </span>
+                           required/>
                 </div>
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+            <button type="submit" className="btn btn-primary" style={{width: '100%'}}>
                 {t('Soumettre')}
             </button>
+            <small style={{marginTop: '10px'}}>
+                {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
+            </small>
         </form>
     );
 }

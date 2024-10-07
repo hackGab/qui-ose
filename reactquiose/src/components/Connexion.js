@@ -8,13 +8,13 @@ import { useTranslation } from "react-i18next";
 
 function Connexion() {
     // State hooks
-    const [email, setEmail] = useState('');  // Email input
-    const [mpd, setMpd] = useState('');  // Password input (mpd -> Mot de passe)
-    const [type, setType] = useState('password');  // Password visibility toggle
-    const [icon, setIcon] = useState(eyeOff);  // Icon for password visibility
-    const [errorMessages, setErrorMessages] = useState('');  // Error message handling
-    const navigate = useNavigate();  // For page redirection
-    const { t } = useTranslation();  // Translation hook
+    const [email, setEmail] = useState('');
+    const [mpd, setMpd] = useState('');
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
+    const [errorMessages, setErrorMessages] = useState('');
+    const navigate = useNavigate();
+    const { t } = useTranslation();
 
     // Toggle password visibility
     const afficherMdp = () => {
@@ -22,7 +22,6 @@ function Connexion() {
         setType(type === 'password' ? 'text' : 'password');
     };
 
-    // Function to handle login API call
     const handleLogin = async (userData) => {
         try {
             // First API call to login endpoint
@@ -33,49 +32,45 @@ function Connexion() {
             });
 
             if (!response.ok) {
-                throw new Error(t('connexionEchouee'));  // If the login fails
+                throw new Error(t('connexionEchouee'));
             }
 
-            const data = await response.json();  // Parse JSON response
-            const accessToken = data.accessToken;  // Extract accessToken from response
+            const data = await response.json();
+            const accessToken = data.accessToken;
 
-            // Fetch user data with the accessToken
             const userResponse = await fetch('http://localhost:8081/user/me', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`  // Use the accessToken
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
 
             const userDataResponse = await userResponse.json();
 
-            return { userData: userDataResponse, accessToken };  // Return user data with token
+            return { userData: userDataResponse, accessToken };
 
         } catch (error) {
-            console.error('Erreur lors de la connexion:', error);  // Handle errors
+            console.error('Erreur lors de la connexion:', error);
             throw new Error(error.message || t('erreurLorsConnexion'));
         }
     };
 
-    // Handle form submission (Login)
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setErrorMessages('');  // Reset error messages
+        setErrorMessages('');
 
-        // Prepare user data for login
         const userData = { email: email, password: mpd.trim() };
 
         try {
             const { userData: fetchedUserData, accessToken } = await handleLogin(userData);
-            navigateToDashboard(fetchedUserData);  // Navigate to dashboard
+            navigateToDashboard(fetchedUserData);
 
         } catch (error) {
-            setErrorMessages(error.message);  // Display error messages
+            setErrorMessages(error.message);
         }
     };
 
-    // Navigate to the appropriate dashboard based on user role
     const navigateToDashboard = (userData) => {
         const path = `/${
             userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
@@ -83,24 +78,19 @@ function Connexion() {
                     userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
                         'accueilProfesseur'
         }`;
-        // Redirect to the role-specific dashboard
         navigate(path, { state: { userData } });
     };
 
-    // Render the login form
     return (
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            {/* Error message display */}
             {errorMessages && (
                 <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
                     {errorMessages}
                 </div>
             )}
 
-            {/* Form title */}
             <legend>{t('ChampsObligatoires')}</legend>
 
-            {/* Email input field */}
             <div className='row'>
                 <div className="form-group">
                     <label htmlFor="email">{t('Email')}</label>
@@ -117,7 +107,9 @@ function Connexion() {
                     />
                 </div>
 
-                {/* Password input field with toggle for visibility */}
+                <span onClick={afficherMdp} style={{cursor: 'pointer'}}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
                 <div className="form-group">
                     <label htmlFor="mdp">{t('MotDePasse')}</label>
                     <div className="input-group">
@@ -132,21 +124,14 @@ function Connexion() {
                             autoComplete="new-password"
                             required
                         />
-                        <div className="input-group-append">
-                            <span className="input-group-text" onClick={afficherMdp} style={{ cursor: 'pointer' }}>
-                                <Icon icon={icon} size={20} />
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Submit button */}
             <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
 
-            {/* Sign-up link */}
-            <small style={{ marginTop: '10px' }}>
-                {t('DejaUnCompte')} <a href="/signUp">{t('Sinscrire')}</a>
+            <small style={{marginTop: '10px'}}>
+                {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>
             </small>
         </form>
     );

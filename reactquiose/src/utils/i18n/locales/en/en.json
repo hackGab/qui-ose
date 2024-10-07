@@ -18,6 +18,7 @@
   "ConfirmerMotDePasse": "Confirm Password *",
   "Sinscrire": "Sign Up",
   "DejaUnCompte": "Already have an account ? ",
+  "NoAccount": "Don't have an account ? ",
   "connectezVous": "Log In",
   "PlaceHolderDepartement" : "Computer Science",
   "Connecter": "Log In",
@@ -47,5 +48,8 @@
   "reject": "Reject",
   "confirm": "Confirm",
   "actions": "Actions",
-  "studentCV": "Student CV"
+  "studentCV": "Student CV",
+  "ConfirmationMdp": "Password Confirmation",
+  "PlaceHolderMdp": "Password",
+  "PlaceHolderConfMdp": "Confirm Password"
 }

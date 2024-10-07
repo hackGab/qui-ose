@@ -44,10 +44,6 @@ class EtudiantControllerTest {
     private EmployeurService employeurService;
 
     @MockBean
-
-    private GestionnaireService gestionnaireService;
-
-    @MockBean
     private PasswordEncoder passwordEncoder;
 
     @MockBean

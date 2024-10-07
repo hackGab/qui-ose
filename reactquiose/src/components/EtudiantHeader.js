@@ -23,7 +23,7 @@ function EtudiantHeader() {
             <nav className="navbar">
                 <div className="logo">
                     <img src={logo} alt="Logo" className="header-logo" />
-                    <Link to="/accueilGestionnaire" className="logo-link">
+                    <Link to="/accueilEtudiant" className="logo-link">
                         <div className="logo-text">Qui-Ose</div>
                     </Link>
                 </div>

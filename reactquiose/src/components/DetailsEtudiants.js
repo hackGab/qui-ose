@@ -1,68 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/DetailsEtudiants.css';
 import GestionnaireHeader from "./GestionnaireHeader";
+import '../CSS/DetailsEtudiants.css';
 
 function DetailsEtudiants() {
     const { t } = useTranslation();
-    const { id } = useParams();
-    const [student, setStudent] = useState(null);
-    const [error, setError] = useState(null);
+    const location = useLocation();
+    const student = location.state?.student;
+    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [rejectionReason, setRejectionReason] = useState('');
+    console.log('Student details:', student);
 
-    /*
-    useEffect(() => {
-        fetch(`https://backend.com/api/etudiants/${id}`)
+    const updateCVStatus = (status) => {
+        const body = {
+            status: status,
+            rejectionReason: status === 'rejeté' ? rejectionReason : null
+        };
+
+        fetch(`http://localhost:8081/gestionnaire/validerOuRejeterCV/${student.cv.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des données');
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    window.location.href = '/listeEtudiants';
+                } else {
+                    console.error('Error details:', response.statusText);
                 }
-                return response.json();
-            })
-            .then(data => {
-                setStudent(data);
             })
             .catch(error => {
-                setError(error.message);
+                console.error('Erreur lors de la mise à jour du CV:', error);
             });
-    }, [id]);
-    */
+    };
 
-    // Hardcodez les étudiants pour le test
-    const etudiants = [
-        {
-            id: 1,
-            email: 'etudiant1@example.com',
-            first_name: 'Jean',
-            last_name: 'Dupont',
-            phone_number: '123-456-7890',
-            departement: 'Informatique',
-            cvUrl: 'https://example.com/cv1.pdf',
-        },
-        {
-            id: 2,
-            email: 'etudiant2@example.com',
-            first_name: 'Marie',
-            last_name: 'Curie',
-            phone_number: '098-765-4321',
-            departement: 'Chimie',
-            cvUrl: 'https://example.com/cv2.pdf',
-        },
-    ];
+    const handleStatusSelect = (status) => {
+        setSelectedStatus(status);
+        if (status === 'rejeté') {
+            setRejectionReason('');
+        }
+    };
 
-    useEffect(() => {
-        const foundStudent = etudiants.find(student => student.id === parseInt(id));
-        setStudent(foundStudent);
-    }, [id, etudiants]);
-
-    if (error) {
-        return <div className="text-danger">{t('error')}: {error}</div>;
-    }
+    const handleConfirm = () => {
+        if (selectedStatus) {
+            updateCVStatus(selectedStatus);
+        }
+    };
 
     if (!student) {
         return <div>{t('studentNotFound')}</div>;
     }
+
+    const isCvMissing = !student.cv?.data;
 
     return (
         <div className="details-container">
@@ -74,9 +68,9 @@ function DetailsEtudiants() {
                 <div className="col-md-6">
                     <h5>{t('personalInfo')}</h5>
                     <div className="details-info">
-                        <p><strong>{t('nomDetail')}:</strong> {student.first_name} {student.last_name}</p>
-                        <p><strong>{t('emailDetail')}:</strong> {student.email}</p>
-                        <p><strong>{t('telephoneDetail')}:</strong> {student.phone_number}</p>
+                        <p><strong>{t('nomDetail')}:</strong> {student.firstName} {student.lastName}</p>
+                        <p><strong>{t('emailDetail')}:</strong> {student.credentials.email}</p>
+                        <p><strong>{t('telephoneDetail')}:</strong> {student.phoneNumber}</p>
                         <p><strong>{t('departmentDetail')}:</strong> {student.departement}</p>
                     </div>
                 </div>
@@ -84,19 +78,48 @@ function DetailsEtudiants() {
                 <div className="col-md-6">
                     <h5 className="mb-3">{t('studentCV')}</h5>
                     <div className="iframe-container">
-                        <iframe
-                            src={student.cvUrl}
-                            title={t('studentCV')}
-                            className="cv-frame"
-                        ></iframe>
+                        {isCvMissing ? (
+                            <p className="text-danger text-center">{t('cvNotSubmitted')}</p>
+                        ) : (
+                            <iframe
+                                src={student.cv.data}
+                                title={t('studentCV')}
+                                className="cv-frame"
+                            ></iframe>
+                        )}
                     </div>
 
                     <div className="mt-4">
                         <h5>{t('actions')}</h5>
                         <div className="btn-group-vertical w-100">
-                            <button className="btn btn-success mb-2">{t('validate')}</button>
-                            <button className="btn btn-danger mb-2">{t('reject')}</button>
-                            <button className="btn btn-primary">{t('confirm')}</button>
+                            <button
+                                className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('validé')}
+                            >
+                                {t('validate')}
+                            </button>
+                            <button
+                                className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('rejeté')}
+                            >
+                                {t('reject')}
+                            </button>
+
+                            {selectedStatus === 'rejeté' && (
+                                <div className="mt-1 mb-2 col-12">
+                                    <textarea
+                                        rows="3"
+                                        placeholder={t('enterRejectionReason')}
+                                        value={rejectionReason}
+                                        onChange={(e) => setRejectionReason(e.target.value)}
+                                        className="form-control rejection-reason"
+                                    />
+                                </div>
+                            )}
+
+                            <button className="btn btn-primary" onClick={handleConfirm}>
+                                {t('confirm')}
+                            </button>
                         </div>
                     </div>
                 </div>

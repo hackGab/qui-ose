@@ -51,9 +51,7 @@
   "confirm": "Confirm",
   "actions": "Actions",
   "studentCV": "Student CV",
-  "ConfirmationMdp": "Password Confirmation",
-  "PlaceHolderMdp": "Password",
-  "PlaceHolderConfMdp": "Confirm Password",
+<<<<<<< HEAD
   "contactPerson": "Contact Person",
   "industry": "Industry",
   "employerDetailsTitle": "Employer Details",
@@ -67,14 +65,34 @@
   "typeRenumeration": "Type of Remuneration",
   "Disponiblite": "Availability",
   "contact": "Contact",
-<<<<<<< HEAD
   "employerStage": "Employer Internship",
-  "ConfirmationMdp": "Password Confirmation",
   "PlaceHolderMdp": "Password",
   "PlaceHolderConfMdp": "Confirm Password"
 
-}
 =======
-  "employerStage": "Employer Internship"
+  "cvNotSubmitted": "CV NOT SUBMITTED",
+  "cvStatusUpdated": "The CV status has been updated successfully.",
+  "cvStatusUpdateFailed": "Failed to update the CV status.",
+  "enterRejectionReason": "Enter the reason for rejection",
+  "cvLoaded": "CV loaded",
+  "pleaseAddCV": "Please add a CV",
+  "rejectionReason": "Rejection Reason",
+  "cvPending": "CV Pending",
+  "cvApproved": "CV Approved",
+  "cvRejected": "CV Rejected",
+  "cvRefused": "CV Refused",
+  "ConfirmationMdp": "Password Confirmation",
+  "PlaceHolderMdp": "Password",
+  "PlaceHolderConfMdp": "Confirm Password",
+  "viewMyCV": "View My CV",
+  "noInternships": "No internships",
+  "uploadCV": "Upload CV",
+  "manipulateCV": "Manipulate Curriculum Vitae",
+  "dragOrClick": "Drag and drop your CV here or click to select a file",
+  "fileName": "File Name",
+  "fileType": "File Type",
+  "fileDate": "File Date",
+  "close": "Close",
+  "submit": "Submit"
+>>>>>>> 57a587619aa00706dd19ed8503f7412bc24c4877
 }
->>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb

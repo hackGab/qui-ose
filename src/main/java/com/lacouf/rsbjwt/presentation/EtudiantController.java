@@ -55,4 +55,9 @@ public class EtudiantController {
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<EtudiantDTO>> getAllEtudiants() {
+        return ResponseEntity.ok(etudiantService.getAllEtudiants());
+    }
 }

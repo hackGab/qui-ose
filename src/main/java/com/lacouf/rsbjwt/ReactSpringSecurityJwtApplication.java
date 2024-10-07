@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt;
 
+import com.lacouf.rsbjwt.model.Gestionnaire;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.*;
@@ -7,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 @SpringBootApplication
 public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
@@ -33,7 +36,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        gestionnaireService.creerGestionnaire(
+        /*gestionnaireService.creerGestionnaire(
                 new GestionnaireDTO(
                         "Thiraiyan",
                         "Moon",
@@ -45,11 +48,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
         String token = userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "nini123"));
         System.out.println("Token: " + token);
-
-        UserDTO userDTO = userService.getMe(token);
-
-        System.out.println("User: " + userDTO.toString());
-        System.out.println("User Role: " + userDTO.getRole());
-
+*/
     }
 }

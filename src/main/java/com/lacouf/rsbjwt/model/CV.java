@@ -35,6 +35,9 @@ public class CV {
     @Column(nullable = false)
     private String status;
 
+    @Column(length = 500)
+    private String rejetMessage = "";
+
     public CV(String name, String type,  String data, String status) {
         this.name = name;
         this.type = type;
@@ -52,6 +55,7 @@ public class CV {
                 ", type='" + type + '\'' +
                 ", uploadDate=" + uploadDate +
                 ", status='" + status + '\'' +
+                ", rejetMessage='" + rejetMessage + '\'' +
                 '}';
     }
 }

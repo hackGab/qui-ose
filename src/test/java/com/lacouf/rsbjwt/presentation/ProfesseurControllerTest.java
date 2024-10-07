@@ -40,10 +40,10 @@ public class ProfesseurControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
-    private PasswordEncoder passwordEncoder;
+    private UserAppService userService;
 
     @MockBean
-    private UserAppService userService;
+    private PasswordEncoder passwordEncoder;
 
     @Test
     @WithMockUser(username = "user", roles = {"PROFESSEUR"})

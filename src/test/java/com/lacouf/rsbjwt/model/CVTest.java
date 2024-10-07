@@ -24,6 +24,7 @@ public class CVTest {
                 ", type='application/pdf'" +
                 ", uploadDate=" + cv.getUploadDate() +
                 ", status='pending'" +
+                ", rejetMessage=''" +
                 '}';
         assertEquals(expected, result);
     }

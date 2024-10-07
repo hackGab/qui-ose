@@ -14,7 +14,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -97,7 +97,7 @@
 }
 
 .notification-icon {
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #0288d1;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -115,6 +115,7 @@
     cursor: pointer;
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1rem;
 }
 
 .profile-button:hover {

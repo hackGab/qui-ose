@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Utilisez useNavigate pour rediriger
+import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
-import {useTranslation} from "react-i18next";
-import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -17,13 +16,8 @@ function Connexion() {
     const {t} = useTranslation();
 
     const afficherMdp = () => {
-        if (type === 'password') {
-            setIcon(eye);
-            setType('text');
-        } else {
-            setIcon(eyeOff);
-            setType('password');
-        }
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
     };
 
     const handleSubmit = (event) => {
@@ -34,7 +28,7 @@ function Connexion() {
         };
         console.log('Données envoyées au backend:', userData);
 
-        fetch('http://localhost:8080/user/login', {
+        fetch('http://localhost:8081/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +46,7 @@ function Connexion() {
                 const accessToken = data.accessToken;
 
                 // Récupérer l'utilisateur
-                return fetch('http://localhost:8080/user/me', {
+                return fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -100,36 +94,39 @@ function Connexion() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="johndoe@gmail.com"
+                        autoComplete="off"
                         required
                     />
                 </div>
 
+                <span onClick={afficherMdp} style={{cursor: 'pointer'}}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
                 <div className="form-group">
-                    <label htmlFor="mpd">{t('MotDePasse')}</label>
+                    <label htmlFor="mdp">{t('MotDePasse')}</label>
                     <div className="input-group">
                         <input
                             type={type}
                             className="form-control"
-                            id="mpd"
-                            name="mpd"
+                            id="mdp"
+                            name="mdp"
                             placeholder="********"
                             value={mpd}
                             onChange={(e) => setMpd(e.target.value)}
-                            autoComplete="current-password"
+                            autoComplete="new-password"
                             required
                         />
-                        <div className="input-group-append">
-                            <span className="input-group-text" onClick={afficherMdp}>
-                                <Icon icon={icon} size={20} />
-                            </span>
-                        </div>
+                       
                     </div>
                 </div>
 
             </div>
 
             <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
-            <small style={{marginTop: '10px'}}>{t('DejaUnCompte')}<a href="/signUp">{t('Sinscrire')}</a></small>
+
+            <small style={{marginTop: '10px'}}>
+                {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>
+            </small>
         </form>
     );
 }

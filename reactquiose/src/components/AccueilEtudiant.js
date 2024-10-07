@@ -202,24 +202,27 @@ function AccueilEtudiant() {
 
             <div className="d-flex justify-content-center my-3">
                 <button
-                    className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
+                    className={`btn btn-lg rounded-top-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
                             file.status === 'validé' ? 'btn-success' :
                                 file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
+                    style={{ width: "10em"}}
                 > {t('uploadCV')}
                 </button>
             </div>
 
             {file && (
-                <div className="d-flex justify-content-center my-3">
-                    <button className="btn btn-info" onClick={openFile}>
+                <div className="d-flex justify-content-center mt-3 mb-4">
+                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info" onClick={openFile} style={{ width: "10em"}}>
                         {t('viewMyCV')}
                     </button>
                 </div>
             )}
 
-            <div className="text-center my-4">
+            <hr style={{ width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
+
+            <div className="text-center my-5">
                 {file && file.status !== 'rejeté' && (
                     <>
                         <h3>Stages</h3>

@@ -12,12 +12,11 @@ import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/ListeEmployeurs";
-import DetailsEmployeurs from "./components/DetailsEmployeur";
 
 function App() {
     return (
         <Router>
-            <div className='App-body'>
+            <div className="App-body">
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" />} />
 
@@ -33,20 +32,26 @@ function App() {
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/details/:id' element={<DetailsEtudiants />} />
-                    
+<<<<<<< HEAD
+                    <Route path="/listeEmployeurs" element={<ListeEmployeurs />} />
+=======
+>>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb
 
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
 
                     <Route path="*" element={<Navigate to="/login" replace />} />
+<<<<<<< HEAD
+=======
 
 		    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
                     <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
                     <Route path='detailsEmployeur/:id' element={<DetailsEmployeurs />} />
                 
+>>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb
                 </Routes>
             </div>
-        </Router>
-    );
+      </Router>
+  );
 }
 
 export default App;

@@ -51,9 +51,6 @@
   "confirm": "Confirm",
   "actions": "Actions",
   "studentCV": "Student CV",
-  "ConfirmationMdp": "Password Confirmation",
-  "PlaceHolderMdp": "Password",
-  "PlaceHolderConfMdp": "Confirm Password",
   "contactPerson": "Contact Person",
   "industry": "Industry",
   "employerDetailsTitle": "Employer Details",
@@ -67,5 +64,8 @@
   "typeRenumeration": "Type of Remuneration",
   "Disponiblite": "Availability",
   "contact": "Contact",
-  "employerStage": "Employer Internship"
+  "employerStage": "Employer Internship",
+  "PlaceHolderMdp": "Password",
+  "PlaceHolderConfMdp": "Confirm Password"
+
 }

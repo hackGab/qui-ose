@@ -10,12 +10,8 @@ import SoumettreOffre from "./components/SoumettreOffre";
 import VisualiserOffres from "./components/VisualiserOffres";
 import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
-<<<<<<< HEAD
-import ListeEmployeurs from "./components/ListeEmployeurs";
-import DetailsEmployeurs from "./components/DetailsEmployeur";
-=======
 import UpdateOffre from "./components/UpdateOffre";
->>>>>>> eba3b8d1e447ad8b9b5a519d790f0cad71168527
+import ListeEmployeurs from "./components/ListeEmployeurs";
 
 function App() {
     return (
@@ -35,17 +31,23 @@ function App() {
                     <Route path="visualiser-offres" element={<VisualiserOffres />} />
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
-<<<<<<< HEAD
-                    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
-                    <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
-                    <Route path='detailsEmployeur/:id' element={<DetailsEmployeurs />} />
-=======
                     <Route path='/details/:id' element={<DetailsEtudiants />} />
+<<<<<<< HEAD
+                    <Route path="/listeEmployeurs" element={<ListeEmployeurs />} />
+=======
+>>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb
 
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
 
                     <Route path="*" element={<Navigate to="/login" replace />} />
->>>>>>> eba3b8d1e447ad8b9b5a519d790f0cad71168527
+<<<<<<< HEAD
+=======
+
+		    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
+                    <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
+                    <Route path='detailsEmployeur/:id' element={<DetailsEmployeurs />} />
+                
+>>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb
                 </Routes>
             </div>
       </Router>

@@ -51,7 +51,6 @@
   "confirm": "Confirmer",
   "actions": "Actions",
   "studentCV": "CV de l'Étudiant",
-  "studentCV": "CV de l'Étudiant",
   "PlaceHolderMdp": "Entrez votre mot de passe",
   "PlaceHolderConfMdp": "Confirmez votre mot de passe",
   "contactPerson": "Personne à Contacter",
@@ -67,5 +66,7 @@
   "typeRenumeration": "Type de Rémunération",
   "Disponiblite": "Disponibilité",
   "contact": "Contact",
-  "employerStage": "Stages de l'Employeur"
+  "employerStage": "Stages de l'Employeur",
+  "PlaceHolderMdp": "Entrez votre mot de passe",
+  "PlaceHolderConfMdp": "Confirmez votre mot de passe"
 }

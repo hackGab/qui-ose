@@ -11,6 +11,8 @@ import VisualiserOffres from "./components/VisualiserOffres";
 import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
+import ListeEmployeurs from "./components/ListeEmployeurs";
+import DetailsEmployeurs from "./components/DetailsEmployeur";
 
 function App() {
     return (

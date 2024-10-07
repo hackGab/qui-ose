@@ -45,7 +45,6 @@ function Connexion() {
                 console.log('Réponse du serveur:', data);
                 const accessToken = data.accessToken;
 
-                // Récupérer l'utilisateur
                 return fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
@@ -56,9 +55,9 @@ function Connexion() {
             })
             .then((response) => {
                 if (response.ok) {
-                    return response.json(); // Récupérer les données utilisateur
+                    return response.json();
                 }
-                throw new Error(t('erreurLorsRecuperationUtilisateur')); // Gérer les erreurs
+                throw new Error(t('erreurLorsRecuperationUtilisateur'));
             })
             .then((userData) => {
                 console.log('Données utilisateur:', userData);
@@ -66,7 +65,7 @@ function Connexion() {
                 if (userData.role === 'ETUDIANT') {
                     navigate('/accueilEtudiant', { state: { userData } });
                 } else if (userData.role === 'EMPLOYEUR') {
-                    navigate('/accueilEmployeur');
+                    navigate('/accueilEmployeur', {state: { userData } });
                 } else if (userData.role === 'GESTIONNAIRE') {
                     navigate('/accueilGestionnaire');
                 } else if (userData.role === 'PROFESSEUR') {

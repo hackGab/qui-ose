@@ -1,94 +1,96 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Utilisez useNavigate pour rediriger
+import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
-import {useTranslation} from "react-i18next";
-import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 
 function Connexion() {
+    // State hooks
     const [email, setEmail] = useState('');
     const [mpd, setMpd] = useState('');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
+    // Toggle password visibility
     const afficherMdp = () => {
-        if (type === 'password') {
-            setIcon(eye);
-            setType('text');
-        } else {
-            setIcon(eyeOff);
-            setType('password');
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
+    };
+
+    const handleLogin = async (userData) => {
+        try {
+            // First API call to login endpoint
+            const response = await fetch('http://localhost:8081/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+
+            if (!response.ok) {
+                throw new Error(t('connexionEchouee'));
+            }
+
+            const data = await response.json();
+            const accessToken = data.accessToken;
+
+            const userResponse = await fetch('http://localhost:8081/user/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const userDataResponse = await userResponse.json();
+
+            return { userData: userDataResponse, accessToken };
+
+        } catch (error) {
+            console.error('Erreur lors de la connexion:', error);
+            throw new Error(error.message || t('erreurLorsConnexion'));
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const userData = {
-            email: email,
-            password: mpd.trim(),
-        };
-        console.log('Données envoyées au backend:', userData);
+        setErrorMessages('');
 
-        fetch('http://localhost:8080/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error(t('connexionEchouee'));
-            })
-            .then((data) => {
-                console.log('Réponse du serveur:', data);
-                const accessToken = data.accessToken;
+        const userData = { email: email, password: mpd.trim() };
 
-                // Récupérer l'utilisateur
-                return fetch('http://localhost:8080/user/me', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-            })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json(); // Récupérer les données utilisateur
-                }
-                throw new Error(t('erreurLorsRecuperationUtilisateur')); // Gérer les erreurs
-            })
-            .then((userData) => {
-                console.log('Données utilisateur:', userData);
-                // Redirection en fonction du rôle
-                if (userData.role === 'ETUDIANT') {
-                    navigate('/accueilEtudiant');
-                } else if (userData.role === 'EMPLOYEUR') {
-                    navigate('/accueilEmployeur');
-                } else if (userData.role === 'GESTIONNAIRE') {
-                    navigate('/accueilGestionnaire');
-                } else if (userData.role === 'PROFESSEUR') {
-                    navigate('/accueilProfesseur');
-                }
-            })
-            .catch((error) => {
-                console.error('Erreur lors de la connexion:', error);
-                setErrorMessages(t('erreurLorsConnexion'));
-            });
+        try {
+            const { userData: fetchedUserData, accessToken } = await handleLogin(userData);
+            navigateToDashboard(fetchedUserData);
+
+        } catch (error) {
+            setErrorMessages(error.message);
+        }
+    };
+
+    const navigateToDashboard = (userData) => {
+        const path = `/${
+            userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+                        'accueilProfesseur'
+        }`;
+        navigate(path, { state: { userData } });
     };
 
     return (
         <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
+            {errorMessages && (
+                <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+                    {errorMessages}
+                </div>
+            )}
+
             <legend>{t('ChampsObligatoires')}</legend>
+
             <div className='row'>
                 <div className="form-group">
                     <label htmlFor="email">{t('Email')}</label>
@@ -100,36 +102,37 @@ function Connexion() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="johndoe@gmail.com"
+                        autoComplete="off"
                         required
                     />
                 </div>
 
+                <span onClick={afficherMdp} style={{cursor: 'pointer'}}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
                 <div className="form-group">
-                    <label htmlFor="mpd">{t('MotDePasse')}</label>
+                    <label htmlFor="mdp">{t('MotDePasse')}</label>
                     <div className="input-group">
                         <input
                             type={type}
                             className="form-control"
-                            id="mpd"
-                            name="mpd"
+                            id="mdp"
+                            name="mdp"
                             placeholder="********"
                             value={mpd}
                             onChange={(e) => setMpd(e.target.value)}
-                            autoComplete="current-password"
+                            autoComplete="new-password"
                             required
                         />
-                        <div className="input-group-append">
-                            <span className="input-group-text" onClick={afficherMdp}>
-                                <Icon icon={icon} size={20} />
-                            </span>
-                        </div>
                     </div>
                 </div>
-
             </div>
 
             <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
-            <small style={{marginTop: '10px'}}>{t('DejaUnCompte')}<a href="/signUp">{t('Sinscrire')}</a></small>
+
+            <small style={{marginTop: '10px'}}>
+                {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>
+            </small>
         </form>
     );
 }

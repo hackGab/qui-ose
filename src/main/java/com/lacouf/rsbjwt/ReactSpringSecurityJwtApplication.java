@@ -48,10 +48,5 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
         String token = userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "nini123"));
         System.out.println("Token: " + token);
-
-        UserDTO userDTO = userService.getMe(token);
-
-        System.out.println("User: " + userDTO.toString());
-        System.out.println("User Role: " + userDTO.getRole());
     }
 }

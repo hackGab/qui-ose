@@ -18,6 +18,7 @@
   "departmentDetail": "Départment",
   "Sinscrire": "S'inscrire",
   "DejaUnCompte": "Déjà un compte? ",
+  "NoAccount": "Pas de compte? ",
   "connectezVous": "Connectez-vous",
   "PlaceHolderDepartement" : "Technique de l'informatique",
   "Connecter": "Connecter",
@@ -50,6 +51,7 @@
   "confirm": "Confirmer",
   "actions": "Actions",
   "studentCV": "CV de l'Étudiant",
+<<<<<<< HEAD
   "contactPerson": "Personne à Contacter",
   "industry": "Industrie",
   "employerDetailsTitle": "Détails de l'Employeur",
@@ -64,4 +66,8 @@
   "Disponiblite": "Disponibilité",
   "contact": "Contact",
   "employerStage": "Stages de l'Employeur"
+=======
+  "PlaceHolderMdp": "Entrez votre mot de passe",
+  "PlaceHolderConfMdp": "Confirmez votre mot de passe"
+>>>>>>> eba3b8d1e447ad8b9b5a519d790f0cad71168527
 }

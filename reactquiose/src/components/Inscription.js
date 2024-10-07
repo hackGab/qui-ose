@@ -5,9 +5,8 @@ import { Else, If, Then } from 'react-if';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
-import {useNavigate} from "react-router-dom";
-import {useTranslation} from 'react-i18next';
-import i18n from "i18next";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -25,13 +24,12 @@ function Inscription() {
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessages('');
 
-        // Trim all input fields
         const trimmedPrenom = prenom.trim();
         const trimmedNom = nom.trim();
         const trimmedEmail = email.trim();
@@ -58,55 +56,86 @@ function Inscription() {
             entreprise: role === 'employeur' ? trimmedNomEntreprise : undefined
         };
 
-
         let url;
-        console.log('Role:', role);
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8080/etudiant/creerEtudiant';
+                url = 'http://localhost:8081/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8080/professeur/creerProfesseur';
+                url = 'http://localhost:8081/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8080/employeur/creerEmployeur';
+                url = 'http://localhost:8081/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');
                 return;
         }
+        const handleLogin = async (userData) => {
+            try {
+                const response = await fetch('http://localhost:8081/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
 
-        console.log('Données envoyées au backend:', userData);
-        console.log('URL:', url);
-        // Envoi d'une requête POST au backend
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+                if (!response.ok) {
+                    throw new Error(t('connexionEchouee'));
+                }
 
-            },
-            body: JSON.stringify(userData),
-            print: userData
-        })
-            .then(response => {
-                console.log('Réponse du backend:', response.status);
-                if (response.status === 201) {
-                    return response.json();
-                } else if (response.status === 409) {
-                    setErrorMessages(t('utilisateurExiste'));
-                } else {
-                    setErrorMessages(t('erreurLorsCreationUser'));
-                }
-            })
-            .then(data => {
-                if (data) {
-                    navigate('/login');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                setErrorMessages(t('erreurConnexionServeur'));
+                const data = await response.json();
+                const accessToken = data.accessToken;
+
+                const userResponse = await fetch('http://localhost:8081/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const userDataResponse = await userResponse.json();
+
+                return { userData: userDataResponse, accessToken };
+
+            } catch (error) {
+                console.error('Erreur lors de la connexion:', error);
+                throw new Error(error.message || t('erreurLorsConnexion'));
+            }
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
             });
+
+            if (response.status === 201) {
+                const loginData = {
+                    email: trimmedEmail,
+                    password: trimmedMpd
+                };
+
+                try {
+                    const { userData: fetchedUserData } = await handleLogin(loginData);
+                    navigateToDashboard(fetchedUserData);
+
+                } catch (error) {
+                    console.error('Erreur lors de la connexion:', error);
+                    setErrorMessages(t('erreurLorsConnexion'));
+                }
+            } else if (response.status === 409) {
+                setErrorMessages(t('utilisateurExiste'));
+            } else {
+                setErrorMessages(t('erreurLorsCreationUser'));
+            }
+        } catch (error) {
+            console.error('Erreur lors de l\'inscription:', error);
+            setErrorMessages(error.message || t('erreurLorsInscription'));
+        }
     };
 
     const afficherMdp = () => {
@@ -119,13 +148,24 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
+    const navigateToDashboard = (userData) => {
+        const path = `/${
+            userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+                        'accueilProfesseur'
+        }`;
+        navigate(path, { state: { userData } });
+    };
 
     return (
         <form className='pt-0' onSubmit={handleSubmit}>
-           <legend>{t('ChampsObligatoires')} </legend>
-            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>{errorMessages}</div>}
+            <legend>{t('ChampsObligatoires')} </legend>
+            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>
+                {errorMessages}
+            </div>}
             <div className='row'>
-                <div className='form-group' style={{ display: "inline-flex" }}>
+                <div className='form-group' style={{display: "inline-flex"}}>
                     <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                     &nbsp;
                     <select
@@ -144,9 +184,7 @@ function Inscription() {
                         <option value='employeur'>{t('employeur')}</option>
                     </select>
                 </div>
-
             </div>
-
 
             <div className='row'>
                 <div className="form-group">
@@ -164,19 +202,17 @@ function Inscription() {
                 </div>
 
                 <div>
-                    {/* Si le role est un employeur, ajouter ce champ */}
                     <If condition={role === 'employeur'}>
                         <Then>
-                            <div>
-                                <div className="form-group">
-                                    <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
-                                    <input type="text" className="form-control" id="nomEntreprise"
-                                           name="nomEntreprise"
-                                           placeholder="Nom de l'entreprise"
-                                           value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
-                                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
-                                           required/>
-                                </div>
+                            <div className="form-group">
+                                <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
+                                <input type="text" className="form-control" id="nomEntreprise"
+                                       name="nomEntreprise"
+                                       placeholder="Nom de l'entreprise"
+                                       value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
+                                       pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
+                                       autoComplete={"off"}
+                                       required/>
                             </div>
                         </Then>
                         <Else>
@@ -186,6 +222,7 @@ function Inscription() {
                                        placeholder={t('PlaceHolderDepartement')}
                                        value={departement} onChange={(e) => setDepartement(e.target.value)}
                                        pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
+                                       autoComplete={"off"}
                                        required/>
                             </div>
                         </Else>
@@ -196,7 +233,9 @@ function Inscription() {
                     <label htmlFor="email">{t('Email')}</label>
                     <input type="email" className="form-control" id="email" name="email"
                            value={email} onChange={(e) => setEmail(e.target.value)}
-                           placeholder="johndoe@gmail.com" required/>
+                           placeholder="johndoe@gmail.com"
+                           autoComplete={"off"}
+                           required/>
                 </div>
 
                 <div className="form-group">
@@ -207,53 +246,40 @@ function Inscription() {
                         maskChar={null}
                         id="num"
                         placeholder="(514)-123-4567"
+                        autoComplete={"off"}
                         value={num} onChange={(e) => setNum(e.target.value)}
-                        name="num">
-                        {(inputProps) => <input type="tel" {...inputProps} />}
-                    </InputMask>
+                        required
+                    />
                 </div>
 
+                <span className='password-icon' onClick={afficherMdp}>
+                        <Icon icon={icon} size={20}/>
+                </span>
                 <div className="form-group">
                     <label htmlFor="mpd">{t('MotDePasse')}</label>
-                    <div className="input-group">
-                        <input type={type}
-                               className="form-control"
-                               id="mpd"
-                               name="mpd"
-                               placeholder="********"
-                               value={mpd} onChange={(e) => setMpd(e.target.value)}
-                               autoComplete="current-password"
-                               required/>
-                        <div className="input-group-append">
-                            <span className="input-group-text" onClick={afficherMdp}>
-                                <Icon icon={icon} size={20}/>
-                            </span>
-                        </div>
-                    </div>
+                    <input type={type} className="form-control" id="mpd" name="mpd"
+                           placeholder={t('PlaceHolderMdp')}
+                           value={mpd} onChange={(e) => setMpd(e.target.value)}
+                           required/>
                 </div>
 
+                <span className='password-icon' onClick={afficherMdpConf}>
+                        <Icon icon={iconConf} size={20}/>
+                </span>
                 <div className="form-group">
                     <label htmlFor="mpdConfirm">{t('ConfirmerMotDePasse')}</label>
-                    <div className="input-group">
-                        <input type={typeConf}
-                               className="form-control"
-                               id="mpdConfirm"
-                               name="mpdConfirm"
-                               placeholder="********"
-                               value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                               autoComplete="current-password"
-                               required/>
-                        <div className="input-group-append">
-                            <span className="input-group-text" onClick={afficherMdpConf}>
-                                <Icon icon={iconConf} size={20}/>
-                            </span>
-                        </div>
-                    </div>
+                    <input type={typeConf} className="form-control" id="mpdConfirm" name="mpdConfirm"
+                           placeholder={t('PlaceHolderConfMdp')}
+                           value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                           required/>
                 </div>
-
-                <button type="submit" className="btn btn-primary">{t('Sinscrire')}</button>
-                <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a></small>
             </div>
+            <button type="submit" className="btn btn-primary" style={{width: '100%'}}>
+                {t('Soumettre')}
+            </button>
+            <small style={{marginTop: '10px'}}>
+                {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
+            </small>
         </form>
     );
 }

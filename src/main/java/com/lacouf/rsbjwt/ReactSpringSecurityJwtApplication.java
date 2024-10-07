@@ -36,7 +36,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        gestionnaireService.creerGestionnaire(
+       /* gestionnaireService.creerGestionnaire(
                 new GestionnaireDTO(
                         "Thiraiyan",
                         "Moon",
@@ -47,6 +47,6 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
         );
 
         String token = userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "nini123"));
-        System.out.println("Token: " + token);
+        System.out.println("Token: " + token);*/
     }
 }

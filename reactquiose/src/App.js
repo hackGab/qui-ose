@@ -11,6 +11,7 @@ import VisualiserOffres from "./components/VisualiserOffres";
 import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
+import ListeEmployeurs from "./components/ListeEmployeurs";
 
 function App() {
     return (
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/details/:id' element={<DetailsEtudiants />} />
+                    <Route path="/listeEmployeurs" element={<ListeEmployeurs />} />
 
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
 

@@ -66,11 +66,11 @@ function Connexion() {
                 if (userData.role === 'ETUDIANT') {
                     navigate('/accueilEtudiant', { state: { userData } });
                 } else if (userData.role === 'EMPLOYEUR') {
-                    navigate('/accueilEmployeur');
+                    navigate('/accueilEmployeur', { state: { userData } });
                 } else if (userData.role === 'GESTIONNAIRE') {
-                    navigate('/accueilGestionnaire');
+                    navigate('/accueilGestionnaire', { state: { userData } });
                 } else if (userData.role === 'PROFESSEUR') {
-                    navigate('/accueilProfesseur');
+                    navigate('/accueilProfesseur', { state: { userData } });
                 }
             })
             .catch((error) => {

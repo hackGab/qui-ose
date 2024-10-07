@@ -179,7 +179,7 @@ function SoumettreOffre() {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Soumettre une offre d'emploi</h5>
+                                    <h5 className="modal-title"><b>Soumettre une offre d'emploi</b></h5>
                                 </div>
                                 <div className="modal-body">
                                     <div
@@ -200,32 +200,35 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="titre">Titre de l'offre</label>
+                                        <label htmlFor="titre"><b>Titre de l'offre</b></label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="titre"
+                                            style={{ textAlign: "center" }}
                                             value={titre}
                                             onChange={(e) => setTitre(e.target.value)}
                                         />
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="localisation">Localisation</label>
+                                        <label htmlFor="localisation"><b>Localisation</b></label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="localisation"
+                                            style={{ textAlign: "center" }}
                                             value={localisation}
                                             onChange={(e) => setLocalisation(e.target.value)}
                                         />
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="nbCandidats">Nombre de candidats</label>
+                                        <label htmlFor="nbCandidats"><b>Nombre de candidats</b></label>
                                         <input
                                             type="number"
                                             className="form-control"
+                                            style={{ textAlign: "center" }}
                                             id="nbCandidats"
                                             value={nbCandidats}
                                             onChange={(e) => setNbCandidats(e.target.value)}
@@ -233,11 +236,12 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="dateLimite">Date limite</label>
+                                        <label htmlFor="dateLimite"><b>Date limite</b></label>
                                         <input
                                             type="date"
                                             className="form-control"
                                             id="dateLimite"
+                                            style={{ textAlign: "center" }}
                                             value={dateLimite}
                                             onChange={(e) => setDateLimite(e.target.value)}
                                         />

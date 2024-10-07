@@ -25,7 +25,7 @@ function Connexion() {
     const handleLogin = async (userData) => {
         try {
             // First API call to login endpoint
-            const response = await fetch('http://localhost:8081/user/login', {
+            const response = await fetch('http://localhost:8080/user/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),
@@ -38,7 +38,7 @@ function Connexion() {
             const data = await response.json();
             const accessToken = data.accessToken;
 
-            const userResponse = await fetch('http://localhost:8081/user/me', {
+            const userResponse = await fetch('http://localhost:8080/user/me', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,33 +102,37 @@ function Connexion() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="johndoe@gmail.com"
-                        autoComplete="off"
+                        autoComplete={"on"}
                         required
                     />
                 </div>
 
-                <span onClick={afficherMdp} style={{cursor: 'pointer'}}>
-                                <Icon icon={icon} size={20}/>
-                            </span>
+
                 <div className="form-group">
                     <label htmlFor="mdp">{t('MotDePasse')}</label>
-                    <div className="input-group">
-                        <input
-                            type={type}
-                            className="form-control"
-                            id="mdp"
-                            name="mdp"
-                            placeholder="********"
-                            value={mpd}
-                            onChange={(e) => setMpd(e.target.value)}
-                            autoComplete="new-password"
-                            required
-                        />
+                    <div className="d-flex">
+                        <div className="input-group">
+                            <input
+                                type={type}
+                                className="form-control m-0"
+                                id="mdp"
+                                name="mdp"
+                                placeholder="********"
+                                value={mpd}
+                                onChange={(e) => setMpd(e.target.value)}
+                                autoComplete={"off"}
+                                required
+                            />
+                        </div>
+
+                        <span onClick={afficherMdp} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                            <Icon icon={icon} size={20}/>
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <button className="btn btn-primary w-50" type="submit">{t('Connecter')}</button>
+            <button className="btn btn-primary w-50 mt-4" type="submit">{t('Connecter')}</button>
 
             <small style={{marginTop: '10px'}}>
                 {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>

@@ -24,6 +24,7 @@ public class OffreDeStage {
 
     private int nbCandidats;
     private String status;
+    private String rejetMessage = "";
 
 
     @ManyToOne
@@ -50,6 +51,8 @@ public class OffreDeStage {
                 ", employeur='" + employeur + '\'' +
                 ", datePublication='" + datePublication + '\'' +
                 ", nbCandidats='" + nbCandidats + '\'' +
+                ", status='" + status + '\'' +
+                ", rejetMessage='" + rejetMessage + '\'' +
                 '}';
     }
 }

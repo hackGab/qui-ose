@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
+import {useTranslation} from "react-i18next";
 
 function AccueilEtudiant() {
+    const { t } = useTranslation();
     const location = useLocation();
     const userData = location.state?.userData;
 
@@ -14,6 +16,7 @@ function AccueilEtudiant() {
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [internships, setInternships] = useState([]);
+    const [rejectionMessage, setRejectionMessage] = useState("");
 
     useEffect(() => {
         if (userData) {
@@ -31,9 +34,16 @@ function AccueilEtudiant() {
                         setFile(data.cv);
                         setFileData(data.cv.data);
                         console.log('Réponse du serveur:', data);
-                    } else {
+                        console.log('CV:', data.cv.rejetMessage);
+
+                        if (data.cv.status === 'rejeté') {
+                            setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
+                        } else {
+                            setRejectionMessage("");
+                        }
                     }
 
+                    // Récupération des stages
                     const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
                     fetch(internshipsUrl)
                         .then((response) => {
@@ -74,7 +84,6 @@ function AccueilEtudiant() {
                 setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
-        } else {
         }
     };
 
@@ -95,7 +104,6 @@ function AccueilEtudiant() {
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({ target: { files: [uploadedFile] } });
-        } else {
         }
     };
 
@@ -151,7 +159,6 @@ function AccueilEtudiant() {
 
             setShowModal(false);
             setTemporaryFile(null);
-        } else {
         }
     };
 
@@ -175,52 +182,64 @@ function AccueilEtudiant() {
             <EtudiantHeader />
 
             <div className="text-center my-4">
+
                 {file ? (
-                    <h2>Votre CV est chargé !</h2>
+                    <h2>{file == null ? 'Ajouter CV' :
+                        file.status === 'Attente' ? t('cvPending') :
+                            file.status === 'validé' ? t('cvApproved') :
+                                file.status === 'rejeté' ? t('cvRejected') : t('cvRefused')}</h2>
                 ) : (
-                    <h2 className="text-warning">Veuillez ajouter votre CV pour continuer.</h2>
+                    <h2 className="text-warning">{t('pleaseAddCV')}</h2>
                 )}
             </div>
+
+            {rejectionMessage && (
+                <div className="alert alert-danger text-center error-text" style={{ fontSize: "1.25rem" }}>
+                    <h5>{t('rejectionReason')}</h5>
+                    <p>{rejectionMessage}</p>
+                </div>
+            )}
 
             <div className="d-flex justify-content-center my-3">
                 <button
                     className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'Aprouvé' ? 'btn-success' :
-                                file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                            file.status === 'validé' ? 'btn-success' :
+                                file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
-                >
-                    {file == null ? 'Ajouter CV' :
-                        file.status === 'Attente' ? 'CV en attente de confirmation' :
-                            file.status === 'Aprouvé' ? 'CV Approuvé' :
-                                file.status === 'Rejeté' ? 'CV Rejeté' : 'CV non remis'}
+                > {t('uploadCV')}
                 </button>
             </div>
 
             {file && (
                 <div className="d-flex justify-content-center my-3">
                     <button className="btn btn-info" onClick={openFile}>
-                        Voir mon CV
+                        {t('viewMyCV')}
                     </button>
                 </div>
             )}
 
             <div className="text-center my-4">
-                <h3>Stages</h3>
-                <div className="d-flex justify-content-center">
-                    {internships.length > 0 ? (
-                        <ul className="list-unstyled">
-                            {internships.map((internship, index) => (
-                                <li key={index}>
-                                    {internship.title} - {internship.company} ({internship.duration})
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Aucun stage à afficher.</p>
-                    )}
-                </div>
+                {file && file.status !== 'rejeté' && (
+                    <>
+                        <h3>Stages</h3>
+                        <div className="d-flex justify-content-center">
+                            {internships.length > 0 ? (
+                                <ul className="list-unstyled">
+                                    {internships.map((internship, index) => (
+                                        <li key={index}>
+                                            {internship.title} - {internship.company} ({internship.duration})
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>{t('noInternships')}</p>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
+
 
             {showModal && (
                 <div className="custom-modal-overlay">
@@ -228,7 +247,7 @@ function AccueilEtudiant() {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Manipuler Curriculum Vitae</h5>
+                                    <h5 className="modal-title">{t('manipulateCV')}</h5>
                                 </div>
                                 <div className="modal-body">
                                     <div
@@ -239,29 +258,30 @@ function AccueilEtudiant() {
                                         onClick={handleClick}
                                         className={`drop-zone ${dragActive ? "active" : ""}`}
                                     >
-                                        <p>Déposez votre fichier PDF ici ou cliquez pour le télécharger.</p>
+                                        <p>{t('dragOrClick')}</p>
                                         <input
                                             type="file"
                                             id="fileInput"
                                             onChange={handleFileChange}
-                                            style={{ display: "none" }}
+                                            style={{display: "none"}}
                                         />
                                     </div>
 
+
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
-                                            <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>
-                                            <h6><strong>Type du fichier :</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>Date de remise :</strong> {new Date().toLocaleDateString()}</h6>
+                                            <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                            <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}</h6>
                                         </div>
                                     )}
                                 </div>
                                 <div className="modal-footer">
                                     <button className="btn btn-primary" onClick={handleSubmit}>
-                                        Soumettre
+                                        {t('submit')}
                                     </button>
                                     <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
-                                        Fermer
+                                        {t('close')}
                                     </button>
                                 </div>
                             </div>
@@ -269,7 +289,6 @@ function AccueilEtudiant() {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

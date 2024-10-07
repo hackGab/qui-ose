@@ -60,14 +60,14 @@ class GestionnaireControllerTest {
     @WithMockUser(username = "gestionnaire", roles = {"GESTIONNAIRE"})
     public void shouldValiderCV() throws Exception {
         // Arrange
-        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("accepté")))
+        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("accepté"), eq("")))
                 .thenReturn(Optional.of(cvDTO));
         cvDTO.setStatus("accepté");
 
-        // Act & Assert
+
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/gestionnaire/validerOuRejeterCV/1")
-                        .param("status", "accepté")
+                        .content("{\"status\": \"accepté\", \"rejectionReason\": \"\"}")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -79,14 +79,14 @@ class GestionnaireControllerTest {
     @WithMockUser(username = "gestionnaire", roles = {"GESTIONNAIRE"})
     public void shouldRejeterCV() throws Exception {
         // Arrange
-        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("rejeté")))
+        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("rejeté"), eq("raison")))
                 .thenReturn(Optional.of(cvDTO));
         cvDTO.setStatus("rejeté");
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/gestionnaire/validerOuRejeterCV/1")
-                        .param("status", "rejeté")
+                        .content("{\"status\": \"rejeté\", \"rejectionReason\": \"raison\"}")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -98,13 +98,13 @@ class GestionnaireControllerTest {
     @WithMockUser(username = "gestionnaire", roles = {"GESTIONNAIRE"})
     public void shouldReturnNotFoundWhenCVNotExists() throws Exception {
         // Arrange
-        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("accepté")))
+        when(gestionnaireService.validerOuRejeterCV(anyLong(), eq("accepté"), eq("")))
                 .thenReturn(Optional.empty());
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/gestionnaire/validerOuRejeterCV/1")
-                        .param("status", "accepté")
+                        .content("{\"status\": \"accepté\", \"rejectionReason\": \"\"}")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

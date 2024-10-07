@@ -9,24 +9,28 @@ function DetailsEtudiants() {
     const { t } = useTranslation();
     const location = useLocation();
     const student = location.state?.student;
-    const [selectedStatus, setSelectedStatus] = useState(null); // État pour suivre le statut sélectionné
+    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [rejectionReason, setRejectionReason] = useState('');
     console.log('Student details:', student);
 
     const updateCVStatus = (status) => {
-        const token = localStorage.getItem('authToken');
+        const body = {
+            status: status,
+            rejectionReason: status === 'rejeté' ? rejectionReason : null
+        };
 
-        fetch(`http://localhost:8080/gestionnaire/validerOuRejeterCV/${student.cv.id}?status=${status}`, {
+        fetch(`http://localhost:8080/gestionnaire/validerOuRejeterCV/${student.cv.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            body: JSON.stringify(body)
         })
             .then(response => {
                 console.log('Response status:', response.status);
                 if (response.ok) {
-                    alert(t('cvStatusUpdated'));
+                    window.location.href = '/listeEtudiants';
                 } else {
-                    alert(t('cvStatusUpdateFailed'));
                     console.error('Error details:', response.statusText);
                 }
             })
@@ -36,14 +40,15 @@ function DetailsEtudiants() {
     };
 
     const handleStatusSelect = (status) => {
-        setSelectedStatus(status); // Met à jour le statut sélectionné
+        setSelectedStatus(status);
+        if (status === 'rejeté') {
+            setRejectionReason('');
+        }
     };
 
     const handleConfirm = () => {
         if (selectedStatus) {
-            updateCVStatus(selectedStatus); // Appelle la fonction de mise à jour avec le statut sélectionné
-        } else {
-            alert(t('pleaseSelectStatus')); // Alerte si aucun statut n'est sélectionné
+            updateCVStatus(selectedStatus);
         }
     };
 
@@ -99,6 +104,19 @@ function DetailsEtudiants() {
                             >
                                 {t('reject')}
                             </button>
+
+                            {selectedStatus === 'rejeté' && (
+                                <div className="mt-1 mb-2 col-12">
+                                    <textarea
+                                        rows="3"
+                                        placeholder={t('enterRejectionReason')}
+                                        value={rejectionReason}
+                                        onChange={(e) => setRejectionReason(e.target.value)}
+                                        className="form-control rejection-reason"
+                                    />
+                                </div>
+                            )}
+
                             <button className="btn btn-primary" onClick={handleConfirm}>
                                 {t('confirm')}
                             </button>

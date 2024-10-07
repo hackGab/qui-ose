@@ -44,12 +44,19 @@ public class GestionnaireService {
         }
     }
 
-    public Optional<CVDTO> validerOuRejeterCV(Long cvId, String status) {
+    public Optional<CVDTO> validerOuRejeterCV(Long cvId, String status, String rejectionReason) {
         Optional<CV> cvOptional = cvRepository.findById(cvId);
 
         if (cvOptional.isPresent()) {
             CV cv = cvOptional.get();
             cv.setStatus(status);
+
+            if ("rejeté".equals(status)) {
+                cv.setRejetMessage(rejectionReason);
+            } else {
+                cv.setRejetMessage("");
+            }
+
             cvRepository.save(cv);
             return Optional.of(new CVDTO(cv));
         }

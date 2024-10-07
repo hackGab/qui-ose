@@ -86,7 +86,7 @@ public class GestionnaireServiceTest {
         when(cvRepository.save(any(CV.class))).thenReturn(cvEntity);
 
         // Act
-        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté");
+        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté", "");
 
         // Assert
         assertTrue(result.isPresent());
@@ -100,7 +100,7 @@ public class GestionnaireServiceTest {
         when(cvRepository.save(any(CV.class))).thenReturn(cvEntity);
 
         // Act
-        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "rejeté");
+        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "rejeté", "raison");
 
         // Assert
         assertTrue(result.isPresent());
@@ -113,7 +113,7 @@ public class GestionnaireServiceTest {
         when(cvRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act
-        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté");
+        Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté", "");
 
         // Assert
         assertFalse(result.isPresent());

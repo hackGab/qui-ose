@@ -49,7 +49,7 @@ public class GestionnaireService {
 
         if (cvOptional.isPresent()) {
             CV cv = cvOptional.get();
-            cv.setStatus(status);  // "accepté" ou "rejeté"
+            cv.setStatus(status);
             cvRepository.save(cv);
             return Optional.of(new CVDTO(cv));
         }

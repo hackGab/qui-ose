@@ -122,17 +122,18 @@ function VisualiserOffres() {
                         {offres.map((offre, index) => (
                             <div
                                 key={index}
-                                className={`card offre-card ${selectedOffre === index ? "hovered" : ""} ${deletingId === offre.id ? "fade-out" : ""}`}
+                                className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`}
                                 onClick={() => handleOffreClick(index)}
                             >
                                 <div className="card-body">
                                     <h5 className="card-title">{offre.titre}</h5>
                                     <p className="card-text">
-                                        <strong>Localisation :</strong> {offre.localisation} <br />
+                                        <strong>Localisation :</strong> {offre.localisation} <br/>
                                         <strong>Nombre de candidats :</strong> {offre.nbCandidats}
                                     </p>
                                     <small>
-                                        Date de publication : {new Date(offre.datePublication).toLocaleDateString()} <br />
+                                        Date de publication : {new Date(offre.datePublication).toLocaleDateString()}
+                                        <br/>
                                         Date limite : {new Date(offre.dateLimite).toLocaleDateString()}
                                     </small>
                                     <div className={`status-badge ${getStatusClass(offre.status)}`}>
@@ -143,33 +144,32 @@ function VisualiserOffres() {
                                         <>
                                             <div
                                                 className="card pdf-card mt-4"
-                                                style={{ backgroundColor: "#f0f0f0" }}
+                                                style={{backgroundColor: "#f0f0f0"}}
                                                 onClick={() => openPDF(offre.data)}
                                             >
                                                 <div className="card-body text-center">
                                                     <h5 className="card-title">Voir le fichier PDF</h5>
-                                                    <p className="card-text">Cliquez ici pour ouvrir le PDF de l'offre sélectionnée.</p>
+                                                    <p className="card-text">Cliquez ici pour ouvrir le PDF de l'offre
+                                                        sélectionnée.</p>
                                                 </div>
                                             </div>
                                             <div className="d-flex justify-content-between mt-4">
-                                                {/* Icône de modification */}
                                                 <FontAwesomeIcon
                                                     icon={faEdit}
                                                     size="2x"
                                                     className="text-warning"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{cursor: "pointer"}}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        handleUpdateClick(offre,employeurEmail);
+                                                        handleUpdateClick(offre, employeurEmail);
                                                     }}
                                                 />
 
-                                                {/* Icône de suppression */}
                                                 <FontAwesomeIcon
                                                     icon={faTrash}
                                                     size="2x"
                                                     className="text-danger"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{cursor: "pointer"}}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         deleteOffre(offre.id);

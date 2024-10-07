@@ -6,8 +6,17 @@
     position: relative;
 }
 
+.offre-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
 
-.hovered {
+.offre-card.selected:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.selected {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -19,6 +28,11 @@
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     transition: all 0.3s ease;
+}
+
+.selected:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 .status-badge {

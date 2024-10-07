@@ -182,7 +182,6 @@ function SoumettreOffre() {
                                     <h5 className="modal-title">Soumettre une offre d'emploi</h5>
                                 </div>
                                 <div className="modal-body">
-                                    {/* Existing file upload input */}
                                     <div
                                         onDragEnter={handleDrag}
                                         onDragOver={handleDrag}
@@ -200,7 +199,6 @@ function SoumettreOffre() {
                                         />
                                     </div>
 
-                                    {/* New fields */}
                                     <div className="form-group mt-3">
                                         <label htmlFor="titre">Titre de l'offre</label>
                                         <input
@@ -245,7 +243,6 @@ function SoumettreOffre() {
                                         />
                                     </div>
 
-                                    {/* Existing file details section */}
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
                                             <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>

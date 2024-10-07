@@ -13,7 +13,7 @@ function ListeEtudiants() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:8080/etudiant/all', {
+        fetch('http://localhost:8081/etudiant/all', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

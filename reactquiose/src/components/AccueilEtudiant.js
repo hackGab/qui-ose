@@ -5,7 +5,6 @@ import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
 
 function AccueilEtudiant() {
-    const { t } = useTranslation();
     const location = useLocation();
     const userData = location.state?.userData;
 
@@ -17,10 +16,11 @@ function AccueilEtudiant() {
     const [dragActive, setDragActive] = useState(false);
     const [internships, setInternships] = useState([]);
     const [rejectionMessage, setRejectionMessage] = useState("");
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (userData) {
-            const url = `http://localhost:8080/etudiant/credentials/${userData.credentials.email}`;
+            const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
             fetch(url)
                 .then((response) => {
@@ -44,7 +44,7 @@ function AccueilEtudiant() {
                     }
 
                     // Récupération des stages
-                    const internshipsUrl = `http://localhost:8080/etudiant/stages/${userData.credentials.email}`;
+                    const internshipsUrl = `http://localhost:8081/etudiant/stages/${userData.credentials.email}`;
                     fetch(internshipsUrl)
                         .then((response) => {
                             if (!response.ok) {
@@ -84,6 +84,7 @@ function AccueilEtudiant() {
                 setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
+        } else {
         }
     };
 
@@ -104,6 +105,7 @@ function AccueilEtudiant() {
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({ target: { files: [uploadedFile] } });
+        } else {
         }
     };
 
@@ -117,7 +119,7 @@ function AccueilEtudiant() {
                 status: "Attente",
             };
 
-            const urlAjout = `http://localhost:8080/cv/creerCV/${userData.credentials.email}`;
+            const urlAjout = `http://localhost:8081/cv/creerCV/${userData.credentials.email}`;
             let ancienId = file ? file.id : null;
 
             fetch(urlAjout, {
@@ -140,7 +142,7 @@ function AccueilEtudiant() {
                 })
                 .then(() => {
                     if (ancienId) {
-                        const urlDestruction = `http://localhost:8080/cv/supprimerCV/${ancienId}`;
+                        const urlDestruction = `http://localhost:8081/cv/supprimerCV/${ancienId}`;
 
                         fetch(urlDestruction, {
                             method: "DELETE",
@@ -159,6 +161,7 @@ function AccueilEtudiant() {
 
             setShowModal(false);
             setTemporaryFile(null);
+        } else {
         }
     };
 
@@ -182,7 +185,6 @@ function AccueilEtudiant() {
             <EtudiantHeader />
 
             <div className="text-center my-4">
-
                 {file ? (
                     <h2>{file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? t('cvPending') :
@@ -243,7 +245,6 @@ function AccueilEtudiant() {
                 )}
             </div>
 
-
             {showModal && (
                 <div className="custom-modal-overlay">
                     <div className="modal modal-custom" tabIndex="-1" role="dialog">
@@ -270,7 +271,6 @@ function AccueilEtudiant() {
                                         />
                                     </div>
 
-
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
                                             <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
@@ -292,6 +292,7 @@ function AccueilEtudiant() {
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

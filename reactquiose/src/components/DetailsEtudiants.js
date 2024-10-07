@@ -19,7 +19,7 @@ function DetailsEtudiants() {
             rejectionReason: status === 'rejeté' ? rejectionReason : null
         };
 
-        fetch(`http://localhost:8080/gestionnaire/validerOuRejeterCV/${student.cv.id}`, {
+        fetch(`http://localhost:8081/gestionnaire/validerOuRejeterCV/${student.cv.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

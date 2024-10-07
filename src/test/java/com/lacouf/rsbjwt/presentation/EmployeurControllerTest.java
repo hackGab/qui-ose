@@ -32,10 +32,10 @@ public class EmployeurControllerTest {
     private EtudiantService etudiantService;
 
     @MockBean
-    private GestionnaireService gestionnaireService;
+    private ProfesseurService professeurService;
 
     @MockBean
-    private ProfesseurService professeurService;
+    private GestionnaireService gestionnaireService;
 
     @MockBean
     private PasswordEncoder passwordEncoder;

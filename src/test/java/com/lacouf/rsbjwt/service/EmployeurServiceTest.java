@@ -36,7 +36,7 @@ public class EmployeurServiceTest {
         employeurService = new EmployeurService(employeurRepository, passwordEncoder);
         employeurController = new EmployeurController(employeurService);
 
-        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password", "password");
+        CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");
 
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");

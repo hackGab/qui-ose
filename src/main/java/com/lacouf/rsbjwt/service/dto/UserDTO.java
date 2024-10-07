@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
-    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -27,7 +26,6 @@ public class UserDTO {
     }
 
     public UserDTO(UserApp user) {
-        this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -38,7 +36,6 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

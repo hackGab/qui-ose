@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.security.JwtTokenProvider;
 import com.lacouf.rsbjwt.service.dto.LoginDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,13 +20,25 @@ class UserAppServiceTest {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
     private UserAppService userAppService;
+    private UserAppRepository userAppRepository;
+    private EtudiantRepository etudiantRepository;
+    private ProfesseurRepository professeurRepository;
+    private EmployeurRepository employeurRepository;
+    private GestionnaireRepository gestionnaireRepository;
     private LoginDTO loginDto;
 
     @BeforeEach
     void setUp() {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         jwtTokenProvider = Mockito.mock(JwtTokenProvider.class);
-        userAppService = new UserAppService(authenticationManager, jwtTokenProvider);
+        userAppRepository = Mockito.mock(UserAppRepository.class);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        professeurRepository = Mockito.mock(ProfesseurRepository.class);
+        employeurRepository = Mockito.mock(EmployeurRepository.class);
+        gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
+
+        userAppService = new UserAppService(authenticationManager, jwtTokenProvider, userAppRepository,
+                etudiantRepository, professeurRepository, employeurRepository, gestionnaireRepository);
 
         loginDto = new LoginDTO("user@example.com", "password");
     }

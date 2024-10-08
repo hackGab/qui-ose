@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.service;
 import com.lacouf.rsbjwt.model.Gestionnaire;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.GestionnaireRepository;
+import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +26,14 @@ public class GestionnaireServiceTest {
     private GestionnaireService gestionnaireService;
     private GestionnaireRepository gestionnaireRepository;
     private PasswordEncoder passwordEncoder;
+    private OffreDeStageRepository offreDeStageRepository;
+
 
     @BeforeEach
     void setUp() {
         gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository, passwordEncoder);
+        gestionnaireService = new GestionnaireService(gestionnaireRepository, passwordEncoder, offreDeStageRepository);
 
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);

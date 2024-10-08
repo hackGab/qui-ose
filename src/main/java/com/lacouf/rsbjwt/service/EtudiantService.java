@@ -102,7 +102,7 @@ public class EtudiantService {
 
     public List<OffreDeStageDTO> getOffresApprouvees() {
         return offreDeStageRepository.findAll().stream()
-                .filter(offreDeStage -> offreDeStage.getStatus().equals("valide"))
+                .filter(offreDeStage -> offreDeStage.getStatus().equals("validé"))
                 .map(OffreDeStageDTO::new)
                 .toList();
     }

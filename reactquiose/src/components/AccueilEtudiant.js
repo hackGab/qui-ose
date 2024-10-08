@@ -3,6 +3,7 @@ import { useLocation,useNavigate } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
+import ListeDeStage from "./ListeDeStage";
 
 function AccueilEtudiant() {
     const location = useLocation();
@@ -45,7 +46,7 @@ function AccueilEtudiant() {
 
                         // Vérifiez si le statut est valide
                         console.log('CV Status:', data.cv.status);
-                        if (data.cv.status === 'valide') {
+                        if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');
                             const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
                             fetch(internshipsUrl)
@@ -56,7 +57,7 @@ function AccueilEtudiant() {
                                     return response.json();
                                 })
                                 .then((internshipsData) => {
-                                    console.log('Stages récupérés:', internshipsData); // Vérifiez ce qui est retourné
+                                    console.log('Stages récupérés:', internshipsData);
                                     setInternships(internshipsData);
                                 })
                                 .catch((error) => {
@@ -71,7 +72,7 @@ function AccueilEtudiant() {
                     console.error('Erreur:', error);
                 });
         }
-    }, [userData]); // Assurez-vous d'ajouter userData comme dépendance
+    }, [userData]);
 
     const afficherAjoutCV = () => {
         setShowModal(true);
@@ -189,7 +190,7 @@ function AccueilEtudiant() {
 
     const navigateToListeDeStage = () => {
         navigate("/listeDeStage", {
-            state: { internships }, // Passez les internships à la nouvelle route
+            state: { internships },
         });
     };
 
@@ -201,7 +202,7 @@ function AccueilEtudiant() {
                 {file ? (
                     <h2>{file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? t('cvPending') :
-                            file.status === 'valide' ? t('cvApproved') :
+                            file.status === 'validé' ? t('cvApproved') :
                                 file.status === 'rejete' ? t('cvRejected') : t('cvRefused')}</h2>
                 ) : (
                     <h2 className="text-warning">{t('pleaseAddCV')}</h2>
@@ -219,7 +220,7 @@ function AccueilEtudiant() {
                 <button
                     className={`btn btn-lg rounded-top-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'valide' ? 'btn-success' :
+                            file.status === 'validé' ? 'btn-success' :
                                 file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
                     style={{width: "10em"}}
@@ -237,71 +238,7 @@ function AccueilEtudiant() {
             )}
 
             <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
-
-            <div className="d-flex justify-content-center my-3">
-                <div
-                    className="card text-center"
-                    style={{width: "18rem", cursor: "pointer"}}
-                    onClick={navigateToListeDeStage}
-                >
-                    <div className="card-body">
-                        <h5 className="card-title">Offres de Stage</h5>
-                        <p className="card-text">Cliquez ici pour voir toutes les offres de stage disponibles.</p>
-                        
-                    </div>
-                </div>
-            </div>
-
-            {/*<div className="text-center my-5">*/}
-            {/*    {file && file.status === 'valide' && (*/}
-            {/*        <div className="text-center my-4" style={{marginTop: file && file.status === 'valide' ? "200px" : "100px"}}>*/}
-            {/*            <h3>Stages</h3>*/}
-            {/*            <div*/}
-            {/*                className="d-flex flex-wrap justify-content-center"*/}
-            {/*                style={{maxHeight: "400px", overflowY: "scroll"}}*/}
-            {/*            >*/}
-            {/*                {internships.length > 0 ? (*/}
-            {/*                    <div className="row w-100">*/}
-            {/*                        {internships.map((internship, index) => (*/}
-            {/*                            <div*/}
-            {/*                                key={index}*/}
-            {/*                                className="col-lg-4 col-md-6 col-sm-12 p-2"*/}
-            {/*                            >*/}
-            {/*                                <div className="card my-3 h-100">*/}
-            {/*                                    <div className="card-body">*/}
-            {/*                                        <h5 className="card-title">{internship.titre}</h5>*/}
-            {/*                                        <h6 className="card-subtitle mb-2 text-muted">*/}
-            {/*                                            {internship.localisation}*/}
-            {/*                                        </h6>*/}
-            {/*                                        <p className="card-text">*/}
-            {/*                                            <strong>Date limite de candidature:</strong>{" "}*/}
-            {/*                                            {internship.dateLimite}*/}
-            {/*                                        </p>*/}
-            {/*                                        <p className="card-text">*/}
-            {/*                                            <strong>Date de publication:</strong>{" "}*/}
-            {/*                                            {internship.datePublication}*/}
-            {/*                                        </p>*/}
-            {/*                                        <div className="d-flex justify-content-center my-3">*/}
-            {/*                                            <button className="btn btn-info"*/}
-            {/*                                                    onClick={() => openFile(internship.data)}>*/}
-            {/*                                                Voir candidature*/}
-            {/*                                            </button>*/}
-            {/*                                        </div>*/}
-            {/*                                        <p className="card-text">*/}
-            {/*                                            <strong>Nombre de candidats:</strong> {internship.nbCandidats}*/}
-            {/*                                        </p>*/}
-            {/*                                    </div>*/}
-            {/*                                </div>*/}
-            {/*                            </div>*/}
-            {/*                        ))}*/}
-            {/*                    </div>*/}
-            {/*                ) : (*/}
-            {/*                    <p>Aucun stage à afficher.</p>*/}
-            {/*                )}*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-            {/*</div>*/}
+            {file && file.status === 'validé' && <ListeDeStage internships={internships} />}
 
             {showModal && (
                 <div className="custom-modal-overlay">

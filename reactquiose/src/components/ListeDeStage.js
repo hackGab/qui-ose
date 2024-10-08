@@ -3,8 +3,7 @@ import { useLocation } from "react-router-dom";
 
 function ListeDeStage() {
     const location = useLocation();
-    const internships = location.state?.internships || []; // Récupération des offres de stages
-
+    const internships = location.state?.internships || [];
     const openFile = (data) => {
         if (data) {
             const pdfWindow = window.open();
@@ -46,7 +45,9 @@ function ListeDeStage() {
                         </div>
                     ))
                 ) : (
-                    <p>Aucune offre de stage à afficher.</p>
+                    <div className="d-flex justify-content-center align-items-center">
+                        <p>Aucune offre de stage à afficher.</p>
+                    </div>
                 )}
             </div>
         </div>

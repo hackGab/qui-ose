@@ -203,12 +203,15 @@ function AccueilEtudiant() {
                     <h2>{file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? t('cvPending') :
                             file.status === 'validé' ? t('cvApproved') :
-                                file.status === 'rejete' ? t('cvRejected') : t('cvRefused')}</h2>
+                                file.status === 'rejeté' ? t('cvRejected') : t('cvRefused')}</h2>
                 ) : (
                     <h2 className="text-warning">{t('pleaseAddCV')}</h2>
                 )}
             </div>
 
+            <button onClick={() => {
+                console.log(internships)
+            }}></button>
             {rejectionMessage && (
                 <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
                     <h5>{t('rejectionReason')}</h5>
@@ -238,7 +241,7 @@ function AccueilEtudiant() {
             )}
 
             <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
-            {file && file.status === 'validé' && <ListeDeStage internships={internships} />}
+            {file && file.status === 'validé' && <ListeDeStage internships={internships}/>}
 
             {showModal && (
                 <div className="custom-modal-overlay">

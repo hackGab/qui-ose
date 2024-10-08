@@ -1,9 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 
-function ListeDeStage() {
-    const location = useLocation();
-    const internships = location.state?.internships || [];
+function ListeDeStage({ internships = [] }) {
     const openFile = (data) => {
         if (data) {
             const pdfWindow = window.open();
@@ -23,13 +20,13 @@ function ListeDeStage() {
                     internships.map((internship, index) => (
                         <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">
                             <div className="card my-3 h-100">
-                                <div className="card-body">
-                                    <h5 className="card-title">{internship.titre}</h5>
-                                    <h6 className="card-subtitle mb-2 text-muted">{internship.localisation}</h6>
-                                    <p className="card-text">
+                                <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                                    <h5 className="card-title text-center">{internship.titre}</h5>
+                                    <h6 className="card-subtitle mb-2 text-muted text-center">{internship.localisation}</h6>
+                                    <p className="card-text text-center">
                                         <strong>Date limite de candidature:</strong> {internship.dateLimite}
                                     </p>
-                                    <p className="card-text">
+                                    <p className="card-text text-center">
                                         <strong>Date de publication:</strong> {internship.datePublication}
                                     </p>
                                     <div className="d-flex justify-content-center my-3">
@@ -37,7 +34,7 @@ function ListeDeStage() {
                                             Voir candidature
                                         </button>
                                     </div>
-                                    <p className="card-text">
+                                    <p className="card-text text-center">
                                         <strong>Nombre de candidats:</strong> {internship.nbCandidats}
                                     </p>
                                 </div>

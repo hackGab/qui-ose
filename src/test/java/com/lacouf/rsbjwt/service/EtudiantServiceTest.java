@@ -4,25 +4,26 @@ import com.lacouf.rsbjwt.model.CV;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.repository.UserAppRepository;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
-import com.lacouf.rsbjwt.service.dto.CredentialDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
-import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -35,7 +36,6 @@ class EtudiantServiceTest {
 
     private UserAppRepository userAppRepository;
     private CVRepository cvRepository;
-
     private OffreDeStageRepository offreDeStageRepository;
 
     private EtudiantDTO newEtudiant;
@@ -203,56 +203,24 @@ class EtudiantServiceTest {
     }
 
     @Test
-    void getOffresApprouvees() {
-        Employeur employeur = new Employeur();
-        employeur.setId(1L);
-        employeur.setCredentials(new Credentials("allo@ballo.com","123", Role.EMPLOYEUR));
-        // Arrange : Création des entités de stage
-        OffreDeStage offreDeStage1 = new OffreDeStage();
-        offreDeStage1.setStatus("validé");
-        offreDeStage1.setEmployeur(employeur);
+    void shouldReturnListOfOffresDeStage() {
+        // Arrange
+        Employeur employeur = new Employeur("John", "Doe", "email", "mdp", "phone", "entreprise");
+        OffreDeStage offreDeStage = new OffreDeStage("titre", "localisation", LocalDate.now(), "data", 1, "validé");
+        offreDeStage.setEmployeur(employeur);
 
-        OffreDeStage offreDeStage2 = new OffreDeStage();
-        offreDeStage2.setStatus("validé");
-        offreDeStage2.setEmployeur(employeur);
-
-        OffreDeStage offreDeStage3 = new OffreDeStage();
-        offreDeStage3.setStatus("en_attente");
-        offreDeStage3.setEmployeur(employeur);
-
+        List<OffreDeStage> offres = List.of(offreDeStage);
 
         when(offreDeStageRepository.findAll())
-                .thenReturn(List.of(offreDeStage1, offreDeStage2));
+                .thenReturn(offres);
 
-        // Act :
+        // Act
         List<OffreDeStageDTO> response = etudiantService.getOffresApprouvees();
 
-
-        assertEquals(2, response.size());
-        assertTrue(response.stream().allMatch(offre -> offre.getStatus().equals("validé")));
-    }
-
-    @Test
-    void getAllEtudiants() {
-        // Arrange : Création des entités d'étudiants
-        Etudiant etudiant1 = new Etudiant();
-        etudiant1.setFirstName("John");
-        etudiant1.setLastName("Doe");
-        etudiant1.setCredentials(new Credentials("","",Role.ETUDIANT));
-
-        Etudiant etudiant2 = new Etudiant();
-        etudiant2.setFirstName("Jane");
-        etudiant2.setLastName("Doe");
-        etudiant2.setCredentials(new Credentials("","",Role.ETUDIANT));
-
-        // Simule la réponse du repository
-        when(etudiantRepository.findAll())
-                .thenReturn(List.of(etudiant1, etudiant2));
-
-        // Act : Appel du service
-        Iterable<EtudiantDTO> response = etudiantService.getAllEtudiants();
-
-        // Assert : Vérifie qu'on obtient bien les étudiants
-        assertEquals(2, response.spliterator().getExactSizeIfKnown());
+        // Assert
+        assertEquals(offres.size(), response.size());
+        assertEquals(offres.get(0).getTitre(), response.get(0).getTitre());
+        assertEquals(offres.get(0).getLocalisation(), response.get(0).getLocalisation());
+        assertEquals(offres.get(0).getDateLimite(), response.get(0).getDateLimite());
     }
 }

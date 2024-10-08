@@ -47,6 +47,7 @@ public class OffreDeStageControllerTest {
 
     @MockBean
     private EmployeurService employeurService;
+    private OffreDeStageController controller;
 
     @MockBean
     private GestionnaireService gestionnaireService;
@@ -134,6 +135,7 @@ public class OffreDeStageControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
 
@@ -175,6 +177,7 @@ public class OffreDeStageControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
+
 
 
     @Test
@@ -226,6 +229,7 @@ public class OffreDeStageControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     void try_to_updateOffreDeStage_with_random_id() throws Exception {
 
+        ResponseEntity<OffreDeStageDTO> response = controller.updateOffreDeStage(id, updatedOffre);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/offreDeStage/")

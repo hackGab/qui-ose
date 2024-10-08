@@ -80,6 +80,22 @@ class EtudiantControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(etudiantDTO)));
     }
+
+//    @Test
+//    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+//    public void shouldReturnEmptyWhenExceptionIsThrown() throws Exception {
+//        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+//        Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
+//                .thenThrow(new RuntimeException("Database error"));
+//
+//        mockMvc.perform(MockMvcRequestBuilders
+//                        .post("/etudiant/creerEtudiant")
+//                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+//                        .content(new ObjectMapper().writeValueAsString(etudiantDTO))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+//    }
 }
 
 

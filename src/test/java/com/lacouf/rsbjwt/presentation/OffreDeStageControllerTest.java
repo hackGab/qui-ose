@@ -1,136 +1,254 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.service.EmployeurService;
-import com.lacouf.rsbjwt.service.OffreDeStageService;
+import com.lacouf.rsbjwt.model.auth.Credentials;
+import com.lacouf.rsbjwt.model.auth.Role;
+import com.lacouf.rsbjwt.service.*;
+import com.lacouf.rsbjwt.service.dto.CredentialDTO;
+import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
-
+@WebMvcTest(OffreDeStageController.class)
 public class OffreDeStageControllerTest {
-    private OffreDeStageService offreDeStageService;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ProfesseurService professeurService;
+
+    @MockBean
+    private EtudiantService etudiantService;
+
+    @MockBean
     private EmployeurService employeurService;
-    private OffreDeStageController controller;
 
-    @BeforeEach
-    public void setUp() {
-        offreDeStageService = Mockito.mock(OffreDeStageService.class);
-        employeurService = Mockito.mock(EmployeurService.class);
-        controller = new OffreDeStageController(offreDeStageService, employeurService);
-    }
+    @MockBean
+    private GestionnaireService gestionnaireService;
+
+    @MockBean
+    private UserAppService userService;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private OffreDeStageService offreDeStageService;
+
 
     @Test
-    public void test_create_offre_de_stage_with_valid_data() {
-        OffreDeStageDTO newOffre = new OffreDeStageDTO();
-        newOffre.setTitre("Internship");
-        String email = "employer@example.com";
-        Employeur employeur = new Employeur("John", "Doe", email, "password", "123456789", "Entreprise");
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldCreateOffreDeStage() throws Exception {
+
+        Employeur employeurEntity = new Employeur("John", "Doe",
+                null, "a@b.com", "123", "Entreprise");
+        employeurEntity.setId(46L);
+
+        when(employeurService.findByCredentials_Email(any(String.class)))
+                .thenReturn(Optional.of(employeurEntity));
+
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+        offreDeStageDTO.setTitre("Titre du stage");
+
+        when(offreDeStageService.creerOffreDeStage(any(OffreDeStageDTO.class), any(Optional.class)))
+                .thenReturn(Optional.of(offreDeStageDTO));
 
 
-        Mockito.when(employeurService.findByCredentials_Email(email))
-                .thenReturn(Optional.of(employeur));
-        Mockito.when(offreDeStageService.creerOffreDeStage(Mockito.any(), Mockito.eq(Optional.of(employeur))))
-                .thenReturn(Optional.of(newOffre));
-
-        ResponseEntity<OffreDeStageDTO> response = controller.creerOffreDeStage(email, newOffre);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void test_create_offre_de_stage_with_none_data() {
-        ResponseEntity<OffreDeStageDTO> response = controller.creerOffreDeStage(null, null);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @Test
-    public void test_getOffreDeStageById() {
-        Long id = 1L;
-        OffreDeStageDTO expectedOffre = new OffreDeStageDTO();
-        Mockito.when(offreDeStageService.getOffreDeStageById(id)).thenReturn(Optional.of(expectedOffre));
-
-        ResponseEntity<OffreDeStageDTO> response = controller.getOffreDeStageById(id);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedOffre, response.getBody());
-    }
-
-    @Test
-    public void test_getOffreDeStageById_withNoId() {
-        ResponseEntity<OffreDeStageDTO> response = controller.getOffreDeStageById(null);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/offreDeStage/creerOffreDeStage/a@b.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(offreDeStageDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(offreDeStageDTO)));
     }
 
 
     @Test
-    void getOffresEmployeur() {
-        String email = "s@d.com";
-        Employeur employeur = new Employeur("John", "Doe", email, "password", "123456789", "Entreprise");
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_create_offre_de_stage_with_none_data() throws Exception {
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+        offreDeStageDTO.setTitre("Titre du stage");
 
-        Mockito.when(employeurService.findByCredentials_Email(email))
-                .thenReturn(Optional.of(employeur));
 
-        Mockito.when(offreDeStageService.getOffresEmployeur(employeur)).thenReturn(Optional.of(List.of(new OffreDeStageDTO())));
-
-        ResponseEntity<List<OffreDeStageDTO>> response = controller.getOffresEmployeur(email);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/offreDeStage/creerOffreDeStage/a@b.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(null))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
-    @Test
-    void getOffresEmployeur_with_no_email() {
-        ResponseEntity<List<OffreDeStageDTO>> response = controller.getOffresEmployeur(null);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
 
 
     @Test
-    void deleteOffreDeStage() {
-        Long id = 1L;
-        ResponseEntity<Void> response = controller.deleteOffreDeStage(id);
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_getOffreDeStageById() throws Exception {
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+        offreDeStageDTO.setTitre("Titre du stage");
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        when(offreDeStageService.getOffreDeStageById(anyLong()))
+                .thenReturn(Optional.of(offreDeStageDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(offreDeStageDTO)));
     }
+
 
     @Test
-    void try_to_deleteOffreDeStage_with_no_id() {
-        ResponseEntity<Void> response = controller.deleteOffreDeStage(null);
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_getOffreDeStageById_withNoId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
+
 
     @Test
-    void updateOffreDeStage() {
-        Long id = 1L;
-        OffreDeStageDTO updatedOffre = new OffreDeStageDTO();
-        Mockito.when(offreDeStageService.updateOffreDeStage(id, updatedOffre)).thenReturn(Optional.of(updatedOffre));
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    void getOffresEmployeur() throws Exception {
 
-        ResponseEntity<OffreDeStageDTO> response = controller.updateOffreDeStage(id, updatedOffre);
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+        offreDeStageDTO.setTitre("Titre du stage");
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(updatedOffre, response.getBody());
+        OffreDeStageDTO offreDeStageDTO2 = new OffreDeStageDTO();
+        offreDeStageDTO2.setTitre("Titre du stage 2");
+
+        when(employeurService.findByCredentials_Email(any(String.class)))
+                .thenReturn(Optional.of(new Employeur()));
+
+        when(offreDeStageService.getOffresEmployeur(any(Employeur.class)))
+                .thenReturn(Optional.of(List.of(offreDeStageDTO, offreDeStageDTO2)));
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/offresEmployeur/a@b.vom")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(List.of(offreDeStageDTO, offreDeStageDTO2))));
+
     }
+
 
     @Test
-    void try_to_updateOffreDeStage_with_no_id() {
-        ResponseEntity<OffreDeStageDTO> response = controller.updateOffreDeStage(null, null);
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    void getOffresEmployeur_with_no_email() throws Exception {
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/offresEmployeur/")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
     }
+
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    void deleteOffreDeStage() throws Exception {
+        // Mock the service to return the expected message
+        when(offreDeStageService.deleteOffreDeStage(anyLong()))
+                .thenReturn("Offre de stage supprimée");
+
+        // Perform the DELETE request to the correct URL
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/offreDeStage/1")// Corrected the double slash
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+
+    @Test
+        @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+        void try_to_deleteOffreDeStage_with_no_id() throws Exception {
+            mockMvc.perform(MockMvcRequestBuilders
+                            .delete("/offreDeStage/")
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound());
+        }
+
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    void updateOffreDeStage() throws Exception {
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+
+        when(offreDeStageService.updateOffreDeStage(anyLong(), any(OffreDeStageDTO.class)))
+                .thenReturn(Optional.of(offreDeStageDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/offreDeStage/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(offreDeStageDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    void try_to_updateOffreDeStage_with_random_id() throws Exception {
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/offreDeStage/")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(null))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    }
+
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    void getOffresValidees() throws Exception {
+
+        when(etudiantService.getOffresApprouvees())
+                .thenReturn(List.of(new OffreDeStageDTO()));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/offresValidees")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 }

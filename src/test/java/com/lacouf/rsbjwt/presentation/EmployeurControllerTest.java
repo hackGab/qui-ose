@@ -50,6 +50,8 @@ public class EmployeurControllerTest {
         Mockito.when(employeurService.creerEmployeur(any(EmployeurDTO.class)))
                 .thenReturn(Optional.of(employeurDTO));
 
+        System.out.println(new ObjectMapper().writeValueAsString(employeurDTO));
+
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/employeur/creerEmployeur")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())

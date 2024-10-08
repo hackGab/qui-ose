@@ -31,7 +31,7 @@ public class OffreDeStageController {
     public ResponseEntity<OffreDeStageDTO> creerOffreDeStage(
             @PathVariable String email,
             @RequestBody OffreDeStageDTO newOffreDeStageDTO) {
-        if (newOffreDeStageDTO == null || email == null || email.isEmpty()) {
+        if (newOffreDeStageDTO == null || email == null || email.isEmpty() ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -62,15 +62,19 @@ public class OffreDeStageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOffreDeStage(@PathVariable Long id) {
-        System.out.println("id = " + id);
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+
+        String responseMessage = offreDeStageService.deleteOffreDeStage(id);
+
+        // Assuming the deletion is always successful, we just return 204
+        // If you want to handle errors differently, you might check the message
+        if ("Offre de stage supprimée".equals(responseMessage)) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle deletion error
         }
-
-        offreDeStageService.deleteOffreDeStage(id);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {

@@ -209,9 +209,6 @@ function AccueilEtudiant() {
                 )}
             </div>
 
-            <button onClick={() => {
-                console.log(internships)
-            }}></button>
             {rejectionMessage && (
                 <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
                     <h5>{t('rejectionReason')}</h5>

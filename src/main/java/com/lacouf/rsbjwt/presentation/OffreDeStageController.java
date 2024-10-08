@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
+import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,12 @@ public class OffreDeStageController {
 
     private final OffreDeStageService offreDeStageService;
     private final EmployeurService employeurService;
+    private final EtudiantService etudiantService;
 
-    public OffreDeStageController(OffreDeStageService offreDeStageService, EmployeurService employeurService) {
+    public OffreDeStageController(OffreDeStageService offreDeStageService, EmployeurService employeurService, EtudiantService etudiantService) {
         this.offreDeStageService = offreDeStageService;
         this.employeurService = employeurService;
+        this.etudiantService = etudiantService;
     }
 
     @PostMapping("/creerOffreDeStage/{email}")
@@ -94,6 +97,15 @@ public class OffreDeStageController {
 
         return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/offresValidees")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees() {
+        List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouvees();
+
+        System.out.println("offresValidees = " + offresValidees.toString());
+
+        return ResponseEntity.ok().body(offresValidees);
     }
 }
 

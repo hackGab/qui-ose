@@ -16,40 +16,7 @@ function AccueilEtudiant() {
     const [dragActive, setDragActive] = useState(false);
     const [rejectionMessage, setRejectionMessage] = useState("");
     const {t} = useTranslation();
-    const [internships, setInternships] = useState([
-        {
-            titre: "Stage 1",
-            localisation: "Paris",
-            dateLimite: new Date(),
-            datePublication: new Date(),
-            data: "Yessir",
-            nbCandidats: 10
-        },
-        {
-            titre: "Stage 2",
-            localisation: "Lyon",
-            dateLimite: new Date(),
-            datePublication: new Date(),
-            data: "No Mane",
-            nbCandidats: 20
-        },
-        {
-            titre: "Stage 3",
-            localisation: "Marseille",
-            dateLimite: new Date(),
-            datePublication: new Date(),
-            data: "Medium mane",
-            nbCandidats: 5
-        },
-        {
-            titre: "Stage 4",
-            localisation: "Toulouse",
-            dateLimite: new Date(),
-            datePublication: new Date(),
-            data: "Big Mane",
-            nbCandidats: 50
-        }
-    ]);
+    const [internships, setInternships] = useState([]);
 
     useEffect(() => {
         if (userData) {
@@ -77,20 +44,23 @@ function AccueilEtudiant() {
                     }
 
                     // Récupération des stages
-                    const internshipsUrl = `http://localhost:8081/etudiant/stages/${userData.credentials.email}`;
-                    fetch(internshipsUrl)
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(`Erreur lors de la requête: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            setInternships(data);
-                        })
-                        .catch((error) => {
-                            console.error('Erreur lors de la récupération des stages:', error);
-                        });
+
+                    if (data.cv && data.cv.status === 'validé') {
+                        const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
+                        fetch(internshipsUrl)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`Erreur lors de la requête: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                setInternships(data);
+                            })
+                            .catch((error) => {
+                                console.error('Erreur lors de la récupération des stages:', error);
+                            });
+                    }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
@@ -258,11 +228,11 @@ function AccueilEtudiant() {
 
             <div className="text-center my-5">
                 {file && file.status === 'validé' && (
-                    <div className="text-center my-4" style={{ marginTop: "100px" }}>
+                    <div className="text-center my-4" style={{marginTop: file && file.status === 'validé' ? "200px" : "100px"}}>
                         <h3>Stages</h3>
                         <div
                             className="d-flex flex-wrap justify-content-center"
-                            style={{ maxHeight: "400px", overflowY: "scroll" }}
+                            style={{maxHeight: "400px", overflowY: "scroll"}}
                         >
                             {internships.length > 0 ? (
                                 <div className="row w-100">
@@ -279,14 +249,15 @@ function AccueilEtudiant() {
                                                     </h6>
                                                     <p className="card-text">
                                                         <strong>Date limite de candidature:</strong>{" "}
-                                                        {internship.dateLimite.toLocaleDateString()}
+                                                        {internship.dateLimite}
                                                     </p>
                                                     <p className="card-text">
                                                         <strong>Date de publication:</strong>{" "}
-                                                        {internship.datePublication.toLocaleDateString()}
+                                                        {internship.datePublication}
                                                     </p>
                                                     <div className="d-flex justify-content-center my-3">
-                                                        <button className="btn btn-info" onClick={() => openFile(internship.data)}>
+                                                        <button className="btn btn-info"
+                                                                onClick={() => openFile(internship.data)}>
                                                             Voir candidature
                                                         </button>
                                                     </div>
@@ -336,7 +307,7 @@ function AccueilEtudiant() {
                                         <div className="file-details mt-3">
                                             <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
                                             <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}</h6>
+                                            <h6><strong>{t('fileDate')}</strong> {temporaryFile.uploadDate}</h6>
                                         </div>
                                     )}
                                 </div>

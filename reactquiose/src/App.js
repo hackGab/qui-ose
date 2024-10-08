@@ -10,6 +10,7 @@ import VisualiserOffres from "./components/VisualiserOffres";
 import ListeEtudiants from './components/ListeEtudiants';
 import DetailsEtudiants from './components/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
+import ListeDeStage from  "./components/ListeDeStage";
 
 function App() {
     return (
@@ -30,7 +31,7 @@ function App() {
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
-
+                    <Route path="/listeDeStage" element={<ListeDeStage />} />
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
 
                     <Route path="*" element={<Navigate to="/login" replace />} />

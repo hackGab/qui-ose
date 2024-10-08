@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 function AccueilEtudiant() {
     const location = useLocation();
     const userData = location.state?.userData;
-
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);
@@ -30,10 +30,11 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log('Réponse du serveur:', data);
+
                     if (data.cv) {
                         setFile(data.cv);
                         setFileData(data.cv.data);
-                        console.log('Réponse du serveur:', data);
                         console.log('CV:', data.cv.rejetMessage);
 
                         if (data.cv.status === 'rejeté') {
@@ -41,32 +42,36 @@ function AccueilEtudiant() {
                         } else {
                             setRejectionMessage("");
                         }
-                    }
 
-                    // Récupération des stages
-
-                    if (data.cv && data.cv.status === 'validé') {
-                        const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
-                        fetch(internshipsUrl)
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error(`Erreur lors de la requête: ${response.status}`);
-                                }
-                                return response.json();
-                            })
-                            .then((data) => {
-                                setInternships(data);
-                            })
-                            .catch((error) => {
-                                console.error('Erreur lors de la récupération des stages:', error);
-                            });
+                        // Vérifiez si le statut est valide
+                        console.log('CV Status:', data.cv.status);
+                        if (data.cv.status === 'valide') {
+                            console.log('Récupération des stages...');
+                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
+                            fetch(internshipsUrl)
+                                .then((response) => {
+                                    if (!response.ok) {
+                                        throw new Error(`Erreur lors de la requête: ${response.status}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then((internshipsData) => {
+                                    console.log('Stages récupérés:', internshipsData); // Vérifiez ce qui est retourné
+                                    setInternships(internshipsData);
+                                })
+                                .catch((error) => {
+                                    console.error('Erreur lors de la récupération des stages:', error);
+                                });
+                        } else {
+                            console.log('Le CV n\'est pas valide, aucune récupération de stages.');
+                        }
                     }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
                 });
         }
-    }, [userData]);
+    }, [userData]); // Assurez-vous d'ajouter userData comme dépendance
 
     const afficherAjoutCV = () => {
         setShowModal(true);
@@ -182,23 +187,29 @@ function AccueilEtudiant() {
         document.getElementById("fileInput").click();
     };
 
+    const navigateToListeDeStage = () => {
+        navigate("/listeDeStage", {
+            state: { internships }, // Passez les internships à la nouvelle route
+        });
+    };
+
     return (
         <div className="container-fluid p-4">
-            <EtudiantHeader />
+            <EtudiantHeader/>
 
             <div className="text-center my-4">
                 {file ? (
                     <h2>{file == null ? 'Ajouter CV' :
                         file.status === 'Attente' ? t('cvPending') :
-                            file.status === 'validé' ? t('cvApproved') :
-                                file.status === 'rejeté' ? t('cvRejected') : t('cvRefused')}</h2>
+                            file.status === 'valide' ? t('cvApproved') :
+                                file.status === 'rejete' ? t('cvRejected') : t('cvRefused')}</h2>
                 ) : (
                     <h2 className="text-warning">{t('pleaseAddCV')}</h2>
                 )}
             </div>
 
             {rejectionMessage && (
-                <div className="alert alert-danger text-center error-text" style={{ fontSize: "1.25rem" }}>
+                <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
                     <h5>{t('rejectionReason')}</h5>
                     <p>{rejectionMessage}</p>
                 </div>
@@ -208,74 +219,89 @@ function AccueilEtudiant() {
                 <button
                     className={`btn btn-lg rounded-top-pill custom-btn ${file == null ? 'btn-secondary' :
                         file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'validé' ? 'btn-success' :
+                            file.status === 'valide' ? 'btn-success' :
                                 file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
-                    style={{ width: "10em"}}
+                    style={{width: "10em"}}
                 > {t('uploadCV')}
                 </button>
             </div>
 
             {file && (
                 <div className="d-flex justify-content-center mt-3 mb-4">
-                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info" onClick={() => openFile(fileData)} style={{ width: "10em"}}>
+                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info"
+                            onClick={() => openFile(fileData)} style={{width: "10em"}}>
                         {t('viewMyCV')}
                     </button>
                 </div>
             )}
 
-            <hr style={{ width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
+            <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
 
-            <div className="text-center my-5">
-                {file && file.status === 'validé' && (
-                    <div className="text-center my-4" style={{marginTop: file && file.status === 'validé' ? "200px" : "100px"}}>
-                        <h3>Stages</h3>
-                        <div
-                            className="d-flex flex-wrap justify-content-center"
-                            style={{maxHeight: "400px", overflowY: "scroll"}}
-                        >
-                            {internships.length > 0 ? (
-                                <div className="row w-100">
-                                    {internships.map((internship, index) => (
-                                        <div
-                                            key={index}
-                                            className="col-lg-4 col-md-6 col-sm-12 p-2"
-                                        >
-                                            <div className="card my-3 h-100">
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{internship.titre}</h5>
-                                                    <h6 className="card-subtitle mb-2 text-muted">
-                                                        {internship.localisation}
-                                                    </h6>
-                                                    <p className="card-text">
-                                                        <strong>Date limite de candidature:</strong>{" "}
-                                                        {internship.dateLimite}
-                                                    </p>
-                                                    <p className="card-text">
-                                                        <strong>Date de publication:</strong>{" "}
-                                                        {internship.datePublication}
-                                                    </p>
-                                                    <div className="d-flex justify-content-center my-3">
-                                                        <button className="btn btn-info"
-                                                                onClick={() => openFile(internship.data)}>
-                                                            Voir candidature
-                                                        </button>
-                                                    </div>
-                                                    <p className="card-text">
-                                                        <strong>Nombre de candidats:</strong> {internship.nbCandidats}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p>Aucun stage à afficher.</p>
-                            )}
-                        </div>
+            <div className="d-flex justify-content-center my-3">
+                <div
+                    className="card text-center"
+                    style={{width: "18rem", cursor: "pointer"}}
+                    onClick={navigateToListeDeStage}
+                >
+                    <div className="card-body">
+                        <h5 className="card-title">Offres de Stage</h5>
+                        <p className="card-text">Cliquez ici pour voir toutes les offres de stage disponibles.</p>
+                        
                     </div>
-                )}
+                </div>
             </div>
+
+            {/*<div className="text-center my-5">*/}
+            {/*    {file && file.status === 'valide' && (*/}
+            {/*        <div className="text-center my-4" style={{marginTop: file && file.status === 'valide' ? "200px" : "100px"}}>*/}
+            {/*            <h3>Stages</h3>*/}
+            {/*            <div*/}
+            {/*                className="d-flex flex-wrap justify-content-center"*/}
+            {/*                style={{maxHeight: "400px", overflowY: "scroll"}}*/}
+            {/*            >*/}
+            {/*                {internships.length > 0 ? (*/}
+            {/*                    <div className="row w-100">*/}
+            {/*                        {internships.map((internship, index) => (*/}
+            {/*                            <div*/}
+            {/*                                key={index}*/}
+            {/*                                className="col-lg-4 col-md-6 col-sm-12 p-2"*/}
+            {/*                            >*/}
+            {/*                                <div className="card my-3 h-100">*/}
+            {/*                                    <div className="card-body">*/}
+            {/*                                        <h5 className="card-title">{internship.titre}</h5>*/}
+            {/*                                        <h6 className="card-subtitle mb-2 text-muted">*/}
+            {/*                                            {internship.localisation}*/}
+            {/*                                        </h6>*/}
+            {/*                                        <p className="card-text">*/}
+            {/*                                            <strong>Date limite de candidature:</strong>{" "}*/}
+            {/*                                            {internship.dateLimite}*/}
+            {/*                                        </p>*/}
+            {/*                                        <p className="card-text">*/}
+            {/*                                            <strong>Date de publication:</strong>{" "}*/}
+            {/*                                            {internship.datePublication}*/}
+            {/*                                        </p>*/}
+            {/*                                        <div className="d-flex justify-content-center my-3">*/}
+            {/*                                            <button className="btn btn-info"*/}
+            {/*                                                    onClick={() => openFile(internship.data)}>*/}
+            {/*                                                Voir candidature*/}
+            {/*                                            </button>*/}
+            {/*                                        </div>*/}
+            {/*                                        <p className="card-text">*/}
+            {/*                                            <strong>Nombre de candidats:</strong> {internship.nbCandidats}*/}
+            {/*                                        </p>*/}
+            {/*                                    </div>*/}
+            {/*                                </div>*/}
+            {/*                            </div>*/}
+            {/*                        ))}*/}
+            {/*                    </div>*/}
+            {/*                ) : (*/}
+            {/*                    <p>Aucun stage à afficher.</p>*/}
+            {/*                )}*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    )}*/}
+            {/*</div>*/}
 
             {showModal && (
                 <div className="custom-modal-overlay">

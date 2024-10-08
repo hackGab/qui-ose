@@ -2,7 +2,9 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
+import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
+import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +24,14 @@ public class OffreDeStageControllerTest {
     private OffreDeStageService offreDeStageService;
     private EmployeurService employeurService;
     private OffreDeStageController controller;
+    private EtudiantService etudiantService;
 
     @BeforeEach
     public void setUp() {
         offreDeStageService = Mockito.mock(OffreDeStageService.class);
         employeurService = Mockito.mock(EmployeurService.class);
-        controller = new OffreDeStageController(offreDeStageService, employeurService);
+        etudiantService = Mockito.mock(EtudiantService.class);
+        controller = new OffreDeStageController(offreDeStageService, employeurService, etudiantService);
     }
 
     @Test
@@ -133,4 +138,33 @@ public class OffreDeStageControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
+
+    @Test
+    void getAllOffresApprouvees() {
+        // Arrange
+        EmployeurDTO employeur = new EmployeurDTO();
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO(
+                1L,
+                "titre",
+                "localisation",
+                LocalDate.now(),
+                LocalDate.now().plusDays(30),
+                "data",
+                1,
+                "validé",
+                employeur
+        );
+
+        Mockito.when(etudiantService.getOffresApprouvees()).thenReturn(List.of(offreDeStageDTO));
+
+        // Act
+        ResponseEntity<List<OffreDeStageDTO>> response = controller.getOffresValidees();
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+        assertEquals("titre", response.getBody().get(0).getTitre());
+    }
+
 }

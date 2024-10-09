@@ -13,6 +13,7 @@ import DetailsEtudiants from './components/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/ListeEmployeurs";
 import DetailsEmployeurs from "./components/DetailsEmployeur";
+import ListeDeStage from  "./components/ListeDeStage";
 
 function App() {
     return (
@@ -35,10 +36,10 @@ function App() {
                     <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
 		    <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
-		    
+		    <Route path="/listeDeStage" element={<ListeDeStage />} />
 		    <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
-
                     <Route path="*" element={<Navigate to="/login" replace />} />
+
 
                 </Routes>
             </div>

@@ -22,7 +22,7 @@ public class OffreDeStageDTO {
     private String rejetMessage = "";
     private EmployeurDTO employeur;
 
-    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats,String status, EmployeurDTO employeur) {
+    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status, EmployeurDTO employeur) {
         this.id = id;
         this.titre = titre;
         this.localisation = localisation;

@@ -5,12 +5,15 @@ import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.UserApp;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
+import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,12 +23,14 @@ public class EtudiantService {
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
     private final CVRepository cvRepository;
+    private final OffreDeStageRepository offreDeStageRepository;
 
-    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository) {
+    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository) {
         this.userAppRepository = userAppRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
         this.cvRepository = cvRepository;
+        this.offreDeStageRepository = offreDeStageRepository;
     }
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
@@ -92,6 +97,13 @@ public class EtudiantService {
     public Iterable<EtudiantDTO> getAllEtudiants() {
         return etudiantRepository.findAll().stream()
                 .map(EtudiantDTO::new)
+                .toList();
+    }
+
+    public List<OffreDeStageDTO> getOffresApprouvees() {
+        return offreDeStageRepository.findAll().stream()
+                .filter(offreDeStage -> offreDeStage.getStatus().equals("validé"))
+                .map(OffreDeStageDTO::new)
                 .toList();
     }
 }

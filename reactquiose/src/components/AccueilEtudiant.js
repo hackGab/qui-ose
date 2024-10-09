@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
+import ListeDeStage from "./ListeDeStage";
 
 function AccueilEtudiant() {
     const location = useLocation();
     const userData = location.state?.userData;
-
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);
     const [temporaryFileData, setTemporaryFileData] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
-    const [internships, setInternships] = useState([]);
     const [rejectionMessage, setRejectionMessage] = useState("");
     const {t} = useTranslation();
+    const [internships, setInternships] = useState([]);
 
     useEffect(() => {
         if (userData) {
@@ -30,34 +31,42 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log('Réponse du serveur:', data);
+
                     if (data.cv) {
                         setFile(data.cv);
                         setFileData(data.cv.data);
-                        console.log('Réponse du serveur:', data);
                         console.log('CV:', data.cv.rejetMessage);
 
-                        if (data.cv.status === 'rejeté') {
+                        if (data.cv.status === 'rx`ejeté') {
                             setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
                         } else {
                             setRejectionMessage("");
                         }
-                    }
 
-                    // Récupération des stages
-                    const internshipsUrl = `http://localhost:8081/etudiant/stages/${userData.credentials.email}`;
-                    fetch(internshipsUrl)
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(`Erreur lors de la requête: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            setInternships(data);
-                        })
-                        .catch((error) => {
-                            console.error('Erreur lors de la récupération des stages:', error);
-                        });
+                        // Vérifiez si le statut est valide
+                        console.log('CV Status:', data.cv.status);
+                        if (data.cv.status === 'validé') {
+                            console.log('Récupération des stages...');
+                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
+                            fetch(internshipsUrl)
+                                .then((response) => {
+                                    if (!response.ok) {
+                                        throw new Error(`Erreur lors de la requête: ${response.status}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then((internshipsData) => {
+                                    console.log('Stages récupérés:', internshipsData);
+                                    setInternships(internshipsData);
+                                })
+                                .catch((error) => {
+                                    console.error('Erreur lors de la récupération des stages:', error);
+                                });
+                        } else {
+                            console.log('Le CV n\'est pas valide, aucune récupération de stages.');
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
@@ -149,10 +158,9 @@ function AccueilEtudiant() {
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                        })
-                            .catch((error) => {
-                                console.error("Erreur:", error);
-                            });
+                        }).catch((error) => {
+                            console.error("Erreur:", error);
+                        });
                     }
                 })
                 .catch((error) => {
@@ -165,11 +173,11 @@ function AccueilEtudiant() {
         }
     };
 
-    const openFile = () => {
-        if (file) {
+    const openFile = (data) => {
+        if (data) {
             const pdfWindow = window.open();
             pdfWindow.document.write(
-                `<iframe src="${fileData}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
+                `<iframe src="${data}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
             );
         } else {
             alert("Aucun fichier à afficher !");
@@ -180,9 +188,15 @@ function AccueilEtudiant() {
         document.getElementById("fileInput").click();
     };
 
+    const navigateToListeDeStage = () => {
+        navigate("/listeDeStage", {
+            state: { internships },
+        });
+    };
+
     return (
         <div className="container-fluid p-4">
-            <EtudiantHeader />
+            <EtudiantHeader/>
 
             <div className="text-center my-4">
                 {file ? (
@@ -196,7 +210,7 @@ function AccueilEtudiant() {
             </div>
 
             {rejectionMessage && (
-                <div className="alert alert-danger text-center error-text" style={{ fontSize: "1.25rem" }}>
+                <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
                     <h5>{t('rejectionReason')}</h5>
                     <p>{rejectionMessage}</p>
                 </div>
@@ -209,41 +223,22 @@ function AccueilEtudiant() {
                             file.status === 'validé' ? 'btn-success' :
                                 file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutCV}
-                    style={{ width: "10em"}}
+                    style={{width: "10em"}}
                 > {t('uploadCV')}
                 </button>
             </div>
 
             {file && (
                 <div className="d-flex justify-content-center mt-3 mb-4">
-                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info" onClick={openFile} style={{ width: "10em"}}>
+                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info"
+                            onClick={() => openFile(fileData)} style={{width: "10em"}}>
                         {t('viewMyCV')}
                     </button>
                 </div>
             )}
 
-            <hr style={{ width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
-
-            <div className="text-center my-5">
-                {file && file.status !== 'rejeté' && (
-                    <>
-                        <h3>Stages</h3>
-                        <div className="d-flex justify-content-center">
-                            {internships.length > 0 ? (
-                                <ul className="list-unstyled">
-                                    {internships.map((internship, index) => (
-                                        <li key={index}>
-                                            {internship.title} - {internship.company} ({internship.duration})
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>{t('noInternships')}</p>
-                            )}
-                        </div>
-                    </>
-                )}
-            </div>
+            <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
+            {file && file.status === 'validé' && <ListeDeStage internships={internships}/>}
 
             {showModal && (
                 <div className="custom-modal-overlay">
@@ -275,7 +270,7 @@ function AccueilEtudiant() {
                                         <div className="file-details mt-3">
                                             <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
                                             <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}</h6>
+                                            <h6><strong>{t('fileDate')}</strong> {temporaryFile.uploadDate}</h6>
                                         </div>
                                     )}
                                 </div>

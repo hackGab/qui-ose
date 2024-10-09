@@ -11,11 +11,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -43,19 +43,38 @@ public class CVControllerTest {
     @MockBean
     private UserAppService userService;
 
-   /* @Test
+    /*
+    @Test
     public void shouldCreateCV() throws Exception {
-        CVDTO cvDTO = new CVDTO("pdf.pdf", "application/pdf", new Date(), "John", "Attente");
+        CVDTO cvDTO = new CVDTO("pdf.pdf", "application/pdf", "John", "Attente");
+        cvDTO.setUploadDate(LocalDate.now());
+
         Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
                 .thenReturn(Optional.of(cvDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/cv/creerCV/email@gmail.com")
+                        .post("/cv/creerCV/{email}", "email@gmail.com")
                         .content(new ObjectMapper().writeValueAsString(cvDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(Optional.of(cvDTO))));
+    }
+
+    @Test
+    public void shouldntCreateCV() throws Exception {
+        CVDTO cvDTO = new CVDTO("pdf.pdf", "application/pdf", "John", "Attente");
+        cvDTO.setUploadDate(LocalDate.now());
+
+        Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/cv/creerCV/{email}", "email@gmail.com")
+                        .content(new ObjectMapper().writeValueAsString(cvDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
     }*/
 
     @Test

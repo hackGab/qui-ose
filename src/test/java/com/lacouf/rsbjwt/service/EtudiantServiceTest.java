@@ -1,15 +1,16 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.CV;
+import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
+import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.repository.UserAppRepository;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
-import com.lacouf.rsbjwt.service.dto.CredentialDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +36,7 @@ class EtudiantServiceTest {
 
     private UserAppRepository userAppRepository;
     private CVRepository cvRepository;
+    private OffreDeStageRepository offreDeStageRepository;
 
     private EtudiantDTO newEtudiant;
     private Etudiant etudiantEntity;
@@ -44,8 +48,9 @@ class EtudiantServiceTest {
         userAppRepository = Mockito.mock(UserAppRepository.class);
         cvRepository = Mockito.mock(CVRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository);
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -195,5 +200,27 @@ class EtudiantServiceTest {
 
         // Assert
         verify(cvRepository, times(1)).deleteById(cvId);
+    }
+
+    @Test
+    void shouldReturnListOfOffresDeStage() {
+        // Arrange
+        Employeur employeur = new Employeur("John", "Doe", "email", "mdp", "phone", "entreprise");
+        OffreDeStage offreDeStage = new OffreDeStage("titre", "localisation", LocalDate.now(), "data", 1, "validé");
+        offreDeStage.setEmployeur(employeur);
+
+        List<OffreDeStage> offres = List.of(offreDeStage);
+
+        when(offreDeStageRepository.findAll())
+                .thenReturn(offres);
+
+        // Act
+        List<OffreDeStageDTO> response = etudiantService.getOffresApprouvees();
+
+        // Assert
+        assertEquals(offres.size(), response.size());
+        assertEquals(offres.get(0).getTitre(), response.get(0).getTitre());
+        assertEquals(offres.get(0).getLocalisation(), response.get(0).getLocalisation());
+        assertEquals(offres.get(0).getDateLimite(), response.get(0).getDateLimite());
     }
 }

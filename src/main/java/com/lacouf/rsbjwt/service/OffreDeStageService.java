@@ -50,9 +50,17 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);
     }
 
-    public void deleteOffreDeStage(Long id) {
-        offreDeStageRepository.deleteById(id);
+
+
+    public String deleteOffreDeStage(Long id) {
+        try {
+            offreDeStageRepository.deleteById(id);
+            return "Offre de stage supprimée";
+        } catch (Exception e) {
+            return "Erreur lors de la suppression de l'offre de stage";
+        }
     }
+
 
     public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
         return offreDeStageRepository.findById(id)
@@ -85,3 +93,4 @@ public class OffreDeStageService {
                 .toList();
     }
 }
+

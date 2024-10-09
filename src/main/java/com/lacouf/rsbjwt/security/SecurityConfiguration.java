@@ -57,6 +57,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/offreDeStage/all").permitAll()
                         .requestMatchers(DELETE, "/offreDeStage/**").permitAll()
                         .requestMatchers(PUT, "/offreDeStage/**").permitAll()
+                        .requestMatchers(GET, "/offreDeStage/offresValidees").permitAll()
                         .requestMatchers(PUT, "/gestionnaire/validerOuRejeterCV/**").permitAll()
                         .requestMatchers(PUT, "/gestionnaire/validerOuRejeterOffre/**").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")

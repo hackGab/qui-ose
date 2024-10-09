@@ -38,7 +38,7 @@ function AccueilEtudiant() {
                         setFileData(data.cv.data);
                         console.log('CV:', data.cv.rejetMessage);
 
-                        if (data.cv.status === 'rx`ejeté') {
+                        if (data.cv.status === 'rejeté') {
                             setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
                         } else {
                             setRejectionMessage("");

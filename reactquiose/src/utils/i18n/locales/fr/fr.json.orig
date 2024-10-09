@@ -51,9 +51,20 @@
   "confirm": "Confirmer",
   "actions": "Actions",
   "studentCV": "CV de l'Étudiant",
-  "studentCV": "CV de l'Étudiant",
+  "cvNotSubmitted": "CV NON REMIS",
+  "cvStatusUpdated": "Le statut du CV a été mis à jour avec succès.",
+  "cvStatusUpdateFailed": "Échec de la mise à jour du statut du CV.",
+  "enterRejectionReason": "Entrez la raison du rejet",
+  "cvLoaded": "CV chargé !",
+  "pleaseAddCV": "Veuillez ajouter un CV",
+  "rejectionReason": "Raison du rejet",
+  "cvPending": "CV en attente",
+  "cvApproved": "CV Approuvé",
+  "cvRejected": "CV Rejeté",
+  "cvRefused": "CV Refusé",
   "PlaceHolderMdp": "Entrez votre mot de passe",
   "PlaceHolderConfMdp": "Confirmez votre mot de passe",
+<<<<<<< HEAD
   "contactPerson": "Personne à Contacter",
   "industry": "Industrie",
   "employerDetailsTitle": "Détails de l'Employeur",
@@ -67,12 +78,19 @@
   "typeRenumeration": "Type de Rémunération",
   "Disponiblite": "Disponibilité",
   "contact": "Contact",
-<<<<<<< HEAD
   "employerStage": "Stages de l'Employeur",
   "PlaceHolderMdp": "Entrez votre mot de passe",
   "PlaceHolderConfMdp": "Confirmez votre mot de passe"
-}
 =======
-  "employerStage": "Stages de l'Employeur"
+  "viewMyCV": "Voir mon CV",
+  "noInternships": "Aucun stage n'a été trouvé",
+  "uploadCV": "Télécharger CV",
+  "manipulateCV": "Manipuler Curriculum Vitae",
+  "dragOrClick": "Glissez et déposez un fichier ici ou cliquez pour télécharger",
+  "fileName": "Nom du fichier",
+  "fileType": "Type de fichier",
+  "fileDate": "Date du fichier",
+  "close": "Fermer",
+  "submit": "Soumettre"
+>>>>>>> 57a587619aa00706dd19ed8503f7412bc24c4877
 }
->>>>>>> 712ed9b90594d96ab60d3eb88988f184cfe658cb

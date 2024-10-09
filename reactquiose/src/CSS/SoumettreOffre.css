@@ -17,7 +17,7 @@
 }
 
 .drop-zone p {
-    font-size: 25px;
+    font-size: 2em;
 }
 
 .drop-zone.active {
@@ -39,7 +39,7 @@
 
 .modal-custom {
     width: 100%;
-    border-radius: 8px;
+    border-radius: 1em;
     text-align: center;
     display: flex;
     align-items: center;
@@ -50,5 +50,9 @@
 }
 
 .file-details h6{
-    font-size: 20px;
+    font-size: 1.4em;
+}
+
+label {
+    font-size: 1.2em;
 }

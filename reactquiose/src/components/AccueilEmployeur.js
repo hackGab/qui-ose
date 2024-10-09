@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../CSS/AccueilEmployeur.css';
-import EmployeurHeader from "./EmployeurHeader"; // Importing the CSS file
+import EmployeurHeader from "./EmployeurHeader";
 
 function AccueilEmployeur() {
     const navigate = useNavigate();
@@ -28,7 +28,6 @@ function AccueilEmployeur() {
             <div className="container mt-5">
                 <h1 className="text-center mt-5 mb-4">Accueil Employeur</h1>
 
-                {/* Dashboard Section */}
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card mb-3 text-center clickable-card" onClick={handleClickSubmit}>
@@ -38,7 +37,6 @@ function AccueilEmployeur() {
                             </div>
                         </div>
 
-                        {/* New Card for Viewing Offers */}
                         <div className="card mb-3 text-center clickable-card" onClick={handleClickView}>
                             <div className="card-body">
                                 <h5 className="card-title">Visualiser les offres d'emploi</h5>

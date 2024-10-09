@@ -59,13 +59,13 @@ function Inscription() {
         let url;
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8081/etudiant/creerEtudiant';
+                url = 'http://localhost:8080/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8081/professeur/creerProfesseur';
+                url = 'http://localhost:8080/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8081/employeur/creerEmployeur';
+                url = 'http://localhost:8080/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');
@@ -73,7 +73,7 @@ function Inscription() {
         }
         const handleLogin = async (userData) => {
             try {
-                const response = await fetch('http://localhost:8081/user/login', {
+                const response = await fetch('http://localhost:8080/user/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
@@ -234,7 +234,7 @@ function Inscription() {
                     <input type="email" className="form-control" id="email" name="email"
                            value={email} onChange={(e) => setEmail(e.target.value)}
                            placeholder="johndoe@gmail.com"
-                           autoComplete={"off"}
+                           autoComplete={"on"}
                            required/>
                 </div>
 
@@ -252,34 +252,55 @@ function Inscription() {
                     />
                 </div>
 
-                <span className='password-icon' onClick={afficherMdp}>
-                        <Icon icon={icon} size={20}/>
-                </span>
-                <div className="form-group">
+
+                <div className="form-group mt-2">
                     <label htmlFor="mpd">{t('MotDePasse')}</label>
-                    <input type={type} className="form-control" id="mpd" name="mpd"
-                           placeholder={t('PlaceHolderMdp')}
-                           value={mpd} onChange={(e) => setMpd(e.target.value)}
-                           required/>
+                    <div className="d-flex">
+                        <div className="input-group">
+                            <input
+                                type={type}
+                                className="form-control m-0"
+                                id="mpd"
+                                name="mpd"
+                                placeholder={t('PlaceHolderMdp')}
+                                value={mpd} onChange={(e) => setMpd(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <span onClick={afficherMdp} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                            <Icon icon={icon} size={20}/>
+                        </span>
+                    </div>
                 </div>
 
-                <span className='password-icon' onClick={afficherMdpConf}>
-                        <Icon icon={iconConf} size={20}/>
-                </span>
-                <div className="form-group">
+                <div className="form-group mt-3">
                     <label htmlFor="mpdConfirm">{t('ConfirmerMotDePasse')}</label>
-                    <input type={typeConf} className="form-control" id="mpdConfirm" name="mpdConfirm"
-                           placeholder={t('PlaceHolderConfMdp')}
-                           value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
-                           required/>
+                    <div className="d-flex">
+                        <div className="input-group">
+                            <input
+                                type={typeConf}
+                                className="form-control m-0"
+                                id="mpdConfirm"
+                                name="mpdConfirm"
+                                placeholder={t('PlaceHolderConfMdp')}
+                                value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <span onClick={afficherMdpConf} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                            <Icon icon={icon} size={20}/>
+                        </span>
+                    </div>
                 </div>
+
+                <button type="submit" className="btn btn-primary w-50 mt-4 m-auto">{t('Soumettre')}</button>
+
+                <small style={{marginTop: '10px'}}>
+                    {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
+                </small>
             </div>
-            <button type="submit" className="btn btn-primary" style={{width: '100%'}}>
-                {t('Soumettre')}
-            </button>
-            <small style={{marginTop: '10px'}}>
-                {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
-            </small>
         </form>
     );
 }

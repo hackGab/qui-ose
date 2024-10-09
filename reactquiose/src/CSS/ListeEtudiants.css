@@ -77,3 +77,19 @@ p {
         max-width: 100%;
     }
 }
+
+.card.rejeté {
+    border: 5px solid red;
+}
+
+.card.validé {
+    border: 5px solid green;
+}
+
+.card.attente {
+    border: 5px solid #c4c418;
+}
+
+.card.sans-cv {
+    border: 5px solid gray;
+}

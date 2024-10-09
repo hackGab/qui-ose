@@ -34,4 +34,18 @@ public class GestionnaireController {
         return offreDeStageDTO.map(offre -> new ResponseEntity<>(offre, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PutMapping("/validerOuRejeterCV/{cvId}")
+    public ResponseEntity<CVDTO> validerOuRejeterCV(
+            @PathVariable Long cvId,
+            @RequestBody Map<String, Object> body) {
+
+        String status = (String) body.get("status");
+        String rejectionReason = (String) body.get("rejectionReason");
+
+        Optional<CVDTO> cvDTO = gestionnaireService.validerOuRejeterCV(cvId, status, rejectionReason);
+
+        return cvDTO.map(cv -> new ResponseEntity<>(cv, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }

@@ -19,6 +19,7 @@ public class OffreDeStageDTO {
     private String data;
     private int nbCandidats;
     private String status;
+    private String rejetMessage = "";
     private EmployeurDTO employeur;
 
     public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats,String status, EmployeurDTO employeur) {
@@ -42,6 +43,7 @@ public class OffreDeStageDTO {
         this.data = offre.getData();
         this.nbCandidats = offre.getNbCandidats();
         this.status = offre.getStatus();
+        this.rejetMessage = offre.getRejetMessage();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
     }
 

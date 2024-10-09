@@ -49,11 +49,10 @@ function VisualiserOffres() {
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "Accepter":
+            case "Validé":
                 return "status-green";
-            case "Rejeter":
+            case "Rejeté":
                 return "status-red";
-            case "Attente":
             default:
                 return "status-yellow";
         }
@@ -108,6 +107,7 @@ function VisualiserOffres() {
         return <div>Erreur : {error}</div>;
     }
 
+
     return (
         <div className="container mt-5">
             <EmployeurHeader />
@@ -135,8 +135,11 @@ function VisualiserOffres() {
                                         Date limite : {new Date(offre.dateLimite).toLocaleDateString()}
                                     </small>
                                     <div className={`status-badge ${getStatusClass(offre.status)}`}>
-                                        <strong>Status :</strong> {offre.status}
+                                        Status : {offre.status}
                                     </div>
+                                    {offre.status === "Rejeté" && (
+                                        <small>Raison du rejet : <strong>{offre.rejetMessage}</strong></small>
+                                    )}
 
                                     {selectedOffre === index && (
                                         <>

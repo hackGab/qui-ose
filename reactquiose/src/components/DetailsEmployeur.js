@@ -1,67 +1,61 @@
-import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useParams } from 'react-router-dom';
+import {useLocation, useParams} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/DetailsEtudiants.css';
 import GestionnaireHeader from "./GestionnaireHeader";
+import React, {useState} from "react";
 
 function DetailsEmployeurs() {
     const { t } = useTranslation();
     const { id } = useParams();
-    const [employer, setEmployer] = useState(null);
-    const [error, setError] = useState(null);
+    const location = useLocation();
+    const offre = location.state?.offre;
+    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [rejectionReason, setRejectionReason] = useState('');
 
-    /*
-    useEffect(() => {
-        fetch(`https://backend.com/api/employeurs/${id}`)
+
+    const updateOffreStatus = (status) => {
+        const body = {
+            status: status,
+            rejectionReason: status === 'Rejeté' ? rejectionReason : null
+        };
+
+        fetch(`http://localhost:8081/gestionnaire/validerOuRejeterOffre/${offre.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des données');
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    window.location.href = '/listeEmployeurs';
+                } else {
+                    console.error('Error details:', response.statusText);
                 }
-                return response.json();
-            })
-            .then(data => {
-                setEmployer(data);
             })
             .catch(error => {
-                setError(error.message);
+                console.error('Erreur lors de la mise à jour de l\'offre de stage:', error);
             });
-    }, [id]);
-    */
+    };
 
-    // Hardcoded employer data for testing
-    const employeurs = [
-        {
-            id: 1,
-            email: 'employer1@example.com',
-            company_name: 'Tech Corp',
-            contact_person: 'John Smith',
-            phone_number: '123-456-7890',
-            industry: 'Informatique',
-            stageUrl: 'https://example.com/stage1.pdf',
-        },
-        {
-            id: 2,
-            email: 'employer2@example.com',
-            company_name: 'Bio Labs',
-            contact_person: 'Jane Doe',
-            phone_number: '098-765-4321',
-            industry: 'Biotechnologie',
-            stageUrl: 'https://example.com/stage2.pdf',
-        },
-    ];
+    const handleStatusSelect = (status) => {
+        setSelectedStatus(status);
+        if (status === 'Rejeté') {
+            setRejectionReason('');
+        }
+    };
 
-    useEffect(() => {
-        const foundEmployer = employeurs.find(employer => employer.id === parseInt(id));
-        setEmployer(foundEmployer);
-    }, [id]);
+    const handleConfirm = () => {
+        if (selectedStatus) {
+            updateOffreStatus(selectedStatus);
+        }
+    };
 
-    if (error) {
-        return <div className="text-danger">{t('error')}: {error}</div>;
-    }
 
-    if (!employer) {
-        return <div>{t('employerNotFound')}</div>;
+    if (!offre) {
+        return <div>{t('offreNotFound')}</div>;
     }
 
     return (
@@ -74,33 +68,61 @@ function DetailsEmployeurs() {
                 <div className="col-md-6">
                     <h5>{t('companyInfo')}</h5>
                     <div className="details-info">
-                        <p><strong>{t('nomDetail')}:</strong> {employer.company_name}</p>
-                        <p><strong>{t('emailDetail')}:</strong> {employer.contact_person}</p>
-                        <p><strong>{t('telephoneDetail')}:</strong> {employer.email}</p>
-                        <p><strong>{t('industry')}:</strong> {employer.industry}</p>
+                        <p><strong>{t('nomDetail')}:</strong> {offre.employeur.firstName}</p>
+                        <p><strong>{t('emailDetail')}:</strong> {offre.employeur.email}</p>
+                        <p><strong>{t('telephoneDetail')}:</strong> {offre.employeur.phoneNumber}</p>
+                        <p><strong>{t('industry')}:</strong> {offre.employeur.entreprise}</p>
+                        <p><strong>{t('titleStage')}:</strong> {offre.titre}</p>
+                        <p><strong>{t('dureeStage')}:</strong> {offre.dateLimite}</p>
+                        <p><strong>{t('localisation')}:</strong> {offre.localisation}</p>
+                        <p><strong>{t('DateDebut')}:</strong> {offre.datePublication}</p>
+                        <p><strong>{t('Disponiblite')}:</strong> {offre.nbCandidats}</p>
                     </div>
                 </div>
+            {/*</div>*/}
 
+
+            {/*<div className="row mt-4">*/}
                 <div className="col-md-6">
                     <h5 className="mb-3">{t('employerStage')}</h5>
                     <div className="details-info">
-                        <p><strong>{t('titleStage')}:</strong> {employer.company_name}</p>
-                        <p><strong>{t('stageDetail')}:</strong> {employer.contact_person}</p>
-                        <p><strong>{t('dureeStage')}:</strong> {employer.email}</p>
-                        <p><strong>{t('localisation')}:</strong> {employer.phone_number}</p>
-                        <p><strong>{t('Exigence')}:</strong> {employer.industry}</p>
-                        <p><strong>{t('DateDebut')}:</strong> {employer.company_name}</p>
-                        <p><strong>{t('typeRenumeration')}:</strong> {employer.contact_person}</p>
-                        <p><strong>{t('Disponiblite')}:</strong> {employer.email}</p>
-                        <p><strong>{t('contact')}:</strong> {employer.phone_number}</p>
+                        <iframe
+                            src={offre.data}
+                            className="cv-frame"
+                        ></iframe>
                     </div>
 
                     <div className="mt-4">
                         <h5>{t('actions')}</h5>
                         <div className="btn-group-vertical w-100">
-                            <button className="btn btn-success mb-2">{t('validate')}</button>
-                            <button className="btn btn-danger mb-2">{t('reject')}</button>
-                            <button className="btn btn-primary">{t('confirm')}</button>
+                            <button
+                                className={`btn ${selectedStatus === 'Validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('Validé')}
+                            >
+                                {t('validate')}
+                            </button>
+                            <button
+                                className={`btn ${selectedStatus === 'Rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                onClick={() => handleStatusSelect('Rejeté')}
+                            >
+                                {t('reject')}
+                            </button>
+
+                            {selectedStatus === 'Rejeté' && (
+                                <div className="mt-1 mb-2 col-12">
+                                    <textarea
+                                        rows="3"
+                                        placeholder={t('enterRejectionReason')}
+                                        value={rejectionReason}
+                                        onChange={(e) => setRejectionReason(e.target.value)}
+                                        className="form-control rejection-reason"
+                                    />
+                                </div>
+                            )}
+
+                            <button className="btn btn-primary" onClick={handleConfirm}>
+                                {t('confirm')}
+                            </button>
                         </div>
                     </div>
                 </div>

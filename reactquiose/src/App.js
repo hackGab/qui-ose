@@ -33,7 +33,7 @@ function App() {
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
-		    <Route path='detailsEmployeur/:id' element={<DetailsEmployeurs />} />
+		    <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
 		    
 		    <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />

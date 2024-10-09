@@ -32,7 +32,7 @@ public class OffreDeStage {
     private Employeur employeur;
 
 
-    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats,String status) {
+    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status) {
         this.titre = titre;
         this.localisation = localisation;
         this.dateLimite = dateLimite;

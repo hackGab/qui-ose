@@ -34,6 +34,7 @@
   "connexionEchouee": "Connexion échouée",
   "erreurLorsConnexion": "Erreur lors de la connexion",
   "studentNotFound": "Étudiant non trouvé",
+  "offreNotFound": "Offre non trouvée",
   "RequiredFields": "Champs Obligatoires *",
 
   "Dashboard": "Tableau de Bord",

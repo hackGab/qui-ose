@@ -59,13 +59,13 @@ function Inscription() {
         let url;
         switch (role) {
             case 'etudiant':
-                url = 'http://localhost:8080/etudiant/creerEtudiant';
+                url = 'http://localhost:8081/etudiant/creerEtudiant';
                 break;
             case 'prof':
-                url = 'http://localhost:8080/professeur/creerProfesseur';
+                url = 'http://localhost:8081/professeur/creerProfesseur';
                 break;
             case 'employeur':
-                url = 'http://localhost:8080/employeur/creerEmployeur';
+                url = 'http://localhost:8081/employeur/creerEmployeur';
                 break;
             default:
                 console.error('Rôle inconnu');
@@ -73,7 +73,7 @@ function Inscription() {
         }
         const handleLogin = async (userData) => {
             try {
-                const response = await fetch('http://localhost:8080/user/login', {
+                const response = await fetch('http://localhost:8081/user/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
@@ -285,6 +285,7 @@ function Inscription() {
                                 name="mpdConfirm"
                                 placeholder={t('PlaceHolderConfMdp')}
                                 value={mpdConfirm} onChange={(e) => setMpdConfirm(e.target.value)}
+                                autoComplete={"off"}
                                 required
                             />
                         </div>

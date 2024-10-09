@@ -21,7 +21,7 @@ function ListeEtudiants() {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des données');
+                    throw new Error('lors de la récupération des données');
                 }
                 return response.json();
             })
@@ -41,7 +41,7 @@ function ListeEtudiants() {
     }
 
     if (error) {
-        return <p className="text-center mt-5 text-danger">Erreur: {error}</p>;
+        return <p className="text-center mt-5 text-danger">Erreur {error}</p>;
     }
 
     return (

@@ -28,7 +28,7 @@ function DetailsEmployeurs() {
             body: JSON.stringify(body)
         })
             .then(response => {
-                console.log('Response status:', response.status);
+                console.log('Response status:', response);
                 if (response.ok) {
                     window.location.href = '/listeEmployeurs';
                 } else {
@@ -79,13 +79,10 @@ function DetailsEmployeurs() {
                         <p><strong>{t('Disponiblite')}:</strong> {offre.nbCandidats}</p>
                     </div>
                 </div>
-            {/*</div>*/}
 
-
-            {/*<div className="row mt-4">*/}
                 <div className="col-md-6">
                     <h5 className="mb-3">{t('employerStage')}</h5>
-                    <div className="details-info">
+                    <div className="iframe-container">
                         <iframe
                             src={offre.data}
                             className="cv-frame"

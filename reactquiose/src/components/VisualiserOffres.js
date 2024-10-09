@@ -33,6 +33,7 @@ function VisualiserOffres() {
                 }
 
                 const data = await response.json();
+                console.log(data)
 
                 if (data.length === 0) {
                     setOffres([]);
@@ -131,16 +132,16 @@ function VisualiserOffres() {
                                         <strong>{t('localisation')}</strong> {offre.localisation} <br/>
                                         <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
                                     </p>
-                                    <small>
+                                    <p className="info-stage">
                                         {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}
                                         <br/>
                                         {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
-                                    </small>
+                                    </p>
                                     <div className={`status-badge ${getStatusClass(offre.status)}`}>
                                         {t('Status')} {offre.status}
                                     </div>
                                     {offre.status === "Rejeté" && (
-                                        <small>{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></small>
+                                        <p className="info-stage">{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></p>
                                     )}
 
                                     {selectedOffre === index && (

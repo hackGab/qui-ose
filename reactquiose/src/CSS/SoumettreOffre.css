@@ -50,7 +50,11 @@
 }
 
 .file-details h6{
-    font-size: 1.4em;
+    font-size: 2em;
+}
+
+div label{
+    font-size: 1.5em;
 }
 
 label {

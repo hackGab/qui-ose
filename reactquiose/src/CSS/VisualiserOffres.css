@@ -16,6 +16,10 @@
     box-shadow: none;
 }
 
+.info-stage {
+    font-size: 1.5em;
+}
+
 .selected {
     position: fixed;
     top: 50%;

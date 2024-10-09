@@ -188,12 +188,6 @@ function AccueilEtudiant() {
         document.getElementById("fileInput").click();
     };
 
-    const navigateToListeDeStage = () => {
-        navigate("/listeDeStage", {
-            state: { internships },
-        });
-    };
-
     return (
         <div className="container-fluid p-4">
             <EtudiantHeader/>

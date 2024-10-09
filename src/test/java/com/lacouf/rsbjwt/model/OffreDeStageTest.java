@@ -72,6 +72,8 @@ public class OffreDeStageTest {
                 ", employeur='" + EMPLOYEUR + '\'' +
                 ", datePublication='" + DATE_JOUR + '\'' +
                 ", nbCandidats='" + NB_CANDIDATS + '\'' +
+                ", status='" + STATUS + '\'' +
+                ", rejetMessage=''" +
                 "}";
         assertEquals(expected, offre.toString());
     }

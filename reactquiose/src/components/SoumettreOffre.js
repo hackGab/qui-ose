@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/SoumettreOffre.css";
+import {useTranslation} from "react-i18next";
+
 
 function SoumettreOffre() {
     const location = useLocation();
@@ -18,6 +20,7 @@ function SoumettreOffre() {
     const [nbCandidats, setNbCandidats] = useState(0);
     const [dateLimite, setDateLimite] = useState("");
     const [datePublication, setPublication] = useState("");
+    const { t } = useTranslation();
 
     useEffect(() => {
     }, [employeurEmail]);
@@ -63,6 +66,8 @@ function SoumettreOffre() {
             handleFileChange({target: {files: [uploadedFile]}});
         }
     };
+
+
 
     const handleSubmit = () => {
         if (temporaryFile) {
@@ -143,9 +148,9 @@ function SoumettreOffre() {
 
             <div className="text-center my-4">
                 {file ? (
-                    <h2>Votre offre d'emploi est chargée !</h2>
+                    <h2>{t('OffreLoad')}</h2>
                 ) : (
-                    <h2 className="text-warning">Veuillez ajouter votre offre d'emploi pour continuer.</h2>
+                    <h2 className="text-warning">{t('AjoutOffrePourContinuer')}</h2>
                 )}
             </div>
 
@@ -157,17 +162,17 @@ function SoumettreOffre() {
                                 file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
                     onClick={afficherAjoutOffre}
                 >
-                    {file == null ? 'Ajouter Offre' :
-                        file.status === 'Attente' ? 'Offre en attente de confirmation' :
-                            file.status === 'Approuvé' ? 'Offre Approuvée' :
-                                file.status === 'Rejeté' ? 'Offre Rejetée' : 'Offre non remise'}
+                    {file == null ? t('AjouterOffre') :
+                        file.status === 'Attente' ? t('OffreAttenteConfirmation') :
+                            file.status === 'Approuvé' ? t('OffreApprouvée') :
+                                file.status === 'Rejeté' ? t('OffreRefusée') : t('OffreNonRemise')}
                 </button>
             </div>
 
             {file && (
                 <div className="d-flex justify-content-center my-3">
                     <button className="btn btn-info" onClick={openFile}>
-                        Voir mon offre d'emploi
+                        {t('SeeOffer')}
                     </button>
                 </div>
             )}
@@ -179,7 +184,7 @@ function SoumettreOffre() {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title"><b>Soumettre une offre d'emploi</b></h5>
+                                    <h5 className="modal-title"><b>{t('SoumettreOffreEmploi')}</b></h5>
                                 </div>
                                 <div className="modal-body">
                                     <div
@@ -190,7 +195,7 @@ function SoumettreOffre() {
                                         onClick={handleClick}
                                         className={`drop-zone ${dragActive ? "active" : ""}`}
                                     >
-                                        <p>Déposez votre fichier PDF ici ou cliquez pour le télécharger.</p>
+                                        <p>{t('dragOrClick')}</p>
                                         <input
                                             type="file"
                                             id="fileInput"
@@ -200,7 +205,7 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="titre"><b>Titre de l'offre</b></label>
+                                        <label htmlFor="titre"><b>{t('TitreDeOffre')}</b></label>
                                         <input
                                             type="text"
                                             className="form-control"
@@ -212,7 +217,7 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="localisation"><b>Localisation</b></label>
+                                        <label htmlFor="localisation"><b>{t('localisation')}</b></label>
                                         <input
                                             type="text"
                                             className="form-control"
@@ -224,7 +229,7 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="nbCandidats"><b>Nombre de candidats</b></label>
+                                        <label htmlFor="nbCandidats"><b>{t('NombreDeCandidats')}</b></label>
                                         <input
                                             type="number"
                                             className="form-control"
@@ -236,7 +241,7 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="form-group mt-3">
-                                        <label htmlFor="dateLimite"><b>Date limite</b></label>
+                                        <label htmlFor="dateLimite"><b>{t('DateLimite')}</b></label>
                                         <input
                                             type="date"
                                             className="form-control"
@@ -249,9 +254,9 @@ function SoumettreOffre() {
 
                                     {temporaryFile && (
                                         <div className="file-details mt-3">
-                                            <h6><strong>Nom du fichier :</strong> {temporaryFile.name}</h6>
-                                            <h6><strong>Type du fichier :</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>Date de soumission :</strong> {new Date().toLocaleDateString()}
+                                            <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                            <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}
                                             </h6>
                                         </div>
                                     )}
@@ -259,10 +264,10 @@ function SoumettreOffre() {
 
                                 <div className="modal-footer">
                                     <button className="btn btn-primary" onClick={handleSubmit}>
-                                        Soumettre
+                                        {t('Soumettre')}
                                     </button>
                                     <button type="button" className="btn btn-secondary" onClick={fermerAffichageOffre}>
-                                        Fermer
+                                        {t('Fermer')}
                                     </button>
                                 </div>
                             </div>

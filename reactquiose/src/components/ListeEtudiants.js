@@ -52,11 +52,11 @@ function ListeEtudiants() {
                 <p className="text-center mb-4">{t('studentListSubtitle')}</p>
                 <div className="row">
                     {etudiants.map((etudiant) => {
-                        const status = etudiant.cv ? etudiant.cv.status : null; // Vérification si le CV existe
+                        const status = etudiant.cv ? etudiant.cv.status : null;
                         return (
                             <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
                                 <Link
-                                    to={`/detailsEtudiant/${etudiant.id}`}
+                                    to={`/detailsEtudiant/${etudiant.email}`}
                                     className="text-decoration-none"
                                     state={{ student: etudiant }}
                                 >

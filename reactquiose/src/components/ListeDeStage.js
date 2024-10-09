@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function ListeDeStage({ internships = [] }) {
+    const { t } = useTranslation();
     const openFile = (data) => {
         if (data) {
             const pdfWindow = window.open();
@@ -14,7 +16,7 @@ function ListeDeStage({ internships = [] }) {
 
     return (
         <div className="container">
-            <h3 className="text-center my-4">Offres de Stage</h3>
+            <h3 className="text-center my-4">{t('OffresDeStage')}</h3>
             <div className="row">
                 {internships.length > 0 ? (
                     internships.map((internship, index) => (
@@ -24,18 +26,18 @@ function ListeDeStage({ internships = [] }) {
                                     <h5 className="card-title text-center">{internship.titre}</h5>
                                     <h6 className="card-subtitle mb-2 text-muted text-center">{internship.localisation}</h6>
                                     <p className="card-text text-center">
-                                        <strong>Date limite de candidature:</strong> {internship.dateLimite}
+                                        <strong>{t('DateLimite')}</strong> {internship.dateLimite}
                                     </p>
                                     <p className="card-text text-center">
-                                        <strong>Date de publication:</strong> {internship.datePublication}
+                                        <strong>{t('DateDePublication')}</strong> {internship.datePublication}
                                     </p>
                                     <div className="d-flex justify-content-center my-3">
                                         <button className="btn btn-info" onClick={() => openFile(internship.data)}>
-                                            Voir candidature
+                                            {t('VoirCandidature')}
                                         </button>
                                     </div>
                                     <p className="card-text text-center">
-                                        <strong>Nombre de candidats:</strong> {internship.nbCandidats}
+                                        <strong>{t('NombreDeCandidats')}</strong> {internship.nbCandidats}
                                     </p>
                                 </div>
                             </div>
@@ -43,7 +45,7 @@ function ListeDeStage({ internships = [] }) {
                     ))
                 ) : (
                     <div className="d-flex justify-content-center align-items-center">
-                        <p>Aucune offre de stage à afficher.</p>
+                        <p>{t('AucuneOffreAfficher')}</p>
                     </div>
                 )}
             </div>

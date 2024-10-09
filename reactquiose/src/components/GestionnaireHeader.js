@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/GestionnaireHeader.css';
 import logo from '../images/logo.png';
+import i18n from "i18next";
+import "../CSS/BoutonLangue.css";
 
 function GestionnaireHeader() {
     const { t } = useTranslation();
@@ -16,6 +18,10 @@ function GestionnaireHeader() {
 
     const handleLinkClick = (path) => {
         setActiveLink(path);
+    };
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     return (
@@ -63,6 +69,8 @@ function GestionnaireHeader() {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">{t('Anglais')}</Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">{t('Francais')}</Link>
                         </div>
                     )}
                 </div>

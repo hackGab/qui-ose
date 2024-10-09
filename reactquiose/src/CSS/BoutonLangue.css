@@ -1,0 +1,16 @@
+.language-button {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    padding: 0.5em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+}
+
+.language-button:hover {
+    color: #007bff;
+    text-decoration: underline;
+}

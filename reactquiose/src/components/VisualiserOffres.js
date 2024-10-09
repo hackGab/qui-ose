@@ -4,6 +4,7 @@ import "../CSS/VisualiserOffres.css";
 import EmployeurHeader from "./EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from "react-i18next";
 
 function VisualiserOffres() {
     const location = useLocation();
@@ -14,6 +15,7 @@ function VisualiserOffres() {
     const [error, setError] = useState(null);
     const [selectedOffre, setSelectedOffre] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
+    const {t} = useTranslation();
 
     useEffect(() => {
         const fetchOffres = async () => {
@@ -100,21 +102,21 @@ function VisualiserOffres() {
     };
 
     if (isLoading) {
-        return <div>Chargement des offres...</div>;
+        return <div>{t('ChangementDesOffres')}</div>;
     }
 
     if (error) {
-        return <div>Erreur : {error}</div>;
+        return <div>{t('Erreur')} {error}</div>;
     }
 
 
     return (
         <div className="container mt-5">
             <EmployeurHeader />
-            <h1 className="text-center mt-5">Vos offres d'emploi</h1>
+            <h1 className="text-center mt-5">{t('VosOffres')}</h1>
 
             {offres.length === 0 ? (
-                <div className="alert alert-info mt-3">Aucune offre trouvée</div>
+                <div className="alert alert-info mt-3">{t('AccuneOffreTrouve')}</div>
             ) : (
                 <div className="row mt-3">
                     {offres.map((offre, index) => (
@@ -126,19 +128,19 @@ function VisualiserOffres() {
                                 <div className="card-body">
                                     <h5 className="card-title">{offre.titre}</h5>
                                     <p className="card-text">
-                                        <strong>Localisation :</strong> {offre.localisation} <br/>
-                                        <strong>Nombre de candidats :</strong> {offre.nbCandidats}
+                                        <strong>{t('localisation')}</strong> {offre.localisation} <br/>
+                                        <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
                                     </p>
                                     <small>
-                                        Date de publication : {new Date(offre.datePublication).toLocaleDateString()}
+                                        {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}
                                         <br/>
-                                        Date limite : {new Date(offre.dateLimite).toLocaleDateString()}
+                                        {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
                                     </small>
                                     <div className={`status-badge ${getStatusClass(offre.status)}`}>
-                                        Status : {offre.status}
+                                        {t('Status')} {offre.status}
                                     </div>
                                     {offre.status === "Rejeté" && (
-                                        <small>Raison du rejet : <strong>{offre.rejetMessage}</strong></small>
+                                        <small>{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></small>
                                     )}
 
                                     {selectedOffre === index && (
@@ -149,9 +151,8 @@ function VisualiserOffres() {
                                                 onClick={() => openPDF(offre.data)}
                                             >
                                                 <div className="card-body text-center">
-                                                    <h5 className="card-title">Voir le fichier PDF</h5>
-                                                    <p className="card-text">Cliquez ici pour ouvrir le PDF de l'offre
-                                                        sélectionnée.</p>
+                                                    <h5 className="card-title">{t('VoirLeFichierPfd')}</h5>
+                                                    <p className="card-text">{t('ClickToViewPdf')}</p>
                                                 </div>
                                             </div>
                                             <div className="d-flex justify-content-between mt-4">

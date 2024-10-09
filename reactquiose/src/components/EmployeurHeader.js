@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import logo from '../images/logo.png';
 import { Link,useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/EmployerHeader.css';
+import '../CSS/EmployerHeader.css'
+import i18n from "i18next";
+import "../CSS/BoutonLangue.css";
 
 function EmployeurHeader() {
     const { t } = useTranslation();
@@ -14,6 +16,10 @@ function EmployeurHeader() {
         setProfileMenuOpen(!profileMenuOpen);
     }
 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
+
     return (
         <header className="gestionnaire-header">
             <nav className="navbar">
@@ -23,29 +29,6 @@ function EmployeurHeader() {
                         <div className="logo-text">Qui-Ose</div>
                     </Link>
                 </div>
-                {/*<div className="nav-links">*/}
-                {/*    <Link*/}
-                {/*        className={`nav-link ${activeLink === '/listeEtudiants' ? 'active' : ''}`}*/}
-                {/*        to="/listeEtudiants"*/}
-                {/*        onClick={() => handleLinkClick('/listeEtudiants')}*/}
-                {/*    >*/}
-                {/*        {t('etudiant')}*/}
-                {/*    </Link>*/}
-                {/*    <Link*/}
-                {/*        className={`nav-link ${activeLink === '/role/professeur' ? 'active' : ''}`}*/}
-                {/*        to="/role/professeur"*/}
-                {/*        onClick={() => handleLinkClick('/role/professeur')}*/}
-                {/*    >*/}
-                {/*        {t('prof')}*/}
-                {/*    </Link>*/}
-                {/*    <Link*/}
-                {/*        className={`nav-link ${activeLink === '/role/employeur' ? 'active' : ''}`}*/}
-                {/*        to="/role/employeur"*/}
-                {/*        onClick={() => handleLinkClick('/role/employeur')}*/}
-                {/*    >*/}
-                {/*        {t('employeur')}*/}
-                {/*    </Link>*/}
-                {/*</div>*/}
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
                     <div
@@ -59,6 +42,8 @@ function EmployeurHeader() {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">{t('Anglais')}</Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">{t('Francais')}</Link>
                         </div>
                     )}
                 </div>

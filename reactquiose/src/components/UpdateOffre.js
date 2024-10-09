@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 function UpdateOffre() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -13,6 +13,7 @@ function UpdateOffre() {
     const [dateLimite, setDateLimite] = useState(offre?.dateLimite || "");
     const [pdfFile, setPdfFile] = useState(null);
     const [dragActive, setDragActive] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!offre) {
@@ -111,10 +112,10 @@ function UpdateOffre() {
 
     return (
         <div className="container mt-5">
-            <h2>Mise à jour de l'offre</h2>
+            <h2>{t('MiseAJourOffre')}</h2>
             <form onSubmit={handleUpdate} onDragEnter={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
                 <div className="form-group">
-                    <label>Titre</label>
+                    <label>{t('TitreDeOffre')}</label>
                     <input
                         type="text"
                         className="form-control"
@@ -124,7 +125,7 @@ function UpdateOffre() {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Localisation</label>
+                    <label>{t('localisation')}</label>
                     <input
                         type="text"
                         className="form-control"
@@ -134,7 +135,7 @@ function UpdateOffre() {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Nombre de candidats</label>
+                    <label>{t('NombreDeCandidats')}</label>
                     <input
                         type="number"
                         className="form-control"
@@ -144,7 +145,7 @@ function UpdateOffre() {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Date Limite</label>
+                    <label>{t('DateLimite')}</label>
                     <input
                         type="date"
                         className="form-control"
@@ -154,7 +155,7 @@ function UpdateOffre() {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Fichier PDF (optionnel)</label>
+                    <label>{t('FichierPDFO')}</label>
                     <input
                         type="file"
                         className="form-control"
@@ -162,10 +163,10 @@ function UpdateOffre() {
                         onChange={(e) => setPdfFile(e.target.files[0])}
                     />
                     {pdfFile && (
-                        <p>Fichier sélectionné : {pdfFile.name}</p>
+                        <p>{t('FichierSelectionner')} {pdfFile.name}</p>
                     )}
                 </div>
-                <button type="submit" className="btn btn-primary mt-3">Mettre à jour l'offre</button>
+                <button type="submit" className="btn btn-primary mt-3">{t('MiseAJourOffre')}</button>
             </form>
         </div>
     );

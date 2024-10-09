@@ -33,14 +33,12 @@ function App() {
                     <Route path="visualiser-offres" element={<VisualiserOffres />} />
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
-                    <Route path='/detailsEtudiant/:id' element={<DetailsEtudiants />} />
-		    <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
-		    <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
-		    <Route path="/listeDeStage" element={<ListeDeStage />} />
-		    <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
+                    <Route path='/detailsEtudiant/:email' element={<DetailsEtudiants />} />
+                    <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
+		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
+		            <Route path="/listeDeStage" element={<ListeDeStage />} />
+		            <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
-
-
                 </Routes>
             </div>
       </Router>

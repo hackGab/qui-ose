@@ -118,6 +118,10 @@
     font-size: 1rem;
 }
 
+.language-button{
+    text-decoration: none;
+}
+
 .profile-button:hover {
     background-color: #01579b;
 }

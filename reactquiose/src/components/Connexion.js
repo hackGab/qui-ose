@@ -5,6 +5,7 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useTranslation } from "react-i18next";
+import '../CSS/BoutonLangue.css'
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ function Connexion() {
     const [icon, setIcon] = useState(eyeOff);
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const {t} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     // Toggle password visibility
     const afficherMdp = () => {
@@ -46,7 +47,6 @@ function Connexion() {
                 console.log('Réponse du serveur:', data);
                 const accessToken = data.accessToken;
 
-                
                 return fetch('http://localhost:8081/user/me', {
                     method: 'GET',
                     headers: {
@@ -63,7 +63,6 @@ function Connexion() {
             })
             .then((userData) => {
                 console.log('Données utilisateur:', userData);
-                // Redirection en fonction du rôle
                 if (userData.role === 'ETUDIANT') {
                     navigate('/accueilEtudiant', { state: { userData } });
                 } else if (userData.role === 'EMPLOYEUR') {
@@ -80,63 +79,72 @@ function Connexion() {
             });
     };
 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
+
     return (
-        <form className='pt-0 m-auto' onSubmit={handleSubmit}>
-            {errorMessages && (
-                <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                    {errorMessages}
-                </div>
-            )}
+        <div>
+            <div>
+                <button onClick={() => changeLanguage('fr')} className="language-button">FR</button>
+                <button onClick={() => changeLanguage('en')} className="language-button">EN</button>
+            </div>
+            <form className='pt-0 m-auto' onSubmit={handleSubmit}>
+                {errorMessages && (
+                    <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+                        {errorMessages}
+                    </div>
+                )}
 
-            <legend>{t('ChampsObligatoires')}</legend>
+                <legend>{t('ChampsObligatoires')}</legend>
 
-            <div className='row'>
-                <div className="form-group">
-                    <label htmlFor="email">{t('Email')}</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="johndoe@gmail.com"
-                        autoComplete={"on"}
-                        required
-                    />
-                </div>
+                <div className='row'>
+                    <div className="form-group">
+                        <label htmlFor="email">{t('Email')}</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="johndoe@gmail.com"
+                            autoComplete={"on"}
+                            required
+                        />
+                    </div>
 
+                    <div className="form-group">
+                        <label htmlFor="mdp">{t('MotDePasse')}</label>
+                        <div className="d-flex">
+                            <div className="input-group">
+                                <input
+                                    type={type}
+                                    className="form-control m-0"
+                                    id="mdp"
+                                    name="mdp"
+                                    placeholder="********"
+                                    value={mpd}
+                                    onChange={(e) => setMpd(e.target.value)}
+                                    autoComplete={"off"}
+                                    required
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label htmlFor="mdp">{t('MotDePasse')}</label>
-                    <div className="d-flex">
-                        <div className="input-group">
-                            <input
-                                type={type}
-                                className="form-control m-0"
-                                id="mdp"
-                                name="mdp"
-                                placeholder="********"
-                                value={mpd}
-                                onChange={(e) => setMpd(e.target.value)}
-                                autoComplete={"off"}
-                                required
-                            />
+                            <span onClick={afficherMdp} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                                <Icon icon={icon} size={20}/>
+                            </span>
                         </div>
-
-                        <span onClick={afficherMdp} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
-                            <Icon icon={icon} size={20}/>
-                        </span>
                     </div>
                 </div>
-            </div>
 
-            <button className="btn btn-primary w-50 mt-4" type="submit">{t('Connecter')}</button>
+                <button className="btn btn-primary w-50 mt-4" type="submit">{t('Connecter')}</button>
 
-            <small style={{marginTop: '10px'}}>
-                {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>
-            </small>
-        </form>
+                <small style={{marginTop: '10px'}}>
+                    {t('NoAccount')} <a href="/signUp">{t('Sinscrire')}</a>
+                </small>
+            </form>
+        </div>
     );
 }
 

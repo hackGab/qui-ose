@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../CSS/AccueilEmployeur.css';
 import EmployeurHeader from "./EmployeurHeader";
+import { useTranslation } from "react-i18next";
 
 function AccueilEmployeur() {
     const navigate = useNavigate();
     const location = useLocation();
     const [userData, setUserData] = useState(location.state?.userData || null);
-
+    const { t } = useTranslation();
     const handleClickSubmit = () => {
         console.log("Soumettre une offre d'emploi");
         if (userData?.credentials?.email) {
@@ -26,21 +27,21 @@ function AccueilEmployeur() {
             <EmployeurHeader />
 
             <div className="container mt-5">
-                <h1 className="text-center mt-5 mb-4">Accueil Employeur</h1>
+                <h1 className="text-center mt-5 mb-4">{t('accueilEmployeur')}</h1>
 
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card mb-3 text-center clickable-card" onClick={handleClickSubmit}>
                             <div className="card-body">
-                                <h5 className="card-title">Soumettre une offre d'emploi</h5>
-                                <p className="card-text">Cliquez ici pour soumettre une nouvelle offre d'emploi.</p>
+                                <h5 className="card-title">{t('SoumettreOffreEmploi')}</h5>
+                                <p className="card-text">{t('soumettreUneNouvelleOffre')}</p>
                             </div>
                         </div>
 
                         <div className="card mb-3 text-center clickable-card" onClick={handleClickView}>
                             <div className="card-body">
-                                <h5 className="card-title">Visualiser les offres d'emploi</h5>
-                                <p className="card-text">Cliquez ici pour visualiser les offres d'emploi que vous avez soumises.</p>
+                                <h5 className="card-title">{t('VisualiserLesOffresEmploi')}</h5>
+                                <p className="card-text">{t('visualiserLesOffresEmploiSoumise')}</p>
                             </div>
                         </div>
                     </div>

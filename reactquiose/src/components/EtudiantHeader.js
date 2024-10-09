@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/GestionnaireHeader.css';
 import logo from '../images/logo.png';
+import "../CSS/BoutonLangue.css";
+import i18n from "i18next";
 
 function EtudiantHeader() {
     const { t } = useTranslation();
@@ -13,9 +15,8 @@ function EtudiantHeader() {
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!profileMenuOpen);
     };
-
-    const handleLinkClick = (path) => {
-        setActiveLink(path);
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     return (
@@ -26,9 +27,6 @@ function EtudiantHeader() {
                     <Link to="/accueilEtudiant" className="logo-link">
                         <div className="logo-text">Qui-Ose</div>
                     </Link>
-                </div>
-                <div className="nav-links">
-
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
@@ -43,6 +41,8 @@ function EtudiantHeader() {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">{t('Anglais')}</Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">{t('Francais')}</Link>
                         </div>
                     )}
                 </div>

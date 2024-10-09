@@ -1,7 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.CV;
+import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Gestionnaire;
+import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
@@ -10,6 +13,7 @@ import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
+import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +47,8 @@ public class GestionnaireServiceTest {
         gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
         cvRepository = Mockito.mock(CVRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder);
-
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
@@ -124,4 +128,55 @@ public class GestionnaireServiceTest {
     }
 
 
+    @Test
+    void validerOuRejeterOffre() {
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setId(1L);
+        offreDeStage.setStatus("attend");
+
+        OffreDeStage offreDeStage1 = new OffreDeStage();
+        offreDeStage1.setId(1L);
+        offreDeStage1.setStatus("accepté");
+
+
+        Employeur employeur = new Employeur();
+        employeur.setId(1L);
+        employeur.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
+        offreDeStage.setEmployeur(employeur);
+
+        when(offreDeStageRepository.findById(1L)).thenReturn(Optional.of(offreDeStage));
+        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage1);
+
+        Optional<OffreDeStageDTO> result = gestionnaireService.validerOuRejeterOffre(1L, "accepté", "");
+
+        assertTrue(result.isPresent());
+        assertEquals("accepté", result.get().getStatus());
+    }
+
+    @Test
+    void validerOuRejeterOffreWithRejection() {
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setId(1L);
+        offreDeStage.setStatus("attend");
+
+        OffreDeStage offreDeStage1 = new OffreDeStage();
+        offreDeStage1.setId(1L);
+        offreDeStage1.setStatus("rejeté");
+
+        Employeur employeur = new Employeur();
+        employeur.setId(1L);
+        employeur.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
+
+        offreDeStage.setEmployeur(employeur);
+
+        when(offreDeStageRepository.findById(1L)).thenReturn(Optional.of(offreDeStage));
+        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage1);
+
+        Optional<OffreDeStageDTO> result = gestionnaireService.validerOuRejeterOffre(1L, "rejeté", "raison");
+
+        assertTrue(result.isPresent());
+        assertEquals("rejeté", result.get().getStatus());
+    }
 }

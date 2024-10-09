@@ -76,7 +76,7 @@ public class GestionnaireService {
             OffreDeStage offreDeStage = offreOptional.get();
             offreDeStage.setStatus(status);
 
-            if ("Rejeté".equals(status)) {
+            if ("rejeté".equals(status)) {
                 offreDeStage.setRejetMessage(rejectionReason);
             } else {
                 offreDeStage.setRejetMessage("");

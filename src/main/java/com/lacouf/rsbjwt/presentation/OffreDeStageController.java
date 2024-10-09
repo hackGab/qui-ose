@@ -95,5 +95,10 @@ public class OffreDeStageController {
         return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<OffreDeStageDTO>> getAllOffresDeStage() {
+        return ResponseEntity.ok(offreDeStageService.getAllOffresDeStage());
+    }
 }
 

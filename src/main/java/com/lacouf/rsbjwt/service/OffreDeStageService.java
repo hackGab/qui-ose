@@ -50,8 +50,6 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);
     }
 
-
-
     public void deleteOffreDeStage(Long id) {
         offreDeStageRepository.deleteById(id);
     }
@@ -80,5 +78,10 @@ public class OffreDeStageService {
                 .collect(Collectors.toList());
         return offresDTO.isEmpty() ? Optional.empty() : Optional.of(offresDTO);
     }
-}
 
+    public Iterable<OffreDeStageDTO> getAllOffresDeStage() {
+        return offreDeStageRepository.findAll().stream()
+                .map(OffreDeStageDTO::new)
+                .toList();
+    }
+}

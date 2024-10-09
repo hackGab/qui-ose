@@ -6,6 +6,7 @@ import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.GestionnaireRepository;
+import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
@@ -18,7 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +35,7 @@ public class GestionnaireServiceTest {
     private EtudiantRepository etudiantRepository;
     private CVRepository cvRepository;
     private PasswordEncoder passwordEncoder;
+    private OffreDeStageRepository offreDeStageRepository;
 
     private CV cvEntity;
     @BeforeEach
@@ -39,12 +43,12 @@ public class GestionnaireServiceTest {
         gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
         cvRepository = Mockito.mock(CVRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository, cvRepository, etudiantRepository, passwordEncoder);
+        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder);
 
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
-        cvEntity = new CV();
+	cvEntity = new CV();
         cvEntity.setId(1L);
         cvEntity.setStatus("attend");
     }

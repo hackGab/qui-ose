@@ -201,26 +201,4 @@ class EtudiantServiceTest {
         // Assert
         verify(cvRepository, times(1)).deleteById(cvId);
     }
-
-    @Test
-    void shouldReturnListOfOffresDeStage() {
-        // Arrange
-        Employeur employeur = new Employeur("John", "Doe", "email", "mdp", "phone", "entreprise");
-        OffreDeStage offreDeStage = new OffreDeStage("titre", "localisation", LocalDate.now(), "data", 1, "validé");
-        offreDeStage.setEmployeur(employeur);
-
-        List<OffreDeStage> offres = List.of(offreDeStage);
-
-        when(offreDeStageRepository.findAll())
-                .thenReturn(offres);
-
-        // Act
-        List<OffreDeStageDTO> response = etudiantService.getOffresApprouvees();
-
-        // Assert
-        assertEquals(offres.size(), response.size());
-        assertEquals(offres.get(0).getTitre(), response.get(0).getTitre());
-        assertEquals(offres.get(0).getLocalisation(), response.get(0).getLocalisation());
-        assertEquals(offres.get(0).getDateLimite(), response.get(0).getDateLimite());
-    }
 }

@@ -141,139 +141,141 @@ function SoumettreOffre() {
     };
 
     return (
-        <div className="container-fluid p-4">
+        <>
             <EmployeurHeader/>
+            <div className="container-fluid p-4">
 
-            <div className="text-center my-4">
-                {file ? (
-                    <h2>{t('OffreLoad')}</h2>
-                ) : (
-                    <h2 className="text-warning">{t('AjoutOffrePourContinuer')}</h2>
-                )}
-            </div>
+                <div className="text-center my-4">
+                    {file ? (
+                        <h2>{t('OffreLoad')}</h2>
+                    ) : (
+                        <h2 className="text-warning">{t('AjoutOffrePourContinuer')}</h2>
+                    )}
+                </div>
 
-            <div className="d-flex justify-content-center my-3">
-                <button
-                    className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
-                        file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'Approuvé' ? 'btn-success' :
-                                file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
-                    onClick={afficherAjoutOffre}
-                >
-                    {file == null ? t('AjouterOffre') :
-                        file.status === 'Attente' ? t('OffreAttenteConfirmation') :
-                            file.status === 'Approuvé' ? t('OffreApprouvée') :
-                                file.status === 'Rejeté' ? t('OffreRefusée') : t('OffreNonRemise')}
-                </button>
-            </div>
-
-            {file && (
                 <div className="d-flex justify-content-center my-3">
-                    <button className="btn btn-info" onClick={openFile}>
-                        {t('SeeOffer')}
+                    <button
+                        className={`btn btn-lg rounded-pill custom-btn ${file == null ? 'btn-secondary' :
+                            file.status === 'Attente' ? 'btn-warning' :
+                                file.status === 'Approuvé' ? 'btn-success' :
+                                    file.status === 'Rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                        onClick={afficherAjoutOffre}
+                    >
+                        {file == null ? t('AjouterOffre') :
+                            file.status === 'Attente' ? t('OffreAttenteConfirmation') :
+                                file.status === 'Approuvé' ? t('OffreApprouvée') :
+                                    file.status === 'Rejeté' ? t('OffreRefusée') : t('OffreNonRemise')}
                     </button>
                 </div>
-            )}
+
+                {file && (
+                    <div className="d-flex justify-content-center my-3">
+                        <button className="btn btn-info" onClick={openFile}>
+                            {t('SeeOffer')}
+                        </button>
+                    </div>
+                )}
 
 
-            {showModal && (
-                <div className="custom-modal-overlay">
-                    <div className="modal modal-custom" tabIndex="-1" role="dialog">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title"><b>{t('SoumettreOffreEmploi')}</b></h5>
-                                </div>
-                                <div className="modal-body">
-                                    <div
-                                        onDragEnter={handleDrag}
-                                        onDragOver={handleDrag}
-                                        onDragLeave={handleDrag}
-                                        onDrop={handleDrop}
-                                        onClick={handleClick}
-                                        className={`drop-zone ${dragActive ? "active" : ""}`}
-                                    >
-                                        <p>{t('dragOrClick')}</p>
-                                        <input
-                                            type="file"
-                                            id="fileInput"
-                                            onChange={handleFileChange}
-                                            style={{display: "none"}}
-                                        />
+                {showModal && (
+                    <div className="custom-modal-overlay">
+                        <div className="modal modal-custom" tabIndex="-1" role="dialog">
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title"><b>{t('SoumettreOffreEmploi')}</b></h5>
                                     </div>
-
-                                    <div className="form-group mt-3">
-                                        <label htmlFor="titre"><b>{t('TitreDeOffre')}</b></label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="titre"
-                                            style={{ textAlign: "center" }}
-                                            value={titre}
-                                            onChange={(e) => setTitre(e.target.value)}
-                                        />
-                                    </div>
-
-                                    <div className="form-group mt-3">
-                                        <label htmlFor="localisation"><b>{t('localisation')}</b></label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="localisation"
-                                            style={{ textAlign: "center" }}
-                                            value={localisation}
-                                            onChange={(e) => setLocalisation(e.target.value)}
-                                        />
-                                    </div>
-
-                                    <div className="form-group mt-3">
-                                        <label htmlFor="nbCandidats"><b>{t('NombreDeCandidats')}</b></label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            style={{ textAlign: "center" }}
-                                            id="nbCandidats"
-                                            value={nbCandidats}
-                                            onChange={(e) => setNbCandidats(e.target.value)}
-                                        />
-                                    </div>
-
-                                    <div className="form-group mt-3">
-                                        <label htmlFor="dateLimite"><b>{t('DateLimite')}</b></label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            id="dateLimite"
-                                            style={{ textAlign: "center" }}
-                                            value={dateLimite}
-                                            onChange={(e) => setDateLimite(e.target.value)}
-                                        />
-                                    </div>
-
-                                    {temporaryFile && (
-                                        <div className="file-details mt-3">
-                                            <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
-                                            <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}
-                                            </h6>
+                                    <div className="modal-body">
+                                        <div
+                                            onDragEnter={handleDrag}
+                                            onDragOver={handleDrag}
+                                            onDragLeave={handleDrag}
+                                            onDrop={handleDrop}
+                                            onClick={handleClick}
+                                            className={`drop-zone ${dragActive ? "active" : ""}`}
+                                        >
+                                            <p>{t('dragOrClick')}</p>
+                                            <input
+                                                type="file"
+                                                id="fileInput"
+                                                onChange={handleFileChange}
+                                                style={{display: "none"}}
+                                            />
                                         </div>
-                                    )}
-                                </div>
 
-                                <div className="modal-footer">
-                                    <button className="btn btn-primary" onClick={handleSubmit}>
-                                        {t('Soumettre')}
-                                    </button>
-                                    <button type="button" className="btn btn-secondary" onClick={fermerAffichageOffre}>
-                                        {t('Fermer')}
-                                    </button>
+                                        <div className="form-group mt-3">
+                                            <label htmlFor="titre"><b>{t('TitreDeOffre')}</b></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="titre"
+                                                style={{ textAlign: "center" }}
+                                                value={titre}
+                                                onChange={(e) => setTitre(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="form-group mt-3">
+                                            <label htmlFor="localisation"><b>{t('localisation')}</b></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="localisation"
+                                                style={{ textAlign: "center" }}
+                                                value={localisation}
+                                                onChange={(e) => setLocalisation(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="form-group mt-3">
+                                            <label htmlFor="nbCandidats"><b>{t('NombreDeCandidats')}</b></label>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                style={{ textAlign: "center" }}
+                                                id="nbCandidats"
+                                                value={nbCandidats}
+                                                onChange={(e) => setNbCandidats(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="form-group mt-3">
+                                            <label htmlFor="dateLimite"><b>{t('DateLimite')}</b></label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                id="dateLimite"
+                                                style={{ textAlign: "center" }}
+                                                value={dateLimite}
+                                                onChange={(e) => setDateLimite(e.target.value)}
+                                            />
+                                        </div>
+
+                                        {temporaryFile && (
+                                            <div className="file-details mt-3">
+                                                <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                                <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                                <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}
+                                                </h6>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="modal-footer">
+                                        <button className="btn btn-primary" onClick={handleSubmit}>
+                                            {t('Soumettre')}
+                                        </button>
+                                        <button type="button" className="btn btn-secondary" onClick={fermerAffichageOffre}>
+                                            {t('Fermer')}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 }
 

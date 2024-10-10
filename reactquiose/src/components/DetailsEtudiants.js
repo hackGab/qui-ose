@@ -6,7 +6,7 @@ import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/DetailsEtudiants.css';
 
 function DetailsEtudiants() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const location = useLocation();
     const student = location.state?.student;
     const [selectedStatus, setSelectedStatus] = useState(null);
@@ -59,72 +59,74 @@ function DetailsEtudiants() {
     const isCvMissing = !student.cv?.data;
 
     return (
-        <div className="details-container">
-            <GestionnaireHeader />
+        <>
+            <GestionnaireHeader/>
+             <div className="details-container">
 
-            <h1 className="mb-4 detail-title">{t('studentDetailsTitle')}</h1>
+                <h1 className="mb-4 detail-title">{t('studentDetailsTitle')}</h1>
 
-            <div className="row">
-                <div className="col-md-6">
-                    <h5>{t('personalInfo')}</h5>
-                    <div className="details-info">
-                        <p><strong>{t('nomDetail')}:</strong> {student.firstName} {student.lastName}</p>
-                        <p><strong>{t('emailDetail')}:</strong> {student.credentials.email}</p>
-                        <p><strong>{t('telephoneDetail')}:</strong> {student.phoneNumber}</p>
-                        <p><strong>{t('departmentDetail')}:</strong> {student.departement}</p>
-                    </div>
-                </div>
-
-                <div className="col-md-6">
-                    <h5 className="mb-3">{t('studentCV')}</h5>
-                    <div className="iframe-container">
-                        {isCvMissing ? (
-                            <p className="text-danger text-center">{t('cvNotSubmitted')}</p>
-                        ) : (
-                            <iframe
-                                src={student.cv.data}
-                                title={t('studentCV')}
-                                className="cv-frame"
-                            ></iframe>
-                        )}
+                <div className="row">
+                    <div className="col-md-6">
+                        <h5>{t('personalInfo')}</h5>
+                        <div className="details-info">
+                            <p><strong>{t('nomDetail')}:</strong> {student.firstName} {student.lastName}</p>
+                            <p><strong>{t('emailDetail')}:</strong> {student.credentials.email}</p>
+                            <p><strong>{t('telephoneDetail')}:</strong> {student.phoneNumber}</p>
+                            <p><strong>{t('departmentDetail')}:</strong> {student.departement}</p>
+                        </div>
                     </div>
 
-                    <div className="mt-4">
-                        <h5>{t('actions')}</h5>
-                        <div className="btn-group-vertical w-100">
-                            <button
-                                className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
-                                onClick={() => handleStatusSelect('validé')}
-                            >
-                                {t('validate')}
-                            </button>
-                            <button
-                                className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
-                                onClick={() => handleStatusSelect('rejeté')}
-                            >
-                                {t('reject')}
-                            </button>
-
-                            {selectedStatus === 'rejeté' && (
-                                <div className="mt-1 mb-2 col-12">
-                                    <textarea
-                                        rows="3"
-                                        placeholder={t('enterRejectionReason')}
-                                        value={rejectionReason}
-                                        onChange={(e) => setRejectionReason(e.target.value)}
-                                        className="form-control rejection-reason"
-                                    />
-                                </div>
+                    <div className="col-md-6">
+                        <h5 className="mb-3">{t('studentCV')}</h5>
+                        <div className="iframe-container">
+                            {isCvMissing ? (
+                                <p className="text-danger text-center">{t('cvNotSubmitted')}</p>
+                            ) : (
+                                <iframe
+                                    src={student.cv.data}
+                                    title={t('studentCV')}
+                                    className="cv-frame"
+                                ></iframe>
                             )}
+                        </div>
 
-                            <button className="btn btn-primary" onClick={handleConfirm}>
-                                {t('confirm')}
-                            </button>
+                        <div className="mt-4">
+                            <h5>{t('actions')}</h5>
+                            <div className="btn-group-vertical w-100">
+                                <button
+                                    className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                    onClick={() => handleStatusSelect('validé')}
+                                >
+                                    {t('validate')}
+                                </button>
+                                <button
+                                    className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                    onClick={() => handleStatusSelect('rejeté')}
+                                >
+                                    {t('reject')}
+                                </button>
+
+                                {selectedStatus === 'rejeté' && (
+                                    <div className="mt-1 mb-2 col-12">
+                                            <textarea
+                                                rows="3"
+                                                placeholder={t('enterRejectionReason')}
+                                                value={rejectionReason}
+                                                onChange={(e) => setRejectionReason(e.target.value)}
+                                                className="form-control rejection-reason"
+                                            />
+                                    </div>
+                                )}
+
+                                <button className="btn btn-primary" onClick={handleConfirm}>
+                                    {t('confirm')}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

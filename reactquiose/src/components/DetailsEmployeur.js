@@ -58,72 +58,74 @@ function DetailsEmployeurs() {
     }
 
     return (
-        <div className="details-container">
-            <GestionnaireHeader />
+        <>
+            <GestionnaireHeader/>
+            <div className="details-container">
 
-            <h1 className="mb-4 detail-title">{t('employerDetailsTitle')}</h1>
+                <h1 className="mb-4 detail-title">{t('employerDetailsTitle')}</h1>
 
-            <div className="row">
-                <div className="col-md-6">
-                    <h5>{t('companyInfo')}</h5>
-                    <div className="details-info">
-                        <p><strong>{t('nomDetail')}:</strong> {offre.employeur.firstName}</p>
-                        <p><strong>{t('emailDetail')}:</strong> {offre.employeur.email}</p>
-                        <p><strong>{t('telephoneDetail')}:</strong> {offre.employeur.phoneNumber}</p>
-                        <p><strong>{t('industry')}:</strong> {offre.employeur.entreprise}</p>
-                        <p><strong>{t('titleStage')}:</strong> {offre.titre}</p>
-                        <p><strong>{t('dureeStage')}:</strong> {offre.dateLimite}</p>
-                        <p><strong>{t('localisation')}:</strong> {offre.localisation}</p>
-                        <p><strong>{t('DateDebut')}:</strong> {offre.datePublication}</p>
-                        <p><strong>{t('Disponiblite')}:</strong> {offre.nbCandidats}</p>
-                    </div>
-                </div>
-
-                <div className="col-md-6">
-                    <h5 className="mb-3">{t('employerStage')}</h5>
-                    <div className="iframe-container">
-                        <iframe
-                            src={offre.data}
-                            className="cv-frame"
-                        ></iframe>
+                <div className="row">
+                    <div className="col-md-6">
+                        <h5>{t('companyInfo')}</h5>
+                        <div className="details-info">
+                            <p><strong>{t('nomDetail')}:</strong> {offre.employeur.firstName}</p>
+                            <p><strong>{t('emailDetail')}:</strong> {offre.employeur.email}</p>
+                            <p><strong>{t('telephoneDetail')}:</strong> {offre.employeur.phoneNumber}</p>
+                            <p><strong>{t('industry')}:</strong> {offre.employeur.entreprise}</p>
+                            <p><strong>{t('titleStage')}:</strong> {offre.titre}</p>
+                            <p><strong>{t('dureeStage')}:</strong> {offre.dateLimite}</p>
+                            <p><strong>{t('localisation')}:</strong> {offre.localisation}</p>
+                            <p><strong>{t('DateDebut')}:</strong> {offre.datePublication}</p>
+                            <p><strong>{t('Disponiblite')}:</strong> {offre.nbCandidats}</p>
+                        </div>
                     </div>
 
-                    <div className="mt-4">
-                        <h5>{t('actions')}</h5>
-                        <div className="btn-group-vertical w-100">
-                            <button
-                                className={`btn ${selectedStatus === 'Validé' ? 'btn-success' : 'btn-gray'} mb-2`}
-                                onClick={() => handleStatusSelect('Validé')}
-                            >
-                                {t('validate')}
-                            </button>
-                            <button
-                                className={`btn ${selectedStatus === 'Rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
-                                onClick={() => handleStatusSelect('Rejeté')}
-                            >
-                                {t('reject')}
-                            </button>
+                    <div className="col-md-6">
+                        <h5 className="mb-3">{t('employerStage')}</h5>
+                        <div className="iframe-container">
+                            <iframe
+                                src={offre.data}
+                                className="cv-frame"
+                            ></iframe>
+                        </div>
 
-                            {selectedStatus === 'Rejeté' && (
-                                <div className="mt-1 mb-2 col-12">
-                                    <textarea
-                                        rows="3"
-                                        placeholder={t('enterRejectionReason')}
-                                        value={rejectionReason}
-                                        onChange={(e) => setRejectionReason(e.target.value)}
-                                        className="form-control rejection-reason"
-                                    />
-                                </div>
-                            )}
+                        <div className="mt-4">
+                            <h5>{t('actions')}</h5>
+                            <div className="btn-group-vertical w-100">
+                                <button
+                                    className={`btn ${selectedStatus === 'Validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                    onClick={() => handleStatusSelect('Validé')}
+                                >
+                                    {t('validate')}
+                                </button>
+                                <button
+                                    className={`btn ${selectedStatus === 'Rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                    onClick={() => handleStatusSelect('Rejeté')}
+                                >
+                                    {t('reject')}
+                                </button>
 
-                            <button className="btn btn-primary" onClick={handleConfirm}>
-                                {t('confirm')}
-                            </button>
+                                {selectedStatus === 'Rejeté' && (
+                                    <div className="mt-1 mb-2 col-12">
+                                        <textarea
+                                            rows="3"
+                                            placeholder={t('enterRejectionReason')}
+                                            value={rejectionReason}
+                                            onChange={(e) => setRejectionReason(e.target.value)}
+                                            className="form-control rejection-reason"
+                                        />
+                                    </div>
+                                )}
+
+                                <button className="btn btn-primary" onClick={handleConfirm}>
+                                    {t('confirm')}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

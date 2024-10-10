@@ -45,38 +45,42 @@ function ListeEtudiants() {
     }
 
     return (
-        <div className="container-fluid d-flex flex-column min-vh-100">
-            <GestionnaireHeader />
-            <div className="container flex-grow-1 pt-5 mt-5">
-                <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
-                <p className="text-center mb-4">{t('studentListSubtitle')}</p>
-                <div className="row">
-                    {etudiants.map((etudiant) => {
-                        const status = etudiant.cv ? etudiant.cv.status : null;
-                        return (
-                            <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
-                                <Link
-                                    to={`/detailsEtudiant/${etudiant.email}`}
-                                    className="text-decoration-none"
-                                    state={{ student: etudiant }}
-                                >
-                                    <div className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
-                                        <div className="card-body">
-                                            <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
-                                            <p className="card-text">
-                                                <FaEnvelope /> {etudiant.credentials.email}<br />
-                                                <FaPhone /> {etudiant.phoneNumber}<br />
-                                                <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
-                                            </p>
+        <>
+            <GestionnaireHeader/>
+            <div className="container-fluid p-4">
+                <div className="container flex-grow-1 pt-5 mt-5">
+                    <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
+                    <p className="text-center mb-4">{t('studentListSubtitle')}</p>
+                    <div className="row">
+                        {etudiants.map((etudiant) => {
+                            const status = etudiant.cv ? etudiant.cv.status : null;
+                            return (
+                                <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
+                                    <Link
+                                        to={`/detailsEtudiant/${etudiant.email}`}
+                                        className="text-decoration-none"
+                                        state={{student: etudiant}}
+                                    >
+                                        <div
+                                            className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                            <div className="card-body">
+                                                <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
+                                                <p className="card-text">
+                                                    <FaEnvelope/> {etudiant.credentials.email}<br/>
+                                                    <FaPhone/> {etudiant.phoneNumber}<br/>
+                                                    <span
+                                                        className="badge bg-info">{t('department')}: {etudiant.departement}</span>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        );
-                    })}
+                                    </Link>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

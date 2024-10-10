@@ -23,31 +23,33 @@ function AccueilEmployeur() {
     };
 
     return (
-        <div className="container-fluid d-flex flex-column min-vh-100">
+        <>
             <EmployeurHeader />
+            <div className="container-fluid p-4">
 
-            <div className="container mt-5">
-                <h1 className="text-center mt-5 mb-4">{t('accueilEmployeur')}</h1>
+                <div className="container mt-5">
+                    <h1 className="text-center mt-5 mb-4">{t('accueilEmployeur')}</h1>
 
-                <div className="row justify-content-center">
-                    <div className="col-md-8">
-                        <div className="card mb-3 text-center clickable-card" onClick={handleClickSubmit}>
-                            <div className="card-body">
-                                <h5 className="card-title">{t('SoumettreOffreEmploi')}</h5>
-                                <p className="card-text">{t('soumettreUneNouvelleOffre')}</p>
+                    <div className="row justify-content-center">
+                        <div className="col-md-8">
+                            <div className="card mb-3 text-center clickable-card" onClick={handleClickSubmit}>
+                                <div className="card-body">
+                                    <h5 className="card-title">{t('SoumettreOffreEmploi')}</h5>
+                                    <p className="card-text">{t('soumettreUneNouvelleOffre')}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="card mb-3 text-center clickable-card" onClick={handleClickView}>
-                            <div className="card-body">
-                                <h5 className="card-title">{t('VisualiserLesOffresEmploi')}</h5>
-                                <p className="card-text">{t('visualiserLesOffresEmploiSoumise')}</p>
+                            <div className="card mb-3 text-center clickable-card" onClick={handleClickView}>
+                                <div className="card-body">
+                                    <h5 className="card-title">{t('VisualiserLesOffresEmploi')}</h5>
+                                    <p className="card-text">{t('visualiserLesOffresEmploiSoumise')}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

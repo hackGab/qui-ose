@@ -112,82 +112,87 @@ function VisualiserOffres() {
 
 
     return (
-        <div className="container mt-5">
+        <>
             <EmployeurHeader />
-            <h1 className="text-center mt-5">{t('VosOffres')}</h1>
+            <div className="container-fluid p-4">
 
-            {offres.length === 0 ? (
-                <div className="alert alert-info mt-3">{t('AccuneOffreTrouve')}</div>
-            ) : (
-                <div className="row mt-3">
-                    {offres.map((offre, index) => (
-                        <div key={index} className="col-md-4 mb-4">
-                            <div
-                                className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`}
-                                onClick={() => handleOffreClick(index)}
-                            >
-                                <div className="card-body">
-                                    <h5 className="card-title">{offre.titre}</h5>
-                                    <p className="card-text">
-                                        <strong>{t('localisation')}</strong> {offre.localisation} <br/>
-                                        <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
-                                    </p>
-                                    <p className="info-stage">
-                                        {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}
-                                        <br/>
-                                        {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
-                                    </p>
-                                    <div className={`status-badge ${getStatusClass(offre.status)}`}>
-                                        {t('Status')} {offre.status}
+                <div className="container mt-5">
+                    <h1 className="text-center mt-5">{t('VosOffres')}</h1>
+
+                    {offres.length === 0 ? (
+                        <div className="alert alert-info mt-3">{t('AccuneOffreTrouve')}</div>
+                    ) : (
+                        <div className="row mt-3">
+                            {offres.map((offre, index) => (
+                                <div key={index} className="col-md-4 mb-4">
+                                    <div
+                                        className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`}
+                                        onClick={() => handleOffreClick(index)}
+                                    >
+                                        <div className="card-body">
+                                            <h5 className="card-title">{offre.titre}</h5>
+                                            <p className="card-text">
+                                                <strong>{t('localisation')}</strong> {offre.localisation} <br/>
+                                                <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
+                                            </p>
+                                            <p className="info-stage">
+                                                {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}
+                                                <br/>
+                                                {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
+                                            </p>
+                                            <div className={`status-badge ${getStatusClass(offre.status)}`}>
+                                                {t('Status')} {offre.status}
+                                            </div>
+                                            {offre.status === "Rejeté" && (
+                                                <p className="info-stage">{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></p>
+                                            )}
+
+                                            {selectedOffre === index && (
+                                                <>
+                                                    <div
+                                                        className="card pdf-card mt-4"
+                                                        style={{backgroundColor: "#f0f0f0"}}
+                                                        onClick={() => openPDF(offre.data)}
+                                                    >
+                                                        <div className="card-body text-center">
+                                                            <h5 className="card-title">{t('VoirLeFichierPfd')}</h5>
+                                                            <p className="card-text">{t('ClickToViewPdf')}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="d-flex justify-content-between mt-4">
+                                                        <FontAwesomeIcon
+                                                            icon={faEdit}
+                                                            size="2x"
+                                                            className="text-warning"
+                                                            style={{cursor: "pointer"}}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleUpdateClick(offre, employeurEmail);
+                                                            }}
+                                                        />
+
+                                                        <FontAwesomeIcon
+                                                            icon={faTrash}
+                                                            size="2x"
+                                                            className="text-danger"
+                                                            style={{cursor: "pointer"}}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                deleteOffre(offre.id);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
-                                    {offre.status === "Rejeté" && (
-                                        <p className="info-stage">{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></p>
-                                    )}
-
-                                    {selectedOffre === index && (
-                                        <>
-                                            <div
-                                                className="card pdf-card mt-4"
-                                                style={{backgroundColor: "#f0f0f0"}}
-                                                onClick={() => openPDF(offre.data)}
-                                            >
-                                                <div className="card-body text-center">
-                                                    <h5 className="card-title">{t('VoirLeFichierPfd')}</h5>
-                                                    <p className="card-text">{t('ClickToViewPdf')}</p>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex justify-content-between mt-4">
-                                                <FontAwesomeIcon
-                                                    icon={faEdit}
-                                                    size="2x"
-                                                    className="text-warning"
-                                                    style={{cursor: "pointer"}}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleUpdateClick(offre, employeurEmail);
-                                                    }}
-                                                />
-
-                                                <FontAwesomeIcon
-                                                    icon={faTrash}
-                                                    size="2x"
-                                                    className="text-danger"
-                                                    style={{cursor: "pointer"}}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        deleteOffre(offre.id);
-                                                    }}
-                                                />
-                                            </div>
-                                        </>
-                                    )}
                                 </div>
-                            </div>
+                            ))}
                         </div>
-                    ))}
+                    )}
                 </div>
-            )}
-        </div>
+            </div>
+        </>
     );
 }
 

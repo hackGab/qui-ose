@@ -202,7 +202,7 @@ function AccueilEtudiant() {
                 )}
             </div>
 
-            {rejectionMessage && (
+            {file && file.status === "rejeté" && (
                 <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
                     <h5>{t('rejectionReason')}</h5>
                     <p>{rejectionMessage}</p>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../images/logo.png';
-import { Link,useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/EmployerHeader.css'
 import i18n from "i18next";
@@ -9,8 +9,6 @@ import "../CSS/BoutonLangue.css";
 function EmployeurHeader() {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-    const location = useLocation();
-    const [activeLink, setActiveLink] = useState(location.pathname);
 
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!profileMenuOpen);

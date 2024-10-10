@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../CSS/AccueilEmployeur.css';
 import EmployeurHeader from "./EmployeurHeader";

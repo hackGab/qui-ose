@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import EtudiantHeader from "./EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
@@ -8,7 +8,6 @@ import ListeDeStage from "./ListeDeStage";
 function AccueilEtudiant() {
     const location = useLocation();
     const userData = location.state?.userData;
-    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);

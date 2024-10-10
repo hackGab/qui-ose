@@ -14,12 +14,10 @@ function SoumettreOffre() {
     const [temporaryFileData, setTemporaryFileData] = useState(null);
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
-    const [internships, setInternships] = useState([]);
     const [titre, setTitre] = useState("");
     const [localisation, setLocalisation] = useState("");
     const [nbCandidats, setNbCandidats] = useState(0);
     const [dateLimite, setDateLimite] = useState("");
-    const [datePublication, setPublication] = useState("");
     const { t } = useTranslation();
 
     useEffect(() => {

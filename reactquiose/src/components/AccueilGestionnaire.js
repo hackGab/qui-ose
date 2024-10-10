@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
@@ -10,7 +10,7 @@ import employeurImage from '../images/Employeur.png';
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();
-    const [refusNotification, setRefusNotification] = useState(0);
+    const [refusNotification] = useState(0);
 
     const sections = [
         { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },

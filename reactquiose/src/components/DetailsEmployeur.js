@@ -7,7 +7,6 @@ import React, {useState} from "react";
 
 function DetailsEmployeurs() {
     const { t } = useTranslation();
-    const { id } = useParams();
     const location = useLocation();
     const offre = location.state?.offre;
     const [selectedStatus, setSelectedStatus] = useState(null);

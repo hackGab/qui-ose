@@ -11,7 +11,5 @@ import java.util.List;
 public interface OffreDeStageRepository extends JpaRepository<OffreDeStage, Long> {
 
         List<OffreDeStage> findByEmployeur(Employeur employeur);
-//    List<OffreDeStage> findByEmployeurId(Long employeurId);
-
 
 }

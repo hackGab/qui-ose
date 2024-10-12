@@ -232,8 +232,9 @@ function AccueilEtudiant() {
                 )}
 
                 <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
-                {file && file.status === 'validé' && <ListeDeStage internships={internships}/>}
-
+                {file && file.status === 'validé' && (
+                    <ListeDeStage internships={internships} userData={userData} />
+                )}
                 {showModal && (
                 <div className="custom-modal-overlay">
                     <div className="modal modal-custom" tabIndex="-1" role="dialog">

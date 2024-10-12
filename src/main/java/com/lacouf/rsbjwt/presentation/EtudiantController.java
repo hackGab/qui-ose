@@ -60,4 +60,12 @@ public class EtudiantController {
     public ResponseEntity<Iterable<EtudiantDTO>> getAllEtudiants() {
         return ResponseEntity.ok(etudiantService.getAllEtudiants());
     }
+
+    @PostMapping("/{etudiantEmail}/offre/{offreId}")
+    public ResponseEntity<EtudiantDTO> ajouterOffreDeStage(@PathVariable String etudiantEmail, @PathVariable Long offreId) {
+        Optional<EtudiantDTO> etudiantDTO = etudiantService.ajouterOffreDeStage(etudiantEmail, offreId);
+
+        return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

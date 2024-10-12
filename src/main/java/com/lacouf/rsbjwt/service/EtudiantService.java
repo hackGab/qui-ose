@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.CV;
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.UserApp;
 import com.lacouf.rsbjwt.repository.CVRepository;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
@@ -105,5 +106,24 @@ public class EtudiantService {
                 .filter(offreDeStage -> offreDeStage.getStatus().equals("Validé"))
                 .map(OffreDeStageDTO::new)
                 .toList();
+    }
+
+    public Optional<EtudiantDTO> ajouterOffreDeStage(String etudiantEmail, Long offreId) {
+        Optional<Etudiant> etudiantOpt = Optional.ofNullable(etudiantRepository.findByEmail(etudiantEmail));
+        Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
+
+        if (etudiantOpt.isPresent() && offreOpt.isPresent()) {
+            Etudiant etudiant = etudiantOpt.get();
+            OffreDeStage offre = offreOpt.get();
+
+            etudiant.getOffresAppliquees().add(offre);
+
+            etudiantRepository.save(etudiant);
+            offreDeStageRepository.save(offre);
+
+            return Optional.of(new EtudiantDTO(etudiant));
+        }
+
+        return Optional.empty();
     }
 }

@@ -1,14 +1,17 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.security.JwtTokenProvider;
-import com.lacouf.rsbjwt.service.dto.LoginDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,5 +75,70 @@ class UserAppServiceTest {
 
         // Assert
         assertEquals("Invalid credentials", exception.getMessage());
+    }
+
+    @Test
+    void getEtudiantDTO_ShouldReturnEtudiantDTO_WhenEtudiantExists() {
+        // Arrange
+        Long id = 1L;
+        Etudiant etudiant = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", "Informatique");
+        when(etudiantRepository.findById(id)).thenReturn(Optional.of(etudiant));
+
+        // Act
+        EtudiantDTO result = userAppService.getEtudiantDTO(id);
+
+        // Assert
+        assertEquals("John", result.getFirstName());
+        assertEquals("Doe", result.getLastName());
+        assertEquals("Informatique", result.getDepartement());
+        assertEquals("john.doe@example.com", result.getCredentials().getEmail());
+    }
+
+    @Test
+    void getProfesseurDTO_ShouldReturnProfesseurDTO_WhenProfesseurExists() {
+        // Arrange
+        Long id = 1L;
+        Professeur professeur = new Professeur("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", "Mathématiques");
+        when(professeurRepository.findById(id)).thenReturn(Optional.of(professeur));
+
+        // Act
+        ProfesseurDTO result = userAppService.getProfesseurDTO(id);
+
+        // Assert
+        assertEquals("Jane", result.getFirstName());
+        assertEquals("Smith", result.getLastName());
+        assertEquals("Mathématiques", result.getDepartement());
+        assertEquals("jane.smith@example.com", result.getCredentials().getEmail());
+    }
+
+    @Test
+    void getEmployeurDTO_ShouldReturnEmployeurDTO_WhenEmployeurExists() {
+        // Arrange
+        Long id = 1L;
+        Employeur employeur = new Employeur("Company", "Bob", "contact@company.com", "0123456789", "Company Inc.", "Company Inc.");
+        when(employeurRepository.findById(id)).thenReturn(Optional.of(employeur));
+
+        // Act
+        EmployeurDTO result = userAppService.getEmployeurDTO(id);
+
+        // Assert
+        assertEquals("Company", result.getFirstName());
+        assertEquals("contact@company.com", result.getCredentials().getEmail());
+        assertEquals("Company Inc.", result.getEntreprise());
+    }
+
+    @Test
+    void getGestionnaireDTO_ShouldReturnGestionnaireDTO_WhenGestionnaireExists() {
+        // Arrange
+        Long id = 1L;
+        Gestionnaire gestionnaire = new Gestionnaire("Admin", "bob", "admin@example.com", "0987654321", "1234567");
+        when(gestionnaireRepository.findById(id)).thenReturn(Optional.of(gestionnaire));
+
+        // Act
+        GestionnaireDTO result = userAppService.getGestionnaireDTO(id);
+
+        // Assert
+        assertEquals("Admin", result.getFirstName());
+        assertEquals("admin@example.com", result.getCredentials().getEmail());
     }
 }

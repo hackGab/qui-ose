@@ -43,40 +43,6 @@ public class CVControllerTest {
     @MockBean
     private UserAppService userService;
 
-    /*
-    @Test
-    public void shouldCreateCV() throws Exception {
-        CVDTO cvDTO = new CVDTO("pdf.pdf", "application/pdf", "John", "Attente");
-        cvDTO.setUploadDate(LocalDate.now());
-
-        Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
-                .thenReturn(Optional.of(cvDTO));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/cv/creerCV/{email}", "email@gmail.com")
-                        .content(new ObjectMapper().writeValueAsString(cvDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(Optional.of(cvDTO))));
-    }
-
-    @Test
-    public void shouldntCreateCV() throws Exception {
-        CVDTO cvDTO = new CVDTO("pdf.pdf", "application/pdf", "John", "Attente");
-        cvDTO.setUploadDate(LocalDate.now());
-
-        Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
-                .thenReturn(Optional.empty());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/cv/creerCV/{email}", "email@gmail.com")
-                        .content(new ObjectMapper().writeValueAsString(cvDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
-    }*/
-
     @Test
     public void shouldDeleteCV() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders

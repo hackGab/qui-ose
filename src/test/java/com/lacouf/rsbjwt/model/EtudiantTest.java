@@ -24,6 +24,7 @@ class EtudiantTest {
                 ", role='ROLE_ETUDIANT'" +
                 ", departement='departement'" +
                 ", cv=null" +
+                ", offresAppliquees=null" +
                 '}';
         assertEquals(expected, result);
     }

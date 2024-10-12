@@ -81,21 +81,39 @@ class EtudiantControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(etudiantDTO)));
     }
 
-//    @Test
-//    @WithMockUser(username = "user", roles = {"ETUDIANT"})
-//    public void shouldReturnEmptyWhenExceptionIsThrown() throws Exception {
-//        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
-//        Mockito.when(etudiantService.creerEtudiant(any(EtudiantDTO.class)))
-//                .thenThrow(new RuntimeException("Database error"));
-//
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/etudiant/creerEtudiant")
-//                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-//                        .content(new ObjectMapper().writeValueAsString(etudiantDTO))
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
-//    }
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldAddOffreDeStageSuccessfully() throws Exception {
+        String etudiantEmail = "john.doe@example.com";
+        Long offreId = 1L;
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+
+        when(etudiantService.ajouterOffreDeStage(etudiantEmail, offreId))
+                .thenReturn(Optional.of(etudiantDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/etudiant/" + etudiantEmail + "/offre/" + offreId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(etudiantDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnNotFoundIfEtudiantOrOffreNotFound() throws Exception {
+        String etudiantEmail = "john.doe@example.com";
+        Long offreId = 1L;
+
+        when(etudiantService.ajouterOffreDeStage(etudiantEmail, offreId))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/etudiant/" + etudiantEmail + "/offre/" + offreId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }
 
 

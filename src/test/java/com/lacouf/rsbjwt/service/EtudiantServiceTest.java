@@ -201,4 +201,38 @@ class EtudiantServiceTest {
         // Assert
         verify(cvRepository, times(1)).deleteById(cvId);
     }
+
+    @Test
+    void shouldReturnEmptyIfEtudiantNotFound() {
+        // Arrange
+        String etudiantEmail = "email@gmail.com";
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+        Long offreId = 1L;
+        when(etudiantRepository.findByEmail(etudiantEmail))
+                .thenReturn(null);
+
+        // Act
+        Optional<EtudiantDTO> response = etudiantService.ajouterOffreDeStage(etudiantEmail, offreId);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmptyIfOffreNotFound() {
+        // Arrange
+        String etudiantEmail = "email@gmail.com";
+        Long offreId = 1L;
+        when(etudiantRepository.findByEmail(etudiantEmail))
+                .thenReturn(etudiantEntity);
+        when(offreDeStageRepository.findById(offreId))
+                .thenReturn(Optional.empty());
+
+        // Act
+        Optional<EtudiantDTO> response = etudiantService.ajouterOffreDeStage(etudiantEmail, offreId);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
 }

@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,11 +28,9 @@ public class OffreDeStage {
     private String status;
     private String rejetMessage = "";
 
-
     @ManyToOne
     @JoinColumn(name = "EMPLOYEUR_ID")
     private Employeur employeur;
-
 
     public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status) {
         this.titre = titre;
@@ -41,6 +41,7 @@ public class OffreDeStage {
         this.nbCandidats = nbCandidats;
         this.status = status;
     }
+
     @Override
     public String toString() {
         return "OffreDeStage{" +

@@ -22,3 +22,7 @@
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
 }
+
+.overlay p {
+    font-size: 2rem;
+}

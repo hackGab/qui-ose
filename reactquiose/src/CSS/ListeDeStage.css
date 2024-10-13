@@ -1,0 +1,24 @@
+.internship-card {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    border-radius: 1em;
+}
+
+.internship-image {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0; /* Fills all the space of the parent div */
+    background-color: rgba(0, 0, 0, 0.5);
+    place-content: center;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}

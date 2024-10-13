@@ -102,8 +102,9 @@
   "OffreNonRemise": "Your job offer has not been submitted!",
   "SeeOffer": "See my Offer",
   "TitreDeOffre": "Job Title",
-  "NombreDeCandidats": "Number of Candidates",
-  "DateLimite": "Deadline",
+  "NombreDeCandidats": "Number of Candidates : ",
+  "DateLimite": "Deadline : ",
+  "DateLimiteInfo": "The deadline to apply for this internship.",
   "AjouterOffre": "Add Offer",
   "Anglais": "English",
   "Francais": "French",
@@ -121,5 +122,10 @@
   "Erreur" : "Error",
   "OffresDeStage": "Internship Offers",
   "VoirCandidature": "View Application",
-  "AucuneOffreAfficher": "No offer to display"
+  "VoirStage": "Click on the internship to see the details",
+  "DetailsDuStage": "Internship Details",
+  "AucuneOffreAfficher": "No offer to display",
+  "OuvrirEnPleinEcran": "Open in full screen",
+  "Postuler": "Apply",
+  "DejaPostuler": "Already applied"
 }

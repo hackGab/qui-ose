@@ -1,8 +1,8 @@
 package com.lacouf.rsbjwt.presentation;
 
-import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,5 +67,11 @@ public class EtudiantController {
 
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+
+    @GetMapping("/{etudiantEmail}/offres")
+    public ResponseEntity<Iterable<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
+        return ResponseEntity.ok(etudiantService.getOffresDeStage(etudiantEmail));
     }
 }

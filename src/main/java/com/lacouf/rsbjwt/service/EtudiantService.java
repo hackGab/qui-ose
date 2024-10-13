@@ -126,4 +126,11 @@ public class EtudiantService {
 
         return Optional.empty();
     }
+
+    public Iterable<OffreDeStageDTO> getOffresDeStage(String etudiantEmail) {
+        return etudiantRepository.findByEmail(etudiantEmail)
+                .getOffresAppliquees().stream()
+                .map(OffreDeStageDTO::new)
+                .toList();
+    }
 }

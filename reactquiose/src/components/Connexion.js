@@ -79,16 +79,9 @@ function Connexion() {
             });
     };
 
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
 
     return (
         <div>
-            <div>
-                <button onClick={() => changeLanguage('fr')} className="language-button">FR</button>
-                <button onClick={() => changeLanguage('en')} className="language-button">EN</button>
-            </div>
             <form className='pt-0 m-auto' onSubmit={handleSubmit}>
                 {errorMessages && (
                     <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>

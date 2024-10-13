@@ -16,25 +16,23 @@
 
 
 .App-header-connexion {
-    color: white;
     text-align: center;
     margin: auto;
     padding: 1em;
-    animation: fonduTitre 80s ease-in-out infinite alternate;
 }
 
 .App-header-connexion h1 {
     font-size: 5vmax;
     margin: 0;
     padding: 0;
-    color: white;
+    animation: fonduTitre 80s ease-in-out infinite alternate;
 }
 
 .App-header-connexion p {
     font-size: 2vmax;
     margin: 0;
     padding: 0;
-    color: white;
+    animation: fonduTitre 80s ease-in-out infinite alternate;
 }
 
 
@@ -86,6 +84,7 @@
     border: 0.3em solid black;
     border-radius: 1em;
     overflow-y: auto;
+
 }
 
 .form-compte h2 {

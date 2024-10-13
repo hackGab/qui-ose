@@ -151,9 +151,6 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
 
     const navigateToDashboard = (userData) => {
         const path = `/${
@@ -167,15 +164,13 @@ function Inscription() {
 
     return (
         <div>
-            <div>
-                <button onClick={() => changeLanguage('fr')} className="language-button">FR</button>
-                <button onClick={() => changeLanguage('en')} className="language-button">EN</button>
-            </div>
-        <form className='pt-0' onSubmit={handleSubmit}>
-            <legend>{t('ChampsObligatoires')} </legend>
+            <form className='pt-0' onSubmit={handleSubmit}>
+                <legend>{t('ChampsObligatoires')} </legend>
+
             {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>
                     {errorMessages}
                 </div>}
+
                 <div className='row'>
                     <div className='form-group' style={{display: "inline-flex"}}>
                         <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>

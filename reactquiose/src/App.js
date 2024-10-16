@@ -17,6 +17,11 @@ import ListeDeStage from  "./components/ListeDeStage";
 import MesEntrevues from "./components/MesEntrevues";
 
 function App() {
+    const [nbEntrevuesEnAttente, setNbEntrevuesEnAttente] = React.useState(0);
+    const handleDataFromEntrevue = (dataFromChild) => {
+        setNbEntrevuesEnAttente(dataFromChild)
+    }
+
     return (
         <Router>
             <div className="App-body">
@@ -26,8 +31,8 @@ function App() {
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
 
-                    <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
-                    <Route path="/mesEntrevues" element={<MesEntrevues />} />
+                    <Route path="/accueilEtudiant" element={<AccueilEtudiant nbEntrevuesEnAttente={nbEntrevuesEnAttente} />} />
+                    <Route path="/mesEntrevues" element={<MesEntrevues sendDataToParent={handleDataFromEntrevue} />} />
 
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />

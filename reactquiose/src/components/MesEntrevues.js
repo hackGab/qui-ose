@@ -6,7 +6,7 @@ import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
 
-function MesEntrevues() {
+function MesEntrevues({ sendDataToParent }) {
     const { t } = useTranslation();
     const [entrevues, setEntrevues] = useState([
         {
@@ -74,11 +74,14 @@ function MesEntrevues() {
     // Filtrer les entrevues par status
     const entrevuesAccepter = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'accepter');
     const entrevuesEnAttente = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'en attente');
+    const nbEntrevuesEnAttente = entrevuesEnAttente.length;
+
+    sendDataToParent(nbEntrevuesEnAttente);
 
 
     return (
         <>
-            <EtudiantHeader/>
+            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente}/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-4">
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>

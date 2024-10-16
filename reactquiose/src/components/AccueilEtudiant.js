@@ -5,7 +5,7 @@ import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
 import ListeDeStage from "./ListeDeStage";
 
-function AccueilEtudiant() {
+function AccueilEtudiant({nbEntrevuesEnAttente}) {
     const location = useLocation();
     const userData = location.state?.userData;
     const [showModal, setShowModal] = useState(false);
@@ -189,7 +189,7 @@ function AccueilEtudiant() {
 
     return (
         <>
-            <EtudiantHeader />
+            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente}/>
             <div className="container-fluid p-4">
 
                 <div className="text-center my-4">

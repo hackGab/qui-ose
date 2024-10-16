@@ -6,12 +6,11 @@ import logo from '../images/logo.png';
 import "../CSS/BoutonLangue.css";
 import i18n from "i18next";
 
-function EtudiantHeader() {
+function EtudiantHeader({nbEntrevuesEnAttente}) {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
-    let nbEntrevuesEnAttente = 0;
 
 
 
@@ -50,7 +49,7 @@ function EtudiantHeader() {
                         to="/mesEntrevues"
                         onClick={() => handleLinkClick('/mesEntrevues')}
                     >
-                        {t('mesEntrevues')} ({nbEntrevuesEnAttente})
+                        {t('mesEntrevues')} ({nbEntrevuesEnAttente || 0})
                     </Link>
                 </div>
 

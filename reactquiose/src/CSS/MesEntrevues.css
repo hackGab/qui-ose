@@ -1,0 +1,12 @@
+.entrevuesTitreBox {
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.entrevueBox {
+    border: black 0.15em solid;
+    border-radius: 1em;
+    height: 50vh;
+    overflow-y: auto;
+}

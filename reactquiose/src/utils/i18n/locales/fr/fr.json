@@ -40,9 +40,11 @@
   "Dashboard": "Tableau de Bord",
 
   "studentListTitle": "Liste des Étudiants",
-  "employerListSubtitle": "Voici la liste des employeurs inscrits à notre programme de stages.",
   "studentListSubtitle": "Voici la liste des étudiants inscrits à notre programme de stages.",
   "employerListTitle": "Liste des Employeurs",
+  "employerListSubtitle": "Voici la liste des employeurs inscrits à notre programme de stages.",
+  "entrevueListTitle": "Liste des Entrevues",
+  "entrevueListSubtitle": "Voici la liste de vos entrevues acceptées et en attente d'une réponse.",
   "studentDetailsTitle": "Détails de l'Étudiant",
 
   "validated": "validé",
@@ -98,7 +100,10 @@
   "fileDate": "Date du fichier : ",
   "close": "Fermer",
   "submit": "Soumettre",
+
+  "accueil": "Accueil",
   "accueilEmployeur": "Accueil Employeur",
+  "mesEntrevues": "Mes Entrevues",
   "SoumettreOffreEmploi": "Soumettre une offre d'emploi",
   "soumettreUneNouvelleOffre": "Cliquez ici pour soumettre une nouvelle offre d'emploi",
   "VisualiserLesOffresEmploi" : "Visualiser les offres d'emploi",
@@ -136,5 +141,7 @@
   "AucuneOffreAfficher" : "Aucune offre de stage à afficher",
   "OuvrirEnPleinEcran" : "Ouvrir en plein écran",
   "Postuler" : "Postuler",
-  "DejaPostuler" : "Déjà postulé"
+  "DejaPostuler" : "Déjà postulé",
+  "à" : "à",
+  "pour" : "pour"
 }

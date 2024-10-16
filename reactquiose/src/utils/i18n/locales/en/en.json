@@ -36,9 +36,11 @@
   "studentDetailsTitle": "Student Details",
   "RequiredFields": "Required Fields *",
   "studentListTitle": "Student List",
-  "employerListSubtitle": "Here is the list of employers registered in our internship program.",
   "studentListSubtitle": "Here is the list of students registered in our internship program.",
   "employerListTitle": "Employer List",
+  "employerListSubtitle": "Here is the list of employers registered in our internship program.",
+  "entrevueListTitle": "Interview List",
+  "entrevueListSubtitle": "Here is the list of your accepted interviews and those awaiting a response.",
   "validated": "validated",
   "rejected": "rejected",
   "pending": "pending",
@@ -89,7 +91,9 @@
   "fileDate": "File Date",
   "close": "Close",
   "submit": "Submit",
+  "accueil": "Home",
   "accueilEmployeur": "Employer Home",
+  "mesEntrevues": "My Interviews",
   "SoumettreOffreEmploi": "Submit Job Offer",
   "soumettreUneNouvelleOffre": "Click here to Submit a new job offer",
   "VisualiserLesOffresEmploi": "View Job Offers",
@@ -127,5 +131,7 @@
   "AucuneOffreAfficher": "No offer to display",
   "OuvrirEnPleinEcran": "Open in full screen",
   "Postuler": "Apply",
-  "DejaPostuler": "Already applied"
+  "DejaPostuler": "Already applied",
+  "à": "at",
+  "pour": "for"
 }

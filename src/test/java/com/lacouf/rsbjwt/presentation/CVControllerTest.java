@@ -68,7 +68,7 @@ public class CVControllerTest {
     @Test
     public void shouldNotDeleteCV() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/cv/supprimerCV/")
+                        .delete("/cv/supprimerCV/null")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }

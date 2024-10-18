@@ -101,7 +101,7 @@ class EtudiantControllerTest {
 
     @Test
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
-    public void shouldReturnNotFoundIfEtudiantOrOffreNotFound() throws Exception {
+    public void shouldReturnNotFoundIfEtudiantNotFound() throws Exception {
         String etudiantEmail = "john.doe@example.com";
         Long offreId = 1L;
 
@@ -114,7 +114,78 @@ class EtudiantControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnEtudiantByEmail() throws Exception {
+        String email = "email@gmail.com";
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+
+        when(etudiantService.getEtudiantByEmail(email))
+                .thenReturn(Optional.of(etudiantDTO));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldRemoveOffreDeStage() throws Exception {
+        String etudiantEmail = "email@gmail.com";
+        Long offreId = 1L;
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+
+        when(etudiantService.retirerOffreDeStage(etudiantEmail, offreId))
+                .thenReturn(Optional.of(etudiantDTO));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnNotFoundIfEtudiantOrOffreNotFound() throws Exception {
+        String etudiantEmail = "emailnot@gmail.com";
+        Long offreId = 1L;
+
+        when(etudiantService.retirerOffreDeStage(etudiantEmail, offreId))
+                .thenReturn(Optional.empty());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnAllEtudiants() throws Exception {
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", null, null, null, null);
+        when(etudiantService.getAllEtudiants())
+                .thenReturn(java.util.Arrays.asList(etudiantDTO));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnOffresDeStage() throws Exception {
+        String etudiantEmail = "email@gmail.com";
+        when(etudiantService.getOffresDeStage(etudiantEmail))
+                .thenReturn(java.util.Arrays.asList());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnBadRequestIfEmailOrOffreIdIsNull() throws Exception {
+        String email = null;
+        Long offreId = null;
+        when(etudiantService.retirerOffreDeStage(email, offreId))
+                .thenReturn(Optional.empty());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnBadRequestIfEmailIsNull() throws Exception {
+        String email = null;
+        Long offreId = 1L;
+        when(etudiantService.retirerOffreDeStage(email, offreId))
+                .thenReturn(Optional.empty());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnBadRequestIfOffreIdIsNull() throws Exception {
+        String email = "email@gmail.com";
+        Long offreId = null;
+        when(etudiantService.retirerOffreDeStage(email, offreId))
+                .thenReturn(Optional.empty());
+    }
 }
-
-
-

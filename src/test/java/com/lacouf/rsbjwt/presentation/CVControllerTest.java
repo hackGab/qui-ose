@@ -51,4 +51,25 @@ public class CVControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
+    @Test
+    public void shouldCreateCV() throws Exception {
+        CVDTO cvDTO = new CVDTO("cvName", "cvType", "cvData", "cvStatus");
+        Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
+                .thenReturn(Optional.of(cvDTO));
+    }
+
+    @Test
+    public void shouldNotCreateCV() throws Exception {
+        CVDTO cvDTO = new CVDTO("cvName", "cvType", "cvData", "cvStatus");
+        Mockito.when(etudiantService.creerCV(cvDTO, "notemail@gmail.com"))
+                .thenReturn(Optional.empty());
+    }
+
+    @Test
+    public void shouldNotDeleteCV() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/cv/supprimerCV/")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

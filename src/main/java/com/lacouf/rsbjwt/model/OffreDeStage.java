@@ -32,6 +32,9 @@ public class OffreDeStage {
     @JoinColumn(name = "EMPLOYEUR_ID")
     private Employeur employeur;
 
+    @ManyToMany(mappedBy = "offresAppliquees")
+    private List<Etudiant> etudiants = new ArrayList<>();
+
     public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status) {
         this.titre = titre;
         this.localisation = localisation;

@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,13 +110,28 @@ public class OffreDeStageController {
         return ResponseEntity.ok(offreDeStageService.getAllOffresDeStage());
     }
 
- @GetMapping("/offresValidees")
+    @GetMapping("/offresValidees")
     public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees() {
         List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouvees();
 
         System.out.println("offresValidees = " + offresValidees.toString());
 
         return ResponseEntity.ok().body(offresValidees);
+    }
+
+    @GetMapping("/{offreId}/etudiants")
+    public ResponseEntity<Optional<List<EtudiantDTO>>> getEtudiantsByOffre(@PathVariable Long offreId) {
+        if (offreId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<List<EtudiantDTO>> etudiantsOpt = offreDeStageService.getEtudiantsByOffre(offreId);
+
+        if (etudiantsOpt.isPresent()) {
+            return ResponseEntity.ok(etudiantsOpt);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

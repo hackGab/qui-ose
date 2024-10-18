@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.service;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,8 @@ public class EmployeurService {
     public Optional<Employeur> findByCredentials_Email(String email) {
         return employeurRepository.findByCredentials_email(email);
     }
+
+
 
 
 }

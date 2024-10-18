@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,8 +23,9 @@ public class OffreDeStageDTO {
     private String status;
     private String rejetMessage = "";
     private EmployeurDTO employeur;
+    private List<EtudiantDTO> etudiants;
 
-    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status, EmployeurDTO employeur) {
+    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status, EmployeurDTO employeur, List<EtudiantDTO> etudiants) {
         this.id = id;
         this.titre = titre;
         this.localisation = localisation;
@@ -32,6 +35,7 @@ public class OffreDeStageDTO {
         this.nbCandidats = nbCandidats;
         this.status = status;
         this.employeur = employeur;
+        this.etudiants = etudiants;
     }
 
     public OffreDeStageDTO(OffreDeStage offre) {
@@ -45,6 +49,9 @@ public class OffreDeStageDTO {
         this.status = offre.getStatus();
         this.rejetMessage = offre.getRejetMessage();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
+        this.etudiants = offre.getEtudiants().stream()
+                .map(EtudiantDTO::new)  // Conversion de chaque Etudiant en EtudiantDTO
+                .collect(Collectors.toList());
     }
 
     public static OffreDeStageDTO empty() {

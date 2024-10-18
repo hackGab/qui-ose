@@ -3,6 +3,8 @@ package com.lacouf.rsbjwt.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacouf.rsbjwt.model.Employeur;
+import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.service.*;
@@ -250,5 +252,51 @@ public class OffreDeStageControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_getEtudiantsByOffre() throws Exception {
+        Long offreId = 1L;
+
+        EtudiantDTO etudiantDTO1 = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "1234567890", new CredentialDTO("john.doe@example.com", "password"), "Computer Science");
+        EtudiantDTO etudiantDTO2 = new EtudiantDTO("Jane", "Smith", Role.ETUDIANT, "0987654321", new CredentialDTO("jane.smith@example.com", "password"), "Information Technology");
+
+        when(offreDeStageService.getEtudiantsByOffre(offreId))
+                .thenReturn(Optional.of(List.of(etudiantDTO1, etudiantDTO2)));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/" + offreId + "/etudiants")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(List.of(etudiantDTO1, etudiantDTO2))));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_getEtudiantsByOffre_OffreNotFound() throws Exception {
+        Long offreId = 1L;
+
+        when(offreDeStageService.getEtudiantsByOffre(offreId))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/" + offreId + "/etudiants")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void test_getEtudiantsByOffre_InvalidId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/null/etudiants")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 
 }

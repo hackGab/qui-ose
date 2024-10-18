@@ -87,10 +87,8 @@ function ListeDeStage({ internships = [], userData }) {
             const etudiantDTO = await response.json();
             setAppliedInternship([...appliedInternship, offreId])
             console.log('Candidature réussie :', etudiantDTO);
-            alert("Candidature réussie !");
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
-            alert("Échec de la candidature. Veuillez réessayer.");
         }
     };
 

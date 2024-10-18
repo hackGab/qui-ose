@@ -86,7 +86,6 @@ function StagesAppliquees() {
             })
             .catch((error) => {
                 console.error("Erreur lors du retrait de l'application :", error);
-                alert("Une erreur s'est produite lors de la suppression. Veuillez réessayer.");
             });
     };
 

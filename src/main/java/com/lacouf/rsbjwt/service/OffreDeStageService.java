@@ -110,5 +110,7 @@ public class OffreDeStageService {
         return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
     }
 
+
+
 }
 

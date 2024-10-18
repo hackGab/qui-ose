@@ -62,6 +62,35 @@ function StagesAppliquees() {
         }
     }, [user]);
 
+    const retirerApplication = (stage) => {
+        const url = `http://localhost:8081/etudiant/${user.credentials.email}/retirerOffre/${stage.id}`;
+
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la suppression: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Application retirée avec succès :", data);
+                setShowModal(false);
+                setSelectedInternship(null);
+                setStagesWithImages(stagesWithImages.filter((s) => s.id !== stage.id));
+                setStagesAppliquees(stagesAppliquees.filter((s) => s.id !== stage.id));
+            })
+            .catch((error) => {
+                console.error("Erreur lors du retrait de l'application :", error);
+                alert("Une erreur s'est produite lors de la suppression. Veuillez réessayer.");
+            });
+    };
+
+
     const openModal = (stage) => {
         setSelectedInternship(stage);
         setShowModal(true);
@@ -148,6 +177,9 @@ function StagesAppliquees() {
                                         iframeFullscreen.requestFullscreen();
                                     }
                                 }}>{t('OuvrirEnPleinEcran')}</Button>
+                                <Button className="m-2 bg-danger" onClick={() => retirerApplication(selectedInternship)}>
+                                    Retirer application
+                                </Button>
                             </>
                         ) : (
                             <p>{t('AucuneOffreAfficher')}</p>

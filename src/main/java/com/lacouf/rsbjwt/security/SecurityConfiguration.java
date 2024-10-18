@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/cv/creerCV/**").permitAll()
                         .requestMatchers(DELETE, "/cv/supprimerCV/**").permitAll()
+                        .requestMatchers(PUT, "/etudiant/{email}/retirerOffre/{offreId}").permitAll()
                         .requestMatchers("/etudiant/**").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(GET, "/etudiant/all").permitAll()

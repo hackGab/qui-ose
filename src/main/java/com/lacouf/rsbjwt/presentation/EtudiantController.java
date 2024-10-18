@@ -74,4 +74,18 @@ public class EtudiantController {
     public ResponseEntity<Iterable<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
         return ResponseEntity.ok(etudiantService.getOffresDeStage(etudiantEmail));
     }
+
+    @PutMapping("/{email}/retirerOffre/{offreId}")
+    public ResponseEntity<EtudiantDTO> retirerOffreDeStage(@PathVariable String email, @PathVariable Long offreId) {
+        if (email == null || offreId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        System.out.println(email + " " + offreId);
+
+        Optional<EtudiantDTO> etudiantDTO = etudiantService.retirerOffreDeStage(email, offreId);
+
+        return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

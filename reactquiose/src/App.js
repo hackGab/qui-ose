@@ -14,6 +14,7 @@ import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/ListeEmployeurs";
 import DetailsEmployeurs from "./components/DetailsEmployeur";
 import ListeDeStage from  "./components/ListeDeStage";
+import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 
 function App() {
     return (
@@ -24,7 +25,7 @@ function App() {
 
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
-
+                    <Route path="/stagesAppliquees" element={<StagesAppliqueesPage />} />
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />

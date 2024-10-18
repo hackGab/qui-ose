@@ -235,4 +235,20 @@ class EtudiantServiceTest {
         assertTrue(response.isEmpty());
     }
 
+    @Test
+    void shouldReturnAllEtudiants() {
+        // Arrange
+        List<Etudiant> etudiants = new ArrayList<>();
+        etudiants.add(etudiantEntity);
+        when(etudiantRepository.findAll()).thenReturn(etudiants);
+
+        // Act
+        Iterable<EtudiantDTO> response = etudiantService.getAllEtudiants();
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(1, ((List<EtudiantDTO>) response).size());
+        assertEquals(etudiantEntity.getFirstName(), ((List<EtudiantDTO>) response).get(0).getFirstName());
+    }
+
 }

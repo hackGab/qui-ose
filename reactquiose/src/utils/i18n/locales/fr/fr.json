@@ -136,5 +136,6 @@
   "AucuneOffreAfficher" : "Aucune offre de stage à afficher",
   "OuvrirEnPleinEcran" : "Ouvrir en plein écran",
   "Postuler" : "Postuler",
-  "DejaPostuler" : "Déjà postulé"
+  "DejaPostuler" : "Déjà postulé",
+  "VoirLaListeDesCandidats": "Voir la liste des candidats"
 }

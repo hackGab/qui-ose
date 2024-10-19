@@ -120,18 +120,19 @@ public class OffreDeStageController {
     }
 
     @GetMapping("/{offreId}/etudiants")
-    public ResponseEntity<Optional<List<EtudiantDTO>>> getEtudiantsByOffre(@PathVariable Long offreId) {
+    public ResponseEntity<List<EtudiantDTO>> getEtudiantsByOffre(@PathVariable Long offreId) {
         if (offreId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<List<EtudiantDTO>> etudiantsOpt = offreDeStageService.getEtudiantsByOffre(offreId);
+        List<EtudiantDTO> etudiants = offreDeStageService.getEtudiantsByOffre(offreId).orElseGet(() -> List.of());
 
-        if (etudiantsOpt.isPresent()) {
-            return ResponseEntity.ok(etudiantsOpt);
+        if (etudiants.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(etudiants);
         }
     }
+
 }
 

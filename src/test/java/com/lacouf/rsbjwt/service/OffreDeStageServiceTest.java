@@ -46,7 +46,7 @@ public class OffreDeStageServiceTest {
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeurDTO = new EmployeurDTO("John", "Doe", "email@gmail.com", Role.EMPLOYEUR, credentials, "Entreprise");
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
-        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5,"", newEmployeurDTO, new ArrayList<>());
+        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5,"");
         offreDeStageEntity = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5, "status");
     }
 
@@ -184,7 +184,7 @@ public class OffreDeStageServiceTest {
     @Test
     void updateOffreDeStage() {
         // Arrange
-        OffreDeStageDTO updatedOffreDTO = new OffreDeStageDTO(1L, "Stage en développement", "Paris", LocalDate.now().plusDays(30), LocalDate.now().plusDays(60), "Description du stage", 10, "Ouvert", newEmployeurDTO, new ArrayList<>());
+        OffreDeStageDTO updatedOffreDTO = new OffreDeStageDTO(1L, "Stage en développement", "Paris", LocalDate.now().plusDays(30), LocalDate.now().plusDays(60), "Description du stage", 10, "Ouvert");
 
         OffreDeStage updatedOffre = new OffreDeStage();
         updatedOffre.setId(1L);

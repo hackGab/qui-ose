@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../CSS/VisualiserOffres.css";
+import { useTranslation } from "react-i18next";
 
 function EtudiantPostulants() {
     const { offreId } = useParams();
     const [etudiants, setEtudiants] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null)
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!offreId) {
@@ -54,7 +56,7 @@ function EtudiantPostulants() {
 
     return (
         <div>
-            <h5>Étudiants postulants :</h5>
+            <h5>{t('Etudiantspostulants')} :</h5>
             <div className="row">
                 {etudiants.map((etudiant) => (
                     <div key={etudiant.id} className="col-12 col-lg mb-4">
@@ -62,10 +64,10 @@ function EtudiantPostulants() {
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className="card-title">{etudiant.firstName} {etudiant.lastName}</h5>
-                                    <p className="card-text"><strong>Email:</strong> {etudiant.email}</p>
-                                    <p className="card-text"><strong>Numéro de téléphone:</strong> {etudiant.phoneNumber}
+                                    <p className="card-text"><strong>{t('emailDetail')} :</strong> {etudiant.email}</p>
+                                    <p className="card-text"><strong>{t('telephoneDetail')} :</strong> {etudiant.phoneNumber}
                                     </p>
-                                    <p className="card-text"><strong>Programme:</strong> {etudiant.departement}</p>
+                                    <p className="card-text"><strong>{t('departmentDetail')} :</strong> {etudiant.departement}</p>
 
                                 </div>
                             </div>

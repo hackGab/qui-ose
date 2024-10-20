@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "../CSS/VisualiserOffres.css";
 import { useTranslation } from "react-i18next";
+import EmployeurHeader from "./EmployeurHeader";
 
 function EtudiantPostulants() {
     const { offreId } = useParams();
@@ -56,24 +56,25 @@ function EtudiantPostulants() {
 
     return (
         <div>
-            <h5>{t('Etudiantspostulants')} :</h5>
-            <div className="row">
-                {etudiants.map((etudiant) => (
-                    <div key={etudiant.id} className="col-12 col-lg mb-4">
-                        <div className="card-container">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h5 className="card-title">{etudiant.firstName} {etudiant.lastName}</h5>
-                                    <p className="card-text"><strong>{t('emailDetail')} :</strong> {etudiant.email}</p>
-                                    <p className="card-text"><strong>{t('telephoneDetail')} :</strong> {etudiant.phoneNumber}
-                                    </p>
-                                    <p className="card-text"><strong>{t('departmentDetail')} :</strong> {etudiant.departement}</p>
-
+            <EmployeurHeader />
+            <div className="container mt-5">
+                <h5>{t('Etudiantspostulants')} :</h5>
+                <div className="row">
+                    {etudiants.map((etudiant) => (
+                        <div key={etudiant.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div className="card-container">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5 className="card-title">{etudiant.firstName} {etudiant.lastName}</h5>
+                                        <p className="card-text"><strong>{t('emailDetail')} :</strong> {etudiant.email}</p>
+                                        <p className="card-text"><strong>{t('telephoneDetail')} :</strong> {etudiant.phoneNumber}</p>
+                                        <p className="card-text"><strong>{t('departmentDetail')} :</strong> {etudiant.departement}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );

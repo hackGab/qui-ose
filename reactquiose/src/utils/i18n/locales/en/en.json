@@ -80,6 +80,7 @@
   "PlaceHolderMdp": "Password",
   "PlaceHolderConfMdp": "Confirm Password",
   "viewMyCV": "View My CV",
+  "viewCV": "View CV",
   "noInternships": "No internships",
   "uploadCV": "Upload CV",
   "manipulateCV": "Manipulate Curriculum Vitae",
@@ -127,5 +128,8 @@
   "AucuneOffreAfficher": "No offer to display",
   "OuvrirEnPleinEcran": "Open in full screen",
   "Postuler": "Apply",
-  "DejaPostuler": "Already applied"
+  "DejaPostuler": "Already applied",
+  "VoirLaListeDesCandidats": "View the list of candidates",
+  "Etudiantspostulants": "Applicants",
+  "stagesAppliquées": "Applied Internships"
 }

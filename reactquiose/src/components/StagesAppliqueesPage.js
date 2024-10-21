@@ -119,7 +119,7 @@ function StagesAppliquees() {
 
             <div className="container-fluid p-4">
                 <div className="m-auto text-center my-4">
-                    <h3>{t('Stages Appliquées')}</h3>
+                    <h3>{t('stagesAppliquées')}</h3>
                     <small className="text-muted" style={{ fontSize: "1rem" }}><i>*{t('VoirStage')}</i></small>
                 </div>
 

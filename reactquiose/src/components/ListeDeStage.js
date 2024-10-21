@@ -8,6 +8,7 @@ import "../CSS/ListeDeStage.css";
 
 function ListeDeStage({ internships = [], userData }) {
     const { t } = useTranslation();
+    const email = userData.credentials.email;
     const [showModal, setShowModal] = useState(false);
     const [selectedInternship, setSelectedInternship] = useState(null);
     const [appliedInternship, setAppliedInternship] = useState([]);
@@ -74,8 +75,8 @@ function ListeDeStage({ internships = [], userData }) {
     const postulerAuStage = async (offreId) => {
         try {
             console.log('Postuler au stage :', offreId);
-            console.log('Etudiant :', userData.credentials.email);
-            const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offre/${offreId}`, {
+            console.log('Etudiant :', email);
+            const response = await fetch(`http://localhost:8081/etudiant/${email}/offre/${offreId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +96,7 @@ function ListeDeStage({ internships = [], userData }) {
     useEffect(() => {
         const fetchAppliedInternships = async () => {
             try {
-                const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
+                const response = await fetch(`http://localhost:8081/etudiant/${email}/offres`);
                 if (!response.ok) {
                     throw new Error(`Erreur lors de la récupération des offres : ${response.status}`);
                 }
@@ -107,7 +108,7 @@ function ListeDeStage({ internships = [], userData }) {
         };
 
         fetchAppliedInternships();
-    }, [userData.credentials.email]);
+    }, [email]);
 
     const afficherIframesOffre = () => (
         <>

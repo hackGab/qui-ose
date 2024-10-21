@@ -14,6 +14,7 @@ import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/ListeEmployeurs";
 import DetailsEmployeurs from "./components/DetailsEmployeur";
 import ListeDeStage from  "./components/ListeDeStage";
+import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />
                     <Route path="/soumettre-offre" element={<SoumettreOffre />} />
                     <Route path="visualiser-offres" element={<VisualiserOffres />} />
+                    <Route path="/offre/:offreId/etudiants" element={<EtudiantPostulants />} />
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:email' element={<DetailsEtudiants />} />

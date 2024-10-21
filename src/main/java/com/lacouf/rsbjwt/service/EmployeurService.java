@@ -74,7 +74,6 @@ public class EmployeurService {
             return Optional.empty();
         }
     }
-
     public Optional<EntrevueDTO> getEntrevueById(Long id) {
         return entrevueRepository.findById(id)
                 .map(EntrevueDTO::new);

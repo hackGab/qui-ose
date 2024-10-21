@@ -89,6 +89,7 @@
   "PlaceHolderMdp": "Entrez votre mot de passe",
   "PlaceHolderConfMdp": "Confirmez votre mot de passe",
   "viewMyCV": "Voir mon CV",
+  "viewCV": "Voir le CV",
   "noInternships": "Aucun stage n'a été trouvé",
   "uploadCV": "Télécharger CV",
   "manipulateCV": "Manipuler Curriculum Vitae",
@@ -136,5 +137,8 @@
   "AucuneOffreAfficher" : "Aucune offre de stage à afficher",
   "OuvrirEnPleinEcran" : "Ouvrir en plein écran",
   "Postuler" : "Postuler",
-  "DejaPostuler" : "Déjà postulé"
+  "DejaPostuler" : "Déjà postulé",
+  "VoirLaListeDesCandidats": "Voir la liste des candidats",
+  "Etudiantspostulants": "Étudiants postulants",
+  "stagesAppliquées": "Stages appliquées"
 }

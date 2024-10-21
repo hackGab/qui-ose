@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
 
@@ -92,5 +93,24 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new)
                 .toList();
     }
+
+    public Optional<List<EtudiantDTO>> getEtudiantsByOffre(Long offreId) {
+
+        Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
+        if (offreOpt.isEmpty()) {
+            throw new IllegalArgumentException("Offre de stage introuvable");
+        }
+
+
+        List<EtudiantDTO> etudiants = offreOpt.get().getEtudiants().stream()
+                .map(EtudiantDTO::new)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
+    }
+
+
+
 }
 

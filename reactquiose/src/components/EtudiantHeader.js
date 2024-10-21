@@ -61,10 +61,10 @@ function EtudiantHeader() {
                     </Link>
                 </div>
 
-                {file && file.status === "validé" && (
+                {file && file.status === "validé" && location.pathname !== "/stagesAppliquees" && (
                     <div className="nav-text-center">
                         <a onClick={() => navigate('/stagesAppliquees', { state: { userData } })}>
-                            <span>Stages Appliquées ({stagesAppliquees.length})</span>
+                            <span>{t('stagesAppliquées')} ({stagesAppliquees.length})</span>
                         </a>
                     </div>
                 )}

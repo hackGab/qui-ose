@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
+import {Button} from "react-bootstrap";
 
 function EtudiantPostulants() {
     const { offreId } = useParams();
@@ -54,6 +55,17 @@ function EtudiantPostulants() {
         return <div>Aucun étudiant n'a postulé à cette offre.</div>;
     }
 
+    const openFile = (data) => {
+        if (data) {
+            const pdfWindow = window.open();
+            pdfWindow.document.write(
+                `<iframe src="${data}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
+            );
+        } else {
+            alert("Aucun fichier à afficher !");
+        }
+    };
+
     return (
         <div>
             <EmployeurHeader />
@@ -69,6 +81,7 @@ function EtudiantPostulants() {
                                         <p className="card-text"><strong>{t('emailDetail')} :</strong> {etudiant.email}</p>
                                         <p className="card-text"><strong>{t('telephoneDetail')} :</strong> {etudiant.phoneNumber}</p>
                                         <p className="card-text"><strong>{t('departmentDetail')} :</strong> {etudiant.departement}</p>
+                                        <Button variant="primary" onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
                                     </div>
                                 </div>
                             </div>

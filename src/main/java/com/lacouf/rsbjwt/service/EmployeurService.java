@@ -3,9 +3,8 @@ package com.lacouf.rsbjwt.service;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Entrevue;
 import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.repository.EmployeurRepository;
-import com.lacouf.rsbjwt.repository.EntrevueRepository;
-import com.lacouf.rsbjwt.repository.UserAppRepository;
+import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
@@ -14,20 +13,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeurService {
 
     private final EmployeurRepository employeurRepository;
     private final EntrevueRepository entrevueRepository;
+    private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
+    private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
         this.entrevueRepository = entrevueRepository;
+        this.offreDeStageRepository = offreDeStageRepository;
+        this.etudiantRepository = etudiantRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
@@ -58,22 +62,39 @@ public class EmployeurService {
         return employeurRepository.findByCredentials_email(email);
     }
 
-    public Optional<EntrevueDTO> createEntrevue(EntrevueDTO entrevueDTO, String email) {
+    public Optional<EntrevueDTO> createEntrevue(EntrevueDTO entrevueDTO, String email, Long offreId) {
         try {
+            // Fetch the student by email
             Etudiant etudiant = userAppRepository.findUserAppByEmail(email)
                     .map(userApp -> (Etudiant) userApp)
-                    .get();
+                    .orElseThrow(() -> new Exception("Etudiant non trouvé"));
+
+            // Fetch the stage offer by ID
+            OffreDeStage offreDeStage = offreDeStageRepository.findById(offreId)
+                    .orElseThrow(() -> new Exception("Offre de stage non trouvée"));
+
+            // Check if the student already has an interview for the specific offer
+            boolean hasInterview = entrevueRepository.existsByEtudiantAndOffreDeStage(etudiant, offreDeStage);
+            if (hasInterview) {
+                throw new Exception("L'étudiant a déjà une entrevue programmée pour cette offre.");
+            }
+
+            // Create and save the interview
             Entrevue entrevue = new Entrevue(
                     entrevueDTO.getDateHeure(),
                     entrevueDTO.getLocation(),
-                    etudiant
+                    etudiant,
+                    offreDeStage
             );
             Entrevue savedEntrevue = entrevueRepository.save(entrevue);
             return Optional.of(new EntrevueDTO(savedEntrevue));
         } catch (Exception e) {
+            // Log the exception for debugging
+            System.err.println("Error creating interview: " + e.getMessage());
             return Optional.empty();
         }
     }
+
     public Optional<EntrevueDTO> getEntrevueById(Long id) {
         return entrevueRepository.findById(id)
                 .map(EntrevueDTO::new);
@@ -81,6 +102,12 @@ public class EmployeurService {
 
     public List<EntrevueDTO> getAllEntrevues() {
         return entrevueRepository.findAll().stream()
+                .map(EntrevueDTO::new)
+                .toList();
+    }
+
+    public List<EntrevueDTO> getEntrevuesByOffre(Long offreId) {
+        return entrevueRepository.findByOffreDeStageId(offreId).stream()
                 .map(EntrevueDTO::new)
                 .toList();
     }

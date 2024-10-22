@@ -1,9 +1,12 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +19,21 @@ public class EntrevueController {
 
     private final EmployeurService employeurService;
     private final EtudiantService etudiantService;
+    private final UserAppRepository userAppRepository;
 
-    public EntrevueController(EmployeurService employeurService, EtudiantService etudiantService) {
+    public EntrevueController(EmployeurService employeurService, EtudiantService etudiantService,UserAppRepository userAppRepository) {
         this.employeurService = employeurService;
         this.etudiantService = etudiantService;
+        this.userAppRepository = userAppRepository;
     }
 
-    @PostMapping("/creerEntrevue/{email}")
-    public ResponseEntity<EntrevueDTO> createEntrevue(@RequestBody EntrevueDTO entrevueDTO, @PathVariable String email) {
-        Optional<EntrevueDTO> createdEntrevue = employeurService.createEntrevue(entrevueDTO, email);
+    @PostMapping("/creerEntrevue/{email}/{offreId}")
+    public ResponseEntity<EntrevueDTO> createEntrevue(@RequestBody EntrevueDTO entrevueDTO, @PathVariable String email, @PathVariable Long offreId) {
+        Optional<EntrevueDTO> createdEntrevue = employeurService.createEntrevue(entrevueDTO, email, offreId);
         return createdEntrevue.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<EntrevueDTO> getEntrevueById(@PathVariable Long id) {
@@ -39,5 +45,11 @@ public class EntrevueController {
     @GetMapping("/allEntrevue")
     public List<EntrevueDTO> getAllEntrevues() {
         return employeurService.getAllEntrevues();
+    }
+
+    @GetMapping("/offre/{offreId}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesByOffre(@PathVariable Long offreId) {
+        List<EntrevueDTO> entrevues = employeurService.getEntrevuesByOffre(offreId);
+        return ResponseEntity.ok(entrevues);
     }
 }

@@ -131,5 +131,13 @@
   "DejaPostuler": "Already applied",
   "VoirLaListeDesCandidats": "View the list of candidates",
   "Etudiantspostulants": "Applicants",
-  "stagesAppliquées": "Applied Internships"
+  "stagesAppliquées": "Applied Internships",
+  "accepte": "accepted",
+  "entretienDejaCree": "Interview already created",
+  "rejeter" : "Reject",
+  "creerEntrevue": "Create Interview",
+  "dateEtHeure": "Date and Time",
+  "annuler": "Cancel",
+  "rejeterEtudiant": "Reject Student",
+  "confirmationRejet": "Are you sure you want to reject this student?"
 }

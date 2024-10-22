@@ -15,66 +15,45 @@ function MesEntrevues({ sendDataToParent}) {
         {
             id: 1,
             titre: 'Entrevue 1',
-            offre: 'Développeur web',
-            entreprise: 'Google',
-            date: '2021-11-15',
-            heureDebut: '13:00',
-            heureFin: '14:00',
-            duree: 60,
+            offreDeStage: 'Développeur web',
+            dateHeure: '2021-11-15 10:00:00',
             status: 'accepter',
-            localisation: 'Sur place'
+            location: 'Sur place'
         },
         {
             id: 2,
             titre: 'Entrevue 2',
-            offre: 'Programmeur analyste Web',
-            entreprise: 'Microsoft',
-            date: '2021-11-16',
-            heureDebut: '14:00',
-            heureFin: "14:30",
-            duree: 30,
+            offreDeStage: 'Programmeur analyste Web',
+            dateHeure: '2021-11-16 10:00:00',
             status: 'en attente',
-            localisation: 'Sur Zoom'
+            location: 'Sur Zoom'
         },
         {
             id: 3,
             titre: 'Entrevue 3',
-            offre: 'Développeur web',
-            entreprise: 'Apple',
-            date: '2021-11-17',
-            heureDebut: '15:00',
-            heureFin: '16:00',
-            duree: 60,
+            offreDeStage: 'Développeur web',
+            dateHeure: '2021-11-17 10:00:00',
             status: 'rejeter',
-            localisation: 'Sur place'
+            location: 'Sur place'
         },
         {
             id: 4,
             titre: 'Entrevue 4',
-            offre: 'Programmeur analyste Web',
-            entreprise: 'Amazon',
-            date: '2021-11-18',
-            heureDebut: '16:00',
-            heureFin: '16:15',
-            duree: 15,
+            offreDeStage: 'Programmeur analyste Web',
+            dateHeure: '2021-11-18 10:00:00',
             status: 'accepter',
-            localisation: 'Sur Zoom'
+            location: 'Sur Zoom'
         },
         {
             id: 5,
             titre: 'Entrevue 5',
-            offre: 'Développeur web',
-            entreprise: 'Facebook',
-            date: '2021-11-19',
-            heureDebut: '17:00',
-            heureFin: '17:30',
-            duree: 30,
+            offreDeStage: 'Développeur web',
+            dateHeure: '2021-11-19 10:00:00',
             status: 'accepter',
-            localisation: 'Sur place'
+            location: 'Sur place'
         },
     ]);
 
-    const navigate = useNavigate();  // Hook pour naviguer
     const entrevuesAccepter = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'accepter');
     const entrevuesEnAttente = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'en attente');
     const nbEntrevuesEnAttente = entrevuesEnAttente.length;

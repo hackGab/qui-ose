@@ -27,10 +27,15 @@ public class Entrevue {
     @JoinColumn(name = "etudiant_id", nullable = false)
     private Etudiant etudiant;
 
-    public Entrevue(LocalDateTime dateHeure, String location, Etudiant etudiant) {
+    @ManyToOne
+    @JoinColumn(name = "offre_de_stage_id", nullable = false)
+    private OffreDeStage offreDeStage;
+
+    public Entrevue(LocalDateTime dateHeure, String location, Etudiant etudiant, OffreDeStage offreDeStage) {
         this.dateHeure = dateHeure;
         this.location = location;
         this.etudiant = etudiant;
+        this.offreDeStage = offreDeStage;
     }
 
     @Override
@@ -39,7 +44,8 @@ public class Entrevue {
                 "id=" + id +
                 ", dateHeure=" + dateHeure +
                 ", location='" + location + '\'' +
-                ", etudiant=" + etudiant.getFirstName() + " " + etudiant.getLastName() +
+                ", etudiant=" + etudiant.getEmail() +
+                ", offreDeStage=" + offreDeStage.getTitre() +
                 '}';
     }
 }

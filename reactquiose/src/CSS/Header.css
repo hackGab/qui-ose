@@ -1,12 +1,10 @@
 .gestionnaire-header {
     background-color: #e0f7fa;
-    /*position: fixed;*/
     position: relative;
     top: 0;
     left: 0;
     width: 100%;
-    height: 10vh;
-    min-height: min-content;
+    height: min-content;
     z-index: 1000;
     padding: 10px 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -100,7 +98,7 @@
 }
 
 .notification-icon {
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #0288d1;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -118,6 +116,11 @@
     cursor: pointer;
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1rem;
+}
+
+.language-button{
+    text-decoration: none;
 }
 
 .profile-button:hover {

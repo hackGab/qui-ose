@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/GestionnaireHeader.css';
+import '../CSS/Header.css'
 import logo from '../images/logo.png';
 import "../CSS/BoutonLangue.css";
 import i18n from "i18next";

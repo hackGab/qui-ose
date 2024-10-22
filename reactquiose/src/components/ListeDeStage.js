@@ -15,6 +15,7 @@ function ListeDeStage({ internships = [], userData }) {
 
     // Permet de récupérer les images des stages depuis l'API Unsplash
     useEffect(() => {
+        // console.log(userData)
         const fetchImages = async () => {
             const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
             const updatedInternships = await Promise.all(internships.map(async internship => {
@@ -73,8 +74,8 @@ function ListeDeStage({ internships = [], userData }) {
 
     const postulerAuStage = async (offreId) => {
         try {
-            console.log('Postuler au stage :', offreId);
-            console.log('Etudiant :', userData.credentials.email);
+            // console.log('Postuler au stage :', offreId);
+            // console.log('Etudiant :', userData.credentials.email);
             const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offre/${offreId}`, {
                 method: 'POST',
                 headers: {
@@ -96,20 +97,27 @@ function ListeDeStage({ internships = [], userData }) {
 
     useEffect(() => {
         const fetchAppliedInternships = async () => {
-            try {
-                const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
-                if (!response.ok) {
-                    throw new Error(`Erreur lors de la récupération des offres : ${response.status}`);
+            console.log('userData :', userData);
+            // Vérifier que userData et credentials sont définis avant de les utiliser
+            if (userData && userData.credentials && userData.credentials.email) {
+                console.log('Récupération des offres postulées par l’étudiant :', userData.credentials.email);
+                try {
+                    const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la récupération des offres : ${response.status}`);
+                    }
+                    const internships = await response.json();
+                    setAppliedInternship(internships.map(internship => internship.id));
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des offres :', error);
                 }
-                const internships = await response.json();
-                setAppliedInternship(internships.map(internship => internship.id));
-            } catch (error) {
-                console.error('Erreur lors de la récupération des offres :', error);
+            } else {
+                console.error('Les données utilisateur ne sont pas disponibles ou incorrectes.');
             }
         };
 
         fetchAppliedInternships();
-    }, [userData.credentials.email]);
+    }, [userData]);
 
     const afficherIframesOffre = () => (
         <>

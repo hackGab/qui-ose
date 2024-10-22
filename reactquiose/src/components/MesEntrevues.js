@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
 
-function MesEntrevues({ sendDataToParent }) {
+function MesEntrevues({ sendDataToParent}) {
     const { t } = useTranslation();
+    const location = useLocation();
+    const [userData, setUserData] = useState(location.state?.userData || null);
+
     const [entrevues, setEntrevues] = useState([
         {
             id: 1,
@@ -71,39 +74,38 @@ function MesEntrevues({ sendDataToParent }) {
         },
     ]);
 
-    // Filtrer les entrevues par status
+    const navigate = useNavigate();  // Hook pour naviguer
     const entrevuesAccepter = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'accepter');
     const entrevuesEnAttente = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'en attente');
     const nbEntrevuesEnAttente = entrevuesEnAttente.length;
 
-    sendDataToParent(nbEntrevuesEnAttente);
-
+    useEffect(() => {
+        sendDataToParent(nbEntrevuesEnAttente);
+    }, [nbEntrevuesEnAttente, sendDataToParent]);
 
     return (
         <>
-            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente}/>
+            {/* Passer nbEntrevuesEnAttente et userData */}
+            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente} userData={userData} />
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-4">
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>
                     <p className="text-center mb-4"  style={{ fontSize: "2em" }}>{t('entrevueListSubtitle')}</p>
                     <div className="row p-2 text-center w-100 m-auto">
 
-                        {/* Entrevues accepter */}
+                        {/* Entrevues acceptées */}
                         <div className="col-5 m-auto">
                             <h2 className="entrevuesTitreBox">Acceptées</h2>
-
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesAccepter.map((entrevue) => <AffichageEntrevue entrevue={entrevue} t={t} />)}
+                                {entrevuesAccepter.map((entrevue) => <AffichageEntrevue key={entrevue.id} entrevue={entrevue} t={t} />)}
                             </div>
                         </div>
-
 
                         {/* Entrevues en attente */}
                         <div className="col-5 m-auto mt-0">
                             <h2 className="entrevuesTitreBox">En attente</h2>
-
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesEnAttente.map((entrevue) => <AffichageEntrevue entrevue={entrevue} t={t} />)}
+                                {entrevuesEnAttente.map((entrevue) => <AffichageEntrevue key={entrevue.id} entrevue={entrevue} t={t} />)}
                             </div>
                         </div>
                     </div>

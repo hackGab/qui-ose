@@ -83,6 +83,7 @@ public class EmployeurService {
             Entrevue entrevue = new Entrevue(
                     entrevueDTO.getDateHeure(),
                     entrevueDTO.getLocation(),
+                    entrevueDTO.getStatus(),
                     etudiant,
                     offreDeStage
             );

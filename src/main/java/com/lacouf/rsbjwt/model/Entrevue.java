@@ -23,6 +23,9 @@ public class Entrevue {
     @Column(nullable = false)
     private String location;
 
+    @Column(nullable = false)
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "etudiant_id", nullable = false)
     private Etudiant etudiant;
@@ -31,9 +34,10 @@ public class Entrevue {
     @JoinColumn(name = "offre_de_stage_id", nullable = false)
     private OffreDeStage offreDeStage;
 
-    public Entrevue(LocalDateTime dateHeure, String location, Etudiant etudiant, OffreDeStage offreDeStage) {
+    public Entrevue(LocalDateTime dateHeure, String location, String status, Etudiant etudiant, OffreDeStage offreDeStage) {
         this.dateHeure = dateHeure;
         this.location = location;
+        this.status = status;
         this.etudiant = etudiant;
         this.offreDeStage = offreDeStage;
     }
@@ -44,6 +48,7 @@ public class Entrevue {
                 "id=" + id +
                 ", dateHeure=" + dateHeure +
                 ", location='" + location + '\'' +
+                ", status='" + status + '\'' +
                 ", etudiant=" + etudiant.getEmail() +
                 ", offreDeStage=" + offreDeStage.getTitre() +
                 '}';

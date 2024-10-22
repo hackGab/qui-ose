@@ -12,17 +12,20 @@ import java.time.LocalDateTime;
 public class EntrevueDTO {
     private LocalDateTime dateHeure;
     private String location;
+    private String status;
     private EtudiantDTO etudiantDTO;
 
-    public EntrevueDTO(LocalDateTime dateHeure, String location, EtudiantDTO etudiantDTO){
+    public EntrevueDTO(LocalDateTime dateHeure, String location, String status, EtudiantDTO etudiantDTO){
         this.dateHeure = dateHeure;
         this.location = location;
+        this.status = status;
         this.etudiantDTO = etudiantDTO;
     }
 
     public EntrevueDTO(Entrevue entrevue){
         this.dateHeure = entrevue.getDateHeure();
         this.location = entrevue.getLocation();
+        this.status = entrevue.getStatus();
         this.etudiantDTO = new EtudiantDTO(entrevue.getEtudiant());
     }
 

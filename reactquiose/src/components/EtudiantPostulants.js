@@ -118,6 +118,7 @@ function EtudiantPostulants() {
     const handleCreateEntrevue = async () => {
         const entrevueDTO = {
             ...entrevueData,
+            status: "En attente",
             etudiantDTO: selectedEtudiant
         };
 
@@ -196,9 +197,15 @@ function EtudiantPostulants() {
                                                         ? t('entretienDejaCree')
                                                         : t('creerEntrevue')}
                                             </Button>
-                                            <Button variant="danger" onClick={() => handleShowRejectModal(etudiant)}>
-                                                {t('rejeter')}
-                                            </Button>
+                                            { acceptedEtudiants.includes(etudiant.email) ?
+                                                null:
+                                                etudiantsAvecEntrevue.has(etudiant.id) ?
+                                                    null: (
+                                                <Button variant="danger" onClick={() => handleShowRejectModal(etudiant)}>
+                                                    {t('rejeter')}
+                                                </Button>
+                                                    )
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -248,10 +255,10 @@ function EtudiantPostulants() {
 
             <Modal show={showRejectModal} onHide={handleCloseRejectModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{t('confirmerRejet')}</Modal.Title>
+                    <Modal.Title>{t('rejeterEtudiant')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>{t('etesVousSurDeRejeter', { studentName: selectedEtudiant?.firstName })}?</p>
+                    <p>{t('confirmationRejet', { studentName: selectedEtudiant?.firstName })}?</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseRejectModal}>

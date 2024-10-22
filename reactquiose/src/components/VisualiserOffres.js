@@ -137,9 +137,11 @@ function VisualiserOffres() {
                                                 <strong>{t('localisation')}</strong> {offre.localisation} <br/>
                                                 <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
                                                 <br/>
-                                                <Link to={`/offre/${offre.id}/etudiants`}>
-                                                    {t('VoirLaListeDesCandidats')}
-                                                </Link>
+                                                {offre.status === "Validé" && (
+                                                    <Link to={`/offre/${offre.id}/etudiants`}>
+                                                        {t('VoirLaListeDesCandidats')}
+                                                    </Link>
+                                                )}
                                             </p>
                                             <p className="info-stage">
                                                 {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}

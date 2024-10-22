@@ -135,10 +135,10 @@ function VisualiserOffres() {
                                             <h5 className="card-title">{offre.titre}</h5>
                                             <p className="card-text">
                                                 <strong>{t('localisation')}</strong> {offre.localisation} <br/>
-                                                <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
+                                                <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
                                                 <br/>
                                                 <Link to={`/offre/${offre.id}/etudiants`}>
-                                                    {t('VoirLaListeDesCandidats')}
+                                                    {t('VoirLaListeDesCandidats')} ({offre.nbCandidats}) {/* TODO ici mettre le nombre de candidats qui ont postulé*/}
                                                 </Link>
                                             </p>
                                             <p className="info-stage">

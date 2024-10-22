@@ -3,13 +3,16 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
 import {Button} from "react-bootstrap";
+import {FaEnvelope, FaPhone} from "react-icons/fa";
 
 function EtudiantPostulants() {
     const { offreId } = useParams();
+    const [offre, setOffre] = useState(null);
     const [etudiants, setEtudiants] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null)
     const { t } = useTranslation();
+
 
     useEffect(() => {
         if (!offreId) {
@@ -26,7 +29,7 @@ function EtudiantPostulants() {
                     if (response.status === 404) {
                         setEtudiants([]); // Aucun étudiant trouvé
                     } else {
-                        throw new Error("Erreur dans la réponse du serveur");
+                        throw new Error("dans la réponse du serveur");
                     }
                     return;
                 }
@@ -40,7 +43,23 @@ function EtudiantPostulants() {
             }
         };
 
+        const fetchOffre = async () => {
+            try {
+                const response = await fetch(`http://localhost:8081/offreDeStage/${offreId}`);
+
+                if (!response.ok) {
+                    throw new Error("dans la réponse du serveur");
+                }
+
+                const data = await response.json();
+                setOffre(data);
+            } catch (error) {
+                setError(error.message);
+            }
+        }
+
         fetchEtudiants();
+        fetchOffre();
     }, [offreId]);
 
     if (isLoading) {
@@ -67,29 +86,35 @@ function EtudiantPostulants() {
     };
 
     return (
-        <div>
+        <>
             <EmployeurHeader />
-            <div className="container mt-5">
-                <h5>{t('Etudiantspostulants')} :</h5>
-                <div className="row">
-                    {etudiants.map((etudiant) => (
-                        <div key={etudiant.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                            <div className="card-container">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">{etudiant.firstName} {etudiant.lastName}</h5>
-                                        <p className="card-text"><strong>{t('emailDetail')} :</strong> {etudiant.email}</p>
-                                        <p className="card-text"><strong>{t('telephoneDetail')} :</strong> {etudiant.phoneNumber}</p>
-                                        <p className="card-text"><strong>{t('departmentDetail')} :</strong> {etudiant.departement}</p>
-                                        <Button variant="primary" onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
+            <div className="container-fluid p-4">
+                <div className="container flex-grow-1 pt-5 mt-5 text-center">
+                    <h3>{t('EtudiantsPostulants')} {t('AuPosteDe')} <u>{offre.titre}</u> :</h3>
+                    <div className="row mt-4">
+                        {etudiants.map((etudiant) => (
+                            <div key={etudiant.id} className="col-10 col-sm-6 col-md-4 col-lg-3 mb-4 m-auto text-center">
+                                <div className="card-container">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-capitalize">{etudiant.firstName} {etudiant.lastName}</h5>
+                                            <p className="card-text text-truncate">
+                                                <span><FaEnvelope /> <a href={`mailto:${etudiant.email}`}>{etudiant.email}</a></span>
+                                                <br />
+                                                <FaPhone /> {etudiant.phoneNumber}
+                                                <br />
+                                                {t('departmentDetail')} {etudiant.departement}
+                                            </p>
+                                            <Button variant="primary" onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

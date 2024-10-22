@@ -103,7 +103,7 @@
   "OffreNonRemise": "Your job offer has not been submitted!",
   "SeeOffer": "See my Offer",
   "TitreDeOffre": "Job Title",
-  "NombreDeCandidats": "Number of Candidates : ",
+  "NombreDeCandidatsMax": "Max number of candidates : ",
   "DateLimite": "Deadline : ",
   "DateLimiteInfo": "The deadline to apply for this internship.",
   "AjouterOffre": "Add Offer",
@@ -130,6 +130,7 @@
   "Postuler": "Apply",
   "DejaPostuler": "Already applied",
   "VoirLaListeDesCandidats": "View the list of candidates",
-  "Etudiantspostulants": "Applicants",
-  "stagesAppliquées": "Applied Internships"
+  "EtudiantsPostulants": "Applicants",
+  "stagesAppliquées": "Applied Internships",
+  "AuPosteDe": "for the position of"
 }

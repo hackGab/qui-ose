@@ -107,4 +107,10 @@ public class EmployeurService {
                 .map(EntrevueDTO::new)
                 .toList();
     }
+
+    public List<EntrevueDTO> getEntrevuesAccepteesByOffre(Long offreId) {
+        return entrevueRepository.findByOffreDeStageIdAndStatus(offreId, "accepter").stream()
+                .map(EntrevueDTO::new)
+                .toList();
+    }
 }

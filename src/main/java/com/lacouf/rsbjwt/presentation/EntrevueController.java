@@ -71,4 +71,11 @@ public class EntrevueController {
         return updatedEntrevue.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
+
+    @GetMapping("/entrevueAcceptee/offre/{offreId}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesAccepteesByOffre(@PathVariable Long offreId) {
+        List<EntrevueDTO> entrevues = employeurService.getEntrevuesAccepteesByOffre(offreId);
+        System.out.println("entrevues = " + entrevues);
+        return ResponseEntity.ok(entrevues);
+    }
 }

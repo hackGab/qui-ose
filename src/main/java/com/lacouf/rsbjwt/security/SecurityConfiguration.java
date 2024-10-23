@@ -73,6 +73,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/entrevues/offre/{offreId}").permitAll()
                         .requestMatchers(GET, "/entrevues/etudiant/{email}").permitAll()
                         .requestMatchers(GET, "/entrevues/enAttente/etudiant/{email}").permitAll()
+                        .requestMatchers(GET, "/entrevues/entrevueAcceptee/offre/{offreId}").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .requestMatchers("/professeur/**").hasAuthority("PROFESSEUR")
                         .requestMatchers("/etudiant/**").hasAuthority("ETUDIANT")

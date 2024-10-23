@@ -82,7 +82,7 @@ function MesEntrevues() {
                     <p className="text-center mb-4" style={{ fontSize: "2em" }}>{t('entrevueListSubtitle')}</p>
                     <div className="row p-2 text-center w-100 m-auto">
                         <div className="col-md-5 m-auto">
-                            <h2 className="entrevuesTitreBox">Acceptées</h2>
+                            <h2 className="entrevuesTitreBox">{t('Acceptees')}</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
                                 {entrevuesAccepter.length > 0 ? (
                                     entrevuesAccepter.map((entrevue) => (
@@ -93,13 +93,13 @@ function MesEntrevues() {
                                         />
                                     ))
                                 ) : (
-                                    <p>Aucune entrevue acceptée</p>
+                                    <p>{t('AucuneEntrevueAcceptee')}</p>
                                 )}
                             </div>
                         </div>
 
                         <div className="col-md-5 m-auto mt-0">
-                            <h2 className="entrevuesTitreBox">En attente</h2>
+                            <h2 className="entrevuesTitreBox">{t('EnAttente')}</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
                                 {entrevuesEnAttente.length > 0 ? (
                                     entrevuesEnAttente.map((entrevue) => (
@@ -112,7 +112,7 @@ function MesEntrevues() {
                                         />
                                     ))
                                 ) : (
-                                    <p>Aucune entrevue en attente</p>
+                                    <p>{t('AucuneEntrevueEnAttente')}</p>
                                 )}
                             </div>
                         </div>

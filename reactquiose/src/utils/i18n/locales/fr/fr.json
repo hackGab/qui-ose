@@ -152,5 +152,11 @@
   "à" : "à",
   "pour" : "pour",
   "chargementEtudiants": "Chargement des étudiants ...",
-  "AucuneEtudiantAPostuler": "Aucun étudiant n'a postulé pour ce stage"
+  "AucuneEtudiantAPostuler": "Aucun étudiant n'a postulé pour ce stage",
+  "VisualiserLesEntrevueAccepte": "Visualiser les entrevues acceptées",
+  "VisualiserLesEntrevueAccepteClick": "Cliquez ici pour visualiser les entrevues acceptées",
+  "Acceptees": "Acceptées",
+  "AucuneEntrevueAcceptee": "Aucune entrevue acceptée",
+  "EnAttente": "En attente",
+  "AucuneEntrevueEnAttente": "Aucune entrevue en attente"
 }

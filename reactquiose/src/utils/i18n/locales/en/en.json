@@ -149,5 +149,11 @@
   "à": "at",
   "pour": "for",
   "chargementEtudiants": "Loading Students ...",
-  "AucuneEtudiantAPostuler": "No student has applied for this internship"
+  "AucuneEtudiantAPostuler": "No student has applied for this internship",
+  "VisualiserLesEntrevueAccepte": "View Accepted Interviews",
+  "VisualiserLesEntrevueAccepteClick": "Click here to view accepted interviews",
+  "Acceptees": "Accepted",
+  "AucuneEntrevueAcceptee": "No accepted interviews",
+  "EnAttente": "Pending",
+  "AucuneEntrevueEnAttente": "No pending interviews"
 }

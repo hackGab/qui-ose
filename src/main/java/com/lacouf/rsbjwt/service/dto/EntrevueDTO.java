@@ -31,6 +31,7 @@ public class EntrevueDTO {
         this.offreDeStageDTO = new OffreDeStageDTO(entrevue.getOffreDeStage());
     }
 
+
     public EntrevueDTO() {}
 
     public static EntrevueDTO empty() {return new EntrevueDTO();}

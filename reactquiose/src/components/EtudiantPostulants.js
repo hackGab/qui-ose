@@ -37,13 +37,14 @@ function EtudiantPostulants() {
                     fetch(`http://localhost:8081/entrevues/offre/${offreId}`)
                 ]);
 
+                console.log(entrevueResponse);
+
                 if (!etudiantsResponse.ok) {
                     throw new Error("Erreur dans la réponse du serveur");
                 }
 
                 const etudiantsData = await etudiantsResponse.json();
                 setEtudiants(etudiantsData);
-                console.log(etudiantsData);
 
                 if (entrevueResponse.ok) {
                     const entrevueData = await entrevueResponse.json();
@@ -94,7 +95,9 @@ function EtudiantPostulants() {
             });
 
             if (response.ok) {
-                setEtudiants((prev) => prev.filter((e) => e.id !== selectedEtudiant.id));
+                setEtudiants((prevEtudiants) =>
+                    prevEtudiants.filter((etudiant) => etudiant.id !== selectedEtudiant.id)
+                );
                 handleCloseRejectModal();
             } else {
                 const errorData = await response.json();
@@ -104,6 +107,7 @@ function EtudiantPostulants() {
             alert("Erreur réseau lors du rejet de l'étudiant");
         }
     };
+
 
     const handleShowRejectModal = (etudiant) => {
         setSelectedEtudiant(etudiant);

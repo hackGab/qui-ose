@@ -14,6 +14,7 @@ public class EntrevueDTO {
     private String location;
     private String status;
     private EtudiantDTO etudiantDTO;
+    private OffreDeStageDTO offreDeStageDTO;
 
     public EntrevueDTO(LocalDateTime dateHeure, String location, String status, EtudiantDTO etudiantDTO){
         this.dateHeure = dateHeure;
@@ -27,6 +28,7 @@ public class EntrevueDTO {
         this.location = entrevue.getLocation();
         this.status = entrevue.getStatus();
         this.etudiantDTO = new EtudiantDTO(entrevue.getEtudiant());
+        this.offreDeStageDTO = new OffreDeStageDTO(entrevue.getOffreDeStage());
     }
 
     public EntrevueDTO() {}

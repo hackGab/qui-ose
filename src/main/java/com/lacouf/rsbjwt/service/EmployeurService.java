@@ -64,22 +64,18 @@ public class EmployeurService {
 
     public Optional<EntrevueDTO> createEntrevue(EntrevueDTO entrevueDTO, String email, Long offreId) {
         try {
-            // Fetch the student by email
             Etudiant etudiant = userAppRepository.findUserAppByEmail(email)
                     .map(userApp -> (Etudiant) userApp)
                     .orElseThrow(() -> new Exception("Etudiant non trouvé"));
 
-            // Fetch the stage offer by ID
             OffreDeStage offreDeStage = offreDeStageRepository.findById(offreId)
                     .orElseThrow(() -> new Exception("Offre de stage non trouvée"));
 
-            // Check if the student already has an interview for the specific offer
             boolean hasInterview = entrevueRepository.existsByEtudiantAndOffreDeStage(etudiant, offreDeStage);
             if (hasInterview) {
                 throw new Exception("L'étudiant a déjà une entrevue programmée pour cette offre.");
             }
 
-            // Create and save the interview
             Entrevue entrevue = new Entrevue(
                     entrevueDTO.getDateHeure(),
                     entrevueDTO.getLocation(),
@@ -90,7 +86,6 @@ public class EmployeurService {
             Entrevue savedEntrevue = entrevueRepository.save(entrevue);
             return Optional.of(new EntrevueDTO(savedEntrevue));
         } catch (Exception e) {
-            // Log the exception for debugging
             System.err.println("Error creating interview: " + e.getMessage());
             return Optional.empty();
         }

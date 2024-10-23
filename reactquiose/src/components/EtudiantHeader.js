@@ -6,7 +6,7 @@
     import "../CSS/BoutonLangue.css";
     import i18n from "i18next";
 
-    function EtudiantHeader({ nbEntrevuesEnAttente, userData }) {
+    function EtudiantHeader({ userData }) {
         const { t } = useTranslation();
         const [profileMenuOpen, setProfileMenuOpen] = useState(false);
         const navigate = useNavigate();
@@ -14,6 +14,7 @@
         const [file, setFile] = useState(null);
         const [stagesAppliquees, setStagesAppliquees] = useState([]);
         const [activeLink, setActiveLink] = useState(location.pathname);
+        const [nbEntrevuesEnAttente, setNbEntrevuesEnAttente] = useState(0);
         const handleClickLogo = () => {
             if (userData) {
                 navigate("/accueilEtudiant", { state: { userData: userData } });
@@ -61,6 +62,26 @@
                     });
             }
         },[userData]);
+
+        useEffect(() => {
+            fetch(`http://localhost:8081/entrevues/enAttente/etudiant/${userData.credentials.email}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la récupération des entrevues');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Réponse du serveur ddddddddddd:', data);
+                    setNbEntrevuesEnAttente(data.length);
+                })
+                .catch(err => {
+                    console.error('Erreur:', err);
+                });
+
+        }, [userData]);
+
+
 
         return (
             <header className="gestionnaire-header">

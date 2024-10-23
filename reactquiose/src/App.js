@@ -32,9 +32,9 @@ function App() {
 
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
-                    <Route path="/accueilEtudiant" element={<AccueilEtudiant nbEntrevuesEnAttente={nbEntrevuesEnAttente} />} />
-                    <Route path="/mesEntrevues" element={<MesEntrevues sendDataToParent={handleDataFromEntrevue} />} />
-		            <Route path="/stagesAppliquees" element={<StagesAppliqueesPage nbEntrevuesEnAttente={nbEntrevuesEnAttente} />} />
+                    <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
+                    <Route path="/mesEntrevues" element={<MesEntrevues />} />
+		            <Route path="/stagesAppliquees" element={<StagesAppliqueesPage/>} />
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />

@@ -42,6 +42,18 @@ public class EntrevueController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/etudiant/{email}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesByEtudiant(@PathVariable String email) {
+        List<EntrevueDTO> entrevues = etudiantService.getEntrevuesByEtudiant(email);
+        return ResponseEntity.ok(entrevues);
+    }
+
+    @GetMapping("/enAttente/etudiant/{email}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesEnAttenteByEtudiant(@PathVariable String email) {
+        List<EntrevueDTO> entrevues = etudiantService.getEntrevuesEnAttenteByEtudiant(email);
+        return ResponseEntity.ok(entrevues);
+    }
+
     @GetMapping("/allEntrevue")
     public List<EntrevueDTO> getAllEntrevues() {
         return employeurService.getAllEntrevues();

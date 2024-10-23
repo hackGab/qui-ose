@@ -11,5 +11,7 @@ import java.util.List;
 public interface EntrevueRepository extends JpaRepository<Entrevue, Long> {
     boolean existsByEtudiantAndOffreDeStage(Etudiant etudiant, OffreDeStage offreDeStage);
     List<Entrevue> findByOffreDeStageId(Long offreDeStageId);
+
+    List<Entrevue> findAllByEtudiantId(Long etudiantId);
 }
 

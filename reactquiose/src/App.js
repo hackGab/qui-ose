@@ -17,6 +17,7 @@ import ListeDeStage from  "./components/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
+import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 
 function App() {
     const [nbEntrevuesEnAttente, setNbEntrevuesEnAttente] = React.useState(0);
@@ -47,7 +48,8 @@ function App() {
                     <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
-		            <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
+                    <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
+                    <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>
             </div>

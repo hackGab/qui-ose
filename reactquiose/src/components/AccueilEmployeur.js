@@ -22,6 +22,12 @@ function AccueilEmployeur() {
         }
     };
 
+    const handleClickEntrevue = () => {
+        if (userData?.credentials?.email) {
+            navigate("/visualiser-entrevue-accepter", { state: { employeurEmail: userData.credentials.email } });
+        }
+    };
+
     return (
         <>
             <EmployeurHeader />
@@ -43,6 +49,13 @@ function AccueilEmployeur() {
                                 <div className="card-body">
                                     <h5 className="card-title">{t('VisualiserLesOffresEmploi')}</h5>
                                     <p className="card-text">{t('visualiserLesOffresEmploiSoumise')}</p>
+                                </div>
+                            </div>
+
+                            <div className="card mb-3 text-center clickable-card" onClick={handleClickEntrevue}>
+                                <div className="card-body">
+                                    <h5 className="card-title">{t('VisualiserLesEntrevueAccepte')}</h5>
+                                    <p className="card-text">{t('VisualiserLesEntrevueAccepteClick')}</p>
                                 </div>
                             </div>
                         </div>

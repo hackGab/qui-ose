@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 import "../CSS/ListeDeStage.css";
 import EtudiantHeader from "./EtudiantHeader";
 
-function StagesAppliquees({nbEntrevuesEnAttente}) {
+function StagesAppliquees() {
     const location = useLocation();
     const user = location.state?.userData;
     const { t } = useTranslation();
@@ -115,7 +115,7 @@ function StagesAppliquees({nbEntrevuesEnAttente}) {
 
     return (
         <>
-            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente} userData={user}/>
+            <EtudiantHeader userData={user}/>
             <div className="container-fluid p-4">
                 <div className="m-auto text-center my-4">
                     <h3>{t('stagesAppliquées')}</h3>

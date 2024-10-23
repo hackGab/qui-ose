@@ -5,8 +5,8 @@ import '../CSS/MesEntrevues.css';
 
 function AffichageEntrevue({ entrevue, t }) {
     // Extraire les détails de l'entrevue
-    const { id, titre, offreDeStage, status, location, dateHeure } = entrevue;
-
+    const { id, titre, offreDeStageDTO, status, location, dateHeure } = entrevue;
+    console.log('Entrevue:', entrevue);
     // Formatter la date et l'heure
     const date = new Date(dateHeure);
     const formattedDate = date.toLocaleDateString(); // Formater selon la locale
@@ -19,10 +19,10 @@ function AffichageEntrevue({ entrevue, t }) {
                     <div className="card-body text-start">
                         <div className="card-title">
                             <div className="d-flex justify-content-between">
-                                <h6 className="m-0">{titre}</h6>
+                                <h6 className="m-0">{offreDeStageDTO.employeur.entreprise}</h6>
                                 <FaCalendarAlt />
                             </div>
-                            <h4>{offreDeStage}</h4>
+                            <h4>{offreDeStageDTO.titre}</h4>
                         </div>
                         <div className="card-text">
                             <FaLocationPinLock /> &nbsp;

@@ -37,8 +37,6 @@ function EtudiantPostulants() {
                     fetch(`http://localhost:8081/entrevues/offre/${offreId}`)
                 ]);
 
-                console.log(entrevueResponse);
-
                 if (!etudiantsResponse.ok) {
                     throw new Error("Erreur dans la réponse du serveur");
                 }
@@ -48,7 +46,7 @@ function EtudiantPostulants() {
 
                 if (entrevueResponse.ok) {
                     const entrevueData = await entrevueResponse.json();
-                    const etudiantsAvecEntrevueSet = new Set(entrevueData.map(entrevue => entrevue.etudiant_id));
+                    const etudiantsAvecEntrevueSet = new Set(entrevueData.map(entrevue => entrevue.etudiantDTO.credentials.email));
                     setEtudiantsAvecEntrevue(etudiantsAvecEntrevueSet);
                 }
 
@@ -85,6 +83,8 @@ function EtudiantPostulants() {
         if (!selectedEtudiant) return;
 
         const email = selectedEtudiant.credentials?.email || '';
+        console.log("Selected student email:", email);
+        console.log("Current students:", etudiants);
 
         try {
             const response = await fetch(`http://localhost:8081/etudiant/${email}/retirerOffre/${offreId}`, {
@@ -95,9 +95,11 @@ function EtudiantPostulants() {
             });
 
             if (response.ok) {
-                setEtudiants((prevEtudiants) =>
-                    prevEtudiants.filter((etudiant) => etudiant.id !== selectedEtudiant.id)
-                );
+                setEtudiants((prevEtudiants) => {
+                    const updatedStudents = prevEtudiants.filter((etudiant) => etudiant.credentials.email !== email);
+                    console.log("Updated students after filter:", updatedStudents);
+                    return updatedStudents;
+                });
                 handleCloseRejectModal();
             } else {
                 const errorData = await response.json();
@@ -107,6 +109,7 @@ function EtudiantPostulants() {
             alert("Erreur réseau lors du rejet de l'étudiant");
         }
     };
+
 
 
     const handleShowRejectModal = (etudiant) => {
@@ -194,16 +197,16 @@ function EtudiantPostulants() {
                                             <Button
                                                 variant="success"
                                                 onClick={() => handleShowModal(etudiant)}
-                                                disabled={acceptedEtudiants.includes(etudiant.email) || etudiantsAvecEntrevue.has(etudiant.id)}>
+                                                disabled={acceptedEtudiants.includes(etudiant.email) || etudiantsAvecEntrevue.has(etudiant.credentials.email)}>
                                                 {acceptedEtudiants.includes(etudiant.email)
                                                     ? t('accepte')
-                                                    : etudiantsAvecEntrevue.has(etudiant.id)
+                                                    : etudiantsAvecEntrevue.has(etudiant.credentials.email)
                                                         ? t('entretienDejaCree')
                                                         : t('creerEntrevue')}
                                             </Button>
                                             { acceptedEtudiants.includes(etudiant.email) ?
                                                 null:
-                                                etudiantsAvecEntrevue.has(etudiant.id) ?
+                                                etudiantsAvecEntrevue.has(etudiant.email) ?
                                                     null: (
                                                 <Button variant="danger" onClick={() => handleShowRejectModal(etudiant)}>
                                                     {t('rejeter')}

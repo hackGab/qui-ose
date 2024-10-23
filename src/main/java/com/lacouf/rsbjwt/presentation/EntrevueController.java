@@ -111,7 +111,7 @@ public class EntrevueController {
         List<EntrevueDTO> entrevues = employeurService.getEntrevuesAccepteesParEmployeur(email);
 
         if (entrevues.isEmpty()) {
-            return ResponseEntity.noContent().build();  // Renvoie 204 si aucune entrevue acceptée trouvée
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(entrevues);

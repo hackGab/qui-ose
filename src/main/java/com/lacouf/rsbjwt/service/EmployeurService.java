@@ -139,19 +139,15 @@ public class EmployeurService {
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
 
-            // On récupère toutes les offres associées à cet employeur
             List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeur(employeur);
 
-            // On filtre les entrevues associées à ces offres, avec le statut "Accepter"
             List<Entrevue> entrevuesAcceptees = offresDeStage.stream()
                     .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "Accepter").stream())
                     .toList();
 
-            // Conversion en DTO
             return entrevuesAcceptees.stream().map(EntrevueDTO::new).toList();
         }
 
-        // Retourner une liste vide si l'employeur n'est pas trouvé
         return Collections.emptyList();
     }
 

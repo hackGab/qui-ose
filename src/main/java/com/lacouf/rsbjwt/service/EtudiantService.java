@@ -1,9 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CV;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.model.UserApp;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
@@ -169,5 +166,20 @@ public class EtudiantService {
                 .filter(entrevue -> entrevue.getStatus().equals("En attente"))
                 .map(EntrevueDTO::new)
                 .toList();
+    }
+
+    public Optional<EntrevueDTO> changerStatusEntrevue(String emailEtudiant, Long idOffreDeStage, String status) {
+        Etudiant etudiant = etudiantRepository.findByEmail(emailEtudiant);
+        Long etudiantId = etudiant.getId();
+        Optional<Entrevue> entrevueOpt = entrevueRepository.findByEtudiantIdAndOffreDeStageId(etudiantId, idOffreDeStage);
+
+        if (entrevueOpt.isPresent()) {
+            Entrevue entrevue = entrevueOpt.get();
+            entrevue.setStatus(status);
+            entrevueRepository.save(entrevue);
+            return Optional.of(new EntrevueDTO(entrevue));
+        }
+
+        return Optional.empty();
     }
 }

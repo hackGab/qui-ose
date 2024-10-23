@@ -64,4 +64,11 @@ public class EntrevueController {
         List<EntrevueDTO> entrevues = employeurService.getEntrevuesByOffre(offreId);
         return ResponseEntity.ok(entrevues);
     }
+
+    @PutMapping("/changerStatus/{emailEtudiant}/{idOffreDeStage}")
+    public ResponseEntity<EntrevueDTO> changerStatusEntrevue(@PathVariable String emailEtudiant, @PathVariable Long idOffreDeStage, @RequestBody String status) {
+        Optional<EntrevueDTO> updatedEntrevue = etudiantService.changerStatusEntrevue(emailEtudiant, idOffreDeStage, status);
+        return updatedEntrevue.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
 }

@@ -6,7 +6,6 @@ import '../CSS/MesEntrevues.css';
 
 function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const [showModal, setShowModal] = useState(false);
-    const [statutEntrevue, setStatutEntrevue] = useState(entrevue.status);
 
     const emailEtudiant = entrevue.etudiantDTO.email;
     const idOffreDeStage = entrevue.offreDeStageDTO.id;
@@ -18,12 +17,11 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: "accepter",
+                body: ("accepter"), // Assurez-vous d'utiliser JSON.stringify
             });
 
             if (response.ok) {
                 console.log('Entrevue acceptée:', entrevue);
-                setStatutEntrevue('accepter');
                 if (onAccept) onAccept(entrevue);
             } else {
                 console.error('Erreur lors de l\'acceptation de l\'entrevue');
@@ -41,12 +39,11 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: "refuser",
+                body: ("refuser"), // Assurez-vous d'utiliser JSON.stringify
             });
 
             if (response.ok) {
                 console.log('Entrevue refusée:', entrevue);
-                setStatutEntrevue('refuser');
                 if (onReject) onReject(entrevue);
             } else {
                 console.error('Erreur lors du refus de l\'entrevue');
@@ -60,7 +57,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-    const { id, offreDeStageDTO, location, dateHeure } = entrevue;
+    const { id, offreDeStageDTO, location, dateHeure, status } = entrevue;
 
     const date = new Date(dateHeure);
     const formattedDate = date.toLocaleDateString();
@@ -68,8 +65,8 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
 
     return (
         <div className="col-12" key={id}>
-            <div className={`d-inline-flex card offre-card shadow w-100 ${statutEntrevue ? statutEntrevue.toLowerCase() : 'sans-cv'}`}>
-                {statutEntrevue !== 'accepter' ? (
+            <div className={`d-inline-flex card offre-card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                {status !== 'accepter' ? (
                     <div onClick={handleShow} className="text-decoration-none">
                         <div className="card-body text-start">
                             <div className="card-title">

@@ -14,6 +14,8 @@ import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/ListeEmployeurs";
 import DetailsEmployeurs from "./components/DetailsEmployeur";
 import ListeDeStage from  "./components/ListeDeStage";
+import EtudiantPostulants from "./components/EtudiantPostulants";
+import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 
 function App() {
@@ -30,15 +32,15 @@ function App() {
 
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
-
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant nbEntrevuesEnAttente={nbEntrevuesEnAttente} />} />
                     <Route path="/mesEntrevues" element={<MesEntrevues sendDataToParent={handleDataFromEntrevue} />} />
-
+		            <Route path="/stagesAppliquees" element={<StagesAppliqueesPage nbEntrevuesEnAttente={nbEntrevuesEnAttente} />} />
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />
                     <Route path="/soumettre-offre" element={<SoumettreOffre />} />
                     <Route path="visualiser-offres" element={<VisualiserOffres />} />
+                    <Route path="/offre/:offreId/etudiants" element={<EtudiantPostulants />} />
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:email' element={<DetailsEtudiants />} />

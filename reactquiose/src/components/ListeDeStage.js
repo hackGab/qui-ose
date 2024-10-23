@@ -13,9 +13,7 @@ function ListeDeStage({ internships = [], userData }) {
     const [appliedInternship, setAppliedInternship] = useState([]);
     const [internshipsWithImages, setInternshipsWithImages] = useState([]);
 
-    // Permet de récupérer les images des stages depuis l'API Unsplash
     useEffect(() => {
-        // console.log(userData)
         const fetchImages = async () => {
             const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
             const updatedInternships = await Promise.all(internships.map(async internship => {
@@ -87,8 +85,6 @@ function ListeDeStage({ internships = [], userData }) {
             }
             const etudiantDTO = await response.json();
             setAppliedInternship([...appliedInternship, offreId])
-            console.log('Candidature réussie :', etudiantDTO);
-            alert("Candidature réussie !");
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
             alert("Échec de la candidature. Veuillez réessayer.");

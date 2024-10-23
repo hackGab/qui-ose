@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Employeur;
+import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
@@ -8,6 +9,7 @@ import com.lacouf.rsbjwt.repository.EmployeurRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,9 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +46,7 @@ public class OffreDeStageServiceTest {
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeurDTO = new EmployeurDTO("John", "Doe", "email@gmail.com", Role.EMPLOYEUR, credentials, "Entreprise");
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
-        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5,"", newEmployeurDTO);
+        newOffreDTO = new OffreDeStageDTO(1L,"Internship", "Paris", LocalDate.now(), LocalDate.now(), "data", 5,"");
         offreDeStageEntity = new OffreDeStage("Internship", "Paris", LocalDate.now(), "data", 5, "status");
     }
 
@@ -184,7 +184,7 @@ public class OffreDeStageServiceTest {
     @Test
     void updateOffreDeStage() {
         // Arrange
-        OffreDeStageDTO updatedOffreDTO = new OffreDeStageDTO(1L, "Stage en développement", "Paris", LocalDate.now().plusDays(30), LocalDate.now().plusDays(60), "Description du stage", 10, "Ouvert", newEmployeurDTO);
+        OffreDeStageDTO updatedOffreDTO = new OffreDeStageDTO(1L, "Stage en développement", "Paris", LocalDate.now().plusDays(30), LocalDate.now().plusDays(60), "Description du stage", 10, "Ouvert");
 
         OffreDeStage updatedOffre = new OffreDeStage();
         updatedOffre.setId(1L);
@@ -210,5 +210,48 @@ public class OffreDeStageServiceTest {
         assertEquals(updatedOffreDTO.getData(), response.get().getData());
         assertEquals(updatedOffreDTO.getNbCandidats(), response.get().getNbCandidats());
         assertEquals(updatedOffreDTO.getStatus(), response.get().getStatus());
+    }
+
+    @Test
+    public void test_getEtudiantsByOffre() {
+        // Arrange
+        Long offreId = 1L;
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setId(offreId);
+
+        Etudiant etudiant1 = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", "Computer Science");
+        Etudiant etudiant2 = new Etudiant("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", "Information Technology");
+
+        offreDeStage.setEtudiants(List.of(etudiant1, etudiant2));
+
+        when(offreDeStageRepository.findById(offreId)).thenReturn(Optional.of(offreDeStage));
+
+        // Act
+        Optional<List<EtudiantDTO>> response = offreDeStageService.getEtudiantsByOffre(offreId);
+
+        // Assert
+        assertTrue(response.isPresent());
+        List<EtudiantDTO> etudiants = response.get();
+        assertEquals(2, etudiants.size());
+
+        EtudiantDTO etudiantDTO1 = etudiants.get(0);
+        assertEquals(etudiant1.getFirstName(), etudiantDTO1.getFirstName());
+        assertEquals(etudiant1.getLastName(), etudiantDTO1.getLastName());
+        assertEquals(etudiant1.getEmail(), etudiantDTO1.getEmail());
+
+        EtudiantDTO etudiantDTO2 = etudiants.get(1);
+        assertEquals(etudiant2.getFirstName(), etudiantDTO2.getFirstName());
+        assertEquals(etudiant2.getLastName(), etudiantDTO2.getLastName());
+        assertEquals(etudiant2.getEmail(), etudiantDTO2.getEmail());
+    }
+
+    @Test
+    public void test_getEtudiantsByOffre_OffreNotFound() {
+        // Arrange
+        Long offreId = 1L;
+        when(offreDeStageRepository.findById(offreId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> offreDeStageService.getEtudiantsByOffre(offreId));
     }
 }

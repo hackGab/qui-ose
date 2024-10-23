@@ -1,12 +1,18 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Employeur;
+import com.lacouf.rsbjwt.model.Entrevue;
+import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.EmployeurController;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
+import com.lacouf.rsbjwt.repository.EntrevueRepository;
+import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
+import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +30,8 @@ import static org.mockito.Mockito.when;
 
 public class EmployeurServiceTest {
     private EmployeurRepository employeurRepository;
+    private EntrevueRepository entrevueRepository;
+    private UserAppRepository userAppRepository;
     private EmployeurService employeurService;
     private EmployeurController employeurController;
 
@@ -33,7 +43,9 @@ public class EmployeurServiceTest {
     void setUp() {
         employeurRepository = Mockito.mock(EmployeurRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        employeurService = new EmployeurService(employeurRepository, passwordEncoder);
+        entrevueRepository = Mockito.mock(EntrevueRepository.class);
+        userAppRepository = Mockito.mock(UserAppRepository.class);
+        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository);
         employeurController = new EmployeurController(employeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -103,4 +115,105 @@ public class EmployeurServiceTest {
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    void shouldFindEmployeurByEmail() {
+        // Arrange
+        String email = "email@gmail.com";
+        when(employeurRepository.findByCredentials_email(email))
+                .thenReturn(Optional.of(employeurEntity));
+
+        // Act
+        Optional<Employeur> response = employeurService.findByCredentials_Email(email);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals(employeurEntity.getEmail(), response.get().getEmail());
+    }
+
+    @Test
+    void shouldNotFindEmployeurByEmail() {
+        // Arrange
+        String email = "nonexistent@gmail.com";
+        when(employeurRepository.findByCredentials_email(email))
+                .thenReturn(Optional.empty());
+
+        // Act
+        Optional<Employeur> response = employeurService.findByCredentials_Email(email);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void shouldCreateEntrevue() {
+        // Arrange
+        String email = "etudiant@gmail.com";
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+
+        Etudiant etudiant = new Etudiant("","", email,"","", "");
+        when(userAppRepository.findUserAppByEmail(email))
+                .thenReturn(Optional.of(etudiant));
+
+        Entrevue savedEntrevue = new Entrevue(LocalDateTime.now(), "Lachine", etudiant);
+        when(entrevueRepository.save(any(Entrevue.class)))
+                .thenReturn(savedEntrevue);
+
+        // Act
+        Optional<EntrevueDTO> response = employeurService.createEntrevue(entrevueDTO, email);
+
+        // Assert
+        assertTrue(response.isPresent());
+    }
+
+    @Test
+    void shouldReturnEmptyWhenCreatingEntrevueFails() {
+        // Arrange
+        String email = "etudiant@gmail.com";
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+
+        when(userAppRepository.findUserAppByEmail(email))
+                .thenReturn(Optional.empty());
+
+        // Act
+        Optional<EntrevueDTO> response = employeurService.createEntrevue(entrevueDTO, email);
+
+        // Assert
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void shouldGetEntrevueById() {
+        // Arrange
+        Long entrevueId = 1L;
+        Etudiant etudiant = new Etudiant("","", "email","","", "");
+        Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", etudiant);
+        entrevue.setId(entrevueId);
+        when(entrevueRepository.findById(entrevueId))
+                .thenReturn(Optional.of(entrevue));
+
+        // Act
+        Optional<EntrevueDTO> response = employeurService.getEntrevueById(entrevueId);
+
+        // Assert
+        assertTrue(response.isPresent());
+    }
+
+    @Test
+    void shouldReturnAllEntrevues() {
+        // Arrange
+        Etudiant etudiant1 = new Etudiant("","", "email","","", "");
+        Etudiant etudiant2 = new Etudiant("","", "email2","","", "");
+        Entrevue entrevue1 = new Entrevue(LocalDateTime.now(), "Lachine", etudiant1);
+        Entrevue entrevue2 = new Entrevue(LocalDateTime.now(), "Lachine", etudiant2);
+        when(entrevueRepository.findAll())
+                .thenReturn(List.of(entrevue1, entrevue2));
+
+        // Act
+        List<EntrevueDTO> response = employeurService.getAllEntrevues();
+
+        // Assert
+        assertEquals(2, response.size());
+    }
+
 }

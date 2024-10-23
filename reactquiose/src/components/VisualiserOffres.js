@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation,useNavigate, Link } from "react-router-dom";
 import "../CSS/VisualiserOffres.css";
 import EmployeurHeader from "./EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from "react-i18next";
+import EtudiantPostulants from "./EtudiantPostulants";
+
 
 function VisualiserOffres() {
     const location = useLocation();
@@ -134,6 +136,12 @@ function VisualiserOffres() {
                                             <p className="card-text">
                                                 <strong>{t('localisation')}</strong> {offre.localisation} <br/>
                                                 <strong>{t('NombreDeCandidats')}</strong> {offre.nbCandidats}
+                                                <br/>
+                                                {offre.status === "Validé" && (
+                                                    <Link to={`/offre/${offre.id}/etudiants`}>
+                                                        {t('VoirLaListeDesCandidats')}
+                                                    </Link>
+                                                )}
                                             </p>
                                             <p className="info-stage">
                                                 {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}

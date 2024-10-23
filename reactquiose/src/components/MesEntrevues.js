@@ -65,7 +65,7 @@ function MesEntrevues({ sendDataToParent}) {
     return (
         <>
             {/* Passer nbEntrevuesEnAttente et userData */}
-            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente} userData={userData} />
+            <EtudiantHeader nbEntrevuesEnAttente={nbEntrevuesEnAttente} userData={userData}/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-4">
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>

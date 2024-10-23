@@ -133,4 +133,22 @@ public class EtudiantService {
                 .map(OffreDeStageDTO::new)
                 .toList();
     }
+
+    public Optional<EtudiantDTO> retirerOffreDeStage (String email, Long offreId) {
+        Optional<Etudiant> etudiantOpt = Optional.ofNullable(etudiantRepository.findByEmail(email));
+        Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
+
+        if (etudiantOpt.isPresent() && offreOpt.isPresent()) {
+            Etudiant etudiant = etudiantOpt.get();
+            OffreDeStage offre = offreOpt.get();
+
+            etudiant.getOffresAppliquees().remove(offre);
+
+            etudiantRepository.save(etudiant);
+
+            return Optional.of(new EtudiantDTO(etudiant));
+        }
+
+        return Optional.empty();
+    }
 }

@@ -8,7 +8,6 @@ import ListeDeStage from "./ListeDeStage";
 function AccueilEtudiant({nbEntrevuesEnAttente}) {
     const location = useLocation();
     const userData = location.state?.userData;
-    console.log('Données utilisateur:', userData);
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);
@@ -21,7 +20,6 @@ function AccueilEtudiant({nbEntrevuesEnAttente}) {
 
     useEffect(() => {
         if (userData) {
-            console.log('Récupération du CV...'+ userData );
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
             fetch(url)
@@ -243,7 +241,7 @@ function AccueilEtudiant({nbEntrevuesEnAttente}) {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 classN  ame="modal-title">{t('manipulateCV')}</h5>
+                                    <h5 className="modal-title">{t('manipulateCV')}</h5>
                                 </div>
                                 <div className="modal-body">
                                     <div

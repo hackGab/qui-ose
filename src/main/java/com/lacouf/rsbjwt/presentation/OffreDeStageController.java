@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.OffreDeStageService;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class OffreDeStageController {
 
 
         if ("Offre de stage supprimée".equals(responseMessage)) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle deletion error
         }
@@ -109,7 +110,7 @@ public class OffreDeStageController {
         return ResponseEntity.ok(offreDeStageService.getAllOffresDeStage());
     }
 
- @GetMapping("/offresValidees")
+    @GetMapping("/offresValidees")
     public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees() {
         List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouvees();
 
@@ -117,5 +118,21 @@ public class OffreDeStageController {
 
         return ResponseEntity.ok().body(offresValidees);
     }
+
+    @GetMapping("/{offreId}/etudiants")
+    public ResponseEntity<List<EtudiantDTO>> getEtudiantsByOffre(@PathVariable Long offreId) {
+        if (offreId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<EtudiantDTO> etudiants = offreDeStageService.getEtudiantsByOffre(offreId).orElseGet(() -> List.of());
+
+        if (etudiants.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            return ResponseEntity.ok(etudiants);
+        }
+    }
+
 }
 

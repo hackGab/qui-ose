@@ -15,7 +15,6 @@ function EmployeurHeader({ userData }) {
 
     const handleClickLogo = () => {
         if (userData) {
-            console.log("tst")
             navigate("/accueilEmployeur", { state: { userData: userData } });
         }
     };

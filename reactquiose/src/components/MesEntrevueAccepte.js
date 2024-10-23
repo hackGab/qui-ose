@@ -15,7 +15,7 @@ function MesEntrevueAccepte() {
     const { t } = useTranslation();
 
     useEffect(() => {
-        const fetchOffres = async () => {
+        const fetchOffresEntrevues = async () => {
             if (!employeurEmail) {
                 setError("Email employeur non fourni");
                 setIsLoading(false);
@@ -32,7 +32,7 @@ function MesEntrevueAccepte() {
                 const data = await response.json();
                 setOffres(data);
 
-                data.forEach(async (offre) => {
+                for (const offre of data) {
                     const responseEntrevues = await fetch(`http://localhost:8081/entrevues/entrevueAcceptee/offre/${offre.id}`);
                     const entrevuesData = await responseEntrevues.json();
 
@@ -40,7 +40,7 @@ function MesEntrevueAccepte() {
                         ...prevEntrevues,
                         [offre.id]: entrevuesData,
                     }));
-                });
+                }
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -48,11 +48,12 @@ function MesEntrevueAccepte() {
             }
         };
 
-        fetchOffres();
+
+        fetchOffresEntrevues();
     }, [employeurEmail]);
 
     if (isLoading) {
-        return <div>{t('ChangementDesOffres')}</div>;
+        return <div>{t('ChargementDesEntrevues')}</div>;
     }
 
     if (error) {
@@ -64,9 +65,9 @@ function MesEntrevueAccepte() {
             <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
-                    <h1 className="text-center mt-5 page-title">{t('VosOffres')}</h1>
+                    <h1 className="text-center mt-5 page-title">{t('vosEntrevues')}</h1>
 
-                    {offres.length === 0 ? (
+                    {entrevues.length === 0 ? (
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3">

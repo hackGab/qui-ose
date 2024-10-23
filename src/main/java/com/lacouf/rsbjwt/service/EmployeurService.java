@@ -113,4 +113,23 @@ public class EmployeurService {
                 .map(EntrevueDTO::new)
                 .toList();
     }
+
+    public Optional<EntrevueDTO> accepterCandidature(Long entrevueId) {
+        return entrevueRepository.findById(entrevueId)
+                .map(entrevue -> {
+                    entrevue.accepterEntrevue();
+                    entrevueRepository.save(entrevue);
+                    return new EntrevueDTO(entrevue);
+                });
+    }
+
+    public Optional<EntrevueDTO> refuserCandidature(Long entrevueId) {
+        return entrevueRepository.findById(entrevueId)
+                .map(entrevue -> {
+                    entrevue.refuserEntrevue();
+                    entrevueRepository.save(entrevue);
+                    return new EntrevueDTO(entrevue);
+                });
+    }
+
 }

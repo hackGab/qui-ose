@@ -43,11 +43,11 @@ public class Entrevue {
     }
 
     public void accepterEntrevue() {
-        this.status = "Accepter";
+        this.status = "accepter";
     }
 
     public void refuserEntrevue() {
-        this.status = "Refuser";
+        this.status = "refuser";
     }
 
 

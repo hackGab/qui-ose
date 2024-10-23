@@ -142,7 +142,7 @@ public class EmployeurService {
             List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeur(employeur);
 
             List<Entrevue> entrevuesAcceptees = offresDeStage.stream()
-                    .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "Accepter").stream())
+                    .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "accepter").stream())
                     .toList();
 
             return entrevuesAcceptees.stream().map(EntrevueDTO::new).toList();

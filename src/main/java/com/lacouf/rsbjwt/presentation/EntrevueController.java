@@ -105,4 +105,15 @@ public class EntrevueController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/acceptees/employeur/{email}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesAccepteesParEmployeur(@PathVariable String email) {
+        List<EntrevueDTO> entrevues = employeurService.getEntrevuesAccepteesParEmployeur(email);
+
+        if (entrevues.isEmpty()) {
+            return ResponseEntity.noContent().build();  // Renvoie 204 si aucune entrevue acceptée trouvée
+        }
+
+        return ResponseEntity.ok(entrevues);
+    }
 }

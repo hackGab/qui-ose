@@ -11,6 +11,7 @@ import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -130,6 +131,28 @@ public class EmployeurService {
                     entrevueRepository.save(entrevue);
                     return new EntrevueDTO(entrevue);
                 });
+    }
+
+    public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur) {
+        Optional<Employeur> employeurOpt = employeurRepository.findByCredentials_email(emailEmployeur);
+
+        if (employeurOpt.isPresent()) {
+            Employeur employeur = employeurOpt.get();
+
+            // On récupère toutes les offres associées à cet employeur
+            List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeur(employeur);
+
+            // On filtre les entrevues associées à ces offres, avec le statut "Accepter"
+            List<Entrevue> entrevuesAcceptees = offresDeStage.stream()
+                    .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "Accepter").stream())
+                    .toList();
+
+            // Conversion en DTO
+            return entrevuesAcceptees.stream().map(EntrevueDTO::new).toList();
+        }
+
+        // Retourner une liste vide si l'employeur n'est pas trouvé
+        return Collections.emptyList();
     }
 
 }

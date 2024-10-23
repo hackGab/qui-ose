@@ -132,4 +132,6 @@ public class OffreDeStageController {
         return ResponseEntity.ok().body(etudiants);
     }
 
+
+
 }

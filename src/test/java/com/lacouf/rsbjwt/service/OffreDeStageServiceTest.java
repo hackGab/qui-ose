@@ -6,6 +6,7 @@ import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
+import com.lacouf.rsbjwt.repository.EntrevueRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
@@ -36,6 +37,8 @@ public class OffreDeStageServiceTest {
     private OffreDeStage offreDeStageEntity;
     private OffreDeStageDTO newOffreDTO;
     private EmployeurDTO newEmployeurDTO;
+
+
 
     @BeforeEach
     public void setUp() {

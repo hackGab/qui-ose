@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.service;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.repository.EmployeurRepository;
+import com.lacouf.rsbjwt.repository.EntrevueRepository;
 import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
@@ -17,6 +18,8 @@ public class OffreDeStageService {
 
     private final OffreDeStageRepository offreDeStageRepository;
     private final EmployeurRepository employeurRepository;
+
+
 
     public OffreDeStageService(OffreDeStageRepository offreDeStageRepository, EmployeurRepository employeurRepository) {
         this.offreDeStageRepository = offreDeStageRepository;
@@ -109,6 +112,7 @@ public class OffreDeStageService {
 
         return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
     }
+
 
 
 

@@ -8,13 +8,11 @@ import "../CSS/ListeDeStage.css";
 
 function ListeDeStage({ internships = [], userData }) {
     const { t } = useTranslation();
-    const email = userData.credentials.email;
     const [showModal, setShowModal] = useState(false);
     const [selectedInternship, setSelectedInternship] = useState(null);
     const [appliedInternship, setAppliedInternship] = useState([]);
     const [internshipsWithImages, setInternshipsWithImages] = useState([]);
 
-    // Permet de récupérer les images des stages depuis l'API Unsplash
     useEffect(() => {
         const fetchImages = async () => {
             const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
@@ -74,9 +72,9 @@ function ListeDeStage({ internships = [], userData }) {
 
     const postulerAuStage = async (offreId) => {
         try {
-            console.log('Postuler au stage :', offreId);
-            console.log('Etudiant :', email);
-            const response = await fetch(`http://localhost:8081/etudiant/${email}/offre/${offreId}`, {
+            // console.log('Postuler au stage :', offreId);
+            // console.log('Etudiant :', userData.credentials.email);
+            const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offre/${offreId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,28 +85,35 @@ function ListeDeStage({ internships = [], userData }) {
             }
             const etudiantDTO = await response.json();
             setAppliedInternship([...appliedInternship, offreId])
-            console.log('Candidature réussie :', etudiantDTO);
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
+            alert("Échec de la candidature. Veuillez réessayer.");
         }
     };
 
     useEffect(() => {
         const fetchAppliedInternships = async () => {
-            try {
-                const response = await fetch(`http://localhost:8081/etudiant/${email}/offres`);
-                if (!response.ok) {
-                    throw new Error(`Erreur lors de la récupération des offres : ${response.status}`);
+            console.log('userData :', userData);
+            // Vérifier que userData et credentials sont définis avant de les utiliser
+            if (userData && userData.credentials && userData.credentials.email) {
+                console.log('Récupération des offres postulées par l’étudiant :', userData.credentials.email);
+                try {
+                    const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la récupération des offres : ${response.status}`);
+                    }
+                    const internships = await response.json();
+                    setAppliedInternship(internships.map(internship => internship.id));
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des offres :', error);
                 }
-                const internships = await response.json();
-                setAppliedInternship(internships.map(internship => internship.id));
-            } catch (error) {
-                console.error('Erreur lors de la récupération des offres :', error);
+            } else {
+                console.error('Les données utilisateur ne sont pas disponibles ou incorrectes.');
             }
         };
 
         fetchAppliedInternships();
-    }, [email]);
+    }, [userData]);
 
     const afficherIframesOffre = () => (
         <>

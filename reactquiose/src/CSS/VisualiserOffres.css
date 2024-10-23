@@ -2,7 +2,8 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     max-width: 400px;
-    margin: 10px;
+    /*margin: 10px;*/
+    margin: auto !important;
     position: relative;
 }
 

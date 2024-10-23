@@ -1,0 +1,54 @@
+.mes-entrevues-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #343a40;
+}
+
+.no-offres-alert {
+    font-size: 1.2rem;
+    background-color: #ffefef;
+    border: 1px solid #ffcccc;
+    color: #ff6b6b;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.offre-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.offre-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.entrevue-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.entrevue-item {
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+}
+
+.entrevue-details {
+    font-size: 0.9rem;
+    color: #6c757d;
+}

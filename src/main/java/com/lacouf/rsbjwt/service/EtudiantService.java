@@ -1,14 +1,9 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CV;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.model.UserApp;
-import com.lacouf.rsbjwt.repository.CVRepository;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
-import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
-import com.lacouf.rsbjwt.repository.UserAppRepository;
+import com.lacouf.rsbjwt.model.*;
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
+import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,12 +21,15 @@ public class EtudiantService {
     private final CVRepository cvRepository;
     private final OffreDeStageRepository offreDeStageRepository;
 
-    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository) {
+    private final EntrevueRepository entrevueRepository;
+
+    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository) {
         this.userAppRepository = userAppRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
         this.cvRepository = cvRepository;
         this.offreDeStageRepository = offreDeStageRepository;
+        this.entrevueRepository = entrevueRepository;
     }
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
@@ -147,6 +145,39 @@ public class EtudiantService {
             etudiantRepository.save(etudiant);
 
             return Optional.of(new EtudiantDTO(etudiant));
+        }
+
+        return Optional.empty();
+    }
+
+    public List<EntrevueDTO> getEntrevuesByEtudiant(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        Long etudiantId = etudiant.getId();
+        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                .map(EntrevueDTO::new)
+                .toList();
+    }
+
+    public List<EntrevueDTO> getEntrevuesEnAttenteByEtudiant(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        System.out.println(etudiant);
+        Long etudiantId = etudiant.getId();
+        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                .filter(entrevue -> entrevue.getStatus().equals("En attente"))
+                .map(EntrevueDTO::new)
+                .toList();
+    }
+
+    public Optional<EntrevueDTO> changerStatusEntrevue(String emailEtudiant, Long idOffreDeStage, String status) {
+        Etudiant etudiant = etudiantRepository.findByEmail(emailEtudiant);
+        Long etudiantId = etudiant.getId();
+        Optional<Entrevue> entrevueOpt = entrevueRepository.findByEtudiantIdAndOffreDeStageId(etudiantId, idOffreDeStage);
+
+        if (entrevueOpt.isPresent()) {
+            Entrevue entrevue = entrevueOpt.get();
+            entrevue.setStatus(status);
+            entrevueRepository.save(entrevue);
+            return Optional.of(new EntrevueDTO(entrevue));
         }
 
         return Optional.empty();

@@ -28,7 +28,6 @@ public class CV {
     @Column(nullable = false)
     private LocalDate uploadDate;
 
-
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private String data;
 

@@ -12,19 +12,25 @@ function AccueilEmployeur() {
     const handleClickSubmit = () => {
         console.log("Soumettre une offre d'emploi");
         if (userData?.credentials?.email) {
-            navigate("/soumettre-offre", { state: { employeurEmail: userData.credentials.email } });
+            navigate("/soumettre-offre", { state: {  userData: userData } });
         }
     };
 
     const handleClickView = () => {
         if (userData?.credentials?.email) {
-            navigate("/visualiser-offres", { state: { employeurEmail: userData.credentials.email } });
+            navigate("/visualiser-offres", { state: { userData: userData } });
+        }
+    };
+
+    const handleClickEntrevue = () => {
+        if (userData?.credentials?.email) {
+            navigate("/visualiser-entrevue-accepter", { state: {  userData: userData } });
         }
     };
 
     return (
         <>
-            <EmployeurHeader />
+            <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4">
 
                 <div className="container mt-5">
@@ -43,6 +49,13 @@ function AccueilEmployeur() {
                                 <div className="card-body">
                                     <h5 className="card-title">{t('VisualiserLesOffresEmploi')}</h5>
                                     <p className="card-text">{t('visualiserLesOffresEmploiSoumise')}</p>
+                                </div>
+                            </div>
+
+                            <div className="card mb-3 text-center clickable-card" onClick={handleClickEntrevue}>
+                                <div className="card-body">
+                                    <h5 className="card-title">{t('VisualiserLesEntrevueAccepte')}</h5>
+                                    <p className="card-text">{t('VisualiserLesEntrevueAccepteClick')}</p>
                                 </div>
                             </div>
                         </div>

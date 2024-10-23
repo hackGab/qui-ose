@@ -115,8 +115,7 @@ function StagesAppliquees() {
 
     return (
         <>
-            <EtudiantHeader />
-
+            <EtudiantHeader userData={user}/>
             <div className="container-fluid p-4">
                 <div className="m-auto text-center my-4">
                     <h3>{t('stagesAppliquées')}</h3>

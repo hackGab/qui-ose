@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import EmployeurHeader from "./EmployeurHeader";
 function UpdateOffre() {
     const navigate = useNavigate();
     const location = useLocation();
     const offre = location.state?.offre;
+    const userData = location.state?.userData;
     const employeurEmail = location.state?.employeurEmail;
     const [titre, setTitre] = useState(offre?.titre || "");
     const [localisation, setLocalisation] = useState(offre?.localisation || "");
@@ -111,64 +113,69 @@ function UpdateOffre() {
     };
 
     return (
-        <div className="container mt-5">
-            <h2>{t('MiseAJourOffre')}</h2>
-            <form onSubmit={handleUpdate} onDragEnter={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-                <div className="form-group">
-                    <label>{t('TitreDeOffre')}</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={titre}
-                        onChange={(e) => setTitre(e.target.value)}
-                        required
-                    />
+        <>
+            <EmployeurHeader userData={userData} />
+            <div className="container-fluid p-4">
+                <div className="container mt-5">
+                    <h2>{t('MiseAJourOffre')}</h2>
+                    <form onSubmit={handleUpdate} onDragEnter={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
+                        <div className="form-group">
+                            <label>{t('TitreDeOffre')}</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={titre}
+                                onChange={(e) => setTitre(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>{t('localisation')}</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={localisation}
+                                onChange={(e) => setLocalisation(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>{t('NombreDeCandidats')}</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                value={nbCandidats}
+                                onChange={(e) => setNbCandidats(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>{t('DateLimite')}</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                value={dateLimite}
+                                onChange={(e) => setDateLimite(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>{t('FichierPDFO')}</label>
+                            <input
+                                type="file"
+                                className="form-control"
+                                accept="application/pdf"
+                                onChange={(e) => setPdfFile(e.target.files[0])}
+                            />
+                            {pdfFile && (
+                                <p>{t('FichierSelectionner')} {pdfFile.name}</p>
+                            )}
+                        </div>
+                        <button type="submit" className="btn btn-primary mt-3">{t('MiseAJourOffre')}</button>
+                    </form>
                 </div>
-                <div className="form-group">
-                    <label>{t('localisation')}</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={localisation}
-                        onChange={(e) => setLocalisation(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>{t('NombreDeCandidats')}</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        value={nbCandidats}
-                        onChange={(e) => setNbCandidats(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>{t('DateLimite')}</label>
-                    <input
-                        type="date"
-                        className="form-control"
-                        value={dateLimite}
-                        onChange={(e) => setDateLimite(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>{t('FichierPDFO')}</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        accept="application/pdf"
-                        onChange={(e) => setPdfFile(e.target.files[0])}
-                    />
-                    {pdfFile && (
-                        <p>{t('FichierSelectionner')} {pdfFile.name}</p>
-                    )}
-                </div>
-                <button type="submit" className="btn btn-primary mt-3">{t('MiseAJourOffre')}</button>
-            </form>
-        </div>
+            </div>
+        </>
     );
 }
 

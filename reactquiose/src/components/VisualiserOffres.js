@@ -5,13 +5,13 @@ import EmployeurHeader from "./EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from "react-i18next";
-import EtudiantPostulants from "./EtudiantPostulants";
 
 
 function VisualiserOffres() {
     const location = useLocation();
     const navigate = useNavigate();
-    const employeurEmail = location.state?.employeurEmail;
+    const userData = location.state?.userData;
+    const employeurEmail = userData.credentials.email;
     const [offres, setOffres] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -101,7 +101,11 @@ function VisualiserOffres() {
     };
 
     const handleUpdateClick = (offre, employeurEmail) => {
-        navigate("/update-offre", { state: { offre,employeurEmail } });
+        navigate("/update-offre", { state: { offre, employeurEmail, userData } });
+    };
+
+    const handleListeClick = (offre) => {
+        navigate(`/offre/${offre.id}/etudiants`, { state: { userData, offre } });
     };
 
     if (isLoading) {
@@ -115,7 +119,7 @@ function VisualiserOffres() {
 
     return (
         <>
-            <EmployeurHeader />
+            <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4">
 
                 <div className="container mt-5">
@@ -137,9 +141,11 @@ function VisualiserOffres() {
                                                 <strong>{t('localisation')}</strong> {offre.localisation} <br/>
                                                 <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
                                                 <br/>
-                                                <Link to={`/offre/${offre.id}/etudiants`}>
-                                                    {t('VoirLaListeDesCandidats')} ({offre.nbCandidats}) {/* TODO ici mettre le nombre de candidats qui ont postulé*/}
-                                                </Link>
+                                                {offre.status === "Validé" && (
+	                                               <div onClick={() => handleListeClick(offre)} className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline">
+                                                    		{t('VoirLaListeDesCandidats')} ({offre.nbCandidats}) {/* TODO ici mettre le nombre de candidats qui ont postulé*/}
+	                                                </div>
+						                        )}
                                             </p>
                                             <p className="info-stage">
                                                 {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}

@@ -1,0 +1,12 @@
+.card-container.accepted {
+    border: 2px solid green;
+    background-color: #e6ffe6;
+}
+
+.no-students-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}

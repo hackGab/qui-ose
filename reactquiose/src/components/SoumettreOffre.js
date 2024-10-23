@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/SoumettreOffre.css";
 import {useTranslation} from "react-i18next";
@@ -7,7 +7,8 @@ import {useTranslation} from "react-i18next";
 
 function SoumettreOffre() {
     const location = useLocation();
-    const employeurEmail = location.state?.employeurEmail; // Récupérer l'email du state
+    const userData = location.state?.userData;
+    const employeurEmail = userData.credentials.email;
     const [showModal, setShowModal] = useState(false);
     const [file, setFile] = useState(null);
     const [temporaryFile, setTemporaryFile] = useState(null);
@@ -142,7 +143,7 @@ function SoumettreOffre() {
 
     return (
         <>
-            <EmployeurHeader/>
+            <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4">
 
                 <div className="text-center my-4">

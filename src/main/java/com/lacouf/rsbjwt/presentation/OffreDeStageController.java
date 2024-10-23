@@ -71,7 +71,7 @@ public class OffreDeStageController {
 
 
         if ("Offre de stage supprimée".equals(responseMessage)) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle deletion error
         }
@@ -125,14 +125,11 @@ public class OffreDeStageController {
             return ResponseEntity.badRequest().build();
         }
 
+        System.out.println("offreId = " + offreId);
+
         List<EtudiantDTO> etudiants = offreDeStageService.getEtudiantsByOffre(offreId).orElseGet(() -> List.of());
 
-        if (etudiants.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            return ResponseEntity.ok(etudiants);
-        }
+        return ResponseEntity.ok().body(etudiants);
     }
 
 }
-

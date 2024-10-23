@@ -85,7 +85,7 @@ p {
     border: 5px solid red;
 }
 
-.card.validé {
+.card.validé, .card.accepter {
     border: 5px solid green;
 }
 

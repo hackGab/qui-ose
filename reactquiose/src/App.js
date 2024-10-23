@@ -16,8 +16,11 @@ import DetailsEmployeurs from "./components/DetailsEmployeur";
 import ListeDeStage from  "./components/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
+import MesEntrevues from "./components/MesEntrevues";
+import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 
 function App() {
+
     return (
         <Router>
             <div className="App-body">
@@ -26,8 +29,9 @@ function App() {
 
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
-                    <Route path="/stagesAppliquees" element={<StagesAppliqueesPage />} />
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
+                    <Route path="/mesEntrevues" element={<MesEntrevues />} />
+		            <Route path="/stagesAppliquees" element={<StagesAppliqueesPage/>} />
                     <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />
@@ -40,7 +44,8 @@ function App() {
                     <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
-		            <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
+                    <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
+                    <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>
             </div>

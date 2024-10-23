@@ -165,5 +165,6 @@
   "Acceptees": "Acceptées",
   "AucuneEntrevueAcceptee": "Aucune entrevue acceptée",
   "EnAttente": "En attente",
+    "EnAttenteDeConfirmation": "En attente de confirmation",
   "AucuneEntrevueEnAttente": "Aucune entrevue en attente"
 }

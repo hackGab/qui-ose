@@ -14,6 +14,7 @@ function EtudiantPostulants() {
     const [etudiants, setEtudiants] = useState([]);
     const [etudiantsAvecEntrevue, setEtudiantsAvecEntrevue] = useState(new Set());
     const [acceptedEtudiants, setAcceptedEtudiants] = useState([]);
+    const [entrevues, setEntrevues] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const { t } = useTranslation();
@@ -53,7 +54,11 @@ function EtudiantPostulants() {
 
                 if (entrevueResponse.ok) {
                     const entrevueData = await entrevueResponse.json();
-                    const etudiantsAvecEntrevueSet = new Set(entrevueData.map(entrevue => entrevue.etudiantDTO.credentials.email));
+
+                    setEntrevues(entrevueData);
+
+                    const etudiantsAvecEntrevueSet = new Set(entrevueData
+                        .map(entrevue => entrevue.etudiantDTO.credentials.email));
                     setEtudiantsAvecEntrevue(etudiantsAvecEntrevueSet);
                 }
 
@@ -189,7 +194,28 @@ function EtudiantPostulants() {
                         <>
                             <h3>{t('EtudiantsPostulants')} {t('AuPosteDe')} <u>{offre.titre}</u> :</h3>
                             <div className="row mt-4">
-                                {etudiants.map((etudiant) => (
+                                {etudiants
+                                    .filter((etudiant) => {
+                                        if (etudiantsAvecEntrevue.has(etudiant.credentials.email)) {
+                                            let entrevueEtudiant = null
+                                            entrevues.forEach((entrevue) => {
+                                                if (entrevue.etudiantDTO.credentials.email === etudiant.credentials.email) {
+                                                    entrevueEtudiant = entrevue;
+                                                }
+                                            });
+
+                                            if (entrevueEtudiant.status == "refuser" || entrevueEtudiant.status == "accepter") {
+                                                return false;
+                                            }
+                                            else {
+                                                return true;
+                                            }
+                                        }
+                                        else {
+                                            return true;
+                                        }
+                                    })
+                                    .map((etudiant) => (
                                     <div key={etudiant.id} className="col-10 col-sm-6 col-md-4 col-lg-3 mb-4 m-auto text-center">
                                         <div className="card-container">
                                             <div className="card">
@@ -212,7 +238,7 @@ function EtudiantPostulants() {
                                                             {acceptedEtudiants.includes(etudiant.email)
                                                                 ? t('accepte')
                                                                 : etudiantsAvecEntrevue.has(etudiant.credentials.email)
-                                                                    ? t('entretienDejaCree')
+                                                                    ? t('EnAttenteDeConfirmation')
                                                                     : t('creerEntrevue')}
                                                         </Button>
                                                         { acceptedEtudiants.includes(etudiant.email) ?

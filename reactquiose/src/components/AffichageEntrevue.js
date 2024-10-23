@@ -1,29 +1,30 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
 import '../CSS/MesEntrevues.css';
 
-function AffichageEntrevue({ entrevue, t }) {
+function AffichageEntrevue({ entrevue, t, onAccept }) {
     const [showModal, setShowModal] = useState(false);
-    const [action, setAction] = useState(null);
+    const [statutEntrevue, setStatutEntrevue] = useState(entrevue.status); // État local pour gérer le statut de l'entrevue
 
     const emailEtudiant = entrevue.etudiantDTO.email;
     const idOffreDeStage = entrevue.offreDeStageDTO.id;
 
     const handleAccept = async () => {
         try {
-            const response = await fetch(`http://localhost:8081/entrevues/changeStatus/${emailEtudiant}/${idOffreDeStage}`, {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8081/entrevues/changerStatus/${emailEtudiant}/${idOffreDeStage}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: "accepter" }),
+                body: "accepter",
             });
 
             if (response.ok) {
                 console.log('Entrevue acceptée:', entrevue);
+                setStatutEntrevue('accepter');
+                if (onAccept) onAccept(entrevue);  // Appeler la fonction passée depuis le parent pour mettre à jour la liste
             } else {
                 console.error('Erreur lors de l\'acceptation de l\'entrevue');
             }
@@ -35,16 +36,17 @@ function AffichageEntrevue({ entrevue, t }) {
 
     const handleRefuse = async () => {
         try {
-            const response = await fetch(`http://localhost:8081/entrevues/changeStatus/${emailEtudiant}/${idOffreDeStage}`, {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8081/entrevues/changerStatus/${emailEtudiant}/${idOffreDeStage}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: "refuser" }),
+                body: "refuser",
             });
 
             if (response.ok) {
                 console.log('Entrevue refusée:', entrevue);
+                setStatutEntrevue('refuser');
             } else {
                 console.error('Erreur lors du refus de l\'entrevue');
             }
@@ -57,7 +59,7 @@ function AffichageEntrevue({ entrevue, t }) {
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-    const { id, titre, offreDeStageDTO, status, location, dateHeure } = entrevue;
+    const { id, offreDeStageDTO, location, dateHeure } = entrevue;
 
     const date = new Date(dateHeure);
     const formattedDate = date.toLocaleDateString();
@@ -65,8 +67,31 @@ function AffichageEntrevue({ entrevue, t }) {
 
     return (
         <div className="col-12" key={id}>
-            <div className={`d-inline-flex card offre-card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
-                <div onClick={handleShow} className="text-decoration-none">
+            <div className={`d-inline-flex card offre-card shadow w-100 ${statutEntrevue ? statutEntrevue.toLowerCase() : 'sans-cv'}`}>
+                {statutEntrevue !== 'accepter' ? (
+                    <div onClick={handleShow} className="text-decoration-none">
+                        <div className="card-body text-start">
+                            <div className="card-title">
+                                <div className="d-flex justify-content-between">
+                                    <h6 className="m-0">{offreDeStageDTO.employeur.entreprise}</h6>
+                                    <FaCalendarAlt />
+                                </div>
+                                <h4>{offreDeStageDTO.titre}</h4>
+                            </div>
+                            <div className="card-text">
+                                <FaLocationPinLock /> &nbsp;
+                                <span style={{ verticalAlign: "middle" }}>
+                                    <b>{location}</b>
+                                </span>
+                                <br />
+                                <FaClock /> &nbsp;
+                                <span style={{ verticalAlign: "middle" }}>
+                                    <b>{formattedDate}</b> {t('à')} <b>{formattedTime}</b>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
                     <div className="card-body text-start">
                         <div className="card-title">
                             <div className="d-flex justify-content-between">
@@ -87,7 +112,7 @@ function AffichageEntrevue({ entrevue, t }) {
                             </span>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <Modal show={showModal} onHide={handleClose} centered>

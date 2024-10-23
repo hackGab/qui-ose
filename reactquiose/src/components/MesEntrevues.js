@@ -25,7 +25,7 @@ function MesEntrevues() {
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Réponse du serveur: ssssssssssss', data);
+                    console.log('Réponse du serveur:', data);
                     setEntrevues(data);
                     setLoading(false);
                 })
@@ -36,10 +36,19 @@ function MesEntrevues() {
         }
     }, [userData]);
 
+    const handleEntrevueAcceptee = (entrevueAcceptee) => {
+        setEntrevues(prevEntrevues =>
+            prevEntrevues.map(entrevue =>
+                entrevue.id === entrevueAcceptee.id
+                    ? { ...entrevue, status: 'accepter' }
+                    : entrevue
+            )
+        );
+    };
+
     const entrevuesAccepter = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'accepter');
     const entrevuesEnAttente = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'en attente');
     const nbEntrevuesEnAttente = entrevuesEnAttente.length;
-
 
     if (loading) {
         return <div>Chargement...</div>;
@@ -51,7 +60,6 @@ function MesEntrevues() {
 
     return (
         <>
-            {/* Passer nbEntrevuesEnAttente et userData */}
             <EtudiantHeader userData={userData} />
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-4">
@@ -63,7 +71,13 @@ function MesEntrevues() {
                         <div className="col-5 m-auto">
                             <h2 className="entrevuesTitreBox">Acceptées</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesAccepter.map((entrevue) => <AffichageEntrevue key={entrevue.id} entrevue={entrevue} t={t} />)}
+                                {entrevuesAccepter.map((entrevue) => (
+                                    <AffichageEntrevue
+                                        key={entrevue.id}
+                                        entrevue={entrevue}
+                                        t={t}
+                                    />
+                                ))}
                             </div>
                         </div>
 
@@ -71,7 +85,14 @@ function MesEntrevues() {
                         <div className="col-5 m-auto mt-0">
                             <h2 className="entrevuesTitreBox">En attente</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesEnAttente.map((entrevue) => <AffichageEntrevue key={entrevue.id} entrevue={entrevue} t={t} />)}
+                                {entrevuesEnAttente.map((entrevue) => (
+                                    <AffichageEntrevue
+                                        key={entrevue.id}
+                                        entrevue={entrevue}
+                                        t={t}
+                                        onAccept={handleEntrevueAcceptee} // Passer la fonction pour gérer l'acceptation
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>

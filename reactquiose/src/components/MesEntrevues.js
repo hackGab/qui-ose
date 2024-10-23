@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./EtudiantHeader";
@@ -15,7 +15,7 @@ function MesEntrevues() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const email = userData?.credentials.email; // Assurez-vous que userData contient l'email de l'étudiant
+        const email = userData?.credentials.email;
         if (email) {
             fetch(`http://localhost:8081/entrevues/etudiant/${email}`)
                 .then(response => {
@@ -37,18 +37,33 @@ function MesEntrevues() {
     }, [userData]);
 
     const handleEntrevueAcceptee = (entrevueAcceptee) => {
+        console.log('Entrevue acceptée:', entrevueAcceptee);
+
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
-                entrevue.id === entrevueAcceptee.id
+                entrevue.etudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
                     ? { ...entrevue, status: 'accepter' }
                     : entrevue
             )
         );
     };
 
+    const handleEntrevueRejete = (entrevueRejete) => {
+        console.log('Entrevue refusée:', entrevueRejete);
+
+        setEntrevues(prevEntrevues =>
+            prevEntrevues.map(entrevue =>
+                entrevue.etudiantDTO === entrevueRejete.etudiantDTO && entrevue.offreDeStageDTO === entrevueRejete.offreDeStageDTO
+                    ? { ...entrevue, status: 'refuser' }
+                    : entrevue
+            )
+        );
+    };
+
+
     const entrevuesAccepter = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'accepter');
     const entrevuesEnAttente = entrevues.filter(entrevue => entrevue.status.toLowerCase() === 'en attente');
-    const nbEntrevuesEnAttente = entrevuesEnAttente.length;
+
 
     if (loading) {
         return <div>Chargement...</div>;
@@ -66,33 +81,39 @@ function MesEntrevues() {
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>
                     <p className="text-center mb-4" style={{ fontSize: "2em" }}>{t('entrevueListSubtitle')}</p>
                     <div className="row p-2 text-center w-100 m-auto">
-
-                        {/* Entrevues acceptées */}
-                        <div className="col-5 m-auto">
+                        <div className="col-md-5 m-auto">
                             <h2 className="entrevuesTitreBox">Acceptées</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesAccepter.map((entrevue) => (
-                                    <AffichageEntrevue
-                                        key={entrevue.id}
-                                        entrevue={entrevue}
-                                        t={t}
-                                    />
-                                ))}
+                                {entrevuesAccepter.length > 0 ? (
+                                    entrevuesAccepter.map((entrevue) => (
+                                        <AffichageEntrevue
+                                            key={entrevue.id}
+                                            entrevue={entrevue}
+                                            t={t}
+                                        />
+                                    ))
+                                ) : (
+                                    <p>Aucune entrevue acceptée</p>
+                                )}
                             </div>
                         </div>
 
-                        {/* Entrevues en attente */}
-                        <div className="col-5 m-auto mt-0">
+                        <div className="col-md-5 m-auto mt-0">
                             <h2 className="entrevuesTitreBox">En attente</h2>
                             <div className="row p-1 shadow w-100 m-auto entrevueBox">
-                                {entrevuesEnAttente.map((entrevue) => (
-                                    <AffichageEntrevue
-                                        key={entrevue.id}
-                                        entrevue={entrevue}
-                                        t={t}
-                                        onAccept={handleEntrevueAcceptee} // Passer la fonction pour gérer l'acceptation
-                                    />
-                                ))}
+                                {entrevuesEnAttente.length > 0 ? (
+                                    entrevuesEnAttente.map((entrevue) => (
+                                        <AffichageEntrevue
+                                            key={entrevue.id}
+                                            entrevue={entrevue}
+                                            t={t}
+                                            onAccept={handleEntrevueAcceptee}
+                                            onReject={handleEntrevueRejete}
+                                        />
+                                    ))
+                                ) : (
+                                    <p>Aucune entrevue en attente</p>
+                                )}
                             </div>
                         </div>
                     </div>

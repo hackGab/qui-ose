@@ -4,9 +4,9 @@ import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
 import '../CSS/MesEntrevues.css';
 
-function AffichageEntrevue({ entrevue, t, onAccept }) {
+function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const [showModal, setShowModal] = useState(false);
-    const [statutEntrevue, setStatutEntrevue] = useState(entrevue.status); // État local pour gérer le statut de l'entrevue
+    const [statutEntrevue, setStatutEntrevue] = useState(entrevue.status);
 
     const emailEtudiant = entrevue.etudiantDTO.email;
     const idOffreDeStage = entrevue.offreDeStageDTO.id;
@@ -24,7 +24,7 @@ function AffichageEntrevue({ entrevue, t, onAccept }) {
             if (response.ok) {
                 console.log('Entrevue acceptée:', entrevue);
                 setStatutEntrevue('accepter');
-                if (onAccept) onAccept(entrevue);  // Appeler la fonction passée depuis le parent pour mettre à jour la liste
+                if (onAccept) onAccept(entrevue);
             } else {
                 console.error('Erreur lors de l\'acceptation de l\'entrevue');
             }
@@ -47,6 +47,7 @@ function AffichageEntrevue({ entrevue, t, onAccept }) {
             if (response.ok) {
                 console.log('Entrevue refusée:', entrevue);
                 setStatutEntrevue('refuser');
+                if (onReject) onReject(entrevue);
             } else {
                 console.error('Erreur lors du refus de l\'entrevue');
             }

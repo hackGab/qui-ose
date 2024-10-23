@@ -19,5 +19,7 @@ public interface EntrevueRepository extends JpaRepository<Entrevue, Long> {
 
     @Query("SELECT e FROM Entrevue e WHERE e.etudiant.id = :etudiantId AND e.offreDeStage.id = :offreDeStageId")
     Optional<Entrevue> findByEtudiantIdAndOffreDeStageId(@Param("etudiantId") Long etudiantId, @Param("offreDeStageId") Long offreDeStageId);
+
+    List<Entrevue> findByOffreDeStageIdAndStatus(Long offreDeStageId, String status);
 }
 

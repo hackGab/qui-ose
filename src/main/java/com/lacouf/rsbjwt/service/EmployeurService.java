@@ -11,6 +11,7 @@ import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -113,4 +114,41 @@ public class EmployeurService {
                 .map(EntrevueDTO::new)
                 .toList();
     }
+
+    public Optional<EntrevueDTO> accepterCandidature(Long entrevueId) {
+        return entrevueRepository.findById(entrevueId)
+                .map(entrevue -> {
+                    entrevue.accepterEntrevue();
+                    entrevueRepository.save(entrevue);
+                    return new EntrevueDTO(entrevue);
+                });
+    }
+
+    public Optional<EntrevueDTO> refuserCandidature(Long entrevueId) {
+        return entrevueRepository.findById(entrevueId)
+                .map(entrevue -> {
+                    entrevue.refuserEntrevue();
+                    entrevueRepository.save(entrevue);
+                    return new EntrevueDTO(entrevue);
+                });
+    }
+
+    public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur) {
+        Optional<Employeur> employeurOpt = employeurRepository.findByCredentials_email(emailEmployeur);
+
+        if (employeurOpt.isPresent()) {
+            Employeur employeur = employeurOpt.get();
+
+            List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeur(employeur);
+
+            List<Entrevue> entrevuesAcceptees = offresDeStage.stream()
+                    .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "Accepter").stream())
+                    .toList();
+
+            return entrevuesAcceptees.stream().map(EntrevueDTO::new).toList();
+        }
+
+        return Collections.emptyList();
+    }
+
 }

@@ -182,4 +182,14 @@ public class EtudiantService {
 
         return Optional.empty();
     }
+
+    public List<EntrevueDTO> getEntrevuesAccepteesByEtudiant(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        Long etudiantId = etudiant.getId();
+        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                .filter(entrevue -> entrevue.getStatus().equals("Accepter"))
+                .map(EntrevueDTO::new)
+                .toList();
+    }
+
 }

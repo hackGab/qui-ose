@@ -217,12 +217,12 @@ function EtudiantPostulants() {
                                                         </Button>
                                                         { acceptedEtudiants.includes(etudiant.email) ?
                                                             null:
-                                                            // etudiantsAvecEntrevue.has(etudiant.email) ?
-                                                            //     null: (
+                                                            etudiantsAvecEntrevue.has(etudiant.email) ?
+                                                                null: (
                                                                     <Button variant="danger" onClick={() => handleShowRejectModal(etudiant)}>
                                                                         {t('rejeter')}
                                                                     </Button>
-                                                                // )
+                                                                )
                                                         }
                                                     </div>
                                                 </div>

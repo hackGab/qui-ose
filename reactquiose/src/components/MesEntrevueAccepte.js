@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -31,10 +32,13 @@ function MesEntrevueAccepte() {
 
                 const data = await response.json();
                 setOffres(data);
+                console.log("offres", data);
 
                 for (const offre of data) {
                     const responseEntrevues = await fetch(`http://localhost:8081/entrevues/entrevueAcceptee/offre/${offre.id}`);
                     const entrevuesData = await responseEntrevues.json();
+
+                    console.log(entrevuesData)
 
                     setEntrevues((prevEntrevues) => ({
                         ...prevEntrevues,
@@ -78,9 +82,11 @@ function MesEntrevueAccepte() {
                                         <h5 className="offre-title">{t('Offre')} #{offre.id}: {offre.titre}</h5>
                                         <ul className="entrevue-list">
                                             {entrevues[offre.id].map((entrevue, index) => (
-                                                <li key={index} className="entrevue-item">
-                                                    <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.nom} {entrevue.etudiantDTO.prenom} <br />
+                                                <li key={index} className="entrevue-item text-capitalize">
+                                                    <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName} <br />
                                                     <span className="entrevue-details">{new Date(entrevue.dateHeure).toLocaleString()} - {entrevue.location}</span>
+
+                                                {/* mes 2 boutons pour accepter ou refuser */}
                                                 </li>
                                             ))}
                                         </ul>

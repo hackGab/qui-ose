@@ -43,6 +43,7 @@ function EtudiantPostulants() {
 
                 const etudiantsData = await etudiantsResponse.json();
                 setEtudiants(etudiantsData);
+                console.log("Etudiants data:", etudiantsData);
 
                 if (entrevueResponse.ok) {
                     const entrevueData = await entrevueResponse.json();
@@ -151,20 +152,28 @@ function EtudiantPostulants() {
     };
 
     if (isLoading) {
-        return <div>Chargement des étudiants...</div>;
+        return <div>{t('chargementEtudiants')}</div>;
     }
 
     if (error) {
-        return <div>Erreur: {error}</div>;
+        return <div>{t('erreurRecuperationEtudiants')}</div>;
     }
 
     if (etudiants.length === 0) {
         return (
-            <div className="no-students-message">
-                <h4>Aucun étudiant n'a postulé à cette offre.</h4>
+            <div>
+                <EmployeurHeader/>
+                <div
+                    style={{
+                        textAlign: 'center'
+                    }}
+                >
+                    <h4>{t('AucuneEtudiantAPostuler')}</h4>
+                </div>
             </div>
         );
     }
+
 
     const openFile = (data) => {
         if (data) {

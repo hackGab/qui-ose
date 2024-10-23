@@ -28,6 +28,7 @@
   "utilisateurExiste": "User already exists",
   "erreurLorsCreationUser": "Error during user creation",
   "erreurConnexionServeur": "Error connecting to the server",
+  "erreurRecuperationEtudiants": "Error retrieving students",
   "connexionEchouee": "Connection failed",
   "erreurLorsConnexion": "Error during connection",
   "studentNotFound": "Student not found",
@@ -146,5 +147,7 @@
   "rejeterEtudiant": "Reject Student",
   "confirmationRejet": "Are you sure you want to reject this student?",
   "à": "at",
-  "pour": "for"
+  "pour": "for",
+  "chargementEtudiants": "Loading Students ...",
+  "AucuneEtudiantAPostuler": "No student has applied for this internship"
 }

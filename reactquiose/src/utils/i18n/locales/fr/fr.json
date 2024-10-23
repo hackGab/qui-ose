@@ -31,6 +31,7 @@
   "utilisateurExiste": "L'utilisateur existe déjà",
   "erreurLorsCreationUser": "Erreur lors de la création de l'utilisateur",
   "erreurConnexionServeur": "Erreur lors de la connexion au serveur",
+  "erreurRecuperationEtudiants": "Erreur lors de la récupération des étudiants",
   "connexionEchouee": "Connexion échouée",
   "erreurLorsConnexion": "Erreur lors de la connexion",
   "studentNotFound": "Étudiant non trouvé",
@@ -149,5 +150,7 @@
   "rejeterEtudiant": "Rejeter l'étudiant",
   "confirmationRejet": "Confirmation du rejet",
   "à" : "à",
-  "pour" : "pour"
+  "pour" : "pour",
+  "chargementEtudiants": "Chargement des étudiants ...",
+  "AucuneEtudiantAPostuler": "Aucun étudiant n'a postulé pour ce stage"
 }

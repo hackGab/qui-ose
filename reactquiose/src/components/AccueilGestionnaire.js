@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,8 @@ import employeurImage from '../images/Employeur.png';
 function AccueilGestionnaire() {
     const { t } = useTranslation();
     const [refusNotification] = useState(0);
+    const location = useLocation();
+    const userData = location.state?.userData;
 
     const sections = [
         { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
@@ -20,6 +22,9 @@ function AccueilGestionnaire() {
 
     return (
         <div className="container accueil-gestionnaire">
+            <h2 className="text-center my-4 text-capitalize"
+                style={{color: "#01579b"}}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
+
             <h1>{t("Dashboard")}</h1>
             <div className="row justify-content-center">
                 {sections.map((section, index) => (

@@ -168,5 +168,9 @@
   "creer" : "Create",
   "annuler" : "Cancel",
   "AttendreDateEntrevue": "You will be able to select your intern after the interview date ...",
-  "Bienvenue": "Welcome"
+  "Bienvenue": "Welcome",
+  "ConfirmerVotreChoix": "Confirm your choice",
+  "Embaucher": "Hire",
+  "Refuser": "Refuse",
+  "accepterCandidature": "Accept Application"
 }

@@ -177,6 +177,9 @@
   "creer": "Créer",
   "annuler": "Annuler",
   "AttendreDateEntrevue": "Vous pourrez choisir vos stagiaires après la date de l'entrevue ...",
-  "Bienvenue": "Bienvenue"
-
+  "Bienvenue": "Bienvenue",
+  "ConfirmerVotreChoix": "Confirmer votre choix",
+  "Embaucher": "Embaucher",
+  "Refuser": "Refuser",
+    "accepterCandidature": "Accepter la candidature"
 }

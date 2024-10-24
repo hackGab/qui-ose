@@ -34,7 +34,10 @@ function AccueilEmployeur() {
             <div className="container-fluid p-4">
 
                 <div className="container mt-5">
-                    <h1 className="text-center mt-5 mb-4">{t('accueilEmployeur')}</h1>
+
+                    <h2 className="text-center my-1 text-capitalize" style={{ color: "#01579b" }}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
+
+                    <h1 className="text-center mt-2 mb-4">{t('accueilEmployeur')}</h1>
 
                     <div className="row justify-content-center">
                         <div className="col-md-8">

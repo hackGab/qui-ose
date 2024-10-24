@@ -19,6 +19,7 @@ function AccueilEtudiant() {
     const [internships, setInternships] = useState([]);
 
     useEffect(() => {
+        console.log('userData:', userData);
         if (userData) {
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
@@ -191,6 +192,8 @@ function AccueilEtudiant() {
         <>
             <EtudiantHeader userData={userData}/>
             <div className="container-fluid p-4">
+
+                <h2 className="text-center my-4 text-capitalize" style={{ color: "#01579b" }}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
 
                 <div className="text-center my-4">
                     {file ? (

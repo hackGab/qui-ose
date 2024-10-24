@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
 import {forEach} from "react-bootstrap/ElementChildren";
-import {FaCheck, FaTimes} from "react-icons/fa";
+import {FaCalendarAlt, FaCheck, FaTimes} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";
 import i18n from "i18next";
+import {FaLocationPinLock} from "react-icons/fa6";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -237,12 +238,17 @@ function MesEntrevueAccepte() {
                                     <ul className="entrevue-list">
                                         {entrevues.map((entrevue) => (
                                             <li key={entrevue.id} className="entrevue-item text-capitalize d-flex">
-                                                <div style={{whiteSpace: "nowrap"}}>
+                                                <div >
                                                     <span style={{ fontSize: "1rem" }}>
                                                         <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
                                                     </span>
                                                     <br/>
-                                                    <span className="entrevue-details">{formatDate(entrevue.dateHeure)} - {entrevue.location}</span>
+                                                    <FaCalendarAlt /> &nbsp;
+                                                    <span className="entrevue-details" style={{whiteSpace: "nowrap"}}>{formatDate(entrevue.dateHeure)}</span>
+                                                    <br/>
+                                                    <FaLocationPinLock /> &nbsp;
+
+                                                    <span>{entrevue.location}</span>
                                                 </div>
 
                                                 {showButtonsIfDateBeforeToday(entrevue) && (

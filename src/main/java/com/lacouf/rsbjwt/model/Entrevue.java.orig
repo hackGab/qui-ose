@@ -42,6 +42,17 @@ public class Entrevue {
         this.offreDeStage = offreDeStage;
     }
 
+<<<<<<< HEAD
+    public void accepterEntrevue() {
+        this.status = "accepter";
+    }
+
+    public void refuserEntrevue() {
+        this.status = "refuser";
+    }
+
+=======
+>>>>>>> 09898afc9c28472924ba8fafe5b8b23f1bcbdd31
 
     @Override
     public String toString() {

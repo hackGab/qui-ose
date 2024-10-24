@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
 import {forEach} from "react-bootstrap/ElementChildren";
+import {FaCheck, FaTimes} from "react-icons/fa";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -12,6 +13,7 @@ function MesEntrevueAccepte() {
     const [entrevues, setEntrevues] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [statusMessages, setStatusMessages] = useState({});
     const { t } = useTranslation();
 
 
@@ -47,11 +49,16 @@ function MesEntrevueAccepte() {
     }, [employeurEmail]);
 
 
+    useEffect(() => {
+        entrevues.forEach(entrevue => {
+            setDecisionCandidate(entrevue).then(r => console.log("Decision updated"));
+        });
+    }, [entrevues]);
+
+
 
 
     const handleCandidatureAcceptee = (entrevueAcceptee) => {
-        console.log('Entrevue acceptée:', entrevueAcceptee);
-
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
@@ -59,11 +66,11 @@ function MesEntrevueAccepte() {
                     : entrevue
             )
         );
+
+        setDecisionCandidate(entrevueAcceptee).then(r => console.log("Decision updated"));
     }
 
     const handleCandidatureRejete = (entrevueRejete) => {
-        console.log('Entrevue refusée:', entrevueRejete);
-
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantDTO === entrevueRejete.etudiantDTO && entrevue.offreDeStageDTO === entrevueRejete.offreDeStageDTO
@@ -71,11 +78,23 @@ function MesEntrevueAccepte() {
                     : entrevue
             )
         );
+
+        setDecisionCandidate(entrevueRejete).then(r => console.log("Decision updated"));
+    }
+
+    const setDecisionCandidate = async (entrevue) => {
+        const decision = await getDecisionCandidate(entrevue);
+        if (decision !== null) {
+            setStatusMessages(prevStatusMessages => ({
+                ...prevStatusMessages,
+                [entrevue.id]: decision ? t('CandidatureAcceptee') : t('CandidatureRejetee')
+            }));
+        }
     }
 
     const handleAccept = async (entrevue) => {
         try {
-            const response = await fetch(`http://localhost:8081/entrevues/accepter/${entrevue.id}`, {
+            const response = await fetch(`http://localhost:8081/candidatures/accepter/${entrevue.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +103,6 @@ function MesEntrevueAccepte() {
             });
 
             if (response.ok) {
-                console.log('Entrevue acceptée:', entrevue);
                 handleCandidatureAcceptee(entrevue);
             } else {
                 console.error('Erreur lors de l\'acceptation de l\'entrevue');
@@ -96,9 +114,8 @@ function MesEntrevueAccepte() {
     };
 
     const handleRefuse = async (entrevue) => {
-        console.log("entrevue", entrevue)
         try {
-            const response = await fetch(`http://localhost:8081/entrevues/refuser/${entrevue.id}`, {
+            const response = await fetch(`http://localhost:8081/candidatures/refuser/${entrevue.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +124,6 @@ function MesEntrevueAccepte() {
             });
 
             if (response.ok) {
-                console.log('Entrevue refusée:', entrevue);
                 handleCandidatureRejete(entrevue);
             } else {
                 console.error('Erreur lors du refus de l\'entrevue');
@@ -119,6 +135,32 @@ function MesEntrevueAccepte() {
     };
 
 
+    const getDecisionCandidate = async (entrevue) => {
+        try {
+            const response = await fetch(`http://localhost:8081/candidatures/${entrevue.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data === null || data === undefined) {
+                    console.error('Erreur lors de la récupération de la décision de la candidature');
+                    return null;
+                }
+
+                console.log('Status:', data.accepte ? 'Accepted' : 'Rejected');
+                return data.accepte;
+            }
+        } catch (error) {
+            console.error('Erreur réseau:', error);
+        }
+        return null;
+    }
+
+
 
     if (isLoading) {
         return <div>{t('ChargementDesEntrevues')}</div>;
@@ -128,11 +170,13 @@ function MesEntrevueAccepte() {
         return <div>{t('Erreur')} {error}</div>;
     }
 
-    function showButtonsIfDateBeforeToday(entrevue) {
+    const showButtonsIfDateBeforeToday = (entrevue) => {
         const today = new Date();
         const dateEntrevue = new Date(entrevue.dateHeure);
         return today > dateEntrevue;
     }
+
+
 
     return (
         <>
@@ -145,24 +189,33 @@ function MesEntrevueAccepte() {
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3">
-                            {entrevues.map((entrevue) => (
+                            {entrevues.map( (entrevue) => (
                                 <div key={entrevue.offreDeStageDTO.id} className="col-md-12 offre-card">
                                     <h5 className="offre-title">{t('Offre')} #{entrevue.offreDeStageDTO.id}: {entrevue.offreDeStageDTO.titre}</h5>
                                     <ul className="entrevue-list">
                                         <li key={entrevue.id} className="entrevue-item text-capitalize">
-                                            <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName} <br />
+                                            <div>
+                                                <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
+                                                <br/>
 
-                                            <span className="entrevue-details">{new Date(entrevue.dateHeure).toLocaleString()} - {entrevue.location}</span>
-
-                                            {/*{ entrevue.status === 'accepter' && <span className="badge badge-success">{t('Accepter')}</span> }*/}
-                                            {/*{ entrevue.status === 'refuser' && <span className="badge badge-danger">{t('Refuser')}</span> }*/}
-
-                                            { showButtonsIfDateBeforeToday(entrevue) && (
-                                                <div className="entrevue-actions">
-                                                    <button className="btn btn-success" onClick={() => handleAccept(entrevue)}>{t('Accepter')}</button>
-                                                    <button className="btn btn-danger" onClick={() => handleRefuse(entrevue)}>{t('Refuser')}</button>
-                                                </div>
-                                            ) }
+                                                <span className="entrevue-details">{new Date(entrevue.dateHeure).toLocaleString()} - {entrevue.location}</span>
+                                            </div>
+                                            {showButtonsIfDateBeforeToday(entrevue) && (
+                                                <>
+                                                    {statusMessages[entrevue.id] ? (
+                                                        <div className="status-message">{statusMessages[entrevue.id]}</div>
+                                                    ) : (
+                                                        <div className="entrevue-actions">
+                                                            <div className="icon-block" onClick={() => handleAccept(entrevue)}>
+                                                                <FaCheck className="icon-accept" />
+                                                            </div>
+                                                            <div className="icon-block" onClick={() => handleRefuse(entrevue)}>
+                                                                <FaTimes className="icon-refuse" />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
 
                                         </li>
                                     </ul>

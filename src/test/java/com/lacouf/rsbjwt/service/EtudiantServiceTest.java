@@ -5,11 +5,8 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.auth.Role;
-import com.lacouf.rsbjwt.repository.CVRepository;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.presentation.EtudiantController;
-import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
-import com.lacouf.rsbjwt.repository.UserAppRepository;
 import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,14 +40,16 @@ class EtudiantServiceTest {
     private CV cvEntity;
     private PasswordEncoder passwordEncoder;
 
+    private EntrevueRepository entrevueRepository;
     @BeforeEach
     void setUp() {
         userAppRepository = Mockito.mock(UserAppRepository.class);
         cvRepository = Mockito.mock(CVRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
+        entrevueRepository = Mockito.mock(EntrevueRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository);
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -250,5 +249,7 @@ class EtudiantServiceTest {
         assertEquals(1, ((List<EtudiantDTO>) response).size());
         assertEquals(etudiantEntity.getFirstName(), ((List<EtudiantDTO>) response).get(0).getFirstName());
     }
+
+
 
 }

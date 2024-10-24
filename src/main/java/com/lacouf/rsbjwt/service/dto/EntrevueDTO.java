@@ -10,13 +10,16 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class EntrevueDTO {
+
+    private Long id;
     private LocalDateTime dateHeure;
     private String location;
     private String status;
     private EtudiantDTO etudiantDTO;
     private OffreDeStageDTO offreDeStageDTO;
 
-    public EntrevueDTO(LocalDateTime dateHeure, String location, String status, EtudiantDTO etudiantDTO){
+    public EntrevueDTO(Long id, LocalDateTime dateHeure, String location, String status, EtudiantDTO etudiantDTO){
+        this.id = id;
         this.dateHeure = dateHeure;
         this.location = location;
         this.status = status;
@@ -24,12 +27,14 @@ public class EntrevueDTO {
     }
 
     public EntrevueDTO(Entrevue entrevue){
+        this.id = entrevue.getId();
         this.dateHeure = entrevue.getDateHeure();
         this.location = entrevue.getLocation();
         this.status = entrevue.getStatus();
         this.etudiantDTO = new EtudiantDTO(entrevue.getEtudiant());
         this.offreDeStageDTO = new OffreDeStageDTO(entrevue.getOffreDeStage());
     }
+
 
     public EntrevueDTO() {}
 

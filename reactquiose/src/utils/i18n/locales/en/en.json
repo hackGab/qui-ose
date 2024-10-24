@@ -160,5 +160,7 @@
   "AucuneEntrevueAcceptee": "No accepted interviews",
   "EnAttente": "Pending",
   "EnAttenteDeConfirmation": "Pending Confirmation",
-  "AucuneEntrevueEnAttente": "No pending interviews"
+  "AucuneEntrevueEnAttente": "No pending interviews",
+  "CandidatureAcceptee": "Application accepted",
+  "CandidatureRejetee": "Application rejected"
 }

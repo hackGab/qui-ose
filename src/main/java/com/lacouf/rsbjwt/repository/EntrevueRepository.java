@@ -23,5 +23,7 @@ public interface EntrevueRepository extends JpaRepository<Entrevue, Long> {
     List<Entrevue> findByOffreDeStageIdAndStatus(Long offreDeStageId, String status);
 
     List<Entrevue> findByOffreDeStageAndStatus(OffreDeStage offreDeStage, String status);
+
+
 }
 

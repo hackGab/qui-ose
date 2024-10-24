@@ -43,6 +43,7 @@
   "employerListSubtitle": "Here is the list of employers registered in our internship program.",
   "entrevueListTitle": "Interview List",
   "entrevueListSubtitle": "Here is the list of your accepted interviews and those awaiting a response.",
+  "entrevueListConseil": "* Please press an interview to make your choice",
   "vosEntrevues": "Your Interviews :",
   "validated": "validated",
   "rejected": "rejected",
@@ -166,6 +167,6 @@
   "CandidatureRejetee": "Application rejected",
   "creer" : "Create",
   "annuler" : "Cancel",
- "AttendreDateEntrevue": "You will be able to select your intern after the interview date ...",
+  "AttendreDateEntrevue": "You will be able to select your intern after the interview date ...",
   "Bienvenue": "Welcome"
 }

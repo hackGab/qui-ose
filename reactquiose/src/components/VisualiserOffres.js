@@ -158,7 +158,7 @@ function VisualiserOffres() {
     };
 
     if (isLoading) {
-        return <div>{t('ChangementDesOffres')}</div>;
+        return <div>{t('ChargementDesOffres')}</div>;
     }
 
     if (error) {

@@ -82,6 +82,7 @@ function MesEntrevues() {
                 <div className="container flex-grow-1 pt-4">
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>
                     <p className="text-center mb-4" style={{ fontSize: "2em" }}>{t('entrevueListSubtitle')}</p>
+                    <small style={{ fontSize: "1rem"}}>{t('entrevueListConseil')}</small>
                     <div className="row p-2 text-center w-100 m-auto">
                         <div className="col-md-5 m-auto">
                             <h2 className="entrevuesTitreBox">{t('Acceptees')}</h2>

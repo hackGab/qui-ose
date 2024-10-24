@@ -237,35 +237,54 @@ function MesEntrevueAccepte() {
                                     <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
                                     <ul className="entrevue-list">
                                         {entrevues.map((entrevue) => (
-                                            <li key={entrevue.id} className="entrevue-item text-capitalize d-flex">
-                                                <div >
+                                            <li key={entrevue.id} className="entrevue-item text-capitalize">
+                                                <div style={{
+                                                    minWidth: "15em",
+                                                    marginRight: "3em",
+                                                }}>
                                                     <span style={{ fontSize: "1rem" }}>
                                                         <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
                                                     </span>
                                                     <br/>
-                                                    <FaCalendarAlt /> &nbsp;
-                                                    <span className="entrevue-details" style={{whiteSpace: "nowrap"}}>{formatDate(entrevue.dateHeure)}</span>
-                                                    <br/>
-                                                    <FaLocationPinLock /> &nbsp;
 
-                                                    <span>{entrevue.location}</span>
+                                                    <span className="entrevue-details">
+                                                        <FaCalendarAlt /> &nbsp;
+                                                        {formatDate(entrevue.dateHeure)}
+                                                    </span>
+                                                    <br/>
+
+
+                                                    <span className="entrevue-details">
+                                                        <FaLocationPinLock /> &nbsp;
+                                                        {entrevue.location}
+                                                    </span>
                                                 </div>
 
                                                 {showButtonsIfDateBeforeToday(entrevue) && (
                                                     <>
-                                                        <div className="m-auto">
+                                                        <div className="m-auto d-flex">
                                                             {statusMessages[entrevue.id] ? (
                                                                 <div
                                                                     className="status-message">{statusMessages[entrevue.id]}</div>
                                                             ) : (
                                                                 <div className="entrevue-actions">
-                                                                    <div className="icon-block"
-                                                                         onClick={() => handleAccept(entrevue)}>
-                                                                        <FaCheck className="icon-accept"/>
+                                                                    <div className="icon-block">
+                                                                        <button
+                                                                            className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
+                                                                            onClick={() => handleAccept(entrevue)}
+                                                                            style={{ margin: "0", fontSize: "1.2rem" }}
+                                                                        >
+                                                                            Embaucher
+                                                                        </button>
                                                                     </div>
-                                                                    <div className="icon-block"
-                                                                         onClick={() => handleRefuse(entrevue)}>
-                                                                        <FaTimes className="icon-refuse"/>
+                                                                    <div className="icon-block">
+                                                                        <button
+                                                                            className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
+                                                                            onClick={() => handleRefuse(entrevue)}
+                                                                            style={{ margin: "0", fontSize: "1.2rem" }}
+                                                                        >
+                                                                            Refuser
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             )}

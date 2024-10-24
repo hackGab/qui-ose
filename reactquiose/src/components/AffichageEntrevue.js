@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { FaCalendarAlt, FaClock } from 'react-icons/fa';
+import {FaCalendarAlt, FaClock, FaHandPointer, FaMousePointer, FaRegHandPointer} from 'react-icons/fa';
 import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
 import '../CSS/MesEntrevues.css';
 import i18n from "i18next";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const [showModal, setShowModal] = useState(false);
@@ -65,53 +66,40 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
         return new Date(dateString).toLocaleDateString(i18n.language, options);
     }
 
+    const afficheEntrevues = () => {
+        return (
+            <div className="card-body text-start">
+                <div className="card-title">
+                    <div className="d-flex justify-content-between">
+                        <h6 className="m-0">{offreDeStageDTO.employeur.entreprise}</h6>
+                        <FaCalendarAlt/>
+                    </div>
+                    <h4>{offreDeStageDTO.titre}</h4>
+                </div>
+                <div className="card-text">
+                    <FaLocationPinLock/> &nbsp;
+                    <span style={{verticalAlign: "middle"}}>
+                        <b>{location}</b>
+                    </span>
+                    <br/>
+                    <FaClock/> &nbsp;
+                    <span style={{verticalAlign: "middle"}}>
+                        <b>{formatDate(dateHeure)}</b>
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="col-12" key={id}>
             <div className={`d-inline-flex card offre-card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
                 {status !== 'accepter' ? (
                     <div onClick={handleShow} className="text-decoration-none">
-                        <div className="card-body text-start">
-                            <div className="card-title">
-                                <div className="d-flex justify-content-between">
-                                    <h6 className="m-0">{offreDeStageDTO.employeur.entreprise}</h6>
-                                    <FaCalendarAlt />
-                                </div>
-                                <h4>{offreDeStageDTO.titre}</h4>
-                            </div>
-                            <div className="card-text">
-                                <FaLocationPinLock /> &nbsp;
-                                <span style={{ verticalAlign: "middle" }}>
-                                    <b>{location}</b>
-                                </span>
-                                <br />
-                                <FaClock /> &nbsp;
-                                <span style={{ verticalAlign: "middle" }}>
-                                    <b>{formatDate(dateHeure)}</b>
-                                </span>
-                            </div>
-                        </div>
+                        {afficheEntrevues()}
                     </div>
                 ) : (
-                    <div className="card-body text-start">
-                        <div className="card-title">
-                            <div className="d-flex justify-content-between">
-                                <h6 className="m-0">{offreDeStageDTO.employeur.entreprise}</h6>
-                                <FaCalendarAlt />
-                            </div>
-                            <h4>{offreDeStageDTO.titre}</h4>
-                        </div>
-                        <div className="card-text">
-                            <FaLocationPinLock /> &nbsp;
-                            <span style={{ verticalAlign: "middle" }}>
-                                <b>{location}</b>
-                            </span>
-                            <br />
-                            <FaClock /> &nbsp;
-                            <span style={{ verticalAlign: "middle" }}>
-                                <b>{formatDate(dateHeure)}</b>
-                            </span>
-                        </div>
-                    </div>
+                    afficheEntrevues()
                 )}
             </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ function AccueilGestionnaire() {
     return (
         <div className="container accueil-gestionnaire">
             <h2 className="text-center my-2 text-capitalize"
-                style={{color: "#01579b"}}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
+                style={{ color: "#01579b" }}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
 
             <h1>{t("Dashboard")}</h1>
             <div className="row justify-content-center">
@@ -43,6 +43,12 @@ function AccueilGestionnaire() {
                         </Link>
                     </div>
                 ))}
+            </div>
+
+            <div className="candidature-button-container mt-5">
+                <Link to="/listeCandidatures" className="candidature-button">
+                    {t("Voir les Candidatures")}
+                </Link>
             </div>
         </div>
     );

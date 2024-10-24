@@ -18,6 +18,7 @@ import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
+import ListeCandidature from "./components/ListeCandidature";
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
 		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
                     <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
+                    <Route path="/listeCandidatures" element={<ListeCandidature />}/>
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>

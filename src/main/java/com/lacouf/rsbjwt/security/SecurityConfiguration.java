@@ -28,6 +28,7 @@ import static org.springframework.http.HttpMethod.*;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfiguration {
 
     private final JwtTokenProvider jwtTokenProvider;

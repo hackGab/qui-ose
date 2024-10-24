@@ -44,6 +44,8 @@ public class EmployeurServiceTest {
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         userAppRepository = Mockito.mock(UserAppRepository.class);
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class); // Mocking offreDeStageRepository
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
         employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository);
         employeurController = new EmployeurController(employeurService);
 
@@ -53,6 +55,22 @@ public class EmployeurServiceTest {
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
     }
 
+//    @Test
+//    void shouldCreateEmployeur() {
+//        // Arrange
+//        when(employeurRepository.save(any(Employeur.class)))
+//                .thenReturn(employeurEntity);
+//
+//        // Act
+//        ResponseEntity<EmployeurDTO> response = employeurController.creerEmployeur(newEmployeur);
+//
+//        // Assert
+//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//        assertNotNull(response.getBody());
+//        assertEquals(newEmployeur.getFirstName(), response.getBody().getFirstName());
+//        assertEquals(newEmployeur.getLastName(), response.getBody().getLastName());
+//    }
+
     @Test
     void shouldCreateEmployeur() {
         // Arrange
@@ -60,14 +78,13 @@ public class EmployeurServiceTest {
                 .thenReturn(employeurEntity);
 
         // Act
-        ResponseEntity<EmployeurDTO> response = employeurController.creerEmployeur(newEmployeur);
+        employeurService.creerEmployeur(newEmployeur);
 
         // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(newEmployeur.getFirstName(), response.getBody().getFirstName());
-        assertEquals(newEmployeur.getLastName(), response.getBody().getLastName());
+        Mockito.verify(employeurRepository).save(any(Employeur.class));
+        Mockito.verify(passwordEncoder).encode(newEmployeur.getCredentials().getPassword());
     }
+
 
     @Test
     void shouldReturnEmptyWhenExceptionIsThrown() {
@@ -289,6 +306,22 @@ public class EmployeurServiceTest {
 
 
 
+
+    @Test
+    void shouldReturnEmptyWhenOfferNotFound() {
+        // Arrange
+        String email = "email@gmail.com";
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+
+        // Simuler qu'aucune offre de stage n'est trouvée
+        when(offreDeStageRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<EntrevueDTO> response = employeurService.createEntrevue(entrevueDTO, email, 1L);
+
+        // Assert
+        assertTrue(response.isEmpty()); // S'assurer que la réponse est vide
+    }
 
 
 }

@@ -1,13 +1,9 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.service.*;
-import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.repository.UserAppRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +17,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
-import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
-@WebMvcTest(EmployeurController.class)
+@WebMvcTest(EntrevueController.class)
 public class EntrevueControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,10 +37,13 @@ public class EntrevueControllerTest {
     private EtudiantService etudiantService;
 
     @MockBean
-    private ProfesseurService professeurService;
+    private UserAppRepository userAppRepository;
 
     @MockBean
     private GestionnaireService gestionnaireService;
+
+    @MockBean
+    private ProfesseurService professeurService;
 
     @MockBean
     private PasswordEncoder passwordEncoder;
@@ -51,14 +52,169 @@ public class EntrevueControllerTest {
     private UserAppService userService;
 
     @Test
-    @WithMockUser(username = "employeur", roles = {"EMPLOYEUR"})
-    public void shouldReturnNotFoundWhenEntrevueNotExists() throws Exception {
-        Mockito.when(employeurService.getEntrevueById(1L))
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldCreateEntrevue() throws Exception {
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+        Mockito.when(employeurService.createEntrevue(any(EntrevueDTO.class), anyString(), anyLong()))
+                .thenReturn(Optional.of(entrevueDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/entrevues/creerEntrevue/test@example.com/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(entrevueDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevueDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldGetEntrevueById() throws Exception {
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+        Mockito.when(employeurService.getEntrevueById(anyLong()))
+                .thenReturn(Optional.of(entrevueDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevueDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldReturnNotFoundWhenEntrevueNotFound() throws Exception {
+        Mockito.when(employeurService.getEntrevueById(anyLong()))
                 .thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/entrevues/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldGetEntrevuesByEtudiant() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO(), new EntrevueDTO());
+        Mockito.when(etudiantService.getEntrevuesByEtudiant(anyString()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/etudiant/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldGetEntrevuesEnAttenteByEtudiant() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
+        Mockito.when(etudiantService.getEntrevuesEnAttenteByEtudiant(anyString()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/enAttente/etudiant/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldGetEntrevuesByOffre() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
+        Mockito.when(employeurService.getEntrevuesByOffre(anyLong()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/offre/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldChangeEntrevueStatus() throws Exception {
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+        Mockito.when(etudiantService.changerStatusEntrevue(anyString(), anyLong(), anyString()))
+                .thenReturn(Optional.of(entrevueDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/entrevues/changerStatus/test@example.com/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content("Accepted")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevueDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldReturnBadRequestWhenEntrevueStatusChangeFails() throws Exception {
+        Mockito.when(etudiantService.changerStatusEntrevue(anyString(), anyLong(), anyString()))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/entrevues/changerStatus/test@example.com/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content("Accepted")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldGetEntrevuesAccepteesByOffre() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
+        Mockito.when(employeurService.getEntrevuesAccepteesByOffre(anyLong()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/entrevueAcceptee/offre/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    public void shouldGetEntrevuesAccepteesByEtudiant() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
+        Mockito.when(etudiantService.getEntrevuesAccepteesByEtudiant(anyString()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/acceptees/etudiant/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldGetEntrevuesAccepteesParEmployeur() throws Exception {
+        List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
+        Mockito.when(employeurService.getEntrevuesAccepteesParEmployeur(anyString()))
+                .thenReturn(entrevues);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/entrevues/acceptees/employeur/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(entrevues)));
     }
 }

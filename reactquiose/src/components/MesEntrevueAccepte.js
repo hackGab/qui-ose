@@ -1,10 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
-import {forEach} from "react-bootstrap/ElementChildren";
 import {FaCheck, FaTimes} from "react-icons/fa";
+import ConfirmModal from "./ConfirmModal";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -14,6 +14,9 @@ function MesEntrevueAccepte() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [statusMessages, setStatusMessages] = useState({});
+    const [showModal, setShowModal] = useState(false);
+    const [currentAction, setCurrentAction] = useState(null);
+    const [currentEntrevue, setCurrentEntrevue] = useState(null);
     const { t } = useTranslation();
 
 
@@ -92,7 +95,20 @@ function MesEntrevueAccepte() {
         }
     }
 
+
     const handleAccept = async (entrevue) => {
+        setCurrentAction(() => () => acceptEntrevue(entrevue));
+        setCurrentEntrevue(entrevue);
+        setShowModal(true);
+    };
+
+    const handleRefuse = async (entrevue) => {
+        setCurrentAction(() => () => refuseEntrevue(entrevue));
+        setCurrentEntrevue(entrevue);
+        setShowModal(true);
+    };
+
+    const acceptEntrevue = async (entrevue) => {
         try {
             const response = await fetch(`http://localhost:8081/candidatures/accepter/${entrevue.id}`, {
                 method: 'PUT',
@@ -110,10 +126,10 @@ function MesEntrevueAccepte() {
         } catch (error) {
             console.error('Erreur réseau:', error);
         }
-        // setShowModal(false);
+        setShowModal(false);
     };
 
-    const handleRefuse = async (entrevue) => {
+    const refuseEntrevue = async (entrevue) => {
         try {
             const response = await fetch(`http://localhost:8081/candidatures/refuser/${entrevue.id}`, {
                 method: 'PUT',
@@ -131,7 +147,7 @@ function MesEntrevueAccepte() {
         } catch (error) {
             console.error('Erreur réseau:', error);
         }
-        // setShowModal(false);
+        setShowModal(false);
     };
 
 
@@ -161,13 +177,27 @@ function MesEntrevueAccepte() {
     }
 
 
+    const groupInterviewsByOffer = (entrevues) => {
+        return entrevues.reduce((acc, entrevue) => {
+            const offerId = entrevue.offreDeStageDTO.id;
+            if (!acc[offerId]) {
+                acc[offerId] = {
+                    offer: entrevue.offreDeStageDTO,
+                    entrevues: []
+                };
+            }
+            acc[offerId].entrevues.push(entrevue);
+            return acc;
+        }, {});
+    }
+
 
     if (isLoading) {
-        return <div>{t('ChargementDesEntrevues')}</div>;
+        return <div style={{ fontSize: "1.5rem" }}>{t('ChargementDesEntrevues')}</div>;
     }
 
     if (error) {
-        return <div>{t('Erreur')} {error}</div>;
+        return <div style={{ fontSize: "1.5rem" }}>{t('Erreur')} {error}</div>;
     }
 
     const showButtonsIfDateBeforeToday = (entrevue) => {
@@ -176,6 +206,13 @@ function MesEntrevueAccepte() {
         return today > dateEntrevue;
     }
 
+    const formatDate = (dateString) => {
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+    }
+
+
+    const groupedInterviews = groupInterviewsByOffer(entrevues);
 
 
     return (
@@ -185,39 +222,49 @@ function MesEntrevueAccepte() {
                 <div className="container mt-5">
                     <h1 className="text-center mt-5 page-title">{t('vosEntrevues')}</h1>
 
+                    <legend className="mb-5 mt-0"><i>*{t('AttendreDateEntrevue')}</i></legend>
+
                     {Object.keys(entrevues).length === 0 ? (
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
-                        <div className="row mt-3">
-                            {entrevues.map( (entrevue) => (
-                                <div key={entrevue.offreDeStageDTO.id} className="col-md-12 offre-card">
-                                    <h5 className="offre-title">{t('Offre')} #{entrevue.offreDeStageDTO.id}: {entrevue.offreDeStageDTO.titre}</h5>
+                        <div className="row mt-3 mb-3">
+                            {Object.values(groupedInterviews).map(({offer, entrevues}) => (
+                                <div key={offer.id} className="col-md-12 offre-card">
+                                    <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
                                     <ul className="entrevue-list">
-                                        <li key={entrevue.id} className="entrevue-item text-capitalize">
-                                            <div>
-                                                <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
-                                                <br/>
+                                        {entrevues.map((entrevue) => (
+                                            <li key={entrevue.id} className="entrevue-item text-capitalize d-flex">
+                                                <div style={{whiteSpace: "nowrap"}}>
+                                                    <span style={{ fontSize: "1rem" }}>
+                                                        <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
+                                                    </span>
+                                                    <br/>
+                                                    <span className="entrevue-details">{formatDate(entrevue.dateHeure)} - {entrevue.location}</span>
+                                                </div>
 
-                                                <span className="entrevue-details">{new Date(entrevue.dateHeure).toLocaleString()} - {entrevue.location}</span>
-                                            </div>
-                                            {showButtonsIfDateBeforeToday(entrevue) && (
-                                                <>
-                                                    {statusMessages[entrevue.id] ? (
-                                                        <div className="status-message">{statusMessages[entrevue.id]}</div>
-                                                    ) : (
-                                                        <div className="entrevue-actions">
-                                                            <div className="icon-block" onClick={() => handleAccept(entrevue)}>
-                                                                <FaCheck className="icon-accept" />
-                                                            </div>
-                                                            <div className="icon-block" onClick={() => handleRefuse(entrevue)}>
-                                                                <FaTimes className="icon-refuse" />
-                                                            </div>
+                                                {showButtonsIfDateBeforeToday(entrevue) && (
+                                                    <>
+                                                        <div className="m-auto">
+                                                            {statusMessages[entrevue.id] ? (
+                                                                <div
+                                                                    className="status-message">{statusMessages[entrevue.id]}</div>
+                                                            ) : (
+                                                                <div className="entrevue-actions">
+                                                                    <div className="icon-block"
+                                                                         onClick={() => handleAccept(entrevue)}>
+                                                                        <FaCheck className="icon-accept"/>
+                                                                    </div>
+                                                                    <div className="icon-block"
+                                                                         onClick={() => handleRefuse(entrevue)}>
+                                                                        <FaTimes className="icon-refuse"/>
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </>
-                                            )}
-
-                                        </li>
+                                                    </>
+                                                )}
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             ))}
@@ -225,8 +272,15 @@ function MesEntrevueAccepte() {
                     )}
                 </div>
             </div>
+            <ConfirmModal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                onConfirm={currentAction}
+                message={t('ConfirmerAction')}
+            />
         </>
-    );
+    )
+        ;
 }
 
 export default MesEntrevueAccepte;

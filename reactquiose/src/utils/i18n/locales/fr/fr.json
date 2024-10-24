@@ -159,6 +159,7 @@
   "annuler": "Annuler",
   "rejeterEtudiant": "Rejeter l'étudiant",
   "confirmationRejet": "Confirmation du rejet",
+  "ConfirmerAction": "Confirmer l'action",
   "à" : "à",
   "pour" : "pour",
   "chargementEtudiants": "Chargement des étudiants ...",
@@ -171,5 +172,6 @@
   "EnAttenteDeConfirmation": "En attente de confirmation",
   "AucuneEntrevueEnAttente": "Aucune entrevue en attente",
   "CandidatureAcceptee": "Candidature acceptée",
-  "CandidatureRejetee": "Candidature rejetée"
+  "CandidatureRejetee": "Candidature rejetée",
+  "AttendreDateEntrevue": "Vous pourrez choisir vos stagiaires après la date de l'entrevue ..."
 }

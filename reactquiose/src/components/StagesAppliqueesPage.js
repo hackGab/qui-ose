@@ -122,7 +122,7 @@ function StagesAppliquees() {
                     <small className="text-muted" style={{ fontSize: "1rem" }}><i>*{t('VoirStage')}</i></small>
                 </div>
 
-                <div className="row p-2">
+                <div className="row p-2 m-3">
                     {stagesWithImages.length > 0 ? (
                         stagesWithImages.map((stage, index) => (
                             <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">

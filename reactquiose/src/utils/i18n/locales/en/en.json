@@ -150,6 +150,7 @@
   "annuler": "Cancel",
   "rejeterEtudiant": "Reject Student",
   "confirmationRejet": "Are you sure you want to reject this student?",
+  "ConfirmerAction": "Confirm Action",
   "à": "at",
   "pour": "for",
   "chargementEtudiants": "Loading Students ...",
@@ -162,5 +163,6 @@
   "EnAttenteDeConfirmation": "Pending Confirmation",
   "AucuneEntrevueEnAttente": "No pending interviews",
   "CandidatureAcceptee": "Application accepted",
-  "CandidatureRejetee": "Application rejected"
+  "CandidatureRejetee": "Application rejected",
+  "AttendreDateEntrevue": "You will be able to select your intern after the interview date ..."
 }

@@ -3,6 +3,7 @@ import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
 import '../CSS/MesEntrevues.css';
+import i18n from "i18next";
 
 function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const [showModal, setShowModal] = useState(false);
@@ -59,9 +60,10 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
 
     const { id, offreDeStageDTO, location, dateHeure, status } = entrevue;
 
-    const date = new Date(dateHeure);
-    const formattedDate = date.toLocaleDateString();
-    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const formatDate = (dateString) => {
+        const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString(i18n.language, options);
+    }
 
     return (
         <div className="col-12" key={id}>
@@ -84,7 +86,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                                 <br />
                                 <FaClock /> &nbsp;
                                 <span style={{ verticalAlign: "middle" }}>
-                                    <b>{formattedDate}</b> {t('à')} <b>{formattedTime}</b>
+                                    <b>{formatDate(dateHeure)}</b>
                                 </span>
                             </div>
                         </div>
@@ -106,7 +108,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                             <br />
                             <FaClock /> &nbsp;
                             <span style={{ verticalAlign: "middle" }}>
-                                <b>{formattedDate}</b> {t('à')} <b>{formattedTime}</b>
+                                <b>{formatDate(dateHeure)}</b>
                             </span>
                         </div>
                     </div>

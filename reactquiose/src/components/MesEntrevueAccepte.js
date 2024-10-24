@@ -6,6 +6,7 @@ import "../CSS/MesEntrevueAccepte.css";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {FaCheck, FaTimes} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";
+import i18n from "i18next";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -33,6 +34,8 @@ function MesEntrevueAccepte() {
                 console.log("employeurEmail", employeurEmail) // TODO mon useEffect ce fait 2 fois
                 const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}`);
                 const entrevuesAccepteData = await responseEntrevuesAccepte.json();
+
+                console.log("t", t)
 
                 if (responseEntrevuesAccepte.status === 404) {
                     setEntrevues([]);
@@ -207,8 +210,8 @@ function MesEntrevueAccepte() {
     }
 
     const formatDate = (dateString) => {
-        const options = { day: '2-digit', month: 'long', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('fr-FR', options);
+        const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString(i18n.language, options);
     }
 
 

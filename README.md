@@ -1,4 +1,5 @@
 Définition de "DONE"
+
 1.Code complété : Le développement de la fonctionnalité est terminé selon les exigences définies dans la story.
 2.Tests unitaires effectués : Tous les tests unitaires sont écrits et passent avec succès.
 3.Code revu : Le code a été relu et approuvé par un ou plusieurs membres de l'équipe.

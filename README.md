@@ -27,3 +27,9 @@ Sprint 3
    
 2. Je vais réduire le temps de résolution des bugs critiques au cours des deux prochains sprints en les priorisant dans le backlog et en travaillant avec l'équipe . Je vais suivre les progrès avec Jira et évaluer l'efficacité à la fin de chaque sprint.
 
+Sprint 4
+
+1. Je vais améliorer la collaboration avec l'équipe en participant activement aux discussions lors des stand-ups quotidiens et en offrant de l'aide pour au moins une tâche bloquée par un coéquipier chaque semaine durant ce sprint.
+
+2. Je vais préparer la démon et un script détaillé des fonctionnalités principales d'ici 2 jours avant la revue du sprint. Je vais aussi effectuer une répétition de la démo avec l'équipe pour m'assurer que tout est fluide et que les fonctionnalités sont correctement mises en avant.
+

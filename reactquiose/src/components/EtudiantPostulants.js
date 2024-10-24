@@ -235,7 +235,7 @@ function EtudiantPostulants() {
                                                     <div className="d-flex justify-content-between mt-2">
                                                         <Button
                                                             variant="success"
-                                                            className="me-2"  // Ajout de la marge à droite
+                                                            className="me-1"
                                                             onClick={() => handleShowModal(etudiant)}
                                                             disabled={acceptedEtudiants.includes(etudiant.email) || etudiantsAvecEntrevue.has(etudiant.credentials.email)}>
                                                             {acceptedEtudiants.includes(etudiant.email)

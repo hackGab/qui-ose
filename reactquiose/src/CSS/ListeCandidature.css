@@ -1,0 +1,87 @@
+.table {
+    margin-top: 20px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.container {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 20px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+}
+
+.modal-content {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.modal-content {
+    padding: 0.5rem; /* Réduit le padding du contenu modal */
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.modal-header, .modal-footer {
+    padding: 0.5rem; /* Réduit le padding des en-têtes et pieds de modal */
+}
+
+.modal-body {
+    max-height: 70vh; /* Ajuste la hauteur maximale */
+    overflow-y: auto;
+    font-size: 0.9rem; /* Réduit la taille de la police pour le contenu */
+}
+
+h5.modal-title {
+    font-size: 1.2rem; /* Ajuste la taille du titre */
+}
+
+h6 {
+    font-size: 1rem; /* Réduit la taille des sous-titres */
+}
+
+.btn {
+    padding: 0.3rem 0.5rem; /* Réduit le padding des boutons */
+    font-size: 0.9rem; /* Réduit la taille de la police des boutons */
+}

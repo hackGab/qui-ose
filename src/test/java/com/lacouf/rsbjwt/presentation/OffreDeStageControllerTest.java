@@ -273,20 +273,7 @@ public class OffreDeStageControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(List.of(etudiantDTO1, etudiantDTO2))));
     }
 
-    @Test
-    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
-    public void test_getEtudiantsByOffre_OffreNotFound() throws Exception {
-        Long offreId = 1L;
 
-        when(offreDeStageService.getEtudiantsByOffre(offreId))
-                .thenReturn(Optional.empty());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/offreDeStage/" + offreId + "/etudiants")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
 
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})

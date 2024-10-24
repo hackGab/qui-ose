@@ -171,5 +171,7 @@
   "EnAttenteDeConfirmation": "En attente de confirmation",
   "AucuneEntrevueEnAttente": "Aucune entrevue en attente",
   "CandidatureAcceptee": "Candidature acceptée",
-  "CandidatureRejetee": "Candidature rejetée"
+  "CandidatureRejetee": "Candidature rejetée",
+  "creer": "Créer",
+    "annuler": "Annuler"
 }

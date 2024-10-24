@@ -161,6 +161,22 @@ function MesEntrevueAccepte() {
     }
 
 
+    const groupInterviewsByOffer = (entrevues) => {
+        return entrevues.reduce((acc, entrevue) => {
+            const offerId = entrevue.offreDeStageDTO.id;
+            if (!acc[offerId]) {
+                acc[offerId] = {
+                    offer: entrevue.offreDeStageDTO,
+                    entrevues: []
+                };
+            }
+            acc[offerId].entrevues.push(entrevue);
+            console.log("acc", acc)
+            console.log("entrevue", entrevue)
+            return acc;
+        }, {});
+    }
+
 
     if (isLoading) {
         return <div>{t('ChargementDesEntrevues')}</div>;
@@ -176,6 +192,13 @@ function MesEntrevueAccepte() {
         return today > dateEntrevue;
     }
 
+    const formatDate = (dateString) => {
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+    }
+
+
+    const groupedInterviews = groupInterviewsByOffer(entrevues);
 
 
     return (
@@ -185,39 +208,48 @@ function MesEntrevueAccepte() {
                 <div className="container mt-5">
                     <h1 className="text-center mt-5 page-title">{t('vosEntrevues')}</h1>
 
+                    <legend className="mb-5 mt-0"><i>*{t('AttendreDateEntrevue')}</i></legend>
+
                     {Object.keys(entrevues).length === 0 ? (
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3">
-                            {entrevues.map( (entrevue) => (
-                                <div key={entrevue.offreDeStageDTO.id} className="col-md-12 offre-card">
-                                    <h5 className="offre-title">{t('Offre')} #{entrevue.offreDeStageDTO.id}: {entrevue.offreDeStageDTO.titre}</h5>
+                            {Object.values(groupedInterviews).map(({offer, entrevues}) => (
+                                <div key={offer.id} className="col-md-12 offre-card">
+                                    <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
                                     <ul className="entrevue-list">
-                                        <li key={entrevue.id} className="entrevue-item text-capitalize">
-                                            <div>
-                                                <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
-                                                <br/>
+                                        {entrevues.map((entrevue) => (
+                                            <li key={entrevue.id} className="entrevue-item text-capitalize d-flex">
+                                                <div style={{whiteSpace: "nowrap"}}>
+                                                    <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
+                                                    <br/>
+                                                    <span
+                                                        className="entrevue-details">{formatDate(entrevue.dateHeure)} - {entrevue.location}</span>
+                                                </div>
 
-                                                <span className="entrevue-details">{new Date(entrevue.dateHeure).toLocaleString()} - {entrevue.location}</span>
-                                            </div>
-                                            {showButtonsIfDateBeforeToday(entrevue) && (
-                                                <>
-                                                    {statusMessages[entrevue.id] ? (
-                                                        <div className="status-message">{statusMessages[entrevue.id]}</div>
-                                                    ) : (
-                                                        <div className="entrevue-actions">
-                                                            <div className="icon-block" onClick={() => handleAccept(entrevue)}>
-                                                                <FaCheck className="icon-accept" />
-                                                            </div>
-                                                            <div className="icon-block" onClick={() => handleRefuse(entrevue)}>
-                                                                <FaTimes className="icon-refuse" />
-                                                            </div>
+                                                {showButtonsIfDateBeforeToday(entrevue) && (
+                                                    <>
+                                                        <div className="m-auto">
+                                                            {statusMessages[entrevue.id] ? (
+                                                                <div
+                                                                    className="status-message">{statusMessages[entrevue.id]}</div>
+                                                            ) : (
+                                                                <div className="entrevue-actions">
+                                                                    <div className="icon-block"
+                                                                         onClick={() => handleAccept(entrevue)}>
+                                                                        <FaCheck className="icon-accept"/>
+                                                                    </div>
+                                                                    <div className="icon-block"
+                                                                         onClick={() => handleRefuse(entrevue)}>
+                                                                        <FaTimes className="icon-refuse"/>
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </>
-                                            )}
-
-                                        </li>
+                                                    </>
+                                                )}
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             ))}
@@ -226,7 +258,8 @@ function MesEntrevueAccepte() {
                 </div>
             </div>
         </>
-    );
+    )
+        ;
 }
 
 export default MesEntrevueAccepte;

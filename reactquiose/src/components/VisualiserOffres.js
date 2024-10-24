@@ -143,7 +143,7 @@ function VisualiserOffres() {
                                                 <br/>
                                                 {offre.status === "Validé" && (
 	                                               <div onClick={() => handleListeClick(offre)} className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline">
-                                                    		{t('VoirLaListeDesCandidats')} ({offre.nbCandidats}) {/* TODO ici mettre le nombre de candidats qui ont postulé*/}
+                                                    		{t('VoirLaListeDesCandidats')} ({offre.nbCandidats})
 	                                                </div>
 						                        )}
                                             </p>

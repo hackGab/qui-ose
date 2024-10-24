@@ -162,5 +162,7 @@
   "EnAttenteDeConfirmation": "Pending Confirmation",
   "AucuneEntrevueEnAttente": "No pending interviews",
   "CandidatureAcceptee": "Application accepted",
-  "CandidatureRejetee": "Application rejected"
+  "CandidatureRejetee": "Application rejected",
+  "creer" : "Create",
+  "annuler" : "Cancel"
 }

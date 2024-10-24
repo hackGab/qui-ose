@@ -222,17 +222,20 @@ function EtudiantPostulants() {
                                                 <div className="card-body">
                                                     <h5 className="card-title text-capitalize">{etudiant.firstName} {etudiant.lastName}</h5>
                                                     <p className="card-text text-truncate">
-                                                        <span><FaEnvelope /> <a href={`mailto:${etudiant.email}`}>{etudiant.email}</a></span>
-                                                        <br />
-                                                        <FaPhone /> {etudiant.phoneNumber}
-                                                        <br />
+                                                        <span><FaEnvelope/> <a
+                                                            href={`mailto:${etudiant.email}`}>{etudiant.email}</a></span>
+                                                        <br/>
+                                                        <FaPhone/> {etudiant.phoneNumber}
+                                                        <br/>
                                                         {t('departmentDetail')} {etudiant.departement}
                                                     </p>
 
-                                                    <Button variant="primary" onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
+                                                    <Button variant="primary"
+                                                            onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
                                                     <div className="d-flex justify-content-between mt-2">
                                                         <Button
                                                             variant="success"
+                                                            className="me-2"  // Ajout de la marge à droite
                                                             onClick={() => handleShowModal(etudiant)}
                                                             disabled={acceptedEtudiants.includes(etudiant.email) || etudiantsAvecEntrevue.has(etudiant.credentials.email)}>
                                                             {acceptedEtudiants.includes(etudiant.email)
@@ -241,21 +244,24 @@ function EtudiantPostulants() {
                                                                     ? t('EnAttenteDeConfirmation')
                                                                     : t('creerEntrevue')}
                                                         </Button>
-                                                        { acceptedEtudiants.includes(etudiant.email) ?
-                                                            null:
+
+                                                        {acceptedEtudiants.includes(etudiant.email) ?
+                                                            null :
                                                             etudiantsAvecEntrevue.has(etudiant.email) ?
-                                                                null: (
-                                                                    <Button variant="danger" onClick={() => handleShowRejectModal(etudiant)}>
+                                                                null : (
+                                                                    <Button variant="danger"
+                                                                            onClick={() => handleShowRejectModal(etudiant)}>
                                                                         {t('rejeter')}
                                                                     </Button>
                                                                 )
                                                         }
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                    ))}
                             </div>
                         </>
                     )}

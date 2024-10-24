@@ -57,6 +57,8 @@ public class OffreDeStageServiceTest {
     @Test
     public void test_creerOffreDeStage() {
         // Arrange
+        newOffreDTO.setEmployeur(newEmployeurDTO);
+
         when(offreDeStageRepository.save(any(OffreDeStage.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -73,7 +75,6 @@ public class OffreDeStageServiceTest {
         assertEquals(newOffreDTO.getNbCandidats(), response.get().getNbCandidats());
         assertEquals(newOffreDTO.getEmployeur().getFirstName(), response.get().getEmployeur().getFirstName());
         assertEquals(newOffreDTO.getEmployeur().getLastName(), response.get().getEmployeur().getLastName());
-
     }
 
     @Test

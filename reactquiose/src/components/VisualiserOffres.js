@@ -5,6 +5,7 @@ import EmployeurHeader from "./EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 
 function VisualiserOffres() {
@@ -17,10 +18,11 @@ function VisualiserOffres() {
     const [error, setError] = useState(null);
     const [selectedOffre, setSelectedOffre] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
+    const [nbCandidats, setNbCandidats] = useState({});
     const {t} = useTranslation();
 
     useEffect(() => {
-        const fetchOffres = async () => {
+        const fetchOffresAndUtilisateurs = async () => {
             if (!employeurEmail) {
                 setError("Email employeur non fourni");
                 setIsLoading(false);
@@ -29,19 +31,61 @@ function VisualiserOffres() {
 
             try {
                 const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}`);
-                if (response.status === 404){
+                if (response.status === 404) {
                     setOffres([]);
+                    setIsLoading(false);
                     return;
                 }
 
-                const data = await response.json();
-                console.log(data)
-
-                if (data.length === 0) {
+                const offresData = await response.json();
+                if (offresData.length === 0) {
                     setOffres([]);
-                } else {
-                    setOffres(data);
+                    setIsLoading(false);
+                    return;
                 }
+
+                const offresWithUtilisateurs = await Promise.all(
+                    offresData.map(async (offre) => {
+                        const [etudiantsResponse, entrevueResponse] = await Promise.all([
+                            fetch(`http://localhost:8081/offreDeStage/${offre.id}/etudiants`),
+                            fetch(`http://localhost:8081/entrevues/offre/${offre.id}`)
+                        ]);
+
+                        if (!etudiantsResponse.ok) {
+                            throw new Error("Erreur dans la réponse du serveur");
+                        }
+
+                        const etudiantsData = await etudiantsResponse.json();
+                        const entrevueData = entrevueResponse.ok ? await entrevueResponse.json() : [];
+
+                        const etudiantsAvecEntrevueSet = new Set(entrevueData.map(entrevue => entrevue.etudiantDTO.credentials.email));
+
+                        const filteredEtudiants = etudiantsData.filter((etudiant) => {
+                            if (etudiantsAvecEntrevueSet.has(etudiant.credentials.email)) {
+                                let entrevueEtudiant = null;
+                                entrevueData.forEach((entrevue) => {
+                                    if (entrevue.etudiantDTO.credentials.email === etudiant.credentials.email) {
+                                        entrevueEtudiant = entrevue;
+                                    }
+                                });
+
+                                if (entrevueEtudiant.status === "refuser" || entrevueEtudiant.status === "accepter") {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            } else {
+                                return true;
+                            }
+                        });
+
+                        return { offre, data: filteredEtudiants };
+                    })
+                );
+
+                const sortedOffres = offresWithUtilisateurs.sort((a, b) => b.data.length - a.data.length);
+                setOffres(sortedOffres.map(item => item.offre));
+                setNbCandidats(sortedOffres.map(item => item.data.length));
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -49,8 +93,13 @@ function VisualiserOffres() {
             }
         };
 
-        fetchOffres();
+        fetchOffresAndUtilisateurs();
     }, [employeurEmail]);
+
+
+    const getNbCandidats = (offre) => {
+        return nbCandidats[offres.findIndex(item => item.id === offre.id)];
+    }
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -143,7 +192,7 @@ function VisualiserOffres() {
                                                 <br/>
                                                 {offre.status === "Validé" && (
 	                                               <div onClick={() => handleListeClick(offre)} className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline">
-                                                    		{t('VoirLaListeDesCandidats')} ({offre.nbCandidats})
+                                                    		{t('VoirLaListeDesCandidats')} ({ getNbCandidats(offre) || 0 })
 	                                                </div>
 						                        )}
                                             </p>

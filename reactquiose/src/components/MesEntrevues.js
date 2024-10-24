@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
+import i18n from "i18next";
 
 function MesEntrevues() {
     const { t } = useTranslation();
@@ -72,6 +73,7 @@ function MesEntrevues() {
     if (error) {
         return <div>Erreur: {error}</div>;
     }
+
 
     return (
         <>

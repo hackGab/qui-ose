@@ -44,6 +44,9 @@ public class CandidatAccepterController {
     public ResponseEntity<CandidatAccepterDTO> getCandidatureDecision(@PathVariable Long entrevueId) {
         Optional<CandidatAccepterDTO> decisionOpt = candidatAccepterService.getCandidatureDecision(entrevueId);
 
+        if (decisionOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
         return decisionOpt
                 .map(decision -> ResponseEntity.ok().body(decision))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

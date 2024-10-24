@@ -48,7 +48,6 @@ public class CandidatAccepterService {
         return Optional.empty();
     }
 
-
     public Optional<CandidatAccepterDTO> getCandidatureDecision(Long entrevueId) {
         Optional<CandidatAccepter> candidatAccepterOptional = candidatAccepterRepository.findByEntrevueId(entrevueId);
 
@@ -56,5 +55,14 @@ public class CandidatAccepterService {
                 candidatAccepter.getEntrevue().getId(),
                 candidatAccepter.isAccepte()
         ));
+    }
+
+    public Iterable<CandidatAccepterDTO> getAllCandidatures() {
+        return candidatAccepterRepository.findAll().stream()
+                .map(candidatAccepter -> new CandidatAccepterDTO(
+                        candidatAccepter.getEntrevue().getId(),
+                        candidatAccepter.isAccepte()
+                ))
+                .toList();
     }
 }

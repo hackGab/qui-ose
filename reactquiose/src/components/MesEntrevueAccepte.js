@@ -42,11 +42,12 @@ function MesEntrevueAccepte() {
                     setEntrevues([]);
                     return;
                 }
+
                 console.log("entrevuesAccepteData", entrevuesAccepteData)
                 setEntrevues(entrevuesAccepteData);
 
             } catch (error) {
-                setError(error.message);
+                console.error('Erreur lors de la récupération des entrevues:', error);
             } finally {
                 setIsLoading(false);
             }

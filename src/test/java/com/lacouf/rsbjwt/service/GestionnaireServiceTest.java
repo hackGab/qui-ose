@@ -194,7 +194,6 @@ public class GestionnaireServiceTest {
         Entrevue entrevue = new Entrevue();
         entrevue.setId(1L);
 
-
         Contrat contrat = new Contrat();
         contrat.setId(1L);
         contrat.setEtudiantSigne(true);
@@ -215,5 +214,38 @@ public class GestionnaireServiceTest {
 
         // Assert
         assertTrue(result.isPresent());
+    }
+    @Test
+    void getAllContrats() {
+
+        Contrat contrat = new Contrat();
+        contrat.setId(1L);
+        contrat.setEtudiantSigne(true);
+        contrat.setEmployeurSigne(true);
+        contrat.setGestionnaireSigne(true);
+        contrat.setDateSignatureEtudiant(LocalDate.now());
+        contrat.setDateSignatureEmployeur(LocalDate.now());
+        contrat.setDateSignatureGestionnaire(LocalDate.now());
+        contrat.setCollegeEngagement("college");
+        contrat.setDateDebut(LocalDate.now());
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        Contrat contrat1 = new Contrat();
+        contrat1.setId(2L);
+        contrat1.setEtudiantSigne(true);
+        contrat1.setEmployeurSigne(true);
+        contrat1.setGestionnaireSigne(true);
+        contrat1.setDateSignatureEtudiant(LocalDate.now());
+        contrat1.setDateSignatureEmployeur(LocalDate.now());
+        contrat1.setDateSignatureGestionnaire(LocalDate.now());
+        contrat1.setCollegeEngagement("college");
+        contrat1.setDateDebut(LocalDate.now());
+        contrat1.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        when(contratRepository.findAll()).thenReturn(java.util.List.of(contrat, contrat1));
+        Iterable<ContratDTO> result = gestionnaireService.getAllContrats();
+
+        assertTrue(result.iterator().hasNext());
+        assertEquals(2, result.spliterator().getExactSizeIfKnown());
     }
 }

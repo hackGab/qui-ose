@@ -97,7 +97,7 @@ function ListeCandidature() {
             heureHorraireFin: '',
             lieuStage: candidat.entrevueDetails.offreDeStageDTO.localisation,
             nbSemaines: '',
-            tauxHoraire: candidat.entrevueDetails?.offreDeStageDTO.tauxHoraire || '',
+            tauxHoraire: '',
         });
     };
 
@@ -121,6 +121,7 @@ function ListeCandidature() {
             body: JSON.stringify(formData)
         });
 
+        setContrats([...contrats, formData]);
         handleCloseModal();
     };
 
@@ -202,19 +203,23 @@ function ListeCandidature() {
                                         </div>
                                         <div className="form-group col-md-6 p-1">
                                             <label>{t('DateDeFin')} :</label>
-                                            <input type="date" className="form-control" name="dateFin" value={formData.dateFin} onChange={handleChange} required />
+                                            <input type="date" className="form-control" name="dateFin"
+                                                   value={formData.dateFin} onChange={handleChange} required/>
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         <label>{t('NombreTotalSemaines')} :</label>
-                                        <input type="number" className="form-control" name="semaines" value={formData.semaines} onChange={handleChange} required />
+                                        <input type="number" className="form-control" name="semaines"
+                                               value={formData.semaines} onChange={handleChange} required/>
                                     </div>
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
                                         <div className="form-group col-md-6">
                                             <label>{t('HeureDeDebut')} :</label>
-                                            <select className="form-control" name="heureHorraireDebut" value={formData.heureHorraireDebut} onChange={handleChange} required>
+                                            <select className="form-control" name="heureHorraireDebut"
+                                                    value={formData.heureHorraireDebut} onChange={handleChange}
+                                                    required>
                                                 <option value="">{t('SelectionnezUneHeure')}</option>
                                                 {hoursOptions.map(time => (
                                                     <option key={time} value={time}>{time}</option>
@@ -223,7 +228,8 @@ function ListeCandidature() {
                                         </div>
                                         <div className="form-group col-md-6">
                                             <label>{t('HeureDeFin')} :</label>
-                                            <select className="form-control" name="heureHorraireFin" value={formData.heureHorraireFin} onChange={handleChange} required>
+                                            <select className="form-control" name="heureHorraireFin"
+                                                    value={formData.heureHorraireFin} onChange={handleChange} required>
                                                 <option value="">{t('SelectionnezUneHeure')}</option>
                                                 {hoursOptions.map(time => (
                                                     <option key={time} value={time}>{time}</option>
@@ -234,36 +240,60 @@ function ListeCandidature() {
 
                                     <div className="form-group">
                                         <label>{t('NombreTotalHeuresParSemaine')} :</label>
-                                        <input type="number" className="form-control" name="heuresParSemaine" value={formData.heuresParSemaine} onChange={handleChange} required />
+                                        <input type="number" className="form-control" name="heuresParSemaine"
+                                               value={formData.heuresParSemaine} onChange={handleChange} required/>
                                     </div>
 
                                     <h6>{t('Salaire')}</h6>
-                                    <p>{t('SalaireHoraire')} : {formData.tauxHoraire}</p>
+                                    <div className="form-group">
+                                        <label>{t('SalaireHoraire')} :</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="tauxHoraire"
+                                            value={formData.tauxHoraire}
+                                            onChange={(e) => {
+                                                const {name, value} = e.target;
+                                                const regex = /^\d+(\.\d{0,2})?$/;
 
+                                                if (regex.test(value) || value === "") {
+                                                    setFormData({...formData, [name]: value});
+                                                }
+                                            }}
+                                            step="0.01"
+                                            min="0"
+                                            required
+                                        />
+                                    </div>
                                     <h6>{t('TachesEtResponsabilitesDuStage')}</h6>
                                     <div className="form-group">
                                         <label>Description :</label>
-                                        <textarea className="form-control" name="description" value={formData.description} onChange={handleChange} required />
+                                        <textarea className="form-control" name="description"
+                                                  value={formData.description} onChange={handleChange} required/>
                                     </div>
 
                                     <h6>{t('Responsabilites')}</h6>
                                     <div className="form-row">
-                                        <div className="form-group col-md-4 p-1 ">
+                                    <div className="form-group col-md-4 p-1 ">
                                             <label>{t('LeCollegeSEngageA')} :</label>
-                                            <textarea className="form-control" name="collegeEngagement" value={formData.collegeEngagement} onChange={handleChange} />
+                                            <textarea className="form-control" name="collegeEngagement"
+                                                      value={formData.collegeEngagement} onChange={handleChange}/>
                                         </div>
                                         <div className="form-group col-md-4 p-1 ">
                                             <label>{t('EntrepriseSEngageA')} :</label>
-                                            <textarea className="form-control" name="entrepriseEngagement" value={formData.entrepriseEngagement} onChange={handleChange} />
+                                            <textarea className="form-control" name="entrepriseEngagement"
+                                                      value={formData.entrepriseEngagement} onChange={handleChange}/>
                                         </div>
                                         <div className="form-group col-md-4 p-1">
                                             <label>{t('EtudiantSEngageA')} :</label>
-                                            <textarea className="form-control" name="etudiantEngagement" value={formData.etudiantEngagement} onChange={handleChange} />
+                                            <textarea className="form-control" name="etudiantEngagement"
+                                                      value={formData.etudiantEngagement} onChange={handleChange}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>{t('close')}</button>
+                                    <button type="button" className="btn btn-secondary"
+                                            onClick={handleCloseModal}>{t('close')}</button>
                                     <button type="submit" className="btn btn-success">{t('GenererContrat')}</button>
                                 </div>
                             </form>

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import GestionnaireHeader from './GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
+import { useTranslation } from "react-i18next";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
+    const [contrats, setContrats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -52,6 +55,17 @@ function ListeCandidature() {
                 setCandidatures(candidatsWithEntrevues);
                 console.log(candidatsWithEntrevues);
                 setLoading(false);
+            })
+            .then(() => {
+                fetch('http://localhost:8081/contrat/all')
+                    .then(response => response.json())
+                    .then(data => {
+                        setContrats(data);
+                        console.log(data);
+                    })
+                    .catch(err => {
+                        setError(err.message);
+                    });
             })
             .catch(err => {
                 setError(err.message);
@@ -118,87 +132,99 @@ function ListeCandidature() {
             <GestionnaireHeader style={{ marginBottom: '50px' }} />
             <div className="container-fluid p-4">
                 <div className="container text-center">
-                    <h1 className="mb-4">Liste des Candidatures et Détails des Entrevues</h1>
+                    <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
                     <table className="table table-striped table-hover">
                         <thead className="thead-dark">
                         <tr>
-                            <th>Étudiant</th>
-                            <th>Offre de Stage</th>
-                            <th>Employeur</th>
-                            <th>Action</th>
+                            <th>{t('Etudiant')}</th>
+                            <th>{t('OffreDeStage')}</th>
+                            <th>{t('Employeur')}</th>
+                            <th>{t('Actions')}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {candidatures.map(candidat => (
-                            <tr key={candidat.id}>
-                                <td>
-                                    {candidat.entrevueDetails ?
-                                        `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` :
-                                        "N/A"}
-                                </td>
-                                <td>
-                                    {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
-                                </td>
-                                <td>
-                                    {candidat.entrevueDetails ?
-                                        `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` :
-                                        "N/A"}
-                                </td>
-                                <td>
-                                    <button className="btn btn-success" onClick={() => handleGenerateContract(candidat)}>
-                                        Générer Contrat
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {candidatures.map(candidat => {
+                            const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
+
+                            return (
+                                <tr key={candidat.id}>
+                                    <td>
+                                        {candidat.entrevueDetails ?
+                                            `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` :
+                                            "N/A"}
+                                    </td>
+                                    <td>
+                                        {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
+                                    </td>
+                                    <td>
+                                        {candidat.entrevueDetails ?
+                                            `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` :
+                                            "N/A"}
+                                    </td>
+                                    <td>
+                                        {!hasContrat ? (
+                                            <button className="btn btn-success"
+                                                    onClick={() => handleGenerateContract(candidat)}>
+                                                {t('GenererContrat')}
+                                            </button>
+                                        ) : <button className="btn btn-success disabled"
+                                                    onClick={() => handleGenerateContract(candidat)}>
+                                            {t('EnAttenteDeSignatures')}
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            );
+                        })}
                         </tbody>
                     </table>
                 </div>
             </div>
 
             {showModal && (
-                <div className="modal fade show" style={{ display: 'block' }} onClick={handleCloseModal}>
+                <div className="modal fade show" style={{display: 'block'}} onClick={handleCloseModal}>
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Génération de Contrat</h5>
+                                <h5 className="modal-title">{t('GenerationContrat')}</h5>
                             </div>
                             <form onSubmit={handleSubmit}>
                                 <div className="modal-body">
-                                    <h6>ENDROIT DU STAGE</h6>
-                                    <p>Adresse : {formData.lieuStage}</p>
+                                    <h6>{t('EndroitDuStage')}</h6>
+                                    <p>{t('Adresse')} : {formData.lieuStage}</p>
 
-                                    <h6>DUREE DU STAGE</h6>
+                                    <h6>{t('DureeDuStage')}</h6>
                                     <div className="form-row">
                                         <div className="form-group col-md-6 p-1">
-                                            <label>Date de début :</label>
-                                            <input type="date" className="form-control" name="dateDebut" value={formData.dateDebut} onChange={handleChange} required />
+                                            <label>{t('DateDeDebut')} :</label>
+                                            <input type="date" className="form-control" name="dateDebut"
+                                                   value={formData.dateDebut} onChange={handleChange} required/>
                                         </div>
                                         <div className="form-group col-md-6 p-1">
-                                            <label>Date de fin :</label>
+                                            <label>{t('DateDeFin')} :</label>
                                             <input type="date" className="form-control" name="dateFin" value={formData.dateFin} onChange={handleChange} required />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label>Nombre total de semaines :</label>
+                                        <label>{t('NombreTotalSemaines')} :</label>
                                         <input type="number" className="form-control" name="semaines" value={formData.semaines} onChange={handleChange} required />
                                     </div>
 
-                                    <h6>HORAIRE DE TRAVAIL</h6>
+                                    <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
                                         <div className="form-group col-md-6">
-                                            <label>Heure de début :</label>
+                                            <label>{t('HeureDeDebut')} :</label>
                                             <select className="form-control" name="heureHorraireDebut" value={formData.heureHorraireDebut} onChange={handleChange} required>
-                                                <option value="">Sélectionnez une heure</option>
+                                                <option value="">{t('SelectionnezUneHeure')}</option>
                                                 {hoursOptions.map(time => (
                                                     <option key={time} value={time}>{time}</option>
                                                 ))}
                                             </select>
                                         </div>
                                         <div className="form-group col-md-6">
-                                            <label>Heure de fin :</label>
+                                            <label>{t('HeureDeFin')} :</label>
                                             <select className="form-control" name="heureHorraireFin" value={formData.heureHorraireFin} onChange={handleChange} required>
-                                                <option value="">Sélectionnez une heure</option>
+                                                <option value="">{t('SelectionnezUneHeure')}</option>
                                                 {hoursOptions.map(time => (
                                                     <option key={time} value={time}>{time}</option>
                                                 ))}
@@ -207,38 +233,38 @@ function ListeCandidature() {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Nombre total d’heures par semaine :</label>
+                                        <label>{t('NombreTotalHeuresParSemaine')} :</label>
                                         <input type="number" className="form-control" name="heuresParSemaine" value={formData.heuresParSemaine} onChange={handleChange} required />
                                     </div>
 
-                                    <h6>SALAIRE</h6>
-                                    <p>Salaire horaire : {formData.tauxHoraire}</p>
+                                    <h6>{t('Salaire')}</h6>
+                                    <p>{t('SalaireHoraire')} : {formData.tauxHoraire}</p>
 
-                                    <h6>TACHES ET RESPONSABILITES DU STAGIAIRE</h6>
+                                    <h6>{t('TachesEtResponsabilitesDuStage')}</h6>
                                     <div className="form-group">
                                         <label>Description :</label>
                                         <textarea className="form-control" name="description" value={formData.description} onChange={handleChange} required />
                                     </div>
 
-                                    <h6>RESPONSABILITES</h6>
+                                    <h6>{t('Responsabilites')}</h6>
                                     <div className="form-row">
                                         <div className="form-group col-md-4 p-1 ">
-                                            <label>Le Collège s’engage à :</label>
+                                            <label>{t('LeCollegeSEngageA')} :</label>
                                             <textarea className="form-control" name="collegeEngagement" value={formData.collegeEngagement} onChange={handleChange} />
                                         </div>
                                         <div className="form-group col-md-4 p-1 ">
-                                            <label>L’Entreprise s’engage à :</label>
+                                            <label>{t('EntrepriseSEngageA')} :</label>
                                             <textarea className="form-control" name="entrepriseEngagement" value={formData.entrepriseEngagement} onChange={handleChange} />
                                         </div>
                                         <div className="form-group col-md-4 p-1">
-                                            <label>L’Étudiant s’engage à :</label>
+                                            <label>{t('EtudiantSEngageA')} :</label>
                                             <textarea className="form-control" name="etudiantEngagement" value={formData.etudiantEngagement} onChange={handleChange} />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Fermer</button>
-                                    <button type="submit" className="btn btn-primary">Générer</button>
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>{t('close')}</button>
+                                    <button type="submit" className="btn btn-success">{t('GenererContrat')}</button>
                                 </div>
                             </form>
                         </div>

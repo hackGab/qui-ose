@@ -29,4 +29,11 @@ public class ContratController {
         return contratCree.map(contrat -> ResponseEntity.status(HttpStatus.CREATED).body(contrat))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {
+        Iterable<ContratDTO> contrats = gestionnaireService.getAllContrats();
+
+        return ResponseEntity.ok().body(contrats);
+    }
 }

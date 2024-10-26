@@ -126,4 +126,9 @@ public class GestionnaireService {
         }
     }
 
+    public Iterable<ContratDTO> getAllContrats() {
+        return contratRepository.findAll().stream()
+                .map(contrat -> new ContratDTO(contrat))
+                .toList();
+    }
 }

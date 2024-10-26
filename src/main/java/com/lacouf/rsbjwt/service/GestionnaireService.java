@@ -91,7 +91,6 @@ public class GestionnaireService {
 
     public Optional<ContratDTO> creerContrat(ContratDTO contratDTO) {
         try {
-
             CandidatAccepter candidat = contratDTO.getCandidature().toEntity();
             candidat.setEntrevue(entrevueRepository.findById(contratDTO.getCandidature().getEntrevueId()).get());
 

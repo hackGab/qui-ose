@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.service.CandidatAccepterService;
 import com.lacouf.rsbjwt.service.GestionnaireService;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/contrat")
 @CrossOrigin(origins = "http://localhost:3000")
-public class ContratController {
+public class  ContratController {
     private final GestionnaireService gestionnaireService;
 
-    public ContratController(GestionnaireService gestionnaireService) {
+    private final CandidatAccepterService candidatAccepterService;
+
+    public ContratController(GestionnaireService gestionnaireService, CandidatAccepterService candidatAccepterService) {
         this.gestionnaireService = gestionnaireService;
+        this.candidatAccepterService = candidatAccepterService;
     }
 
     @PostMapping("/creerContrat")
@@ -25,9 +29,10 @@ public class ContratController {
         }
 
         Optional<ContratDTO> contratCree = gestionnaireService.creerContrat(newContrat);
+        System.out.println(contratCree);
 
-        return contratCree.map(contrat -> ResponseEntity.status(HttpStatus.CREATED).body(contrat))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
+        return contratCree.map(contratDTO -> ResponseEntity.ok().body(contratDTO)).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
     }
 
     @GetMapping("/all")

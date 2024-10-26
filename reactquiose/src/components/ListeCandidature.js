@@ -70,6 +70,7 @@ function ListeCandidature() {
             collegeEngagement: '',
             entrepriseEngagement: '',
             etudiantEngagement: '',
+            candidature: selectedCandidat
         });
     };
 

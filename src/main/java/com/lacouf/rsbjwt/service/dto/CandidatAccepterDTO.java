@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service.dto;
 
+import com.lacouf.rsbjwt.model.CandidatAccepter;
 import lombok.*;
 
 @Getter
@@ -15,6 +16,12 @@ public class CandidatAccepterDTO {
     public CandidatAccepterDTO(Long entrevueId, boolean accepte) {
         this.entrevueId = entrevueId;
         this.accepte = accepte;
+    }
+
+    public CandidatAccepterDTO(CandidatAccepter candidatAccepter) {
+        this.id = candidatAccepter.getId();
+        this.entrevueId = candidatAccepter.getEntrevue().getId();
+        this.accepte = candidatAccepter.isAccepte();
     }
 
     @Override

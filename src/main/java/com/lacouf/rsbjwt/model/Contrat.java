@@ -38,7 +38,8 @@ public class Contrat {
     private LocalDate dateSignatureGestionnaire;
 
     @OneToOne
-    private CandidatAccepter candidatAccepter;
+    @JoinColumn(nullable = false)
+    private CandidatAccepter candidature;
 
     @Column(nullable = false)
     private String collegeEngagement;
@@ -77,7 +78,7 @@ public class Contrat {
     private float tauxHoraire;
 
     public Contrat(boolean etudiantSigne, boolean employeurSigne, boolean gestionnaireSigne, LocalDate dateSignatureEtudiant,
-                   LocalDate dateSignatureEmployeur, LocalDate dateSignatureGestionnaire, CandidatAccepter candidatAccepter,
+                   LocalDate dateSignatureEmployeur, LocalDate dateSignatureGestionnaire, CandidatAccepter candidature,
                    String collegeEngagement, LocalDate dateDebut, LocalDate dateFin, String description, String entrepriseEngagement,
                    String etudiantEngagement, int heuresParSemaine, LocalTime heureHorraireDebut, LocalTime heureHorraireFin, String lieuStage,
                    int nbSemaines, float tauxHoraire) {
@@ -87,7 +88,7 @@ public class Contrat {
         this.dateSignatureEtudiant = dateSignatureEtudiant;
         this.dateSignatureEmployeur = dateSignatureEmployeur;
         this.dateSignatureGestionnaire = dateSignatureGestionnaire;
-        this.candidatAccepter = candidatAccepter;
+        this.candidature = candidature;
         this.collegeEngagement = collegeEngagement;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -112,8 +113,8 @@ public class Contrat {
                 ", dateSignatureEtudiant=" + dateSignatureEtudiant +
                 ", dateSignatureEmployeur=" + dateSignatureEmployeur +
                 ", dateSignatureGestionnaire=" + dateSignatureGestionnaire +
-                ", etudiant=" + candidatAccepter.getEntrevue().getEtudiant().getEmail() +
-                ", employeur=" + candidatAccepter.getEntrevue().getOffreDeStage().getEmployeur() +
+                ", etudiant=" + candidature.getEntrevue().getEtudiant().getEmail() +
+                ", employeur=" + candidature.getEntrevue().getOffreDeStage().getEmployeur() +
                 ", collegeEngagement='" + collegeEngagement + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +

@@ -46,12 +46,12 @@ public class Entrevue {
     @Override
     public String toString() {
         return "Entrevue{" +
-                "id=" + id +
-                ", dateHeure=" + dateHeure +
-                ", location='" + location + '\'' +
-                ", status='" + status + '\'' +
-                ", etudiant=" + etudiant.getEmail() +
-                ", offreDeStage=" + offreDeStage.getTitre() +
+                "id=" + (id != null ? id : "null") +
+                ", dateHeure=" + (dateHeure != null ? dateHeure : "null") +
+                ", location='" + (location != null ? location : "null") + '\'' +
+                ", status='" + (status != null ? status : "null") + '\'' +
+                ", etudiant=" + (etudiant != null ? etudiant.getEmail() : "null") +
+                ", offreDeStage=" + (offreDeStage != null ? offreDeStage.getTitre() : "null") +
                 '}';
     }
 }

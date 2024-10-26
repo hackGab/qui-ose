@@ -50,7 +50,7 @@ public class CandidatAccepterControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldAcceptCandidature() throws Exception {
-        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO(1L, true);
+        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
         Mockito.when(candidatAccepterService.accepterCandidature(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 
@@ -66,7 +66,7 @@ public class CandidatAccepterControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldRefuseCandidature() throws Exception {
-        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO(1L, false);
+        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
         Mockito.when(candidatAccepterService.refuserCandidature(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 
@@ -77,6 +77,8 @@ public class CandidatAccepterControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(candidatAccepterDTO)));
+
+
     }
 
     @Test
@@ -96,7 +98,7 @@ public class CandidatAccepterControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldGetCandidatureDecision() throws Exception {
-        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO(1L, true);
+        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
         Mockito.when(candidatAccepterService.getCandidatureDecision(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 

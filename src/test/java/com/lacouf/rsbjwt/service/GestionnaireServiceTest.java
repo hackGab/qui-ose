@@ -189,13 +189,26 @@ public class GestionnaireServiceTest {
         contratDTO.setDateSignatureGestionnaire(LocalDate.now());
         contratDTO.setCollegeEngagement("college");
         contratDTO.setDateDebut(LocalDate.now());
+        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
 
-        CandidatAccepter candidat = new CandidatAccepter();
-        candidat.setEntrevue(new Entrevue());
-        candidat.getEntrevue().setId(1L);
+        Entrevue entrevue = new Entrevue();
+        entrevue.setId(1L);
 
-        when(entrevueRepository.findById(1L)).thenReturn(Optional.of(new Entrevue()));
-        when(contratRepository.save(any(Contrat.class))).thenReturn(new Contrat());
+
+        Contrat contrat = new Contrat();
+        contrat.setId(1L);
+        contrat.setEtudiantSigne(true);
+        contrat.setEmployeurSigne(true);
+        contrat.setGestionnaireSigne(true);
+        contrat.setDateSignatureEtudiant(LocalDate.now());
+        contrat.setDateSignatureEmployeur(LocalDate.now());
+        contrat.setDateSignatureGestionnaire(LocalDate.now());
+        contrat.setCollegeEngagement("college");
+        contrat.setDateDebut(LocalDate.now());
+        contrat.setCandidature(new CandidatAccepter(entrevue, true));
+
+        when(entrevueRepository.findById(1L)).thenReturn(Optional.of(entrevue));
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat);
 
         // Act
         Optional<ContratDTO> result = gestionnaireService.creerContrat(contratDTO);

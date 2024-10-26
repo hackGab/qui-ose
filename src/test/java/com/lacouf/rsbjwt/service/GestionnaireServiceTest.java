@@ -1,19 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CV;
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Gestionnaire;
-import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
-import com.lacouf.rsbjwt.repository.CVRepository;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
-import com.lacouf.rsbjwt.repository.GestionnaireRepository;
-import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
-import com.lacouf.rsbjwt.service.dto.CredentialDTO;
-import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
-import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
+import com.lacouf.rsbjwt.repository.*;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -41,6 +33,8 @@ public class GestionnaireServiceTest {
     private CVRepository cvRepository;
     private PasswordEncoder passwordEncoder;
     private OffreDeStageRepository offreDeStageRepository;
+    private ContratRepository contratRepository;
+    private EntrevueRepository entrevueRepository;
 
     private CV cvEntity;
     @BeforeEach
@@ -49,7 +43,9 @@ public class GestionnaireServiceTest {
         cvRepository = Mockito.mock(CVRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder);
+        contratRepository = Mockito.mock(ContratRepository.class);
+        entrevueRepository = Mockito.mock(EntrevueRepository.class);
+        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository);
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
@@ -179,5 +175,32 @@ public class GestionnaireServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals("rejeté", result.get().getStatus());
+    }
+
+    @Test
+    void creerContrat() {
+        // Arrange
+        ContratDTO contratDTO = new ContratDTO();
+        contratDTO.setEtudiantSigne(true);
+        contratDTO.setEmployeurSigne(true);
+        contratDTO.setGestionnaireSigne(true);
+        contratDTO.setDateSignatureEtudiant(LocalDate.now());
+        contratDTO.setDateSignatureEmployeur(LocalDate.now());
+        contratDTO.setDateSignatureGestionnaire(LocalDate.now());
+        contratDTO.setCollegeEngagement("college");
+        contratDTO.setDateDebut(LocalDate.now());
+
+        CandidatAccepter candidat = new CandidatAccepter();
+        candidat.setEntrevue(new Entrevue());
+        candidat.getEntrevue().setId(1L);
+
+        when(entrevueRepository.findById(1L)).thenReturn(Optional.of(new Entrevue()));
+        when(contratRepository.save(any(Contrat.class))).thenReturn(new Contrat());
+
+        // Act
+        Optional<ContratDTO> result = gestionnaireService.creerContrat(contratDTO);
+
+        // Assert
+        assertTrue(result.isPresent());
     }
 }

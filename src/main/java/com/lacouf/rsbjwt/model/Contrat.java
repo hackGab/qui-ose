@@ -113,7 +113,6 @@ public class Contrat {
                 ", dateSignatureEtudiant=" + dateSignatureEtudiant +
                 ", dateSignatureEmployeur=" + dateSignatureEmployeur +
                 ", dateSignatureGestionnaire=" + dateSignatureGestionnaire +
-                ", candidature=" + candidature +
                 ", collegeEngagement='" + collegeEngagement + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +

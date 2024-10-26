@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/entrevues/etudiantsAvecEntrevue").permitAll()
                         .requestMatchers(GET, "/etudiant/{email}/entrevues").permitAll()
                         .requestMatchers(GET, "/entrevues/**").permitAll()
+                        .requestMatchers(POST, "/contrat/creerContrat").permitAll()
                         .requestMatchers(PUT, "/entrevues/changerStatus/{emailEtudiant}/{idOffreDeStage}").permitAll()
                         .requestMatchers(DELETE, "/cv/supprimerCV/**").permitAll()
                         .requestMatchers(DELETE, "/entrevues/retirerOffre/{offreId}").permitAll()

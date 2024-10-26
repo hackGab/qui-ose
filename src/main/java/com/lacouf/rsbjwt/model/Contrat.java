@@ -28,13 +28,13 @@ public class Contrat {
     @Column(nullable = false)
     private boolean gestionnaireSigne;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate dateSignatureEtudiant;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate dateSignatureEmployeur;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate dateSignatureGestionnaire;
 
     @OneToOne
@@ -113,8 +113,7 @@ public class Contrat {
                 ", dateSignatureEtudiant=" + dateSignatureEtudiant +
                 ", dateSignatureEmployeur=" + dateSignatureEmployeur +
                 ", dateSignatureGestionnaire=" + dateSignatureGestionnaire +
-                ", etudiant=" + candidature.getEntrevue().getEtudiant().getEmail() +
-                ", employeur=" + candidature.getEntrevue().getOffreDeStage().getEmployeur() +
+                ", candidature=" + candidature +
                 ", collegeEngagement='" + collegeEngagement + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +

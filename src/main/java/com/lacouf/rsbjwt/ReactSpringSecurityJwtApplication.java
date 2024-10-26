@@ -1,10 +1,16 @@
 package com.lacouf.rsbjwt;
 
+import com.lacouf.rsbjwt.model.CandidatAccepter;
 import com.lacouf.rsbjwt.service.*;
+import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
+import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @SpringBootApplication
 public class ReactSpringSecurityJwtApplication implements CommandLineRunner {

@@ -28,7 +28,7 @@ public class CandidatAccepterService {
             Entrevue entrevue = entrevueOptional.get();
             CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
             CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
-            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
+            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(),savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
         }
 
         return Optional.empty();
@@ -42,7 +42,7 @@ public class CandidatAccepterService {
             Entrevue entrevue = entrevueOptional.get();
             CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, false);
             CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
-            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
+            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(), savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
         }
 
         return Optional.empty();
@@ -52,6 +52,7 @@ public class CandidatAccepterService {
         Optional<CandidatAccepter> candidatAccepterOptional = candidatAccepterRepository.findByEntrevueId(entrevueId);
 
         return candidatAccepterOptional.map(candidatAccepter -> new CandidatAccepterDTO(
+                candidatAccepter.getId(),
                 candidatAccepter.getEntrevue().getId(),
                 candidatAccepter.isAccepte()
         ));
@@ -60,6 +61,7 @@ public class CandidatAccepterService {
     public Iterable<CandidatAccepterDTO> getAllCandidatures() {
         return candidatAccepterRepository.findAll().stream()
                 .map(candidatAccepter -> new CandidatAccepterDTO(
+                        candidatAccepter.getId(),
                         candidatAccepter.getEntrevue().getId(),
                         candidatAccepter.isAccepte()
                 ))

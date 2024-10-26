@@ -13,7 +13,8 @@ function ListeCandidature() {
         dateDebut: '',
         dateFin: '',
         semaines: '',
-        horaireTravail: '',
+        heureHorraireDebut: '',
+        heureHorraireFin: '',
         heuresParSemaine: '',
         tauxHoraire: '',
         description: '',
@@ -22,11 +23,22 @@ function ListeCandidature() {
         etudiantEngagement: '',
     });
 
+    const generateHoursOptions = () => {
+        const options = [];
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const formattedHour = String(hour).padStart(2, '0');
+                const formattedMinute = String(minute).padStart(2, '0');
+                options.push(`${formattedHour}:${formattedMinute}`);
+            }
+        }
+        return options;
+    };
+
     useEffect(() => {
         fetch('http://localhost:8081/candidatures/all')
             .then(response => response.json())
             .then(data => {
-                console.log("Candidatures:", data);
                 setCandidatures(data);
                 const fetchPromises = data.map(candidat =>
                     fetch(`http://localhost:8081/entrevues/${candidat.entrevueId}`)
@@ -37,8 +49,8 @@ function ListeCandidature() {
                 return Promise.all(fetchPromises);
             })
             .then(candidatsWithEntrevues => {
-                console.log("Candidatures avec détails d'entrevues:", candidatsWithEntrevues);
                 setCandidatures(candidatsWithEntrevues);
+                console.log(candidatsWithEntrevues);
                 setLoading(false);
             })
             .catch(err => {
@@ -47,30 +59,31 @@ function ListeCandidature() {
             });
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    const hoursOptions = generateHoursOptions();
 
     const handleGenerateContract = (candidat) => {
         setSelectedCandidat(candidat);
         setShowModal(true);
         setFormData({
-            lieuStage: candidat.entrevueDetails?.offreDeStageDTO.lieuStage || '',
+            etudiantSigne: false,
+            employeurSigne: false,
+            gestionnaireSigne: false,
+            dateSignatureEtudiant: '',
+            dateSignatureEmployeur: '',
+            dateSignatureGestionnaire: '',
+            candidature: candidat,
+            collegeEngagement: '',
             dateDebut: '',
             dateFin: '',
-            semaines: '',
-            horaireTravail: '',
-            heuresParSemaine: '',
-            tauxHoraire: candidat.entrevueDetails?.offreDeStageDTO.tauxHoraire || '',
-            description: candidat.entrevueDetails?.offreDeStageDTO.description || '',
-            collegeEngagement: '',
+            description: candidat.entrevueDetails.offreDeStageDTO.description || '',
             entrepriseEngagement: '',
             etudiantEngagement: '',
-            candidature: selectedCandidat
+            heuresParSemaine: '',
+            heureHorraireDebut: '',
+            heureHorraireFin: '',
+            lieuStage: candidat.entrevueDetails.offreDeStageDTO.localisation,
+            nbSemaines: '',
+            tauxHoraire: candidat.entrevueDetails?.offreDeStageDTO.tauxHoraire || '',
         });
     };
 
@@ -84,12 +97,21 @@ function ListeCandidature() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Données du formulaire:", formData);
-        alert("Contrat généré avec succès !");
+        console.log(formData);
+
+        await fetch('http://localhost:8081/contrat/creerContrat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
+
         handleCloseModal();
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <>
@@ -115,9 +137,7 @@ function ListeCandidature() {
                                         "N/A"}
                                 </td>
                                 <td>
-                                    {candidat.entrevueDetails ?
-                                        candidat.entrevueDetails.offreDeStageDTO.titre :
-                                        "N/A"}
+                                    {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
                                 </td>
                                 <td>
                                     {candidat.entrevueDetails ?
@@ -125,10 +145,7 @@ function ListeCandidature() {
                                         "N/A"}
                                 </td>
                                 <td>
-                                    <button
-                                        className="btn btn-success"
-                                        onClick={() => handleGenerateContract(candidat)}
-                                    >
+                                    <button className="btn btn-success" onClick={() => handleGenerateContract(candidat)}>
                                         Générer Contrat
                                     </button>
                                 </td>
@@ -168,10 +185,27 @@ function ListeCandidature() {
                                     </div>
 
                                     <h6>HORAIRE DE TRAVAIL</h6>
-                                    <div className="form-group">
-                                        <label>Horaire de travail :</label>
-                                        <input type="text" className="form-control" name="horaireTravail" value={formData.horaireTravail} onChange={handleChange} required />
+                                    <div className="form-row">
+                                        <div className="form-group col-md-6">
+                                            <label>Heure de début :</label>
+                                            <select className="form-control" name="heureHorraireDebut" value={formData.heureHorraireDebut} onChange={handleChange} required>
+                                                <option value="">Sélectionnez une heure</option>
+                                                {hoursOptions.map(time => (
+                                                    <option key={time} value={time}>{time}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <label>Heure de fin :</label>
+                                            <select className="form-control" name="heureHorraireFin" value={formData.heureHorraireFin} onChange={handleChange} required>
+                                                <option value="">Sélectionnez une heure</option>
+                                                {hoursOptions.map(time => (
+                                                    <option key={time} value={time}>{time}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
+
                                     <div className="form-group">
                                         <label>Nombre total d’heures par semaine :</label>
                                         <input type="number" className="form-control" name="heuresParSemaine" value={formData.heuresParSemaine} onChange={handleChange} required />

@@ -1,16 +1,12 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CV;
-import com.lacouf.rsbjwt.model.Gestionnaire;
-import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.repository.GestionnaireRepository;
-import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
+import com.lacouf.rsbjwt.model.*;
+import com.lacouf.rsbjwt.repository.*;
+import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.lacouf.rsbjwt.repository.CVRepository;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
 
 import java.util.Optional;
@@ -21,15 +17,19 @@ public class GestionnaireService {
     private final CVRepository cvRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ContratRepository contratRepository;
 
     private final OffreDeStageRepository offreDeStageRepository;
+    private final EntrevueRepository entrevueRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository,  PasswordEncoder passwordEncoder) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
- 	this.offreDeStageRepository = offreDeStageRepository;
+ 	    this.offreDeStageRepository = offreDeStageRepository;
         this.passwordEncoder = passwordEncoder;
+        this.contratRepository = contratRepository;
+        this.entrevueRepository = entrevueRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -88,4 +88,42 @@ public class GestionnaireService {
 
         return Optional.empty();
     }
+
+    public Optional<ContratDTO> creerContrat(ContratDTO contratDTO) {
+        try {
+
+            CandidatAccepter candidat = contratDTO.getCandidature().toEntity();
+            candidat.setEntrevue(entrevueRepository.findById(contratDTO.getCandidature().getEntrevueId()).get());
+
+            Contrat contrat = new Contrat(
+                    contratDTO.isEtudiantSigne(),
+                    contratDTO.isEmployeurSigne(),
+                    contratDTO.isGestionnaireSigne(),
+                    contratDTO.getDateSignatureEtudiant(),
+                    contratDTO.getDateSignatureEmployeur(),
+                    contratDTO.getDateSignatureGestionnaire(),
+                    candidat,
+                    contratDTO.getCollegeEngagement(),
+                    contratDTO.getDateDebut(),
+                    contratDTO.getDateFin(),
+                    contratDTO.getDescription(),
+                    contratDTO.getEntrepriseEngagement(),
+                    contratDTO.getEtudiantEngagement(),
+                    contratDTO.getHeuresParSemaine(),
+                    contratDTO.getHeureHorraireDebut(),
+                    contratDTO.getHeureHorraireFin(),
+                    contratDTO.getLieuStage(),
+                    contratDTO.getNbSemaines(),
+                    contratDTO.getTauxHoraire()
+            );
+
+            Contrat saveContrat = contratRepository.save(contrat);
+
+            return Optional.of(new ContratDTO(saveContrat));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
 }

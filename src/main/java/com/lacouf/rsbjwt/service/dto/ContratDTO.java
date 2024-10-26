@@ -28,7 +28,7 @@ public class ContratDTO {
     private int heuresParSemaine;
     private LocalTime heureHorraireDebut;
     private LocalTime heureHorraireFin;
-    private String lieuxStage;
+    private String lieuStage;
     private int nbSemaines;
     private float tauxHoraire;
 
@@ -49,7 +49,7 @@ public class ContratDTO {
         this.heuresParSemaine = contrat.getHeuresParSemaine();
         this.heureHorraireDebut = contrat.getHeureHorraireDebut();
         this.heureHorraireFin = contrat.getHeureHorraireFin();
-        this.lieuxStage = contrat.getLieuStage();
+        this.lieuStage = contrat.getLieuStage();
         this.nbSemaines = contrat.getNbSemaines();
         this.tauxHoraire = contrat.getTauxHoraire();
     }

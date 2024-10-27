@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lacouf.rsbjwt.ReactSpringSecurityJwtApplication;
 import com.lacouf.rsbjwt.model.Entrevue;
 import com.lacouf.rsbjwt.repository.EntrevueRepository;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -97,6 +100,20 @@ class ContratControllerTest {
     }
 
     @Test
-    void getAllContrats() {
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void testGetAllContrats() throws Exception {
+        ContratDTO contratDTO = createContratDTO();
+        ContratDTO contratDTO1 = createContratDTO();
+
+        when(gestionnaireService.getAllContrats()).thenReturn(new ArrayList<>(Arrays.asList(contratDTO, contratDTO1)));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/contrat/all")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(Arrays.asList(contratDTO, contratDTO1))));
+
+
+
     }
 }

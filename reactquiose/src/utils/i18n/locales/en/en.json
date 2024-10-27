@@ -197,5 +197,9 @@
   "EnAttenteDeSignatures": "Waiting for signatures",
   "SoummetreUnOffre": "Submit an Offer",
   "VisualiserOffres": "View Offers",
-  "EntrevueAcceptee": "Interview Accepted"
+  "EntrevueAcceptee": "Interview Accepted",
+  "ConfirmerVotreChoix": "Confirm your choice",
+  "Embaucher": "Hire",
+  "Refuser": "Refuse",
+  "accepterCandidature": "Accept Application"
 }

@@ -207,5 +207,9 @@
   "EnAttenteDeSignatures": "En attente de signatures",
   "SoummetreUnOffre": "Soumettre une offre",
   "VisualiserOffres": "Visualiser les offres",
-  "EntrevueAcceptee": "Entrevue acceptée"
+  "EntrevueAcceptee": "Entrevue acceptée",
+  "ConfirmerVotreChoix": "Confirmer votre choix",
+  "Embaucher": "Embaucher",
+  "Refuser": "Refuser",
+  "accepterCandidature": "Accepter la candidature"
 }

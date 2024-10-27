@@ -36,6 +36,7 @@ public class EmployeurService {
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
+
         try {
             String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
             Employeur employeur = new Employeur(

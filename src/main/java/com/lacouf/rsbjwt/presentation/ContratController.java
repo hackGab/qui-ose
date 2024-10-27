@@ -29,10 +29,13 @@ public class  ContratController {
         }
 
         Optional<ContratDTO> contratCree = gestionnaireService.creerContrat(newContrat);
-        System.out.println(contratCree);
 
-        return contratCree.map(contratDTO -> ResponseEntity.ok().body(contratDTO)).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        // Pour déboguer
+        System.out.println("Contrat créé : " + contratCree);
 
+        return contratCree
+                .map(contratDTO -> ResponseEntity.status(HttpStatus.CREATED).body(contratDTO))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @GetMapping("/all")

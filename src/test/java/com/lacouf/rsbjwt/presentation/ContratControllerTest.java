@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.ReactSpringSecurityJwtApplication;
+import com.lacouf.rsbjwt.model.Entrevue;
 import com.lacouf.rsbjwt.repository.EntrevueRepository;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -56,25 +58,12 @@ class ContratControllerTest {
     @MockBean
     private CandidatAccepterService candidatAccepterService;
 
-
     @Test
     @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
     void creerContrat() throws Exception {
-        ContratDTO contratDTO = new ContratDTO();
-        contratDTO.setDescription("description");
+        ContratDTO contratDTO = createContratDTO();
 
-
-        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
-        candidatAccepterDTO.setId(1L);
-        candidatAccepterDTO.setAccepte(true);
-        EntrevueDTO entrevueDTO = new EntrevueDTO();
-        entrevueDTO.setId(1L);
-        candidatAccepterDTO.setEntrevue(entrevueDTO);
-        candidatAccepterDTO.setEntrevueId(1L);
-        contratDTO.setCandidature(candidatAccepterDTO);
-
-
-        when(gestionnaireService.creerContrat(contratDTO)).thenReturn(Optional.of(contratDTO));
+        when(gestionnaireService.creerContrat(any(ContratDTO.class))).thenReturn(Optional.of(contratDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/contrat/creerContrat")
@@ -84,7 +73,27 @@ class ContratControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(contratDTO)));
+    }
 
+    private ContratDTO createContratDTO() {
+        ContratDTO contratDTO = new ContratDTO();
+        contratDTO.setEtudiantSigne(true);
+        contratDTO.setEmployeurSigne(true);
+        contratDTO.setGestionnaireSigne(true);
+        contratDTO.setCollegeEngagement("college");
+        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
+        return contratDTO;
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void creerContratBadRequest() throws Exception {
+        mockMvc.perform(post("/contrat/creerContrat")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .content("")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -2,12 +2,9 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
-import com.lacouf.rsbjwt.service.dto.ContratDTO;
-import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
-import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
 
 import java.util.Optional;
 
@@ -92,7 +89,8 @@ public class GestionnaireService {
     public Optional<ContratDTO> creerContrat(ContratDTO contratDTO) {
         try {
             CandidatAccepter candidat = contratDTO.getCandidature().toEntity();
-            candidat.setEntrevue(entrevueRepository.findById(contratDTO.getCandidature().getEntrevueId()).get());
+            Optional<Entrevue> entrevueDTO = entrevueRepository.findById(contratDTO.getCandidature().getEntrevueId());
+            candidat.setEntrevue(entrevueDTO.get());
 
             Contrat contrat = new Contrat(
                     contratDTO.isEtudiantSigne(),

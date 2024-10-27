@@ -232,10 +232,9 @@ function EtudiantPostulants() {
 
                                                     <Button variant="primary"
                                                             onClick={() => openFile(etudiant.cv.data)}>{t('viewCV')}</Button>
-                                                    <div className="d-flex justify-content-between mt-2">
+                                                    <div className="button-container">
                                                         <Button
                                                             variant="success"
-                                                            className="me-1"
                                                             onClick={() => handleShowModal(etudiant)}
                                                             disabled={acceptedEtudiants.includes(etudiant.email) || etudiantsAvecEntrevue.has(etudiant.credentials.email)}>
                                                             {acceptedEtudiants.includes(etudiant.email)
@@ -245,16 +244,12 @@ function EtudiantPostulants() {
                                                                     : t('creerEntrevue')}
                                                         </Button>
 
-                                                        {acceptedEtudiants.includes(etudiant.email) ?
-                                                            null :
-                                                            etudiantsAvecEntrevue.has(etudiant.email) ?
-                                                                null : (
-                                                                    <Button variant="danger"
-                                                                            onClick={() => handleShowRejectModal(etudiant)}>
-                                                                        {t('rejeter')}
-                                                                    </Button>
-                                                                )
-                                                        }
+                                                        {acceptedEtudiants.includes(etudiant.email) ? null : etudiantsAvecEntrevue.has(etudiant.email) ? null : (
+                                                            <Button variant="danger"
+                                                                    onClick={() => handleShowRejectModal(etudiant)}>
+                                                                {t('rejeter')}
+                                                            </Button>
+                                                        )}
                                                     </div>
 
                                                 </div>

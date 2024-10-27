@@ -58,30 +58,34 @@
 }
 
 .modal-content {
-    padding: 0.5rem; /* Réduit le padding du contenu modal */
+    padding: 0.5rem;
     border-radius: 8px;
     background-color: #f8f9fa;
 }
 
 .modal-header, .modal-footer {
-    padding: 0.5rem; /* Réduit le padding des en-têtes et pieds de modal */
+    padding: 0.5rem;
 }
 
 .modal-body {
-    max-height: 70vh; /* Ajuste la hauteur maximale */
+    max-height: 70vh;
     overflow-y: auto;
-    font-size: 0.9rem; /* Réduit la taille de la police pour le contenu */
+    font-size: 0.9rem;
 }
 
 h5.modal-title {
-    font-size: 1.2rem; /* Ajuste la taille du titre */
+    font-size: 1.2rem;
 }
 
 h6 {
-    font-size: 1rem; /* Réduit la taille des sous-titres */
+    font-size: 1rem;
 }
 
 .btn {
-    padding: 0.3rem 0.5rem; /* Réduit le padding des boutons */
-    font-size: 0.9rem; /* Réduit la taille de la police des boutons */
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+td{
+    font-size: 1rem;
 }

@@ -201,7 +201,11 @@
   "TachesEtResponsabilitesDuStage": "Tâches et responsabilités du stage",
   "Responsabilites": "Responsabilités",
   "LeCollegeSEngageA": "Le Collège s'engage à",
+  "EntrepriseSEngageA": "L'Entreprise s'engage à",
   "VoirLesEntrevues": "Voir les Entrevues",
   "EtudiantSEngageA": "L'Étudiant s'engage à",
-  "EnAttenteDeSignatures": "En attente de signatures"
+  "EnAttenteDeSignatures": "En attente de signatures",
+  "SoummetreUnOffre": "Soumettre une offre",
+  "VisualiserOffres": "Visualiser les offres",
+  "EntrevueAcceptee": "Entrevue acceptée"
 }

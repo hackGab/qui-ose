@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../images/logo.png';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/Header.css'
 import i18n from "i18next";
@@ -10,12 +10,19 @@ function EmployeurHeader({ userData }) {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const navigate = useNavigate();
-
-
+    const location = useLocation();
+    const [activeLink, setActiveLink] = useState(location.pathname);
 
     const handleClickLogo = () => {
         if (userData) {
             navigate("/accueilEmployeur", { state: { userData: userData } });
+        }
+    };
+
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
+        if (userData) {
+            navigate(path, { state: { userData: userData } });
         }
     };
 
@@ -34,8 +41,27 @@ function EmployeurHeader({ userData }) {
                     <img src={logo} alt="Logo" className="header-logo"/>
                     <div className="logo-text">Qui-Ose</div>
                 </div>
+
+                <div className="nav-links">
+                    <div className="nav-text-center">
+                        <a className="nav-link" onClick={() => handleLinkClick('/soumettre-offre')}>
+                            <span>{t('SoummetreUnOffre')}</span>
+                        </a>
+                    </div>
+                    <div className="nav-text-center">
+                        <a className="nav-link" onClick={() => handleLinkClick('/accueilEmployeur')}>
+                            <span>{t('VisualiserOffres')}</span>
+                        </a>
+                    </div>
+                    <div className="nav-text-center">
+                        <a className="nav-link" onClick={() => handleLinkClick('/visualiser-entrevue-accepter')}>
+                            <span>{t('EntrevueAcceptee')}</span>
+                        </a>
+                    </div>
+                </div>
+
                 <div className="profile-menu">
-                <div className="notification-icon">🕭</div>
+                    <div className="notification-icon">🕭</div>
                     <div
                         className="profile-button"
                         onClick={toggleProfileMenu}
@@ -47,8 +73,10 @@ function EmployeurHeader({ userData }) {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">{t('Francais')}</Link>
+                            <Link onClick={() => changeLanguage('en')}
+                                  className="language-button dropdown-link">{t('Anglais')}</Link>
+                            <Link onClick={() => changeLanguage('fr')}
+                                  className="language-button dropdown-link">{t('Francais')}</Link>
                         </div>
                     )}
                 </div>

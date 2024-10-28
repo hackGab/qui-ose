@@ -43,21 +43,24 @@ function EmployeurHeader({ userData }) {
                 </div>
 
                 <div className="nav-links">
-                    <div className="nav-text-center">
-                        <a className="nav-link" onClick={() => handleLinkClick('/soumettre-offre')}>
-                            <span>{t('SoummetreUnOffre')}</span>
-                        </a>
-                    </div>
-                    <div className="nav-text-center">
-                        <a className="nav-link" onClick={() => handleLinkClick('/accueilEmployeur')}>
-                            <span>{t('VisualiserOffres')}</span>
-                        </a>
-                    </div>
-                    <div className="nav-text-center">
-                        <a className="nav-link" onClick={() => handleLinkClick('/visualiser-entrevue-accepter')}>
-                            <span>{t('EntrevueAcceptee')}</span>
-                        </a>
-                    </div>
+                    <span
+                        className={`nav-link ${activeLink === '/soumettre-offre' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/soumettre-offre')}
+                    >
+                        {t('SoummetreUnOffre')}
+                    </span>
+                    <span
+                        className={`nav-link ${activeLink === '/accueilEmployeur' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/accueilEmployeur')}
+                    >
+                        {t('VisualiserOffres')}
+                    </span>
+                    <span
+                        className={`nav-link ${activeLink === '/visualiser-entrevue-accepter' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/visualiser-entrevue-accepter')}
+                    >
+                        {t('EntrevueAcceptee')}
+                    </span>
                 </div>
 
                 <div className="profile-menu">

@@ -44,16 +44,16 @@ function EmployeurHeader({ userData }) {
 
                 <div className="nav-links">
                     <span
-                        className={`nav-link ${activeLink === '/soumettre-offre' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/soumettre-offre')}
-                    >
-                        {t('SoummetreUnOffre')}
-                    </span>
-                    <span
                         className={`nav-link ${activeLink === '/accueilEmployeur' ? 'active' : ''}`}
                         onClick={() => handleLinkClick('/accueilEmployeur')}
                     >
                         {t('VisualiserOffres')}
+                    </span>
+                    <span
+                        className={`nav-link ${activeLink === '/soumettre-offre' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/soumettre-offre')}
+                    >
+                        {t('SoummetreUnOffre')}
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/visualiser-entrevue-accepter' ? 'active' : ''}`}
@@ -61,7 +61,12 @@ function EmployeurHeader({ userData }) {
                     >
                         {t('EntrevueAcceptee')}
                     </span>
-                </div>
+                    <span
+                    className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
+                    onClick={() => handleLinkClick('/signerContrat')}
+                    >
+                    {t('SignerContrat')}
+                </span>                </div>
 
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>

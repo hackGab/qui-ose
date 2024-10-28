@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import Formulaire from "./components/Formulaire";
 import './App.css';
 import AccueilEtudiant from "./components/AccueilEtudiant";
-import AccueilEmployeur from "./components/AccueilEmployeur";
 import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
@@ -19,6 +18,7 @@ import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 import ListeCandidature from "./components/ListeCandidature";
+import SignerContrat from "./components/SignerContrat";
 
 function App() {
 
@@ -46,6 +46,7 @@ function App() {
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
                     <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
                     <Route path="/listeCandidatures" element={<ListeCandidature />}/>
+                    <Route path="/SignerContrat" element={<SignerContrat />} />
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>

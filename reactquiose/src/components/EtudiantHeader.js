@@ -92,6 +92,12 @@ import i18n from "i18next";
                     </div>
 
                     <div className="nav-links">
+                        <span
+                            className={`nav-link ${activeLink === '/accueilEtudiant' ? 'active' : ''}`}
+                            onClick={() => handleLinkClick('/accueilEtudiant')}
+                        >
+                            {t('accueil')}
+                        </span>
                         {file && file.status === "validé" && (
                             <span
                                 className={`nav-link ${activeLink === '/stagesAppliquees' ? 'active' : ''}`}
@@ -100,17 +106,18 @@ import i18n from "i18next";
                                 {t('stagesAppliquées')} ({stagesAppliquees.length})
                             </span>
                         )}
-                        <span
-                            className={`nav-link ${activeLink === '/accueilEtudiant' ? 'active' : ''}`}
-                            onClick={() => handleLinkClick('/accueilEtudiant')}
-                        >
-                            {t('accueil')}
-                        </span>
+
                         <span
                             className={`nav-link ${activeLink === '/mesEntrevues' ? 'active' : ''}`}
                             onClick={() => handleLinkClick('/mesEntrevues')}
                         >
                             {t('mesEntrevues')} ({nbEntrevuesEnAttente || 0})
+                        </span>
+                        <span
+                            className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
+                            onClick={() => handleLinkClick('/signerContrat')}
+                        >
+                            {t('SignerContrat')}
                         </span>
                     </div>
 

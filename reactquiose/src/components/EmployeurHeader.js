@@ -62,11 +62,12 @@ function EmployeurHeader({ userData }) {
                         {t('EntrevueAcceptee')}
                     </span>
                     <span
-                    className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
-                    onClick={() => handleLinkClick('/signerContrat')}
-                    >
-                    {t('SignerContrat')}
-                </span>                </div>
+                        className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/signerContrat')}
+                        >
+                        {t('SignerContrat')}
+                    </span>
+                </div>
 
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>

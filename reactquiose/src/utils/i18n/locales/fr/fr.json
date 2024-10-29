@@ -216,5 +216,18 @@
   "ConfirmerVotreChoix": "Confirmer votre choix",
   "Embaucher": "Embaucher",
   "Refuser": "Refuser",
-  "accepterCandidature": "Accepter la candidature"
+  "accepterCandidature": "Accepter la candidature",
+
+  "lieuStage": "Lieu du stage",
+  "dateDebut": "Date de début",
+  "dateFin": "Date de fin",
+  "semaines": "Semaines",
+  "heureHorraireDebut": "Heure de début",
+  "heureHorraireFin": "Heure de fin",
+  "heuresParSemaine": "Heures par semaine",
+  "tauxHoraire": "Taux horaire",
+  "description": "Description",
+  "collegeEngagement": "Le collège engagé",
+  "entrepriseEngagement": "L'Entreprise engagée",
+  "etudiantEngagement": "L'Étudiant engagé"
 }

@@ -6,6 +6,7 @@ import "../CSS/SignerContrat.css";
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {Icon} from "react-icons-kit";
+import TableauContrat from "./TableauContrat.js";
 
 
 
@@ -21,6 +22,20 @@ function SignerContrat() {
     const [contratSigne, setContratSigne] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [contrat, setContrat] = useState({
+        lieuStage: 'Montreal',
+        dateDebut: '2023-01-01',
+        dateFin: '2023-12-31',
+        semaines: '15',
+        heureHorraireDebut: '10:00',
+        heureHorraireFin: '23:00',
+        heuresParSemaine: '35',
+        tauxHoraire: '37',
+        description: 'Description du stage',
+        collegeEngagement: 'André-Grasset',
+        entrepriseEngagement: 'Montréal',
+        etudiantEngagement: 'Bob',
+    });
 
     // Toggle password visibility
     const afficherMdp = () => {
@@ -50,6 +65,9 @@ function SignerContrat() {
     //
     //             if (data.success) {
     //                 setIsLoading(false);
+    //                 setContrat(data.contrat);
+    //             } else {
+    //                 setError('Aucun contrat trouvé');
     //             }
     //         })
     //         .catch((error) => {
@@ -67,10 +85,16 @@ function SignerContrat() {
     // Fonction pour signer le contrat
     const signerContrat = (event) => {
         event.preventDefault();
-        animationBtn();
+
 
         // Envoi de la signature du contrat au serveur
-        const signature = document.getElementById('mdp').value;
+        const signature = mpd;
+        if (!signature) {
+            setError('Veuillez entrer votre mot de passe');
+            return;
+        }
+
+
         const url = 'http://localhost:8081/signer-contrat';
         fetch(url, {
             method: 'POST',
@@ -83,10 +107,17 @@ function SignerContrat() {
             .then(data => {
                 console.log('Réponse du serveur:', data);
                 if (data.success) {
+                    animationBtn();
                     setContratSigne(true);
+                    setError(null);
+                }
+                else {
+                    animationBtnError();
+                    setError('Mot de passe incorrect');
                 }
             })
             .catch((error) => {
+                animationBtnError();
                 console.error('Erreur lors de la requête:', error);
             });
     };
@@ -99,8 +130,20 @@ function SignerContrat() {
             setTimeout(() => {
                 setButtonClass("");
                 setContratSigne(true);
-            }, 1250);
+            }, 2250);
         }, 2250);
+    }
+
+    const animationBtnError = () => {
+        setButtonClass("onclick");
+        setTimeout(() => {
+            setButtonClass("refuse");
+            setTimeout(() => {
+                setButtonClass("");
+                setContratSigne(false);
+            }, 2250);
+            setError("Erreur lors de la signature du contrat");
+        }, 1250);
     }
 
 
@@ -117,18 +160,19 @@ function SignerContrat() {
 
                             {error && (
                                 <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                                    {error}
+                                    {typeof error === 'string' ? error : 'Une erreur est survenue'}
                                 </div>
                             )}
 
-                            <legend style={{ fontSize: "1rem", textAlign: "center", color: "red"}}><i>{t('ChampsObligatoires')}</i></legend>
+
+                            {/* Formulaire qui affiche le contrat */}
+                            <TableauContrat contrat={contrat}/>
+
+                            <legend style={{ fontSize: "1rem", textAlign: "center", color: "red", marginTop: "2em", marginBottom: "0" }}><i>{t('ChampsObligatoires')}</i></legend>
 
                             <div className="row">
-                                <form className="mt-5 m-auto col-md-6 col-10">
+                                <form className="mt-3 m-auto col-md-6 col-10">
                                     <div className="form-group">
-                                        {/*<label htmlFor="mdp">Signature de l'<span className="text-lowercase">{userData.role}</span>:</label>*/}
-                                        {/*<input type="text" className="form-control" id="mdp" placeholder={t('EntrezVotreMdp')} required/>*/}
-
                                         <label htmlFor="mdp">Signature de l'<span
                                             className="text-lowercase">{userData.role}: <i>({t('MotDePasse')})</i></span></label>
                                         <div className="d-flex">
@@ -159,6 +203,7 @@ function SignerContrat() {
                                         onClick={signerContrat}
                                     >
                                     </button>
+
                                 </form>
                             </div>
                         </div>

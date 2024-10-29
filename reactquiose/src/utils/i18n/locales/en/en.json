@@ -206,5 +206,18 @@
   "ConfirmerVotreChoix": "Confirm your choice",
   "Embaucher": "Hire",
   "Refuser": "Refuse",
-  "accepterCandidature": "Accept Application"
+  "accepterCandidature": "Accept Application",
+
+  "lieuStage": "Internship Location",
+  "dateDebut": "Start Date",
+  "dateFin": "End Date",
+  "semaines": "Weeks",
+  "heureHorraireDebut": "Start Time",
+  "heureHorraireFin": "End Time",
+  "heuresParSemaine": "Hours per Week",
+  "tauxHoraire": "Hourly Rate",
+  "description": "Description",
+  "collegeEngagement": "The College's Commitment",
+  "entrepriseEngagement": "The Company's Commitment",
+  "etudiantEngagement": "The Student's Commitment"
 }

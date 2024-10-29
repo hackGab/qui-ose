@@ -31,6 +31,7 @@
   "erreurRecuperationEtudiants": "Error retrieving students",
   "connexionEchouee": "Connection failed",
   "erreurLorsConnexion": "Error during connection",
+  "erreurLorsRecuperation": "Error during recovery",
   "studentNotFound": "Student not found",
   "offreNotFound": "Offer not found",
   "Dashboard": "Dashboard",
@@ -219,5 +220,8 @@
   "description": "Description",
   "collegeEngagement": "The College's Commitment",
   "entrepriseEngagement": "The Company's Commitment",
-  "etudiantEngagement": "The Student's Commitment"
+  "etudiantEngagement": "The Student's Commitment",
+  "ReplierContrat": "Collapse Contract",
+  "DeroulerContrat": "Unfold Contract",
+  "SignatureDe" : "Signature of the "
 }

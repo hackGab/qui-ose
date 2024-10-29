@@ -37,9 +37,18 @@
     letter-spacing: 2px;
 }
 
-.btn-signer:after {
-    content: "SUBMIT";
+/*.btn-signer:after {*/
+/*    content: "SUBMIT";*/
+/*}*/
+
+.btn-signer-en:after {
+    content: "SIGN";
 }
+
+.btn-signer-fr:after {
+    content: "SIGNER";
+}
+
 
 .onclick {
     width: 3rem;
@@ -72,6 +81,10 @@
 .refuse {
     font-size: 1rem;
     color: white;
+    background: var(--bs-red);
+}
+
+.refuse:hover {
     background: var(--bs-red);
 }
 

@@ -140,6 +140,7 @@
   "ChargementDesOffres" : "Chargement des offres ...",
   "ChargementDesEntrevues" : "Chargement des entrevues ...",
   "Erreur": "Erreur : ",
+  "ErreurLorsRecuperation": "Erreur lors de la récupération des données",
   "OffresDeStage": "Offres de Stage",
   "VoirCandidature": "Voir les candidatures",
   "VoirStage": "Cliquez sur le stage pour y voir les détails",
@@ -229,5 +230,8 @@
   "description": "Description",
   "collegeEngagement": "Le collège engagé",
   "entrepriseEngagement": "L'Entreprise engagée",
-  "etudiantEngagement": "L'Étudiant engagé"
+  "etudiantEngagement": "L'Étudiant engagé",
+  "ReplierContrat": "Replier le contrat",
+  "DeroulerContrat": "Dérouler le contrat",
+  "SignatureDe" : "Signature de l'"
 }

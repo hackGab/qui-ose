@@ -7,6 +7,7 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import {Icon} from "react-icons-kit";
 import TableauContrat from "./TableauContrat.js";
+import i18n from "i18next";
 
 
 
@@ -85,6 +86,7 @@ function SignerContrat() {
     // Fonction pour signer le contrat
     const signerContrat = (event) => {
         event.preventDefault();
+        console.log(i18n.language)
 
 
         // Envoi de la signature du contrat au serveur
@@ -160,7 +162,7 @@ function SignerContrat() {
 
                             {error && (
                                 <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                                    {typeof error === 'string' ? error : 'Une erreur est survenue'}
+                                    {error}
                                 </div>
                             )}
 
@@ -173,8 +175,8 @@ function SignerContrat() {
                             <div className="row">
                                 <form className="mt-3 m-auto col-md-6 col-10">
                                     <div className="form-group">
-                                        <label htmlFor="mdp">Signature de l'<span
-                                            className="text-lowercase">{userData.role}: <i>({t('MotDePasse')})</i></span></label>
+                                        <label htmlFor="mdp">{t('SignatureDe')}
+                                            <span className="text-lowercase">{userData.role}: <i>({t('MotDePasse')})</i></span></label>
                                         <div className="d-flex">
                                             <div className="input-group">
                                                 <input
@@ -199,9 +201,10 @@ function SignerContrat() {
 
                                     <button
                                         type="submit"
-                                        className={`btn-signer ${buttonClass}`}
+                                        className={`btn-signer ${buttonClass} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
                                         onClick={signerContrat}
                                     >
+
                                     </button>
 
                                 </form>

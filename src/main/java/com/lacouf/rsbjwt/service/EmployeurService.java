@@ -5,13 +5,10 @@ import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeurService {
@@ -154,17 +151,17 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
-    public Optional<ContratDTO> signerContrat(String uuid, String password) {
+
+
+    public Optional<ContratDTO> signerContratEmployeur(String uuid, String password) {
         Contrat contrat = contratRepository.findByUUID(uuid)
                 .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
 
         Employeur employeur = getEmployeurFromContrat(contrat);
 
-        System.out.println("Employeur: " + employeur);
         // Validation du mot de passe crypté
         if (passwordEncoder.matches(password, employeur.getPassword())) {
             System.out.println("Mot de passe correct" + employeur.getPassword());
-            System.out.println(password);
             contrat.signerContratEmployeur();
             Contrat savedContrat = contratRepository.save(contrat);
             return Optional.of(new ContratDTO(savedContrat));
@@ -172,6 +169,8 @@ public class EmployeurService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
+
+
 
     private Employeur getEmployeurFromContrat(Contrat contrat) {
         return Optional.ofNullable(contrat.getCandidature())

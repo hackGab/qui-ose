@@ -40,6 +40,8 @@ class EtudiantServiceTest {
     private EntrevueRepository entrevueRepository;
 
     private Employeur employeur;
+
+    private ContratRepository contratRepository;
     @BeforeEach
     void setUp() {
         userAppRepository = Mockito.mock(UserAppRepository.class);
@@ -48,7 +50,8 @@ class EtudiantServiceTest {
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository);
+        contratRepository = Mockito.mock(ContratRepository.class);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -408,4 +411,55 @@ class EtudiantServiceTest {
         assertEquals(1, response.size());
         assertEquals("Accepter", response.get(0).getStatus());
     }
+
+    @Test
+    void shouldSignContratSuccessfully() {
+        // Arrange
+        String uuid = "unique-uuid";
+        String password = "password";
+
+        // Préparation de l'offre de stage et de l'entrevue
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeur);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setEtudiant(etudiantEntity);
+        entrevue.setOffreDeStage(offreDeStage);
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+        contrat.setCandidature(candidature);
+        contrat.setEtudiantSigne(false);  // Initialement non signé
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(password, etudiantEntity.getPassword())).thenReturn(true);
+
+        // Act
+        Optional<ContratDTO> response = etudiantService.signerContratParEtudiant(uuid, password);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertTrue(contrat.isEtudiantSigne()); // Vérifie si le contrat a bien été signé
+        verify(contratRepository, times(1)).save(contrat);
+    }
+
+
+    @Test
+    void shouldThrowExceptionForIncorrectPassword() {
+        // Arrange
+        String uuid = "unique-uuid";
+        String incorrectPassword = "wrongPassword";
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(incorrectPassword, etudiantEntity.getPassword())).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> etudiantService.signerContratParEtudiant(uuid, incorrectPassword));
+    }
+
 }

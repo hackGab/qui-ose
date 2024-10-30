@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -64,14 +65,14 @@ public class  ContratController {
     }
 
     @PutMapping("/signer-employeur/{uuid}")
-    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestParam String password) {
-        Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid, password);
+    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestBody Map<String,String> request) {
+        String password = request.get("password");
+        Optional<ContratDTO> contratSigne = employeurService.signerContratEmployeur(uuid, password);
 
         return contratSigne
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
-
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {

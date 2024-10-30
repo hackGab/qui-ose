@@ -120,8 +120,26 @@ function ListeCandidature() {
             }
         }
 
+        if (name === "heureHorraireDebut" || name === "heureHorraireFin" || name === "heuresParSemaine") {
+            const startHour = updatedFormData.heureHorraireDebut.split(":");
+            const endHour = updatedFormData.heureHorraireFin.split(":");
+            const startDate = new Date();
+            const endDate = new Date();
+
+            if (startHour.length === 2 && endHour.length === 2) {
+                startDate.setHours(startHour[0], startHour[1]);
+                endDate.setHours(endHour[0], endHour[1]);
+                const diffInHours = (endDate - startDate) / (1000 * 60 * 60);
+
+                if (name === "heuresParSemaine" && parseFloat(value) < diffInHours) {
+                    return;
+                }
+            }
+        }
+
         setFormData(updatedFormData);
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

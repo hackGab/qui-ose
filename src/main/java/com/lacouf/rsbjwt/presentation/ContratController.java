@@ -62,14 +62,15 @@ public class  ContratController {
         return ResponseEntity.ok().body(contrats);
     }
 
-    @PutMapping("/signer-employer/{uuid}")
-    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid) {
-        Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid);
+    @PutMapping("/signer-employeur/{uuid}")
+    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestParam String password) {
+        Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid, password);
 
         return contratSigne
-                .map(contratDTO -> ResponseEntity.ok().body(contratDTO))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
+
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {

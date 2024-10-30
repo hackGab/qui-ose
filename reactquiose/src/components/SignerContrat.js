@@ -67,6 +67,7 @@ function SignerContrat() {
             console.log(data);
             if (data) {
                 handleAnimation(true, null);
+                updateContratSignStatus();
             } else {
                 handleAnimation(false, t('MotDePasseIncorrect'));
             }
@@ -81,6 +82,7 @@ function SignerContrat() {
         setTimeout(() => {
             setButtonClass(isSuccess ? "validate" : "refuse");
             messageErreur(erreur);
+
             setTimeout(() => setButtonClass(""), 2250);
         }, 1250);
     };
@@ -101,6 +103,17 @@ function SignerContrat() {
         return false;
     };
 
+
+    const updateContratSignStatus = () => {
+        setSelectedContrat(prevContrat => {
+            if (userData.role === 'EMPLOYEUR') {
+                return { ...prevContrat, employeurSigne: true };
+            } else if (userData.role === 'ETUDIANT') {
+                return { ...prevContrat, etudiantSigne: true };
+            }
+            return prevContrat;
+        });
+    };
 
 
     return (
@@ -186,16 +199,9 @@ function SignerContrat() {
                                             <p className="card-text">
                                                 {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
                                             </p>
-                                            {userData.role === 'EMPLOYEUR' && (
-                                                <p className="card-text text-success">
-                                                    {contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')}
-                                                </p>
-                                            )}
-                                            {userData.role === 'ETUDIANT' && (
-                                                <p className={`card-text ${contrat.etudiantSigne ? 'text-success' : 'text-danger'}`}>
-                                                    {contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne')}
-                                                </p>
-                                            )}
+                                            <p className={`card-text ${contrat.etudiantSigne ? 'text-success' : 'text-danger'}`}>
+                                                {userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')) : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

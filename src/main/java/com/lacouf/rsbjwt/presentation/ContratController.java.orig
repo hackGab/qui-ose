@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
+=======
 import java.util.List;
+>>>>>>> d48a9801f0c1d659c81f7b7f25eb2ec212914a45
 import java.util.Map;
 import java.util.Optional;
 
@@ -67,31 +70,16 @@ public class  ContratController {
     @PutMapping("/signer-employeur/{uuid}")
     public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestBody Map<String,String> request) {
         String password = request.get("password");
+<<<<<<< HEAD
+        Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid, password);
+=======
         Optional<ContratDTO> contratSigne = employeurService.signerContratEmployeur(uuid, password);
+>>>>>>> d48a9801f0c1d659c81f7b7f25eb2ec212914a45
 
         return contratSigne
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
-
-
-    @PutMapping("/signer-etudiant/{uuid}")
-    public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestBody Map<String, String> request) {
-        String password = request.get("password");
-        System.out.println("UUID : " + uuid);
-
-        try {
-            Optional<ContratDTO> contratSigne = etudiantService.signerContratParEtudiant(uuid, password);
-            return contratSigne
-                    .map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {
@@ -106,7 +94,21 @@ public class  ContratController {
         return ResponseEntity.ok(contrats);
     }
 
+    @PutMapping("/signer-etudiant/{uuid}")
+    public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestBody Map<String, String> request) {
+        String password = request.get("password");
 
+        try {
+            Optional<ContratDTO> contratSigne = etudiantService.signerContratParEtudiant(uuid, password);
+            return contratSigne
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
 
 }

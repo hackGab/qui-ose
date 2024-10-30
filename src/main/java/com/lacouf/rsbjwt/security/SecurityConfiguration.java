@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/contrat/creerContrat").permitAll()
                         .requestMatchers(GET, "/contrat/all").permitAll()
                         .requestMatchers(GET, "/contrat/getContrats-employeur/{employeurEmail}").permitAll()
+                        .requestMatchers(GET, "/contrat/getContrats-etudiant/{etudiantEmail}").permitAll()
                         .requestMatchers(PUT, "/contrat/signer-employer/{uuid}").permitAll()
                         .requestMatchers(PUT, "/entrevues/changerStatus/{emailEtudiant}/{idOffreDeStage}").permitAll()
                         .requestMatchers(DELETE, "/cv/supprimerCV/**").permitAll()

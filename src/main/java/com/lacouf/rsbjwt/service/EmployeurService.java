@@ -171,9 +171,5 @@ public class EmployeurService {
                         .map(ContratDTO::new)
                         .toList())
                 .orElse(Collections.emptyList());
-
     }
-
-//    public Optional<ContratDTO> signerContrat(Long contratId) {
-//    }
 }

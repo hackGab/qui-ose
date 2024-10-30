@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.repository;
 
 import com.lacouf.rsbjwt.model.Contrat;
 import com.lacouf.rsbjwt.model.Employeur;
+import com.lacouf.rsbjwt.model.Etudiant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +22,12 @@ public interface ContratRepository extends JpaRepository<Contrat, Long> {
             "JOIN offreDeStage.employeur employeur " +
             "WHERE employeur = :employeur")
     List<Contrat> findContratsByEmployeur(@Param("employeur") Employeur employeur);
+
+    @Query("SELECT c FROM Contrat c " +
+            "JOIN c.candidature candidature " +
+            "JOIN candidature.entrevue.etudiant etudiant " +
+            "WHERE etudiant = :etudiant")
+    List<Contrat> findContratsByEtudiantEmail(@Param("etudiant")Etudiant etudiant);
 
     @Query("SELECT c FROM Contrat c " +
             "WHERE c.UUID = :uuid")

@@ -20,7 +20,6 @@ function SignerContrat() {
     const [buttonClass, setButtonClass] = useState("");
     const [contrats, setContrats] = useState([]);
     const [selectedContrat, setSelectedContrat] = useState(null);
-    const [contratSigne, setContratSigne] = useState(false);
     const [error, setError] = useState(null);
 
     // Toggle password visibility
@@ -33,7 +32,9 @@ function SignerContrat() {
     useEffect(() => {
         const fetchContrats = async () => {
             try {
-                const response = await fetch(`http://localhost:8081/contrat/getContrats-employeur/${userData.credentials.email}`);
+                let response;
+                response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}`);
+
                 if (!response.ok) throw new Error(`Erreur: ${response.status}`);
 
                 const data = await response.json();
@@ -46,7 +47,7 @@ function SignerContrat() {
         };
 
         fetchContrats();
-    }, [userData.credentials.email, t]);
+    }, [userData.credentials.email, userData.role, t]);
 
     const signerContrat = async (event) => {
         event.preventDefault();
@@ -56,7 +57,7 @@ function SignerContrat() {
         }
         try {
             const response = await fetch(`http://localhost:8081/contrat/signer-employer/${selectedContrat.uuid}`, {
-                method: 'PUT', // Changez POST en PUT
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ signature: mpd })
             });
@@ -65,7 +66,6 @@ function SignerContrat() {
             console.log(data);
             if (data) {
                 handleAnimation(true);
-                setContratSigne(true);
                 setError(null);
             } else {
                 handleAnimation(false);
@@ -78,6 +78,14 @@ function SignerContrat() {
         }
     };
 
+    const isButtonDisabled = () => {
+        if (userData.role === 'EMPLOYEUR') {
+            return selectedContrat?.employeurSigne;
+        } else if (userData.role === 'ETUDIANT') {
+            return selectedContrat?.etudiantSigne;
+        }
+        return false;
+    };
 
     const handleAnimation = (isSuccess) => {
         setButtonClass("onclick");
@@ -112,7 +120,7 @@ function SignerContrat() {
                                         <label htmlFor="mdp">
                                             {t('SignatureDe')} {userData.role} <i>({t('MotDePasse')})</i>
                                         </label>
-                                        <div className="d-flex">
+                                        <div className="input-group">
                                             <input
                                                 type={type}
                                                 className="form-control"
@@ -122,16 +130,17 @@ function SignerContrat() {
                                                 onChange={(e) => setMpd(e.target.value)}
                                                 required
                                             />
-                                            <span onClick={togglePasswordVisibility} className="icon-toggle">
-                                            <Icon icon={icon} size={20} />
-                                        </span>
+                                            <span onClick={togglePasswordVisibility} className="icon-toggle align-content-center ps-1">
+                                                <Icon icon={icon} size={30}/>
+                                            </span>
                                         </div>
                                     </div>
 
+
                                     <button
                                         type="submit"
-                                        className={`btn-signer ${buttonClass} ${contratSigne || selectedContrat?.employeurSigne ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
-                                        disabled={contratSigne || selectedContrat?.employeurSigne}
+                                        className={`btn-signer ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                        disabled={isButtonDisabled()}
                                     >
                                     </button>
                                 </form>
@@ -142,7 +151,7 @@ function SignerContrat() {
                         </div>
                     ) : (
                         <div className="row">
-                        <div className="text-center mb-4">
+                            <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
                             {contrats.map((contrat) => (
@@ -161,9 +170,16 @@ function SignerContrat() {
                                             <p className="card-text">
                                                 {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
                                             </p>
-                                            <p className="card-text text-success">
-                                                {contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')}
-                                            </p>
+                                            {userData.role === 'EMPLOYEUR' && (
+                                                <p className="card-text text-success">
+                                                    {contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')}
+                                                </p>
+                                            )}
+                                            {userData.role === 'ETUDIANT' && (
+                                                <p className="card-text text-success">
+                                                    {contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne')}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -174,7 +190,6 @@ function SignerContrat() {
             </div>
         </>
     );
-
 }
 
 export default SignerContrat;

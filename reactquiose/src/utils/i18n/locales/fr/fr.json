@@ -238,5 +238,7 @@
   "nbSemaines": "Nombre de semaines",
   "Signer": "Signer",
   "EmployeurDejaSigne": "L'employeur a déjà signé",
-  "EmployeurPasEncoreSigne": "L'employeur n'a pas encore signé"
+  "EmployeurPasEncoreSigne": "L'employeur n'a pas encore signé",
+  "EtudiantDejaSigne": "L'étudiant a déjà signé",
+  "EtudiantPasEncoreSigne": "L'étudiant n'a pas encore signé"
 }

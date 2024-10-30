@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.service.CandidatAccepterService;
 import com.lacouf.rsbjwt.service.EmployeurService;
+import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.GestionnaireService;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,15 @@ public class  ContratController {
     private final GestionnaireService gestionnaireService;
 
     private final EmployeurService employeurService;
+    private final EtudiantService etudiantService;
 
     private final CandidatAccepterService candidatAccepterService;
 
-    public ContratController(GestionnaireService gestionnaireService, CandidatAccepterService candidatAccepterService, EmployeurService employeurService) {
+    public ContratController(GestionnaireService gestionnaireService, CandidatAccepterService candidatAccepterService, EmployeurService employeurService, EtudiantService etudiantService) {
         this.gestionnaireService = gestionnaireService;
         this.candidatAccepterService = candidatAccepterService;
         this.employeurService = employeurService;
+        this.etudiantService = etudiantService;
     }
 
     @PostMapping("/creerContrat")
@@ -52,7 +55,13 @@ public class  ContratController {
         return ResponseEntity.ok().body(contrats);
     }
 
-    // endpoint pour faire signe l employeur
+    @GetMapping("/getContrats-etudiant/{etudiantEmail}")
+    public ResponseEntity<Iterable<ContratDTO>> getContratEtudiant(@PathVariable String etudiantEmail) {
+        ArrayList<ContratDTO> contrats = new ArrayList<>(etudiantService.getContratsByEtudiant(etudiantEmail));
+
+        return ResponseEntity.ok().body(contrats);
+    }
+
     @PutMapping("/signer-employer/{uuid}")
     public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid) {
         Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid);
@@ -61,7 +70,6 @@ public class  ContratController {
                 .map(contratDTO -> ResponseEntity.ok().body(contratDTO))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {

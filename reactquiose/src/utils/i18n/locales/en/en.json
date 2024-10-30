@@ -228,5 +228,7 @@
   "nbSemaines": "Number of Weeks",
   "Signer": "Sign",
   "EmployeurDejaSigne": "Employer already signed",
-  "EmployeurPasEncoreSigne": "Employer not yet signed"
+  "EmployeurPasEncoreSigne": "Employer not yet signed",
+  "EtudiantDejaSigne": "Student already signed",
+  "EtudiantPasEncoreSigne": "Student not yet signed"
 }

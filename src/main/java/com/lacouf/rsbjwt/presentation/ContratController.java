@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -78,4 +79,25 @@ public class  ContratController {
 
         return ResponseEntity.ok().body(contrats);
     }
+
+    @GetMapping("/en-attente-signature/{etudiantEmail}")
+    public ResponseEntity<List<ContratDTO>> getContratsEnAttenteDeSignature(@PathVariable String etudiantEmail) {
+        List<ContratDTO> contrats = etudiantService.getContratsEnAttenteDeSignature(etudiantEmail);
+        return ResponseEntity.ok(contrats);
+    }
+
+    @PutMapping("/signer-etudiant/{uuid}")
+    public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestParam String password) {
+        try {
+            Optional<ContratDTO> contratSigne = etudiantService.signerContratParEtudiant(uuid, password);
+            return contratSigne
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

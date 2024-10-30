@@ -199,4 +199,36 @@ public class EtudiantService {
                 .toList();
     }
 
+
+    public Optional<ContratDTO> signerContratParEtudiant(String uuid, String password) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        Etudiant etudiant = getEtudiantFromContrat(contrat);
+
+        if (passwordEncoder.matches(password, etudiant.getPassword())) {
+            contrat.signerContratEtudiant();
+            Contrat savedContrat = contratRepository.save(contrat);
+            return Optional.of(new ContratDTO(savedContrat));
+        } else {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
+
+    // Méthode utilitaire pour obtenir l'étudiant lié au contrat
+    private Etudiant getEtudiantFromContrat(Contrat contrat) {
+        return Optional.ofNullable(contrat.getCandidature())
+                .map(CandidatAccepter::getEntrevue)
+                .map(Entrevue::getEtudiant)
+                .orElseThrow(() -> new RuntimeException("Étudiant non trouvé pour le contrat donné"));
+    }
+
+    public List<ContratDTO> getContratsEnAttenteDeSignature(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
+                .filter(contrat -> !contrat.isEtudiantSigne())
+                .map(ContratDTO::new)
+                .toList();
+    }
+
 }

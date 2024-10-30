@@ -215,6 +215,8 @@ public class EtudiantService {
         }
     }
 
+
+
     // Méthode utilitaire pour obtenir l'étudiant lié au contrat
     private Etudiant getEtudiantFromContrat(Contrat contrat) {
         return Optional.ofNullable(contrat.getCandidature())

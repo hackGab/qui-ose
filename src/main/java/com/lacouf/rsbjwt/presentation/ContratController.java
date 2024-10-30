@@ -88,7 +88,9 @@ public class  ContratController {
     }
 
     @PutMapping("/signer-etudiant/{uuid}")
-    public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestParam String password) {
+    public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestBody Map<String, String> request) {
+        String password = request.get("password");
+
         try {
             Optional<ContratDTO> contratSigne = etudiantService.signerContratParEtudiant(uuid, password);
             return contratSigne
@@ -100,5 +102,6 @@ public class  ContratController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
 
 }

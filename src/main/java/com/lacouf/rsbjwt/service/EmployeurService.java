@@ -9,9 +9,7 @@ import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -155,8 +153,8 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
-    public Optional<ContratDTO> signerContrat(Long contratId) {
-        Contrat contrat = contratRepository.findById(contratId)
+    public Optional<ContratDTO> signerContrat(String uuid) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
                 .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
 
         contrat.signerContratEmployeur();
@@ -164,6 +162,15 @@ public class EmployeurService {
         Contrat savedContrat = contratRepository.save(contrat);
 
         return Optional.of(new ContratDTO(savedContrat));
+
+    }
+
+    public List<ContratDTO> getContratEmployeur(String employeurEmail) {
+        return employeurRepository.findByCredentials_email(employeurEmail)
+                .map(employeur -> contratRepository.findContratsByEmployeur(employeur).stream()
+                        .map(ContratDTO::new)
+                        .toList())
+                .orElse(Collections.emptyList());
 
     }
 

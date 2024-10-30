@@ -19,6 +19,9 @@ public class Contrat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column
+    private String UUID;
+
     @Column(nullable = false)
     private boolean etudiantSigne;
 
@@ -131,5 +134,9 @@ public class Contrat {
     public void signerContratEmployeur() {
         this.employeurSigne = true;
         this.dateSignatureEmployeur = LocalDate.now();
+    }
+
+    public void genererUUID() {
+        this.UUID = java.util.UUID.randomUUID().toString();
     }
 }

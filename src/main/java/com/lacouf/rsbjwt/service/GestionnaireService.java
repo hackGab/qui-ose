@@ -114,6 +114,8 @@ public class GestionnaireService {
                     contratDTO.getTauxHoraire()
             );
 
+            contrat.genererUUID();
+
             Contrat saveContrat = contratRepository.save(contrat);
 
             return Optional.of(new ContratDTO(saveContrat));

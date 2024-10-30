@@ -233,5 +233,7 @@
   "etudiantEngagement": "L'Étudiant engagé",
   "ReplierContrat": "Replier le contrat",
   "DeroulerContrat": "Dérouler le contrat",
-  "SignatureDe" : "Signature de l'"
+  "SignatureDe" : "Signature de l'",
+  "CliquezSurLesContratsPourSigner": "Cliquez sur les contrats pour les signer",
+  "nbSemaines": "Nombre de semaines"
 }

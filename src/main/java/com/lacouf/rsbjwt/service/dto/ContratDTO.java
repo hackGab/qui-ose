@@ -15,6 +15,7 @@ public class ContratDTO {
     private boolean etudiantSigne;
     private boolean employeurSigne;
     private boolean gestionnaireSigne;
+    private String UUID;
     private LocalDate dateSignatureEtudiant;
     private LocalDate dateSignatureEmployeur;
     private LocalDate dateSignatureGestionnaire;
@@ -35,6 +36,7 @@ public class ContratDTO {
     public ContratDTO(Contrat contrat) {
         this.etudiantSigne = contrat.isEtudiantSigne();
         this.employeurSigne = contrat.isEmployeurSigne();
+        this.UUID = contrat.getUUID();
         this.gestionnaireSigne = contrat.isGestionnaireSigne();
         this.dateSignatureEtudiant = contrat.getDateSignatureEtudiant();
         this.dateSignatureEmployeur = contrat.getDateSignatureEmployeur();

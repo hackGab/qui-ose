@@ -635,4 +635,25 @@ public class ContratTest {
         assert nbSemaines == 12;
         assert tauxHoraire == 15.0f;
     }
+
+
+    @Test
+    void signerContratEmployeur() {
+        Contrat contrat = new Contrat();
+        contrat.signerContratEmployeur();
+
+        assert contrat.isEmployeurSigne();
+        assert contrat.getDateSignatureEmployeur().equals(LocalDate.now());
+
+    }
+
+    @Test
+    void genererUUID() {
+        Contrat contrat = new Contrat();
+        contrat.genererUUID();
+
+        System.out.println(contrat.getUUID());
+
+        assert contrat.getUUID() != null;
+    }
 }

@@ -2,22 +2,37 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../CSS/TableauContrat.css';
 
-
 function TableauContrat({ contrat }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(true);
+
+    // Liste des clés à exclure
+    const excludedKeys = [
+        'etudiantSigne',
+        'employeurSigne',
+        'gestionnaireSigne',
+        'dateSignatureEtudiant',
+        'dateSignatureEmployeur',
+        'dateSignatureGestionnaire',
+        'candidature',
+        'uuid',
+    ];
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
     };
 
     const renderRows = () => {
-        return Object.keys(contrat).map((key) => (
-            <tr key={key}>
-                <td><strong>{t(key)} :</strong></td>
-                <td>{contrat[key]}</td>
-            </tr>
-        ));
+        return Object.keys(contrat)
+            .filter(key => !excludedKeys.includes(key)) // Filtrer les clés à exclure
+            .map((key) => (
+                <tr key={key}>
+                    <td><strong>{t(key)} :</strong></td>
+                    <td>
+                        {typeof contrat[key] === 'object' ? JSON.stringify(contrat[key]) : contrat[key]}
+                    </td>
+                </tr>
+            ));
     };
 
     return (

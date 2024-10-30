@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -43,10 +44,18 @@ public class  ContratController {
     }
 
 
+    @GetMapping("/getContrats-employeur/{employeurEmail}")
+    public ResponseEntity<Iterable<ContratDTO>> getContratEmployeur(@PathVariable String employeurEmail) {
+        ArrayList<ContratDTO> contrats = new ArrayList<>(employeurService.getContratEmployeur(employeurEmail));
+
+
+        return ResponseEntity.ok().body(contrats);
+    }
+
     // endpoint pour faire signe l employeur
-    @PutMapping("/signer-employer/{contratId}")
-    public ResponseEntity<ContratDTO> signerContrat(@PathVariable Long contratId) {
-        Optional<ContratDTO> contratSigne = employeurService.signerContrat(contratId);
+    @PutMapping("/signer-employer/{uuid}")
+    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid) {
+        Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid);
 
         return contratSigne
                 .map(contratDTO -> ResponseEntity.ok().body(contratDTO))

@@ -80,9 +80,9 @@ class ContratControllerTest {
 
     private ContratDTO createContratDTO() {
         ContratDTO contratDTO = new ContratDTO();
-        contratDTO.setEtudiantSigne(true);
-        contratDTO.setEmployeurSigne(true);
-        contratDTO.setGestionnaireSigne(true);
+        contratDTO.setEtudiantSigne(false);
+        contratDTO.setEmployeurSigne(false);
+        contratDTO.setGestionnaireSigne(false);
         contratDTO.setCollegeEngagement("college");
         contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
         return contratDTO;
@@ -114,6 +114,11 @@ class ContratControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(Arrays.asList(contratDTO, contratDTO1))));
 
 
+
+    }
+
+    @Test
+    void signerContrat() {
 
     }
 }

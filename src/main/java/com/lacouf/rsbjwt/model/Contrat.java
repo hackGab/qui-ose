@@ -127,4 +127,9 @@ public class Contrat {
                 ", tauxHoraire=" + tauxHoraire +
                 '}';
     }
+
+    public void signerContratEmployeur() {
+        this.employeurSigne = true;
+        this.dateSignatureEmployeur = LocalDate.now();
+    }
 }

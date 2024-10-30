@@ -23,6 +23,7 @@ function SignerContrat() {
     const [contratSigne, setContratSigne] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [contrats, setContrats] = useState([]);
     const [contrat, setContrat] = useState({
         lieuStage: 'Montreal',
         dateDebut: '2023-01-01',
@@ -43,6 +44,24 @@ function SignerContrat() {
         setIcon(type === 'password' ? eye : eyeOff);
         setType(type === 'password' ? 'text' : 'password');
     };
+
+    useEffect(() => {
+        // Appel pour récupérer tous les contrats
+        fetch('http://localhost:8081/contrat/all')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la requête: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Tous les contrats:', data); // Affiche tous les contrats dans la console
+                setContrats(data); // Enregistre les contrats dans le state si besoin pour un affichage futur
+            })
+            .catch((error) => {
+                console.error('Erreur lors de la récupération des contrats:', error);
+            });
+    }, []);
 
     // Fonction pour récupérer le formulaire du contrat
     // useEffect(() => {

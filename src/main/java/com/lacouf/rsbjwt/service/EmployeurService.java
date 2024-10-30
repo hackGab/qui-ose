@@ -1,10 +1,8 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
+import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
@@ -23,16 +21,19 @@ public class EmployeurService {
     private final EntrevueRepository entrevueRepository;
     private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
+
+    private final ContratRepository contratRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
         this.entrevueRepository = entrevueRepository;
         this.offreDeStageRepository = offreDeStageRepository;
         this.etudiantRepository = etudiantRepository;
+        this.contratRepository = contratRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
@@ -154,4 +155,18 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
+    public Optional<ContratDTO> signerContrat(Long contratId) {
+        Contrat contrat = contratRepository.findById(contratId)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        contrat.signerContratEmployeur();
+
+        Contrat savedContrat = contratRepository.save(contrat);
+
+        return Optional.of(new ContratDTO(savedContrat));
+
+    }
+
+//    public Optional<ContratDTO> signerContrat(Long contratId) {
+//    }
 }

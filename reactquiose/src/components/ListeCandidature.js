@@ -53,7 +53,6 @@ function ListeCandidature() {
             })
             .then(candidatsWithEntrevues => {
                 setCandidatures(candidatsWithEntrevues);
-                console.log(candidatsWithEntrevues);
                 setLoading(false);
             })
             .then(() => {
@@ -61,7 +60,6 @@ function ListeCandidature() {
                     .then(response => response.json())
                     .then(data => {
                         setContrats(data);
-                        console.log(data);
                     })
                     .catch(err => {
                         setError(err.message);
@@ -108,16 +106,29 @@ function ListeCandidature() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedFormData = { ...formData, [name]: value };
+
+        if (name === "dateDebut" || name === "dateFin") {
+            const dateDebut = new Date(updatedFormData.dateDebut);
+            const dateFin = new Date(updatedFormData.dateFin);
+
+            if (dateDebut && dateFin && dateDebut <= dateFin) {
+                const diffInWeeks = Math.ceil((dateFin - dateDebut) / (7 * 24 * 60 * 60 * 1000));
+                updatedFormData.semaines = diffInWeeks;
+            } else {
+                updatedFormData.semaines = '';
+            }
+        }
+
+        setFormData(updatedFormData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         await fetch('http://localhost:8081/contrat/creerContrat', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
 
@@ -171,7 +182,7 @@ function ListeCandidature() {
                                         ) : <button className="btn btn-success disabled"
                                                     onClick={() => handleGenerateContract(candidat)}>
                                             {t('EnAttenteDeSignatures')}
-                                            </button>
+                                        </button>
                                         }
                                     </td>
                                 </tr>
@@ -183,7 +194,7 @@ function ListeCandidature() {
             </div>
 
             {showModal && (
-                <div className="modal fade show" style={{display: 'block'}} onClick={handleCloseModal}>
+                <div className="modal fade show" style={{ display: 'block' }} onClick={handleCloseModal}>
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
@@ -207,11 +218,7 @@ function ListeCandidature() {
                                                    value={formData.dateFin} onChange={handleChange} required/>
                                         </div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>{t('NombreTotalSemaines')} :</label>
-                                        <input type="number" className="form-control" name="semaines"
-                                               value={formData.semaines} onChange={handleChange} required/>
-                                    </div>
+                                    <p>{t('NombreTotalSemaines')} : {formData.semaines}</p>
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
@@ -253,14 +260,14 @@ function ListeCandidature() {
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
                                             onChange={(e) => {
-                                                const {name, value} = e.target;
+                                                const { name, value } = e.target;
                                                 const regex = /^\d+(\.\d{0,2})?$/;
 
                                                 if (regex.test(value) || value === "") {
-                                                    setFormData({...formData, [name]: value});
+                                                    setFormData({ ...formData, [name]: value });
                                                 }
                                             }}
-                                            step="0.01"
+                                            step="0.05"
                                             min="0"
                                             required
                                         />
@@ -274,7 +281,7 @@ function ListeCandidature() {
 
                                     <h6>{t('Responsabilites')}</h6>
                                     <div className="form-row">
-                                    <div className="form-group col-md-4 p-1 ">
+                                        <div className="form-group col-md-4 p-1 ">
                                             <label>{t('LeCollegeSEngageA')} :</label>
                                             <textarea className="form-control" name="collegeEngagement"
                                                       value={formData.collegeEngagement} onChange={handleChange}/>

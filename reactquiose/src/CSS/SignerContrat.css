@@ -37,9 +37,12 @@
     letter-spacing: 2px;
 }
 
-/*.btn-signer:after {*/
-/*    content: "SUBMIT";*/
-/*}*/
+.btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #ccc;
+    color: #666;
+}
 
 .btn-signer-en:after {
     content: "SIGN";

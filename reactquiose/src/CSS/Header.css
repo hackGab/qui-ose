@@ -15,7 +15,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    flex-wrap: wrap;
+}
+
+.navbar.centered {
+    justify-content: center;
 }
 
 .logo {
@@ -158,6 +162,12 @@
 .dropdown-link:hover {
     background-color: #f0f7fa;
     color: #01579b;
+}
+
+@media (max-width: 1024px) {
+    .navbar {
+        justify-content: space-evenly;
+    }
 }
 
 @media (max-width: 768px) {

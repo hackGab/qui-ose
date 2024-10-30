@@ -225,5 +225,8 @@
   "DeroulerContrat": "Unfold Contract",
   "SignatureDe" : "Signature of the ",
   "CliquezSurLesContratsPourSigner": "Click on the contracts to sign them",
-  "nbSemaines": "Number of Weeks"
+  "nbSemaines": "Number of Weeks",
+  "Signer": "Sign",
+  "EmployeurDejaSigne": "Employer already signed",
+  "EmployeurPasEncoreSigne": "Employer not yet signed"
 }

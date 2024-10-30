@@ -48,7 +48,6 @@ function SignerContrat() {
         fetchContrats();
     }, [userData.credentials.email, t]);
 
-    // Signer le contrat
     const signerContrat = async (event) => {
         event.preventDefault();
         if (!mpd) {
@@ -59,7 +58,7 @@ function SignerContrat() {
             const response = await fetch(`http://localhost:8081/contrat/signer-employer/${selectedContrat.uuid}`, {
                 method: 'PUT', // Changez POST en PUT
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ signature: mpd }) // Enlevez contratId ici
+                body: JSON.stringify({ signature: mpd })
             });
 
             const data = await response.json();
@@ -80,7 +79,6 @@ function SignerContrat() {
     };
 
 
-    // Gestion des animations de boutons
     const handleAnimation = (isSuccess) => {
         setButtonClass("onclick");
         setTimeout(() => {
@@ -100,12 +98,10 @@ function SignerContrat() {
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
                     {selectedContrat ? (
-                        // Affichage des détails d'un contrat sélectionné
                         <div>
                             <h1 className="text-center mt-5 page-title">{t('VeuillezSignerContrat')}</h1>
                             {error && <div className='alert alert-danger text-center'>{error}</div>}
 
-                            {/* Composant pour afficher les détails du contrat */}
                             <TableauContrat contrat={selectedContrat} />
 
                             <legend className="text-center text-danger mt-2"><i>{t('ChampsObligatoires')}</i></legend>
@@ -134,9 +130,9 @@ function SignerContrat() {
 
                                     <button
                                         type="submit"
-                                        className={`btn-signer ${buttonClass} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                        className={`btn-signer ${buttonClass} ${contratSigne || selectedContrat?.employeurSigne ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                        disabled={contratSigne || selectedContrat?.employeurSigne}
                                     >
-                                        {t('Signer')}
                                     </button>
                                 </form>
                                 <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3">
@@ -145,10 +141,8 @@ function SignerContrat() {
                             </div>
                         </div>
                     ) : (
-                        // Affichage des cartes de tous les contrats
                         <div className="row">
-                            {/* Ajoutez le message d'instructions ici */}
-                            <div className="text-center mb-4">
+                        <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
                             {contrats.map((contrat) => (
@@ -166,6 +160,9 @@ function SignerContrat() {
                                             </p>
                                             <p className="card-text">
                                                 {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
+                                            </p>
+                                            <p className="card-text text-success">
+                                                {contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')}
                                             </p>
                                         </div>
                                     </div>

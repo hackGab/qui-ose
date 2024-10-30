@@ -235,5 +235,8 @@
   "DeroulerContrat": "Dérouler le contrat",
   "SignatureDe" : "Signature de l'",
   "CliquezSurLesContratsPourSigner": "Cliquez sur les contrats pour les signer",
-  "nbSemaines": "Nombre de semaines"
+  "nbSemaines": "Nombre de semaines",
+  "Signer": "Signer",
+  "EmployeurDejaSigne": "L'employeur a déjà signé",
+  "EmployeurPasEncoreSigne": "L'employeur n'a pas encore signé"
 }

@@ -160,11 +160,9 @@ public class EmployeurService {
 
         Employeur employeur = getEmployeurFromContrat(contrat);
 
-        System.out.println("Employeur: " + employeur);
         // Validation du mot de passe crypté
         if (passwordEncoder.matches(password, employeur.getPassword())) {
             System.out.println("Mot de passe correct" + employeur.getPassword());
-            System.out.println(password);
             contrat.signerContratEmployeur();
             Contrat savedContrat = contratRepository.save(contrat);
             return Optional.of(new ContratDTO(savedContrat));

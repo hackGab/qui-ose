@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -63,7 +64,8 @@ public class  ContratController {
     }
 
     @PutMapping("/signer-employeur/{uuid}")
-    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestParam String password) {
+    public ResponseEntity<ContratDTO> signerContrat(@PathVariable String uuid, @RequestBody Map<String,String> request) {
+        String password = request.get("password");
         Optional<ContratDTO> contratSigne = employeurService.signerContrat(uuid, password);
 
         return contratSigne

@@ -15,7 +15,7 @@ function SignerContrat() {
 
     // State
     const [type, setType] = useState('password');
-    const [mpd, setMpd] = useState('');
+    const [mdp, setMdp] = useState("");
     const [icon, setIcon] = useState(eyeOff);
     const [buttonClass, setButtonClass] = useState("");
     const [contrats, setContrats] = useState([]);
@@ -28,7 +28,7 @@ function SignerContrat() {
         setType(type === 'password' ? 'text' : 'password');
     };
 
-    // Fetch contrats data on mount
+    // Fetch contrats
     useEffect(() => {
         const fetchContrats = async () => {
             try {
@@ -41,7 +41,7 @@ function SignerContrat() {
                 console.log(data);
                 setContrats(data);
             } catch (error) {
-                setError(t('ErreurRecuperationContrat'));
+                messageErreur(t('ErreurRecuperationContrat'));
                 console.error(error);
             }
         };
@@ -51,32 +51,46 @@ function SignerContrat() {
 
     const signerContrat = async (event) => {
         event.preventDefault();
-        if (!mpd) {
-            setError(t('VeuillezEntrerMotDePasse'));
+        if (!mdp) {
+            messageErreur(t('VeuillezEntrerMotDePasse'));
             return;
         }
+
         try {
-            const response = await fetch(`http://localhost:8081/contrat/signer-employer/${selectedContrat.uuid}`, {
+            const response = await fetch(`http://localhost:8081/contrat/signer-${userData.role.toLowerCase()}/${selectedContrat.uuid}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ signature: mpd })
+                body: JSON.stringify({ password: mdp }),
             });
 
             const data = await response.json();
             console.log(data);
             if (data) {
-                handleAnimation(true);
-                setError(null);
+                handleAnimation(true, null);
             } else {
-                handleAnimation(false);
-                setError(t('MotDePasseIncorrect'));
+                handleAnimation(false, t('MotDePasseIncorrect'));
             }
         } catch (error) {
-            handleAnimation(false);
-            setError(t('ErreurSignatureContrat'));
+            handleAnimation(false, t('ErreurLorsRecuperation'));
             console.error(error);
         }
     };
+
+    const handleAnimation = (isSuccess, erreur) => {
+        setButtonClass("onclick");
+        setTimeout(() => {
+            setButtonClass(isSuccess ? "validate" : "refuse");
+            messageErreur(erreur);
+            setTimeout(() => setButtonClass(""), 2250);
+        }, 1250);
+    };
+
+    const messageErreur = (erreur) => {
+        setTimeout( () => {
+            setError(erreur);
+            setTimeout(() => setError(null), 5000);
+        }, 200);
+    }
 
     const isButtonDisabled = () => {
         if (userData.role === 'EMPLOYEUR') {
@@ -87,66 +101,68 @@ function SignerContrat() {
         return false;
     };
 
-    const handleAnimation = (isSuccess) => {
-        setButtonClass("onclick");
-        setTimeout(() => {
-            setButtonClass(isSuccess ? "validate" : "refuse");
-            setTimeout(() => setButtonClass(""), 2250);
-        }, 1250);
-    };
+
 
     return (
         <>
-            {userData?.role === 'EMPLOYEUR' ? (
-                <EmployeurHeader userData={userData} />
-            ) : (
-                <EtudiantHeader userData={userData} />
-            )}
+            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} /> : <EtudiantHeader userData={userData} />}
 
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
                     {selectedContrat ? (
                         <div>
-                            <h1 className="text-center mt-5 page-title">{t('VeuillezSignerContrat')}</h1>
-                            {error && <div className='alert alert-danger text-center'>{error}</div>}
 
-                            <TableauContrat contrat={selectedContrat} />
+                            <div className="text-center mt-3">
+                                <h2 className="text-center mt-5 page-title">
+                                    {selectedContrat.employeurSigne && userData.role === 'EMPLOYEUR' || selectedContrat.etudiantSigne && userData.role === 'ETUDIANT' ? t('ContratSigne') : t('VeuillezSignerContrat')}
+                                </h2>
+                            </div>
 
-                            <legend className="text-center text-danger mt-2"><i>{t('ChampsObligatoires')}</i></legend>
+                            <TableauContrat contrat={selectedContrat}/>
 
-                            <div className="row">
-                                <form className="mt-3 m-auto col-md-6 col-10" onSubmit={signerContrat}>
-                                    <div className="form-group">
-                                        <label htmlFor="mdp">
-                                            {t('SignatureDe')} {userData.role} <i>({t('MotDePasse')})</i>
-                                        </label>
-                                        <div className="input-group">
-                                            <input
-                                                type={type}
-                                                className="form-control"
-                                                id="mdp"
-                                                placeholder="********"
-                                                value={mpd}
-                                                onChange={(e) => setMpd(e.target.value)}
-                                                required
-                                            />
-                                            <span onClick={togglePasswordVisibility} className="icon-toggle align-content-center ps-1">
-                                                <Icon icon={icon} size={30}/>
-                                            </span>
-                                        </div>
-                                    </div>
-
-
-                                    <button
-                                        type="submit"
-                                        className={`btn-signer ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
-                                        disabled={isButtonDisabled()}
-                                    >
+                            <div className="text-center mt-3">
+                                {selectedContrat.employeurSigne && userData.role === 'EMPLOYEUR' || selectedContrat.etudiantSigne && userData.role === 'ETUDIANT' ? (
+                                    <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3 w-75">
+                                        {t('Retour')}
                                     </button>
-                                </form>
-                                <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3">
-                                    {t('Retour')}
-                                </button>
+                                ) : (
+                                    <>
+                                        {error && <div className='alert alert-danger text-center'>{error}</div>}
+                                        <legend className="text-center text-danger mt-2"><i>{t('ChampsObligatoires')}</i></legend>
+                                        <div className="row">
+                                            <form className="mt-3 m-auto col-md-6 col-10" onSubmit={signerContrat}>
+                                                <div className="form-group">
+                                                    <label htmlFor="mdp">
+                                                        {t('SignatureDe')} {userData.role} <i>({t('MotDePasse')})</i>
+                                                    </label>
+                                                    <div className="input-group">
+                                                        <input
+                                                            type={type}
+                                                            className="form-control"
+                                                            id="mdp"
+                                                            placeholder="********"
+                                                            value={mdp}
+                                                            onChange={(e) => setMdp(e.target.value)}
+                                                        />
+                                                        <span onClick={togglePasswordVisibility} className="icon-toggle align-content-center ps-1">
+                                                            <Icon icon={icon} size={30} />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    className={`btn-signer ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                                    disabled={isButtonDisabled()}
+                                                />
+                                            </form>
+                                            <div className="text-center mt-3">
+                                                <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3 w-75">
+                                                    {t('Retour')}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -176,7 +192,7 @@ function SignerContrat() {
                                                 </p>
                                             )}
                                             {userData.role === 'ETUDIANT' && (
-                                                <p className="card-text text-success">
+                                                <p className={`card-text ${contrat.etudiantSigne ? 'text-success' : 'text-danger'}`}>
                                                     {contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne')}
                                                 </p>
                                             )}

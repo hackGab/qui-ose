@@ -131,7 +131,7 @@ function ListeCandidature() {
     return (
         <>
             <GestionnaireHeader style={{ marginBottom: '50px' }} />
-            <div className="container-fluid p-4">
+            <div className="container-fluid p-4 page-liste-candidature">
                 <div className="container text-center">
                     <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
                     <table className="table table-striped table-hover">
@@ -183,7 +183,7 @@ function ListeCandidature() {
             </div>
 
             {showModal && (
-                <div className="modal fade show" style={{display: 'block'}} onClick={handleCloseModal}>
+                <div className="modal fade show page-liste-candidature" style={{display: 'block'}} >
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">

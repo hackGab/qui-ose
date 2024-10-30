@@ -1,9 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.EmployeurController;
@@ -41,14 +38,16 @@ public class EmployeurServiceTest {
     private Employeur employeurEntity;
     private PasswordEncoder passwordEncoder;
 
+
     @BeforeEach
     void setUp() {
         employeurRepository = Mockito.mock(EmployeurRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         userAppRepository = Mockito.mock(UserAppRepository.class);
-        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class); // Mocking offreDeStageRepository
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        contratRepository = Mockito.mock(ContratRepository.class);
         employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -331,6 +330,110 @@ public class EmployeurServiceTest {
         // Assert
         assertTrue(response.isEmpty()); // S'assurer que la réponse est vide
     }
+
+    @Test
+    void shouldSignContratEmployeurSuccessfully() {
+
+        // Arrange
+        String uuid = "unique-uuid";
+        String password = "password";
+
+        employeurEntity.getPassword();
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeurEntity);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+        contrat.setCandidature(candidature);
+        contrat.setEmployeurSigne(false);
+
+        // Act
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(password, employeurEntity.getPassword())).thenReturn(true);
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat);
+
+        Optional<ContratDTO> response = employeurService.signerContratEmployeur(uuid, password);
+
+        // Assert the results
+        assertTrue(response.isPresent());
+        assertTrue(contrat.isEmployeurSigne());
+    }
+
+    @Test
+    void shouldFailToSignContratWithIncorrectPassword() {
+        // Arrange
+        String uuid = "unique-uuid";
+        String incorrectPassword = "wrongPassword";
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeurEntity);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+        contrat.setCandidature(candidature);
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(incorrectPassword, employeurEntity.getPassword())).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> employeurService.signerContratEmployeur(uuid, incorrectPassword));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenContratNotFoundForSignature() {
+        // Arrange
+        String uuid = "non-existent-uuid";
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> employeurService.signerContratEmployeur(uuid, "password"));
+    }
+
+    @Test
+    void shouldReturnContratsForEmployeur() {
+        // Arrange
+        String emailEmployeur = "email@gmail.com";
+        Employeur employeur = new Employeur("John", "Doe", emailEmployeur, "password", "123456789", "Entreprise");
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeur);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+        Contrat contrat = new Contrat();
+        contrat.setCandidature(candidature);
+
+        List<Contrat> contrats = List.of(contrat);
+
+        when(employeurRepository.findByCredentials_email(emailEmployeur)).thenReturn(Optional.of(employeur));
+        when(contratRepository.findContratsByEmployeur(employeur)).thenReturn(contrats);
+
+        // Act
+        List<ContratDTO> response = employeurService.getContratEmployeur(emailEmployeur);
+
+        // Assert
+        assertEquals(1, response.size());
+    }
+
 
 
 }

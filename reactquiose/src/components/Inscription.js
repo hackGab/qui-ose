@@ -61,8 +61,8 @@ function Inscription() {
         fetch('http://localhost:8081/user/departements')
             .then(response => response.json())
             .then(data => {
-                const options = data.map(option => {
-                    return { value: option, label: option };
+                const options = data.map(departement => {
+                    return { value: departement, label: departement }
                 });
                 setOptionsDepartement(options);
             })
@@ -202,9 +202,9 @@ function Inscription() {
 
     const navigateToDashboard = (userData) => {
         const path = `/${
-            userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
-                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
-                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+            userData.role == 'ETUDIANT' ? 'accueilEtudiant' :
+                userData.role == 'EMPLOYEUR' ? 'accueilEmployeur' :
+                    userData.role == 'GESTIONNAIRE' ? 'accueilGestionnaire' :
                         'accueilProfesseur'
         }`;
         navigate(path, { state: { userData } });

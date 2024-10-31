@@ -127,8 +127,10 @@ public class UserAppService {
 
 
 
-    public List<Departement> getAllDepartements() {
-        return Arrays.asList(Departement.values());
+    public List<String> getAllDepartementDisplayNames() {
+        return Arrays.stream(Departement.values())
+                .map(Departement::getDisplayName)
+                .toList();
     }
 
 }

@@ -45,8 +45,8 @@ public class UserController {
 	}
 
 	@GetMapping("/departements")
-	public ResponseEntity<List<Departement>> getAllDepartements() {
-		List<Departement> departements = userService.getAllDepartements();
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departements);
+	public ResponseEntity<List<String>> getAllDepartementDisplayNames() {
+		List<String> departementDisplayNames = userService.getAllDepartementDisplayNames();
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departementDisplayNames);
 	}
 }

@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.service.UserAppService;
 import com.lacouf.rsbjwt.service.dto.JWTAuthResponse;
 import com.lacouf.rsbjwt.service.dto.LoginDTO;
@@ -41,5 +42,11 @@ public class UserController {
 	public ResponseEntity<UserDTO> getMe(HttpServletRequest request){
 		return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON).body(
 			userService.getMe(request.getHeader("Authorization")));
+	}
+
+	@GetMapping("/departements")
+	public ResponseEntity<List<Departement>> getAllDepartements() {
+		List<Departement> departements = userService.getAllDepartements();
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departements);
 	}
 }

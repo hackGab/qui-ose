@@ -28,6 +28,12 @@ public class Etudiant extends UserApp {
     )
     private List<OffreDeStage> offresAppliquees;
 
+
+    @ManyToOne
+    @JoinColumn(name = "professeur_id")
+    private Professeur professeur;
+
+
     public Etudiant(String firstName, String lastName, String email, String password, String phoneNumber, String departement) {
         super(firstName, lastName, email, password, phoneNumber, Role.ETUDIANT);
         this.departement = departement;
@@ -43,8 +49,10 @@ public class Etudiant extends UserApp {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", role='" + getRole() + '\'' +
                 ", departement='" + departement + '\'' +
-                ", cv=" + cv +
+                ", cv=" + (cv != null ? cv.getId() : "null") +
+                ", professeur=" + (professeur != null ? professeur.getId() : "null") +
                 ", offresAppliquees=" + offresAppliquees +
                 '}';
     }
+
 }

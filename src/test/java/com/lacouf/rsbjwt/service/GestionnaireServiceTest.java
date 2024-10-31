@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,6 +37,8 @@ public class GestionnaireServiceTest {
     private ContratRepository contratRepository;
     private EntrevueRepository entrevueRepository;
 
+    private ProfesseurRepository professeurRepository;
+
     private CV cvEntity;
     @BeforeEach
     void setUp() {
@@ -45,7 +48,9 @@ public class GestionnaireServiceTest {
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         contratRepository = Mockito.mock(ContratRepository.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository);
+        professeurRepository = Mockito.mock(ProfesseurRepository.class);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository, professeurRepository);
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
@@ -247,5 +252,92 @@ public class GestionnaireServiceTest {
 
         assertTrue(result.iterator().hasNext());
         assertEquals(2, result.spliterator().getExactSizeIfKnown());
+    }
+
+    @Test
+    void testAssignerProfesseur() {
+        // Arrange
+        Long etudiantId = 1L;
+        Long professeurId = 2L;
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setId(etudiantId);
+        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
+
+        Professeur professeur = new Professeur();
+        professeur.setId(professeurId);
+        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
+
+        Contrat contrat = new Contrat();
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+        contrat.setGestionnaireSigne(true);
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
+        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.of(contrat));
+        when(etudiantRepository.save(any(Etudiant.class))).thenReturn(etudiant);
+
+        // Act
+        Optional<EtudiantDTO> result = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(professeurId, result.get().getProfesseur().getId());
+    }
+
+
+    @Test
+    void testAssignerProfesseur_EtudiantOuProfesseurNonExistant() {
+        // Arrange
+        Long etudiantId = 1L;
+        Long professeurId = 2L;
+
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.empty());
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(new Professeur()));
+
+        // Act
+        Optional<EtudiantDTO> resultEtudiantNonExistant = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+
+        // Assert
+        assertFalse(resultEtudiantNonExistant.isPresent());
+
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(new Etudiant()));
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<EtudiantDTO> resultProfesseurNonExistant = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+
+        // Assert
+        assertFalse(resultProfesseurNonExistant.isPresent());
+    }
+
+    @Test
+    void testAssignerProfesseur_ContratNonSigne() {
+        // Arrange
+        Long etudiantId = 1L;
+        Long professeurId = 2L;
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setId(etudiantId);
+        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
+
+        Professeur professeur = new Professeur();
+        professeur.setId(professeurId);
+        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
+
+        Contrat contrat = new Contrat();
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+        contrat.setGestionnaireSigne(false); // Contract not signed by the Gestionnaire
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
+        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> {
+            gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+        });
     }
 }

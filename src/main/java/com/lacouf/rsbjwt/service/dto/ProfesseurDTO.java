@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProfesseurDTO extends UserDTO {
+    private Long id;
     private CredentialDTO credentials;
     private String departement;
 
@@ -22,9 +23,11 @@ public class ProfesseurDTO extends UserDTO {
 
     public ProfesseurDTO(Professeur professeur) {
         super(professeur);
+        this.id = professeur.getId();
         this.credentials = new CredentialDTO(professeur.getEmail(), professeur.getPassword());
         this.departement = professeur.getDepartement();
     }
+
 
     public ProfesseurDTO() {}
 

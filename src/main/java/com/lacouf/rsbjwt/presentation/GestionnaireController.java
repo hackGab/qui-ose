@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.service.GestionnaireService;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,4 +49,19 @@ public class GestionnaireController {
         return cvDTO.map(cv -> new ResponseEntity<>(cv, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PutMapping("/assignerProfesseur/{etudiantId}/{professeurId}")
+    public ResponseEntity<EtudiantDTO> assignerProfesseur(
+            @PathVariable Long etudiantId,
+            @PathVariable Long professeurId) {
+
+        try {
+            Optional<EtudiantDTO> etudiantDTO = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+            return etudiantDTO.map(etudiant -> new ResponseEntity<>(etudiant, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
 }

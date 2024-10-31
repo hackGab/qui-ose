@@ -34,4 +34,11 @@ public interface ContratRepository extends JpaRepository<Contrat, Long> {
             "WHERE c.UUID = :uuid")
     Optional<Contrat> findByUUID(@Param("uuid") String uuid);
 
+    @Query("SELECT c FROM Contrat c " +
+            "JOIN c.candidature candidature " +
+            "JOIN candidature.entrevue.etudiant etudiant " +
+            "WHERE etudiant = :etudiant AND c.gestionnaireSigne = true")
+    Optional<Contrat> findByCandidature_EtudiantAndGestionnaireSigneTrue(@Param("etudiant") Etudiant etudiant);
+
+
 }

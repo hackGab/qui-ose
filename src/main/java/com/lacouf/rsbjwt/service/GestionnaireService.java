@@ -18,8 +18,9 @@ public class GestionnaireService {
 
     private final OffreDeStageRepository offreDeStageRepository;
     private final EntrevueRepository entrevueRepository;
+    private final ProfesseurRepository professeurRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
@@ -27,6 +28,7 @@ public class GestionnaireService {
         this.passwordEncoder = passwordEncoder;
         this.contratRepository = contratRepository;
         this.entrevueRepository = entrevueRepository;
+        this.professeurRepository = professeurRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -145,4 +147,25 @@ public class GestionnaireService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
+
+    public Optional<EtudiantDTO> assignerProfesseur(Long etudiantId, Long professeurId) {
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findById(etudiantId);
+        Optional<Professeur> professeurOpt = professeurRepository.findById(professeurId);
+
+        if (etudiantOpt.isPresent() && professeurOpt.isPresent()) {
+            Etudiant etudiant = etudiantOpt.get();
+
+            Optional<Contrat> contratOpt = contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant);
+            if (contratOpt.isEmpty()) {
+                throw new IllegalStateException("Un contrat signé par le gestionnaire est requis pour assigner un professeur à cet étudiant.");
+            }
+
+            etudiant.setProfesseur(professeurOpt.get());
+            etudiantRepository.save(etudiant);
+
+            return Optional.of(new EtudiantDTO(etudiant));
+        }
+        return Optional.empty();
+    }
+
 }

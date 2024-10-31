@@ -24,10 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -294,5 +291,30 @@ class ContratControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void signerContratParGestionnaire() {
+        String uuid = "unique-uuid";
+        String password = "password";
+        String email = "email@.com";
+
+        ContratDTO contratDTO = createContratDTO();
+
+
+        when(gestionnaireService.signerContratGestionnaire(uuid, password,email)).thenReturn(Optional.of(contratDTO));
+
+        try {
+            mockMvc.perform(put("/contrat/signer-gestionnaire/{uuid}/{email}", uuid, email)
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .content(objectMapper.writeValueAsString(Map.of("password", password)))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(contratDTO)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -36,6 +36,8 @@ public class GestionnaireServiceTest {
     private ContratRepository contratRepository;
     private EntrevueRepository entrevueRepository;
 
+    private Gestionnaire gestionnaire;
+
     private CV cvEntity;
     @BeforeEach
     void setUp() {
@@ -49,9 +51,14 @@ public class GestionnaireServiceTest {
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
-	cvEntity = new CV();
+	    cvEntity = new CV();
         cvEntity.setId(1L);
         cvEntity.setStatus("attend");
+
+         gestionnaire = new Gestionnaire();
+
+        gestionnaire.setId(1L);
+        gestionnaire.setCredentials(new Credentials("email", "password", Role.GESTIONNAIRE));
     }
 
     @Test
@@ -247,5 +254,46 @@ public class GestionnaireServiceTest {
 
         assertTrue(result.iterator().hasNext());
         assertEquals(2, result.spliterator().getExactSizeIfKnown());
+    }
+
+    @Test
+    void signerContratGestionnaire() {
+        String uuid = "uuid";
+        String password = "password";
+        String email = "email";
+
+        Contrat contrat = new Contrat();
+        contrat.setId(1L);
+        contrat.setEtudiantSigne(true);
+        contrat.setEmployeurSigne(true);
+        contrat.setGestionnaireSigne(false);
+        contrat.setDateSignatureEtudiant(LocalDate.now());
+        contrat.setDateSignatureEmployeur(LocalDate.now());
+        contrat.setDateSignatureGestionnaire(null);
+        contrat.setCollegeEngagement("college");
+        contrat.setDateDebut(LocalDate.now());
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        Contrat contrat1 = new Contrat();
+        contrat1.setId(1L);
+        contrat1.setEtudiantSigne(true);
+        contrat1.setEmployeurSigne(true);
+        contrat1.setGestionnaireSigne(true);
+        contrat1.setDateSignatureEtudiant(LocalDate.now());
+        contrat1.setDateSignatureEmployeur(LocalDate.now());
+        contrat1.setDateSignatureGestionnaire(LocalDate.now());
+        contrat1.setCollegeEngagement("college");
+        contrat1.setDateDebut(LocalDate.now());
+        contrat1.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat1);
+        when(passwordEncoder.matches(password, "password")).thenReturn(true);
+        when(gestionnaireRepository.findByEmail(email)).thenReturn(gestionnaire);
+
+        Optional<ContratDTO> result = gestionnaireService.signerContratGestionnaire(uuid, password, email);
+
+        assertTrue(result.isPresent());
+        assertTrue(result.get().isGestionnaireSigne());
     }
 }

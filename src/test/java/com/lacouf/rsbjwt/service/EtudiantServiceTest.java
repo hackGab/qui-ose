@@ -8,12 +8,12 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -463,7 +463,7 @@ class EtudiantServiceTest {
         String encodedPassword = "encodedPassword";
 
         // Crée l'entité de l'étudiant et définit son mot de passe encodé
-        etudiantEntity.getCredentials().getPassword();
+        etudiantEntity.getPassword();
 
         // Préparation de l'offre de stage, de l'entrevue et de la candidature
         OffreDeStage offreDeStage = new OffreDeStage();

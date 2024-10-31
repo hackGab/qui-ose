@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GestionnaireHeader from './GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
@@ -9,8 +10,15 @@ function ListeCandidature() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCandidat, setSelectedCandidat] = useState(null);
+    const [selectedContrat, setSelectedContrat] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userData = location.state?.userData;
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -104,6 +112,25 @@ function ListeCandidature() {
         setSelectedCandidat(null);
     };
 
+    const handleOpenPasswordModal = () => {
+        setShowPasswordModal(true);
+    };
+
+    const handleClosePasswordModal = () => {
+        setShowPasswordModal(false);
+        setPassword('');
+    };
+
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+        console.log("Mot de passe saisi :", password);
+        console.log("uuid du candidat sélectionné :", selectedContrat.uuid);
+        console.log("Email de l'utilisateur connecté :", userData.credentials.email);
+        handleSignContract(selectedContrat.uuid, userData.credentials.email);
+        handleClosePasswordModal();
+    };
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         const updatedFormData = { ...formData, [name]: value };
@@ -140,7 +167,6 @@ function ListeCandidature() {
         setFormData(updatedFormData);
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
@@ -153,6 +179,35 @@ function ListeCandidature() {
 
         setContrats([...contrats, formData]);
         handleCloseModal();
+    };
+
+    const handleSignContract = async (uuid, email) => {
+        try {
+            const response = await fetch(`http://localhost:8081/contrat/signer-gestionnaire/${uuid}/${email}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            if (response.ok) {
+                setContrats(prevContrats =>
+                    prevContrats.map(contrat =>
+                        contrat.uuid === uuid ? { ...contrat, gestionnaireSigne: true } : contrat
+                    )
+                );
+                return "Contrat signé avec succès.";
+            } else {
+                const errorMessage = await response.text();
+                return `Échec de la signature : ${errorMessage}`; 
+            }
+        } catch (error) {
+            console.error("Erreur lors de la signature :", error);
+            return "Une erreur s'est produite lors de la signature.";
+        }
+    };
+
+    const isContractSigned = (contrat) => {
+        return contrat.etudiantSigne && contrat.employeurSigne && contrat.gestionnaireSigne;
     };
 
     if (loading) return <div>Loading...</div>;
@@ -176,33 +231,42 @@ function ListeCandidature() {
                         <tbody>
                         {candidatures.map(candidat => {
                             const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
+                            const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
                             return (
                                 <tr key={candidat.id}>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` :
-                                            "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` :
-                                            "N/A"}
-                                    </td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` : "N/A"}</td>
                                     <td>
                                         {!hasContrat ? (
                                             <button className="btn btn-success"
                                                     onClick={() => handleGenerateContract(candidat)}>
                                                 {t('GenererContrat')}
                                             </button>
-                                        ) : <button className="btn btn-success disabled"
-                                                    onClick={() => handleGenerateContract(candidat)}>
-                                            {t('EnAttenteDeSignatures')}
-                                            </button>
-                                        }
+                                        ) : (
+                                            <>
+                                                {isContractSigned(contrat) ? (
+                                                    <button className="btn btn-secondary" disabled>
+                                                        Contrat signé
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-primary' : 'btn-success'}`}
+                                                        disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
+                                                        onClick={() => {
+                                                            setSelectedContrat(contrat);
+                                                            console.log("Contrat à signer :", contrat);
+                                                            handleOpenPasswordModal();
+                                                        }}
+                                                    >
+                                                        {contrat.etudiantSigne && contrat.employeurSigne
+                                                            ? t('SignerContrat')
+                                                            : t('EnAttenteDesSignatures')}
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             );
@@ -213,7 +277,7 @@ function ListeCandidature() {
             </div>
 
             {showModal && (
-                <div className="modal fade show page-liste-candidature" style={{display: 'block'}} >
+                <div className="modal fade show page-liste-candidature" style={{display: 'block'}}>
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
@@ -241,7 +305,7 @@ function ListeCandidature() {
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
-                                        <div className="form-group col-md-6">
+                                    <div className="form-group col-md-6">
                                             <label>{t('HeureDeDebut')} :</label>
                                             <select className="form-control" name="heureHorraireDebut"
                                                     value={formData.heureHorraireDebut} onChange={handleChange}
@@ -321,6 +385,39 @@ function ListeCandidature() {
                                     <button type="button" className="btn btn-secondary"
                                             onClick={handleCloseModal}>{t('close')}</button>
                                     <button type="submit" className="btn btn-success">{t('GenererContrat')}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPasswordModal && (
+                <div className="modal fade show" style={{display: 'block'}}>
+                    <div className="modal-dialog" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{t('SignerContrat')}</h5>
+                            </div>
+                            <form onSubmit={handlePasswordSubmit}>
+                                <div className="modal-body">
+                                    <label>{t('EntrezMotDePasse')}</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                {modalMessage && <p>{modalMessage}</p>}
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={handleClosePasswordModal}>
+                                        {t('Fermer')}
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {t('Signer')}
+                                    </button>
                                 </div>
                             </form>
                         </div>

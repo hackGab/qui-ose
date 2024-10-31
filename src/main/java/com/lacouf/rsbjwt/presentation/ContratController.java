@@ -92,7 +92,6 @@ public class  ContratController {
         }
     }
 
-
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {
         Iterable<ContratDTO> contrats = gestionnaireService.getAllContrats();
@@ -105,8 +104,4 @@ public class  ContratController {
         List<ContratDTO> contrats = etudiantService.getContratsEnAttenteDeSignature(etudiantEmail);
         return ResponseEntity.ok(contrats);
     }
-
-
-
-
 }

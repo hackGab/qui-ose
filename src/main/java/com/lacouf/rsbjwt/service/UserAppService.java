@@ -107,20 +107,24 @@ public class UserAppService {
     public Optional<String> getDepartementByEmail(String email) {
         return userAppRepository.findUserAppByEmail(email)
                 .flatMap(user -> {
-                    switch (user.getRole()) {
-                        case ETUDIANT:
-                            return etudiantRepository.findByEmail(email)
-                                    .map(Etudiant::getDepartement)
-                                    .map(Departement::getDisplayName);
-                        case PROFESSEUR:
-                            return professeurRepository.findByEmail(email)
-                                    .map(Professeur::getDepartement)
-                                    .map(Departement::getDisplayName);
-                        default:
-                            return Optional.of("This user role does not have a department.");
+                    if (user.getRole() == Role.ETUDIANT) {
+                        return etudiantRepository.findByEmail(email)
+                                .flatMap(etudiant -> Optional.ofNullable(etudiant.getDepartement())
+                                        .map(Departement::getDisplayName)
+                                        .or(() -> Optional.of("No department assigned to this student.")));
+                    } else if (user.getRole() == Role.PROFESSEUR) {
+                        return professeurRepository.findByEmail(email)
+                                .flatMap(professeur -> Optional.ofNullable(professeur.getDepartement())
+                                        .map(Departement::getDisplayName)
+                                        .or(() -> Optional.of("No department assigned to this professor.")));
+                    } else {
+                        return Optional.of("This user role does not have a department.");
                     }
                 });
     }
+
+
+
 
     public List<Departement> getAllDepartements() {
         return Departement.getAllDepartements();

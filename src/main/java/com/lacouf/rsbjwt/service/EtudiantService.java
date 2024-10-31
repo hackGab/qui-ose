@@ -106,7 +106,7 @@ public class EtudiantService {
     }
 
     public Optional<EtudiantDTO> ajouterOffreDeStage(String etudiantEmail, Long offreId) {
-        Optional<Etudiant> etudiantOpt = Optional.ofNullable(etudiantRepository.findByEmail(etudiantEmail));
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findByEmail(etudiantEmail);
         Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
 
         if (etudiantOpt.isPresent() && offreOpt.isPresent()) {
@@ -125,14 +125,19 @@ public class EtudiantService {
     }
 
     public Iterable<OffreDeStageDTO> getOffresDeStage(String etudiantEmail) {
-        return etudiantRepository.findByEmail(etudiantEmail)
-                .getOffresAppliquees().stream()
-                .map(OffreDeStageDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(etudiantEmail);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            return etudiant.getOffresAppliquees().stream()
+                    .map(OffreDeStageDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
-    public Optional<EtudiantDTO> retirerOffreDeStage (String email, Long offreId) {
-        Optional<Etudiant> etudiantOpt = Optional.ofNullable(etudiantRepository.findByEmail(email));
+    public Optional<EtudiantDTO> retirerOffreDeStage(String email, Long offreId) {
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findByEmail(email);
         Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
 
         if (etudiantOpt.isPresent() && offreOpt.isPresent()) {
@@ -150,53 +155,74 @@ public class EtudiantService {
     }
 
     public List<EntrevueDTO> getEntrevuesByEtudiant(String email) {
-        Etudiant etudiant = etudiantRepository.findByEmail(email);
-        Long etudiantId = etudiant.getId();
-        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                .map(EntrevueDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            Long etudiantId = etudiant.getId();
+            return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                    .map(EntrevueDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
     public List<EntrevueDTO> getEntrevuesEnAttenteByEtudiant(String email) {
-        Etudiant etudiant = etudiantRepository.findByEmail(email);
-        System.out.println(etudiant);
-        Long etudiantId = etudiant.getId();
-        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                .filter(entrevue -> entrevue.getStatus().equals("En attente"))
-                .map(EntrevueDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            Long etudiantId = etudiant.getId();
+            return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                    .filter(entrevue -> entrevue.getStatus().equals("En attente"))
+                    .map(EntrevueDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
     public Optional<EntrevueDTO> changerStatusEntrevue(String emailEtudiant, Long idOffreDeStage, String status) {
-        Etudiant etudiant = etudiantRepository.findByEmail(emailEtudiant);
-        Long etudiantId = etudiant.getId();
-        Optional<Entrevue> entrevueOpt = entrevueRepository.findByEtudiantIdAndOffreDeStageId(etudiantId, idOffreDeStage);
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(emailEtudiant);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            Long etudiantId = etudiant.getId();
+            Optional<Entrevue> entrevueOpt = entrevueRepository.findByEtudiantIdAndOffreDeStageId(etudiantId, idOffreDeStage);
 
-        if (entrevueOpt.isPresent()) {
-            Entrevue entrevue = entrevueOpt.get();
-            entrevue.setStatus(status);
-            entrevueRepository.save(entrevue);
-            return Optional.of(new EntrevueDTO(entrevue));
+            if (entrevueOpt.isPresent()) {
+                Entrevue entrevue = entrevueOpt.get();
+                entrevue.setStatus(status);
+                entrevueRepository.save(entrevue);
+                return Optional.of(new EntrevueDTO(entrevue));
+            }
         }
-
         return Optional.empty();
     }
 
     public List<EntrevueDTO> getEntrevuesAccepteesByEtudiant(String email) {
-        Etudiant etudiant = etudiantRepository.findByEmail(email);
-        Long etudiantId = etudiant.getId();
-        return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                .filter(entrevue -> entrevue.getStatus().equals("Accepter"))
-                .map(EntrevueDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            Long etudiantId = etudiant.getId();
+            return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
+                    .filter(entrevue -> entrevue.getStatus().equals("Accepter"))
+                    .map(EntrevueDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
     public List<ContratDTO> getContratsByEtudiant(String email) {
-        Etudiant etudiant = etudiantRepository.findByEmail(email);
-        Long etudiantId = etudiant.getId();
-        return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
-                .map(ContratDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            Long etudiantId = etudiant.getId();
+            return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
+                    .map(ContratDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
 
@@ -223,13 +249,16 @@ public class EtudiantService {
     }
 
     public List<ContratDTO> getContratsEnAttenteDeSignature(String email) {
-        Etudiant etudiant = etudiantRepository.findByEmail(email);
-        return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
-                .filter(contrat -> !contrat.isEtudiantSigne())
-                .map(ContratDTO::new)
-                .toList();
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
+                    .filter(contrat -> !contrat.isEtudiantSigne())
+                    .map(ContratDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
-
-
 
 }

@@ -377,7 +377,7 @@ function Inscription() {
                             </div>
 
                             <span onClick={afficherMdpConf} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
-                                <Icon icon={icon} size={20}/>
+                                <Icon icon={iconConf} size={20}/>
                             </span>
                         </div>
                     </div>

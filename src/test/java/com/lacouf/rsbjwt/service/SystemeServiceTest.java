@@ -77,7 +77,7 @@ class SystemeServiceTest {
     void Should_Throw_Exception_When_Contrat_Not_Found() throws Exception {
         ContratDTO contratDTO = new ContratDTO();
         contratDTO.setUUID("uuid");
-        
+
         Mockito.when(contratRepository.findByUUID("uuid")).thenReturn(Optional.empty());
 
         // Act & Assert : vérifie que l'exception est lancée

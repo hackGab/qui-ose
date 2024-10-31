@@ -235,21 +235,6 @@ function Inscription() {
                     <div className='form-group' style={{ display: "inline-flex", textAlign: "end" }}>
                         <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                         &nbsp;
-                        {/*<select*/}
-                        {/*    className='form-control col-6'*/}
-                        {/*    id='role'*/}
-                        {/*    name='role'*/}
-                        {/*    value={role}*/}
-                        {/*    onChange={(e) => {*/}
-                        {/*        setRole(e.target.value);*/}
-                        {/*        setNomEntreprise('');*/}
-                        {/*        setDepartement('');*/}
-                        {/*    }}*/}
-                        {/*    required>*/}
-                        {/*    <option value='etudiant'>{t('etudiant')}</option>*/}
-                        {/*    <option value='prof'>{t('prof')}</option>*/}
-                        {/*    <option value='employeur'>{t('employeur')}</option>*/}
-                        {/*</select>*/}
                         <Select
                             id="role"
                             name="role"

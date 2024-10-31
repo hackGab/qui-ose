@@ -55,8 +55,8 @@ class EtudiantServiceTest {
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
-        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials, "departement");
-        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", "departement");
+        newEtudiant = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", credentials, Departement.TECHNIQUES_INFORMATIQUE);
+        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
 
         cvEntity = new CV("cvName", "cvType", "cvData", "cvStatus");
         employeur = new Employeur("John", "Doe", "john@gmail.com", "1234", "1231231234", "entreprise");

@@ -81,7 +81,7 @@ class UserAppServiceTest {
     void getEtudiantDTO_ShouldReturnEtudiantDTO_WhenEtudiantExists() {
         // Arrange
         Long id = 1L;
-        Etudiant etudiant = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", "Informatique");
+        Etudiant etudiant = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", Departement.TECHNIQUES_INFORMATIQUE);
         when(etudiantRepository.findById(id)).thenReturn(Optional.of(etudiant));
 
         // Act
@@ -90,7 +90,7 @@ class UserAppServiceTest {
         // Assert
         assertEquals("John", result.getFirstName());
         assertEquals("Doe", result.getLastName());
-        assertEquals("Informatique", result.getDepartement());
+        assertEquals( Departement.TECHNIQUES_INFORMATIQUE , result.getDepartement());
         assertEquals("john.doe@example.com", result.getCredentials().getEmail());
     }
 
@@ -98,7 +98,7 @@ class UserAppServiceTest {
     void getProfesseurDTO_ShouldReturnProfesseurDTO_WhenProfesseurExists() {
         // Arrange
         Long id = 1L;
-        Professeur professeur = new Professeur("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", "Mathématiques");
+        Professeur professeur = new Professeur("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", Departement.TECHNIQUES_INFORMATIQUE);
         when(professeurRepository.findById(id)).thenReturn(Optional.of(professeur));
 
         // Act
@@ -107,7 +107,7 @@ class UserAppServiceTest {
         // Assert
         assertEquals("Jane", result.getFirstName());
         assertEquals("Smith", result.getLastName());
-        assertEquals("Mathématiques", result.getDepartement());
+        assertEquals(Departement.TECHNIQUES_INFORMATIQUE, result.getDepartement());
         assertEquals("jane.smith@example.com", result.getCredentials().getEmail());
     }
 

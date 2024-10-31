@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.OffreDeStage;
@@ -223,8 +224,8 @@ public class OffreDeStageServiceTest {
         OffreDeStage offreDeStage = new OffreDeStage();
         offreDeStage.setId(offreId);
 
-        Etudiant etudiant1 = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", "Computer Science");
-        Etudiant etudiant2 = new Etudiant("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", "Information Technology");
+        Etudiant etudiant1 = new Etudiant("John", "Doe", "john.doe@example.com", "password", "1234567890", Departement.TECHNIQUES_INFORMATIQUE);
+        Etudiant etudiant2 = new Etudiant("Jane", "Smith", "jane.smith@example.com", "password", "0987654321", Departement.TECHNIQUES_INFORMATIQUE);
 
         offreDeStage.setEtudiants(List.of(etudiant1, etudiant2));
 

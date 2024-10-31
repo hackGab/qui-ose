@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.ProfesseurController;
@@ -37,8 +38,8 @@ public class ProfesseurServiceTest {
         professeurController = new ProfesseurController(professeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
-        newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, "departement");
-        professeurEntity = new Professeur("John", "Doe", "email@gmail.com", "password", "23456789","departement");
+        newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, Departement.TECHNIQUES_INFORMATIQUE );
+        professeurEntity = new Professeur("John", "Doe", "email@gmail.com", "password", "23456789", Departement.TECHNIQUES_INFORMATIQUE);
     }
 
     @Test

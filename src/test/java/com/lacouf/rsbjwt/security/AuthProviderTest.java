@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.security;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.UserApp;
 import com.lacouf.rsbjwt.repository.UserAppRepository;
@@ -31,7 +32,7 @@ class AuthProviderTest {
         userAppRepository = Mockito.mock(UserAppRepository.class);
         authProvider = new AuthProvider(passwordEncoder, userAppRepository);
 
-        user = new Etudiant("John", "Doe", "email@gmail.com", "correctPassword", "1234567890", "Computer Science");
+        user = new Etudiant("John", "Doe", "email@gmail.com", "correctPassword", "1234567890", Departement.TECHNIQUES_INFORMATIQUE);
     }
 
     @Test

@@ -9,7 +9,7 @@ class EtudiantTest {
     @Test
     void testToString() {
         // Arrange
-        Etudiant etudiant = new Etudiant("John", "Doe", "john@gmail.com", "password", "123456789", "departement");
+        Etudiant etudiant = new Etudiant("John", "Doe", "john@gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
 
         // Act
         String result = etudiant.toString();
@@ -22,7 +22,7 @@ class EtudiantTest {
                 ", email='john@gmail.com'" +
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_ETUDIANT'" +
-                ", departement='departement'" +
+                ", departement='Techniques de l'informatique'" +
                 ", cv=null" +
                 ", professeur=null" +
                 ", offresAppliquees=null" +

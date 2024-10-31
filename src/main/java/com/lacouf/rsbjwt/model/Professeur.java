@@ -14,9 +14,9 @@ import lombok.Setter;
 public class Professeur extends UserApp {
 
     @Column(nullable = false, name = "DEPARTEMENT")
-    private String departement;
+    private Departement departement;
 
-    public Professeur(String firstName, String lastName, String email, String password, String phoneNumber, String departement) {
+    public Professeur(String firstName, String lastName, String email, String password, String phoneNumber, Departement departement) {
         super(firstName, lastName, email, password, phoneNumber, Role.PROFESSEUR);
         this.departement = departement;
     }

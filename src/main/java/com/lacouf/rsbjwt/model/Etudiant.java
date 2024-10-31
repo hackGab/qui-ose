@@ -14,8 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Etudiant extends UserApp {
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "DEPARTEMENT")
-    private String departement;
+    private Departement departement;
 
     @OneToOne
     private CV cv;
@@ -34,7 +35,7 @@ public class Etudiant extends UserApp {
     private Professeur professeur;
 
 
-    public Etudiant(String firstName, String lastName, String email, String password, String phoneNumber, String departement) {
+    public Etudiant(String firstName, String lastName, String email, String password, String phoneNumber, Departement departement) {
         super(firstName, lastName, email, password, phoneNumber, Role.ETUDIANT);
         this.departement = departement;
     }

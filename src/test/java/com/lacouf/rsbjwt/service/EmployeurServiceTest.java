@@ -178,7 +178,7 @@ public class EmployeurServiceTest {
         entrevueDTO.setStatus("validé");
 
 
-        Etudiant etudiant = new Etudiant("John", "Doe", email, "password", "123456789", "Département");
+        Etudiant etudiant = new Etudiant("John", "Doe", email, "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
         etudiant.setId(1L);
         etudiant.setOffresAppliquees(offres);
 
@@ -226,7 +226,7 @@ public class EmployeurServiceTest {
     void shouldGetEntrevueById() {
         // Arrange
         Long entrevueId = 1L;
-        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", "");
+        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", Departement.TECHNIQUES_INFORMATIQUE);
         Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", "En attente", etudiant, new OffreDeStage());
 
         OffreDeStage offreDeStage = new OffreDeStage();
@@ -257,8 +257,8 @@ public class EmployeurServiceTest {
     @Test
     void shouldReturnAllEntrevues() {
         // Arrange
-        Etudiant etudiant1 = new Etudiant("John", "Doe", "email1@gmail.com", "password1", "123456789", "departement1");
-        Etudiant etudiant2 = new Etudiant("Jane", "Doe", "email2@gmail.com", "password2", "987654321", "departement2");
+        Etudiant etudiant1 = new Etudiant("John", "Doe", "email1@gmail.com", "password1", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        Etudiant etudiant2 = new Etudiant("Jane", "Doe", "email2@gmail.com", "password2", "987654321", Departement.TECHNIQUES_INFORMATIQUE);
 
         OffreDeStage offreDeStage1 = new OffreDeStage();
         offreDeStage1.setTitre("Stage en développement");

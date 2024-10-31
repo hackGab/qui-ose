@@ -60,6 +60,16 @@ class ContratControllerTest {
     @MockBean
     private CandidatAccepterService candidatAccepterService;
 
+    private ContratDTO createContratDTO() {
+        ContratDTO contratDTO = new ContratDTO();
+        contratDTO.setEtudiantSigne(false);
+        contratDTO.setEmployeurSigne(false);
+        contratDTO.setGestionnaireSigne(false);
+        contratDTO.setCollegeEngagement("college");
+        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
+        return contratDTO;
+    }
+
     @Test
     @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
     void creerContrat() throws Exception {
@@ -75,16 +85,6 @@ class ContratControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(contratDTO)));
-    }
-
-    private ContratDTO createContratDTO() {
-        ContratDTO contratDTO = new ContratDTO();
-        contratDTO.setEtudiantSigne(false);
-        contratDTO.setEmployeurSigne(false);
-        contratDTO.setGestionnaireSigne(false);
-        contratDTO.setCollegeEngagement("college");
-        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
-        return contratDTO;
     }
 
     @Test

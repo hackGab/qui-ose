@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GestionnaireHeader from './GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
@@ -11,6 +12,11 @@ function ListeCandidature() {
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userData = location.state?.userData;
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -53,7 +59,6 @@ function ListeCandidature() {
             })
             .then(candidatsWithEntrevues => {
                 setCandidatures(candidatsWithEntrevues);
-                console.log(candidatsWithEntrevues);
                 setLoading(false);
             })
             .then(() => {
@@ -61,7 +66,6 @@ function ListeCandidature() {
                     .then(response => response.json())
                     .then(data => {
                         setContrats(data);
-                        console.log(data);
                     })
                     .catch(err => {
                         setError(err.message);
@@ -106,9 +110,56 @@ function ListeCandidature() {
         setSelectedCandidat(null);
     };
 
+    const handleOpenPasswordModal = () => {
+        setShowPasswordModal(true);
+    };
+
+    const handleClosePasswordModal = () => {
+        setShowPasswordModal(false);
+        setPassword('');
+    };
+
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+        console.log("Mot de passe saisi :", password);
+        // Traitez la validation du mot de passe ici
+        handleClosePasswordModal();
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedFormData = { ...formData, [name]: value };
+
+        if (name === "dateDebut" || name === "dateFin") {
+            const dateDebut = new Date(updatedFormData.dateDebut);
+            const dateFin = new Date(updatedFormData.dateFin);
+
+            if (dateDebut && dateFin && dateDebut <= dateFin) {
+                const diffInWeeks = Math.ceil((dateFin - dateDebut) / (7 * 24 * 60 * 60 * 1000));
+                updatedFormData.semaines = diffInWeeks;
+            } else {
+                updatedFormData.semaines = '';
+            }
+        }
+
+        if (name === "heureHorraireDebut" || name === "heureHorraireFin" || name === "heuresParSemaine") {
+            const startHour = updatedFormData.heureHorraireDebut.split(":");
+            const endHour = updatedFormData.heureHorraireFin.split(":");
+            const startDate = new Date();
+            const endDate = new Date();
+
+            if (startHour.length === 2 && endHour.length === 2) {
+                startDate.setHours(startHour[0], startHour[1]);
+                endDate.setHours(endHour[0], endHour[1]);
+                const diffInHours = (endDate - startDate) / (1000 * 60 * 60);
+
+                if (name === "heuresParSemaine" && parseFloat(value) < diffInHours) {
+                    return;
+                }
+            }
+        }
+
+        setFormData(updatedFormData);
     };
 
     const handleSubmit = async (e) => {
@@ -117,7 +168,7 @@ function ListeCandidature() {
 
         await fetch('http://localhost:8081/contrat/creerContrat', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
 
@@ -131,7 +182,7 @@ function ListeCandidature() {
     return (
         <>
             <GestionnaireHeader style={{ marginBottom: '50px' }} />
-            <div className="container-fluid p-4">
+            <div className="container-fluid p-4 page-liste-candidature">
                 <div className="container text-center">
                     <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
                     <table className="table table-striped table-hover">
@@ -146,33 +197,33 @@ function ListeCandidature() {
                         <tbody>
                         {candidatures.map(candidat => {
                             const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
+                            const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
                             return (
                                 <tr key={candidat.id}>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` :
-                                            "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` :
-                                            "N/A"}
-                                    </td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` : "N/A"}</td>
                                     <td>
                                         {!hasContrat ? (
                                             <button className="btn btn-success"
                                                     onClick={() => handleGenerateContract(candidat)}>
                                                 {t('GenererContrat')}
                                             </button>
-                                        ) : <button className="btn btn-success disabled"
-                                                    onClick={() => handleGenerateContract(candidat)}>
-                                            {t('EnAttenteDeSignatures')}
-                                            </button>
-                                        }
+                                        ) : (
+                                            <>
+                                                {contrat.etudiantSigne && contrat.employeurSigne ? (
+                                                    <button className="btn btn-primary" onClick={handleOpenPasswordModal}
+                                                    >
+                                                        {t('SignerContrat')}
+                                                    </button>
+                                                ) : (
+                                                    <button className="btn btn-success disabled">
+                                                        {t('EnAttenteDeSignatures')}
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             );
@@ -183,7 +234,7 @@ function ListeCandidature() {
             </div>
 
             {showModal && (
-                <div className="modal fade show" style={{display: 'block'}} onClick={handleCloseModal}>
+                <div className="modal fade show page-liste-candidature" style={{display: 'block'}}>
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
@@ -207,11 +258,7 @@ function ListeCandidature() {
                                                    value={formData.dateFin} onChange={handleChange} required/>
                                         </div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>{t('NombreTotalSemaines')} :</label>
-                                        <input type="number" className="form-control" name="semaines"
-                                               value={formData.semaines} onChange={handleChange} required/>
-                                    </div>
+                                    <p>{t('NombreTotalSemaines')} : {formData.semaines}</p>
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
@@ -253,14 +300,14 @@ function ListeCandidature() {
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
                                             onChange={(e) => {
-                                                const {name, value} = e.target;
+                                                const { name, value } = e.target;
                                                 const regex = /^\d+(\.\d{0,2})?$/;
 
                                                 if (regex.test(value) || value === "") {
-                                                    setFormData({...formData, [name]: value});
+                                                    setFormData({ ...formData, [name]: value });
                                                 }
                                             }}
-                                            step="0.01"
+                                            step="0.05"
                                             min="0"
                                             required
                                         />
@@ -274,7 +321,7 @@ function ListeCandidature() {
 
                                     <h6>{t('Responsabilites')}</h6>
                                     <div className="form-row">
-                                    <div className="form-group col-md-4 p-1 ">
+                                        <div className="form-group col-md-4 p-1 ">
                                             <label>{t('LeCollegeSEngageA')} :</label>
                                             <textarea className="form-control" name="collegeEngagement"
                                                       value={formData.collegeEngagement} onChange={handleChange}/>
@@ -295,6 +342,38 @@ function ListeCandidature() {
                                     <button type="button" className="btn btn-secondary"
                                             onClick={handleCloseModal}>{t('close')}</button>
                                     <button type="submit" className="btn btn-success">{t('GenererContrat')}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPasswordModal && (
+                <div className="modal fade show" style={{display: 'block'}}>
+                    <div className="modal-dialog" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{t('SignerContrat')}</h5>
+                            </div>
+                            <form onSubmit={handlePasswordSubmit}>
+                                <div className="modal-body">
+                                    <label>{t('EntrezMotDePasse')}</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={handleClosePasswordModal}>
+                                        {t('Fermer')}
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {t('Signer')}
+                                    </button>
                                 </div>
                             </form>
                         </div>

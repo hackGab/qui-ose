@@ -90,39 +90,41 @@ function DetailsEtudiants() {
                             )}
                         </div>
 
-                        <div className="mt-4">
-                            <h5>{t('actions')}</h5>
-                            <div className="btn-group-vertical w-100">
-                                <button
-                                    className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
-                                    onClick={() => handleStatusSelect('validé')}
-                                >
-                                    {t('validate')}
-                                </button>
-                                <button
-                                    className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
-                                    onClick={() => handleStatusSelect('rejeté')}
-                                >
-                                    {t('reject')}
-                                </button>
+                        { !isCvMissing && (
+                            <div className="mt-4">
+                                <h5>{t('actions')}</h5>
+                                <div className="btn-group-vertical w-100">
+                                    <button
+                                        className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                        onClick={() => handleStatusSelect('validé')}
+                                    >
+                                        {t('validate')}
+                                    </button>
+                                    <button
+                                        className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                        onClick={() => handleStatusSelect('rejeté')}
+                                    >
+                                        {t('reject')}
+                                    </button>
 
-                                {selectedStatus === 'rejeté' && (
-                                    <div className="mt-1 mb-2 col-12">
-                                            <textarea
-                                                rows="3"
-                                                placeholder={t('enterRejectionReason')}
-                                                value={rejectionReason}
-                                                onChange={(e) => setRejectionReason(e.target.value)}
-                                                className="form-control rejection-reason"
-                                            />
-                                    </div>
-                                )}
+                                    {selectedStatus === 'rejeté' && (
+                                        <div className="mt-1 mb-2 col-12">
+                                                <textarea
+                                                    rows="3"
+                                                    placeholder={t('enterRejectionReason')}
+                                                    value={rejectionReason}
+                                                    onChange={(e) => setRejectionReason(e.target.value)}
+                                                    className="form-control rejection-reason"
+                                                />
+                                        </div>
+                                    )}
 
-                                <button className="btn btn-primary" onClick={handleConfirm}>
-                                    {t('confirm')}
-                                </button>
+                                    <button className="btn btn-primary" onClick={handleConfirm}>
+                                        {t('confirm')}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

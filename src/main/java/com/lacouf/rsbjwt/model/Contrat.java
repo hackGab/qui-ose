@@ -141,6 +141,10 @@ public class Contrat {
         this.dateSignatureEtudiant = LocalDate.now();
     }
 
+    public void signerContratGestionnaire() {
+        this.gestionnaireSigne = true;
+        this.dateSignatureGestionnaire = LocalDate.now();
+    }
 
     public void genererUUID() {
         this.UUID = java.util.UUID.randomUUID().toString();

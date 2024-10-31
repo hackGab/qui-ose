@@ -60,7 +60,7 @@ function GestionnaireHeader() {
                         to="/listeCandidatures"
                         onClick={() => handleLinkClick('/listeCandidatures')}
                     >
-                        {t('candidature')}
+                        {t('candidatures')}
                     </Link>
                 </div>
                 <div className="profile-menu">

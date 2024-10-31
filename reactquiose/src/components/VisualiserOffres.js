@@ -170,6 +170,8 @@ function VisualiserOffres() {
         <>
             <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4">
+                <h1 className="text-center my-1 text-capitalize"
+                    style={{color: "#01579b"}}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h1>
 
                 <div className="container mt-5">
                     <h1 className="text-center mt-5">{t('VosOffres')}</h1>
@@ -191,10 +193,11 @@ function VisualiserOffres() {
                                                 <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
                                                 <br/>
                                                 {offre.status === "Validé" && (
-	                                               <div onClick={() => handleListeClick(offre)} className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline">
-                                                    		{t('VoirLaListeDesCandidats')} ({ getNbCandidats(offre) || 0 })
-	                                                </div>
-						                        )}
+                                                    <div onClick={() => handleListeClick(offre)}
+                                                         className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline">
+                                                        {t('VoirLaListeDesCandidats')} ({getNbCandidats(offre) || 0})
+                                                    </div>
+                                                )}
                                             </p>
                                             <p className="info-stage">
                                                 {t('DateDePublication')} {new Date(offre.datePublication).toLocaleDateString()}
@@ -205,7 +208,8 @@ function VisualiserOffres() {
                                                 {t('Status')} {offre.status}
                                             </div>
                                             {offre.status === "Rejeté" && (
-                                                <p className="info-stage">{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong></p>
+                                                <p className="info-stage">{t('RaisonDuRejet')}<strong>{offre.rejetMessage}</strong>
+                                                </p>
                                             )}
 
                                             {selectedOffre === index && (

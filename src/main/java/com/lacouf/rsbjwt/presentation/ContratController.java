@@ -91,15 +91,19 @@ public class  ContratController {
         }
     }
 
-    @PutMapping("/signer-gestionnaire/{uuid}")
-    public ResponseEntity<ContratDTO> signerContratParGestionnaire(@PathVariable String uuid, @RequestBody Map<String, String> request, @PathVariable String email) {
+    @PutMapping("/signer-gestionnaire/{uuid}/{email}")
+    public ResponseEntity<ContratDTO> signerContratParGestionnaire(
+            @PathVariable String uuid,
+            @PathVariable String email,
+            @RequestBody Map<String, String> request) {
         String password = request.get("password");
-        Optional<ContratDTO> contratSigne = gestionnaireService.signerContratGestionnaire(uuid, password,email);
+        Optional<ContratDTO> contratSigne = gestionnaireService.signerContratGestionnaire(uuid, password, email);
 
         return contratSigne
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
+
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<ContratDTO>> getAllContrats() {

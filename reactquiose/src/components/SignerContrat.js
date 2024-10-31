@@ -7,7 +7,6 @@ import EmployeurHeader from "./EmployeurHeader";
 import EtudiantHeader from "./EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
 import "../CSS/SignerContrat.css";
-import GestionnaireHeader from "./GestionnaireHeader";
 
 function SignerContrat() {
     const location = useLocation();
@@ -107,8 +106,6 @@ function SignerContrat() {
             return selectedContrat?.employeurSigne;
         } else if (userData.role === 'ETUDIANT') {
             return selectedContrat?.etudiantSigne;
-        } else {
-            return setSelectedContrat?.gestionnaireSigne;
         }
         return false;
     };
@@ -120,8 +117,6 @@ function SignerContrat() {
                 return { ...prevContrat, employeurSigne: true };
             } else if (userData.role === 'ETUDIANT') {
                 return { ...prevContrat, etudiantSigne: true };
-            } else {
-                return { ...prevContrat, gestionnaireSigne: true };
             }
             return prevContrat;
         });
@@ -130,13 +125,7 @@ function SignerContrat() {
 
     return (
         <>
-            {userData?.role === 'EMPLOYEUR' ? (
-                <EmployeurHeader userData={userData} />
-            ) : userData?.role === 'ETUDIANT' ? (
-                <EtudiantHeader userData={userData} />
-            ) : (
-                <GestionnaireHeader userData={userData} />
-            )}
+            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} /> : <EtudiantHeader userData={userData} />}
 
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
@@ -152,9 +141,7 @@ function SignerContrat() {
                             <TableauContrat contrat={selectedContrat}/>
 
                             <div className="text-center mt-3">
-                                {(selectedContrat.employeurSigne && userData.role === 'EMPLOYEUR') ||
-                                (selectedContrat.etudiantSigne && userData.role === 'ETUDIANT') ||
-                                (selectedContrat.gestionnaireSigne && userData.role === 'GESTIONNAIRE') ? (
+                                {selectedContrat.employeurSigne && userData.role === 'EMPLOYEUR' || selectedContrat.etudiantSigne && userData.role === 'ETUDIANT' ? (
                                     <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3 w-75">
                                         {t('Retour')}
                                     </button>
@@ -220,11 +207,7 @@ function SignerContrat() {
                                                 {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
                                             </p>
                                             <p className={`card-text ${contrat.etudiantSigne ? 'text-success' : 'text-danger'}`}>
-                                                {userData.role === 'EMPLOYEUR' ?
-                                                    (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')) :
-                                                    userData.role === 'ETUDIANT' ?
-                                                        (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne')) :
-                                                        (contrat.gestionnaireSigne ? t('GestionnaireDejaSigne') : t('GestionnairePasEncoreSigne'))}
+                                                {userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')) : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))}
                                             </p>
                                         </div>
                                     </div>

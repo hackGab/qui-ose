@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GestionnaireHeader from './GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
@@ -11,6 +12,11 @@ function ListeCandidature() {
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userData = location.state?.userData;
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -104,6 +110,22 @@ function ListeCandidature() {
         setSelectedCandidat(null);
     };
 
+    const handleOpenPasswordModal = () => {
+        setShowPasswordModal(true);
+    };
+
+    const handleClosePasswordModal = () => {
+        setShowPasswordModal(false);
+        setPassword('');
+    };
+
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+        console.log("Mot de passe saisi :", password);
+        // Traitez la validation du mot de passe ici
+        handleClosePasswordModal();
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         const updatedFormData = { ...formData, [name]: value };
@@ -140,7 +162,6 @@ function ListeCandidature() {
         setFormData(updatedFormData);
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
@@ -176,33 +197,33 @@ function ListeCandidature() {
                         <tbody>
                         {candidatures.map(candidat => {
                             const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
+                            const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
                             return (
                                 <tr key={candidat.id}>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` :
-                                            "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}
-                                    </td>
-                                    <td>
-                                        {candidat.entrevueDetails ?
-                                            `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` :
-                                            "N/A"}
-                                    </td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}</td>
+                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` : "N/A"}</td>
                                     <td>
                                         {!hasContrat ? (
                                             <button className="btn btn-success"
                                                     onClick={() => handleGenerateContract(candidat)}>
                                                 {t('GenererContrat')}
                                             </button>
-                                        ) : <button className="btn btn-success disabled"
-                                                    onClick={() => handleGenerateContract(candidat)}>
-                                            {t('EnAttenteDeSignatures')}
-                                            </button>
-                                        }
+                                        ) : (
+                                            <>
+                                                {contrat.etudiantSigne && contrat.employeurSigne ? (
+                                                    <button className="btn btn-primary" onClick={handleOpenPasswordModal}
+                                                    >
+                                                        {t('SignerContrat')}
+                                                    </button>
+                                                ) : (
+                                                    <button className="btn btn-success disabled">
+                                                        {t('EnAttenteDeSignatures')}
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             );
@@ -213,7 +234,7 @@ function ListeCandidature() {
             </div>
 
             {showModal && (
-                <div className="modal fade show page-liste-candidature" style={{display: 'block'}} >
+                <div className="modal fade show page-liste-candidature" style={{display: 'block'}}>
                     <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
@@ -321,6 +342,38 @@ function ListeCandidature() {
                                     <button type="button" className="btn btn-secondary"
                                             onClick={handleCloseModal}>{t('close')}</button>
                                     <button type="submit" className="btn btn-success">{t('GenererContrat')}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPasswordModal && (
+                <div className="modal fade show" style={{display: 'block'}}>
+                    <div className="modal-dialog" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{t('SignerContrat')}</h5>
+                            </div>
+                            <form onSubmit={handlePasswordSubmit}>
+                                <div className="modal-body">
+                                    <label>{t('EntrezMotDePasse')}</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={handleClosePasswordModal}>
+                                        {t('Fermer')}
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {t('Signer')}
+                                    </button>
                                 </div>
                             </form>
                         </div>

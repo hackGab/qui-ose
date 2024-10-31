@@ -249,7 +249,7 @@ function Inscription() {
                     </div>
                 </div>
 
-                <div className='row'>
+                <div className='row' style={{ alignItems: "flex-end" }}>
                     <div className="form-group">
                         <label htmlFor="prenom">{t('prenom')}</label>
                         <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
@@ -279,7 +279,7 @@ function Inscription() {
                                 </div>
                             </Then>
                             <Else>
-                                <div className="form-group mb-1">
+                                <div className="form-group">
                                         <label htmlFor="departement">{t('Departement')}</label>
                                         <Select
                                             id="departement"

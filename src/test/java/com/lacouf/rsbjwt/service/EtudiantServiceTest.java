@@ -211,7 +211,7 @@ class EtudiantServiceTest {
         String etudiantEmail = "email@gmail.com";
         Long offreId = 1L;
         when(etudiantRepository.findByEmail(etudiantEmail))
-                .thenReturn(null);
+                .thenReturn(Optional.empty());
 
         // Act
         Optional<EtudiantDTO> response = etudiantService.ajouterOffreDeStage(etudiantEmail, offreId);
@@ -226,7 +226,7 @@ class EtudiantServiceTest {
         String etudiantEmail = "email@gmail.com";
         Long offreId = 1L;
         when(etudiantRepository.findByEmail(etudiantEmail))
-                .thenReturn(etudiantEntity);
+                .thenReturn(Optional.of(etudiantEntity));
         when(offreDeStageRepository.findById(offreId))
                 .thenReturn(Optional.empty());
 
@@ -282,7 +282,7 @@ class EtudiantServiceTest {
         List<OffreDeStage> offres = List.of(offreDeStage);
         etudiantEntity.setOffresAppliquees(offres);
 
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
 
         // Act
         Iterable<OffreDeStageDTO> response = etudiantService.getOffresDeStage(email);
@@ -307,7 +307,7 @@ class EtudiantServiceTest {
         offresAppliquees.add(offreDeStage);
         etudiantEntity.setOffresAppliquees(offresAppliquees);
 
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(offreDeStageRepository.findById(offreId)).thenReturn(Optional.of(offreDeStage));
 
         // Act
@@ -330,8 +330,7 @@ class EtudiantServiceTest {
 
         List<Entrevue> entrevues = List.of(entrevue);
 
-
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
 
         // Act
@@ -354,7 +353,7 @@ class EtudiantServiceTest {
         entrevue.setOffreDeStage(offreDeStage);
         entrevue.setStatus("En attente");
         List<Entrevue> entrevues = List.of(entrevue);
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
 
         // Act
@@ -377,7 +376,7 @@ class EtudiantServiceTest {
         entrevue.setEtudiant(etudiantEntity);
         entrevue.setOffreDeStage(offreDeStage);
         String status = "Accepter";
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findByEtudiantIdAndOffreDeStageId(etudiantEntity.getId(), offreId)).thenReturn(Optional.of(entrevue));
 
         // Act
@@ -401,7 +400,7 @@ class EtudiantServiceTest {
 
         entrevue.setStatus("Accepter");
         List<Entrevue> entrevues = List.of(entrevue);
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
 
         // Act
@@ -524,7 +523,7 @@ class EtudiantServiceTest {
         // Arrange
         String email = "email@gmail.com";
         Long offreId = 1L;
-        when(etudiantRepository.findByEmail(email)).thenReturn(etudiantEntity);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(offreDeStageRepository.findById(offreId)).thenReturn(Optional.empty());
 
         // Act

@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class Professeur extends UserApp {
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "DEPARTEMENT")
     private Departement departement;

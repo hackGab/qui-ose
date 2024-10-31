@@ -28,7 +28,6 @@ function SignerContrat() {
         setType(type === 'password' ? 'text' : 'password');
     };
 
-    // Fetch contrats
     useEffect(() => {
         const fetchContrats = async () => {
             try {

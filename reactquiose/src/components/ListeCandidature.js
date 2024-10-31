@@ -3,20 +3,25 @@ import GestionnaireHeader from './GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
 import {useLocation, useNavigate} from "react-router-dom";
+import {Icon} from "react-icons-kit";
+import {eye, eyeOff} from "react-icons-kit/feather";
+import TableauContrat from "./TableauContrat";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
+    const [showContractModal, setShowContractModal] = useState(false);
     const [contrats, setContrats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [selectedContrat, setSelectedContrat] = useState(null);
+    const [icon, setIcon] = useState(eyeOff);
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [type, setType] = useState('password');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
     const location = useLocation();
     const userData = location.state?.userData;
     const [formData, setFormData] = useState({
@@ -33,6 +38,11 @@ function ListeCandidature() {
         entrepriseEngagement: '',
         etudiantEngagement: '',
     });
+
+    const togglePasswordVisibility = () => {
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
+    };
 
     const generateHoursOptions = () => {
         const options = [];
@@ -116,6 +126,10 @@ function ListeCandidature() {
         setShowPasswordModal(true);
     };
 
+    const handleOpenContractModal = () => {
+        setShowContractModal(true);
+    };
+
     const handleClosePasswordModal = () => {
         setShowPasswordModal(false);
         setPassword('');
@@ -129,7 +143,6 @@ function ListeCandidature() {
         handleSignContract(selectedContrat.uuid, userData.credentials.email);
         handleClosePasswordModal();
     };
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -247,8 +260,13 @@ function ListeCandidature() {
                                         ) : (
                                             <>
                                                 {isContractSigned(contrat) ? (
-                                                    <button className="btn btn-secondary" disabled>
-                                                        Contrat signé
+                                                    <button className="btn btn-success"
+                                                            onClick={() => {
+                                                                setSelectedContrat(contrat);
+                                                                handleOpenContractModal()
+                                                            }}
+                                                    >
+                                                        {t('GenererPDF')}
                                                     </button>
                                                 ) : (
                                                     <button
@@ -256,7 +274,6 @@ function ListeCandidature() {
                                                         disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
                                                         onClick={() => {
                                                             setSelectedContrat(contrat);
-                                                            console.log("Contrat à signer :", contrat);
                                                             handleOpenPasswordModal();
                                                         }}
                                                     >
@@ -399,20 +416,32 @@ function ListeCandidature() {
                             <div className="modal-header">
                                 <h5 className="modal-title">{t('SignerContrat')}</h5>
                             </div>
+
+                            <TableauContrat contrat={selectedContrat}/>
+
                             <form onSubmit={handlePasswordSubmit}>
                                 <div className="modal-body">
-                                    <label>{t('EntrezMotDePasse')}</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
+                                    <div className="form-group">
+                                        <label>{t('EntrezMotDePasse')}</label>
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type={type}
+                                                className="form-control"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                required
+                                            />
+
+                                            <span onClick={togglePasswordVisibility} className="icon-toggle ps-2">
+                                                <Icon icon={icon} size={20}/>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                                 {modalMessage && <p>{modalMessage}</p>}
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={handleClosePasswordModal}>
+                                    <button type="button" className="btn btn-secondary"
+                                            onClick={handleClosePasswordModal}>
                                         {t('Fermer')}
                                     </button>
                                     <button type="submit" className="btn btn-primary">
@@ -424,6 +453,31 @@ function ListeCandidature() {
                     </div>
                 </div>
             )}
+
+            {showContractModal && (
+                <div className="modal fade show page-liste-candidature" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-lg" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{t('Contrat Signe')}</h5>
+                            </div>
+                            <div className="modal-body">
+                                <TableauContrat contrat={selectedContrat}/>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary"
+                                            onClick={handleClosePasswordModal}>
+                                        {t('Fermer')}
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {t('GenererPDF')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </>
     );
 }

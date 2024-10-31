@@ -233,5 +233,7 @@
   "EmployeurDejaSigne": "Employer already signed",
   "EmployeurPasEncoreSigne": "Employer not yet signed",
   "EtudiantDejaSigne": "Student already signed",
-  "EtudiantPasEncoreSigne": "Student not yet signed"
+  "EtudiantPasEncoreSigne": "Student not yet signed",
+  "EnAttenteDesSignatures": "Waiting for signatures",
+  "EntrezMotDePasse": "Enter Password"
 }

@@ -10,9 +10,11 @@ function ListeCandidature() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCandidat, setSelectedCandidat] = useState(null);
+    const [selectedContrat, setSelectedContrat] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -122,9 +124,12 @@ function ListeCandidature() {
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
         console.log("Mot de passe saisi :", password);
-        // Traitez la validation du mot de passe ici
+        console.log("uuid du candidat sélectionné :", selectedContrat.uuid);
+        console.log("Email de l'utilisateur connecté :", userData.credentials.email);
+        handleSignContract(selectedContrat.uuid, userData.credentials.email);
         handleClosePasswordModal();
     };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -176,6 +181,35 @@ function ListeCandidature() {
         handleCloseModal();
     };
 
+    const handleSignContract = async (uuid, email) => {
+        try {
+            const response = await fetch(`http://localhost:8081/contrat/signer-gestionnaire/${uuid}/${email}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            if (response.ok) {
+                setContrats(prevContrats =>
+                    prevContrats.map(contrat =>
+                        contrat.uuid === uuid ? { ...contrat, gestionnaireSigne: true } : contrat
+                    )
+                );
+                return "Contrat signé avec succès.";
+            } else {
+                const errorMessage = await response.text();
+                return `Échec de la signature : ${errorMessage}`; 
+            }
+        } catch (error) {
+            console.error("Erreur lors de la signature :", error);
+            return "Une erreur s'est produite lors de la signature.";
+        }
+    };
+
+    const isContractSigned = (contrat) => {
+        return contrat.etudiantSigne && contrat.employeurSigne && contrat.gestionnaireSigne;
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -212,14 +246,23 @@ function ListeCandidature() {
                                             </button>
                                         ) : (
                                             <>
-                                                {contrat.etudiantSigne && contrat.employeurSigne ? (
-                                                    <button className="btn btn-primary" onClick={handleOpenPasswordModal}
-                                                    >
-                                                        {t('SignerContrat')}
+                                                {isContractSigned(contrat) ? (
+                                                    <button className="btn btn-secondary" disabled>
+                                                        Contrat signé
                                                     </button>
                                                 ) : (
-                                                    <button className="btn btn-success disabled">
-                                                        {t('EnAttenteDeSignatures')}
+                                                    <button
+                                                        className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-primary' : 'btn-success'}`}
+                                                        disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
+                                                        onClick={() => {
+                                                            setSelectedContrat(contrat);
+                                                            console.log("Contrat à signer :", contrat);
+                                                            handleOpenPasswordModal();
+                                                        }}
+                                                    >
+                                                        {contrat.etudiantSigne && contrat.employeurSigne
+                                                            ? t('SignerContrat')
+                                                            : t('EnAttenteDesSignatures')}
                                                     </button>
                                                 )}
                                             </>
@@ -262,7 +305,7 @@ function ListeCandidature() {
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
-                                        <div className="form-group col-md-6">
+                                    <div className="form-group col-md-6">
                                             <label>{t('HeureDeDebut')} :</label>
                                             <select className="form-control" name="heureHorraireDebut"
                                                     value={formData.heureHorraireDebut} onChange={handleChange}
@@ -367,6 +410,7 @@ function ListeCandidature() {
                                         required
                                     />
                                 </div>
+                                {modalMessage && <p>{modalMessage}</p>}
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={handleClosePasswordModal}>
                                         {t('Fermer')}

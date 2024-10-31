@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -102,4 +103,27 @@ public class UserAppService {
                 new CredentialDTO(gestionnaire.getCredentials().getEmail(), gestionnaire.getCredentials().getPassword())
                 )).orElseGet(GestionnaireDTO::empty);
     }
+
+    public Optional<String> getDepartementByEmail(String email) {
+        return userAppRepository.findUserAppByEmail(email)
+                .flatMap(user -> {
+                    switch (user.getRole()) {
+                        case ETUDIANT:
+                            return etudiantRepository.findByEmail(email)
+                                    .map(Etudiant::getDepartement)
+                                    .map(Departement::getDisplayName);
+                        case PROFESSEUR:
+                            return professeurRepository.findByEmail(email)
+                                    .map(Professeur::getDepartement)
+                                    .map(Departement::getDisplayName);
+                        default:
+                            return Optional.of("This user role does not have a department.");
+                    }
+                });
+    }
+
+    public List<Departement> getAllDepartements() {
+        return Departement.getAllDepartements();
+    }
+
 }

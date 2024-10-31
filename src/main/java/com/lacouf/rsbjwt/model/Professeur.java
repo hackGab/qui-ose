@@ -3,6 +3,8 @@ package com.lacouf.rsbjwt.model;
 import com.lacouf.rsbjwt.model.auth.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +14,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class Professeur extends UserApp {
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "DEPARTEMENT")
     private Departement departement;
 
@@ -33,4 +35,6 @@ public class Professeur extends UserApp {
                 ", departement='" + departement + '\'' +
                 '}';
     }
+
+
 }

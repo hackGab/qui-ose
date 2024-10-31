@@ -1,0 +1,118 @@
+:root {
+    --green: #1ECD97;
+    --gray: #bbbbbb;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-group label {
+    font-size: 1rem;
+}
+
+
+.btn-signer {
+    outline: none;
+    height: 3rem;
+    text-align: center;
+    width: 10rem;
+    border-radius: 2rem;
+    background: #fff;
+    border: 2px solid var(--green);
+    color: var(--green);
+    letter-spacing: 1px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-signer:hover {
+    color: white;
+    background: var(--green);
+}
+
+.btn-signer:active {
+    letter-spacing: 2px;
+}
+
+.btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #ccc;
+    color: #666;
+}
+
+.btn-signer-en:after {
+    content: "SIGN";
+}
+
+.btn-signer-fr:after {
+    content: "SIGNER";
+}
+
+
+.onclick {
+    width: 3rem;
+    border-color: var(--gray);
+    border-width: 3px;
+    font-size: 0;
+    border-left-color: var(--green);
+    animation: rotating 2s 0.25s linear infinite;
+}
+
+.onclick:after {
+    content: "";
+}
+
+.onclick:hover {
+    color: var(--green);
+    background: white;
+}
+
+.validate {
+    font-size: 1rem;
+    color: white;
+    background: var(--green);
+}
+
+.validate:after {
+    content: "✓";
+}
+
+.refuse {
+    font-size: 1rem;
+    color: white;
+    background: var(--bs-red);
+}
+
+.refuse:hover {
+    background: var(--bs-red);
+}
+
+.refuse:after {
+    content: "✗";
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Add this to your CSS file */
+.btn-signer.invalid {
+    background-color: red;
+    color: white;
+    border: 1px solid darkred;
+}
+
+.error-message {
+    color: red;
+    font-size: 1rem;
+    margin-top: 1rem;
+}

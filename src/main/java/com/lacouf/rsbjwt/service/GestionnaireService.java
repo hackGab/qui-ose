@@ -1,17 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CV;
-import com.lacouf.rsbjwt.model.Gestionnaire;
-import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.repository.GestionnaireRepository;
-import com.lacouf.rsbjwt.repository.OffreDeStageRepository;
-import com.lacouf.rsbjwt.service.dto.GestionnaireDTO;
-import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
+import com.lacouf.rsbjwt.model.*;
+import com.lacouf.rsbjwt.repository.*;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.lacouf.rsbjwt.repository.CVRepository;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
 
 import java.util.Optional;
 
@@ -21,15 +14,21 @@ public class GestionnaireService {
     private final CVRepository cvRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ContratRepository contratRepository;
 
     private final OffreDeStageRepository offreDeStageRepository;
+    private final EntrevueRepository entrevueRepository;
+    private final ProfesseurRepository professeurRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository,  PasswordEncoder passwordEncoder) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
- 	this.offreDeStageRepository = offreDeStageRepository;
+ 	    this.offreDeStageRepository = offreDeStageRepository;
         this.passwordEncoder = passwordEncoder;
+        this.contratRepository = contratRepository;
+        this.entrevueRepository = entrevueRepository;
+        this.professeurRepository = professeurRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -88,4 +87,85 @@ public class GestionnaireService {
 
         return Optional.empty();
     }
+
+    public Optional<ContratDTO> creerContrat(ContratDTO contratDTO) {
+        try {
+            CandidatAccepter candidat = contratDTO.getCandidature().toEntity();
+            Optional<Entrevue> entrevueDTO = entrevueRepository.findById(contratDTO.getCandidature().getEntrevueId());
+            candidat.setEntrevue(entrevueDTO.get());
+
+            Contrat contrat = new Contrat(
+                    contratDTO.isEtudiantSigne(),
+                    contratDTO.isEmployeurSigne(),
+                    contratDTO.isGestionnaireSigne(),
+                    contratDTO.getDateSignatureEtudiant(),
+                    contratDTO.getDateSignatureEmployeur(),
+                    contratDTO.getDateSignatureGestionnaire(),
+                    candidat,
+                    contratDTO.getCollegeEngagement(),
+                    contratDTO.getDateDebut(),
+                    contratDTO.getDateFin(),
+                    contratDTO.getDescription(),
+                    contratDTO.getEntrepriseEngagement(),
+                    contratDTO.getEtudiantEngagement(),
+                    contratDTO.getHeuresParSemaine(),
+                    contratDTO.getHeureHorraireDebut(),
+                    contratDTO.getHeureHorraireFin(),
+                    contratDTO.getLieuStage(),
+                    contratDTO.getNbSemaines(),
+                    contratDTO.getTauxHoraire()
+            );
+
+            contrat.genererUUID();
+
+            Contrat saveContrat = contratRepository.save(contrat);
+
+            return Optional.of(new ContratDTO(saveContrat));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    public Iterable<ContratDTO> getAllContrats() {
+        return contratRepository.findAll().stream()
+                .map(ContratDTO::new)
+                .toList();
+    }
+
+    public Optional<ContratDTO> signerContratGestionnaire(String uuid, String password, String email) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        Gestionnaire gestionnaire = gestionnaireRepository.findByEmail(email);
+
+        if (passwordEncoder.matches(password, gestionnaire.getPassword())) {
+            contrat.signerContratGestionnaire();
+            Contrat savedContrat = contratRepository.save(contrat);
+            return Optional.of(new ContratDTO(savedContrat));
+        } else {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
+
+    public Optional<EtudiantDTO> assignerProfesseur(Long etudiantId, Long professeurId) {
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findById(etudiantId);
+        Optional<Professeur> professeurOpt = professeurRepository.findById(professeurId);
+
+        if (etudiantOpt.isPresent() && professeurOpt.isPresent()) {
+            Etudiant etudiant = etudiantOpt.get();
+
+            Optional<Contrat> contratOpt = contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant);
+            if (contratOpt.isEmpty()) {
+                throw new IllegalStateException("Un contrat signé par le gestionnaire est requis pour assigner un professeur à cet étudiant.");
+            }
+
+            etudiant.setProfesseur(professeurOpt.get());
+            etudiantRepository.save(etudiant);
+
+            return Optional.of(new EtudiantDTO(etudiant));
+        }
+        return Optional.empty();
+    }
+
 }

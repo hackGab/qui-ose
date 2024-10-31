@@ -42,11 +42,12 @@ function MesEntrevueAccepte() {
                     setEntrevues([]);
                     return;
                 }
+
                 console.log("entrevuesAccepteData", entrevuesAccepteData)
                 setEntrevues(entrevuesAccepteData);
 
             } catch (error) {
-                setError(error.message);
+                console.error('Erreur lors de la récupération des entrevues:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -274,7 +275,7 @@ function MesEntrevueAccepte() {
                                                                             onClick={() => handleAccept(entrevue)}
                                                                             style={{ margin: "0", fontSize: "1.2rem" }}
                                                                         >
-                                                                            Embaucher
+                                                                            {t('Embaucher')}
                                                                         </button>
                                                                     </div>
                                                                     <div className="icon-block">
@@ -283,7 +284,7 @@ function MesEntrevueAccepte() {
                                                                             onClick={() => handleRefuse(entrevue)}
                                                                             style={{ margin: "0", fontSize: "1.2rem" }}
                                                                         >
-                                                                            Refuser
+                                                                            {t('Refuser')}
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -304,7 +305,7 @@ function MesEntrevueAccepte() {
                 show={showModal}
                 onClose={() => setShowModal(false)}
                 onConfirm={currentAction}
-                message={t('ConfirmerAction')}
+                message={t('ConfirmerVotreChoix')}
             />
         </>
     )

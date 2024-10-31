@@ -55,6 +55,13 @@ function GestionnaireHeader() {
                     >
                         {t('employeur')}
                     </Link>
+                    <Link
+                        className={`nav-link ${activeLink === '/listeCandidatures' ? 'active' : ''}`}
+                        to="/listeCandidatures"
+                        onClick={() => handleLinkClick('/listeCandidatures')}
+                    >
+                        {t('candidatures')}
+                    </Link>
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>

@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
@@ -259,8 +260,8 @@ public class OffreDeStageControllerTest {
     public void test_getEtudiantsByOffre() throws Exception {
         Long offreId = 1L;
 
-        EtudiantDTO etudiantDTO1 = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "1234567890", new CredentialDTO("john.doe@example.com", "password"), "Computer Science");
-        EtudiantDTO etudiantDTO2 = new EtudiantDTO("Jane", "Smith", Role.ETUDIANT, "0987654321", new CredentialDTO("jane.smith@example.com", "password"), "Information Technology");
+        EtudiantDTO etudiantDTO1 = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "1234567890", new CredentialDTO("john.doe@example.com", "password"), Departement.TECHNIQUES_INFORMATIQUE);
+        EtudiantDTO etudiantDTO2 = new EtudiantDTO("Jane", "Smith", Role.ETUDIANT, "0987654321", new CredentialDTO("jane.smith@example.com", "password"), Departement.TECHNIQUES_INFORMATIQUE);
 
         when(offreDeStageService.getEtudiantsByOffre(offreId))
                 .thenReturn(Optional.of(List.of(etudiantDTO1, etudiantDTO2)));

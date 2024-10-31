@@ -2,10 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
-import com.lacouf.rsbjwt.service.dto.CVDTO;
-import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
-import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +16,19 @@ public class EtudiantService {
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
     private final CVRepository cvRepository;
+    private final ContratRepository contratRepository;
     private final OffreDeStageRepository offreDeStageRepository;
 
     private final EntrevueRepository entrevueRepository;
 
-    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository) {
+    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository, ContratRepository contratRepository) {
         this.userAppRepository = userAppRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
         this.cvRepository = cvRepository;
         this.offreDeStageRepository = offreDeStageRepository;
         this.entrevueRepository = entrevueRepository;
+        this.contratRepository = contratRepository;
     }
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
@@ -189,6 +188,45 @@ public class EtudiantService {
         return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
                 .filter(entrevue -> entrevue.getStatus().equals("Accepter"))
                 .map(EntrevueDTO::new)
+                .toList();
+    }
+
+    public List<ContratDTO> getContratsByEtudiant(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        Long etudiantId = etudiant.getId();
+        return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
+                .map(ContratDTO::new)
+                .toList();
+    }
+
+
+    public Optional<ContratDTO> signerContratParEtudiant(String uuid, String password) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        Etudiant etudiant = getEtudiantFromContrat(contrat);
+
+        if (passwordEncoder.matches(password, etudiant.getPassword())) {
+            contrat.signerContratEtudiant();
+            Contrat savedContrat = contratRepository.save(contrat);
+            return Optional.of(new ContratDTO(savedContrat));
+        } else {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
+
+    private Etudiant getEtudiantFromContrat(Contrat contrat) {
+        return Optional.ofNullable(contrat.getCandidature())
+                .map(CandidatAccepter::getEntrevue)
+                .map(Entrevue::getEtudiant)
+                .orElseThrow(() -> new RuntimeException("Étudiant non trouvé pour le contrat donné"));
+    }
+
+    public List<ContratDTO> getContratsEnAttenteDeSignature(String email) {
+        Etudiant etudiant = etudiantRepository.findByEmail(email);
+        return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
+                .filter(contrat -> !contrat.isEtudiantSigne())
+                .map(ContratDTO::new)
                 .toList();
     }
 

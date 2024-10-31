@@ -9,7 +9,7 @@ class ProfesseurTest {
     @Test
     void testToString() {
         // Arrange
-        Professeur professeur = new Professeur("John", "Doe", "john@gmail.com", "password", "123456789", "departement");
+        Professeur professeur = new Professeur("John", "Doe", "john@gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
 
         // Act
         String result = professeur.toString();
@@ -22,7 +22,7 @@ class ProfesseurTest {
                 ", email='john@gmail.com'" +
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_PROFESSEUR'" +
-                ", departement='departement'" +
+                ", departement='Techniques de l'informatique'" +
                 '}';
         assertEquals(expected, result);
     }

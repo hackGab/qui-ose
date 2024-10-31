@@ -15,6 +15,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class CVController {
 
+
     private final EtudiantService etudiantService;
 
     public CVController(EtudiantService etudiantService) {

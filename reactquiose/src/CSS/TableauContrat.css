@@ -1,0 +1,77 @@
+.tableau-contrat {
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.toggle-button {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+}
+
+.toggle-button:hover {
+    background-color: #0056b3;
+}
+
+.table-contrat {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.table-contrat tbody {
+    display: contents;
+}
+
+.table-contrat tr {
+    display: inline-grid;
+}
+
+.table-contrat th, .table-contrat td {
+    padding: 0;
+}
+
+.table-contrat th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.table-contrat tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-contrat tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-contrat td {
+    transition: background-color 0.3s ease;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1200px) {
+    .table-contrat {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .table-contrat {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .table-contrat {
+        grid-template-columns: 1fr;
+    }
+}

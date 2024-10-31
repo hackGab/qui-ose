@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service.dto;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProfesseurDTO extends UserDTO {
+    private Long id;
     private CredentialDTO credentials;
-    private String departement;
+    private Departement departement;
 
-    public ProfesseurDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, String departement) {
+    public ProfesseurDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, Departement departement) {
         super(firstName, lastName, phoneNumber, role);
         this.credentials = credentials;
         this.departement = departement;
@@ -22,9 +24,11 @@ public class ProfesseurDTO extends UserDTO {
 
     public ProfesseurDTO(Professeur professeur) {
         super(professeur);
+        this.id = professeur.getId();
         this.credentials = new CredentialDTO(professeur.getEmail(), professeur.getPassword());
         this.departement = professeur.getDepartement();
     }
+
 
     public ProfesseurDTO() {}
 

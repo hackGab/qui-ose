@@ -119,4 +119,33 @@ class CandidatAccepterServiceTest {
         // Assert
         assertFalse(result.isPresent());
     }
+
+    @Test
+    void getAllCandidatures() {
+        //Arrange
+        Entrevue entrevue = new Entrevue();
+        entrevue.setId(1L);
+        CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
+
+        Entrevue entrevue1 = new Entrevue();
+        entrevue1.setId(2L);
+        CandidatAccepter candidatAccepter1 = new CandidatAccepter(entrevue1, false);
+
+        Entrevue entrevue2 = new Entrevue();
+        entrevue2.setId(3L);
+        CandidatAccepter candidatAccepter2 = new CandidatAccepter(entrevue2, true);
+
+        Mockito.when(candidatAccepterRepository.findAll()).thenReturn(java.util.List.of(candidatAccepter, candidatAccepter1, candidatAccepter2));
+
+        // Act
+
+        Iterable<CandidatAccepterDTO> result = candidatAccepterService.getAllCandidatures();
+
+        // Assert
+
+        assertEquals(3, result.spliterator().getExactSizeIfKnown());
+        assertTrue(result.iterator().hasNext());
+        assertEquals(1L, result.iterator().next().getEntrevueId());
+
+    }
 }

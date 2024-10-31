@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import Formulaire from "./components/Formulaire";
 import './App.css';
 import AccueilEtudiant from "./components/AccueilEtudiant";
-import AccueilEmployeur from "./components/AccueilEmployeur";
 import AccueilGestionnaire from "./components/AccueilGestionnaire";
 import AccueilProfesseur from "./components/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
@@ -18,6 +17,8 @@ import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
+import ListeCandidature from "./components/ListeCandidature";
+import SignerContrat from "./components/SignerContrat";
 
 function App() {
 
@@ -32,19 +33,20 @@ function App() {
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />
                     <Route path="/mesEntrevues" element={<MesEntrevues />} />
 		            <Route path="/stagesAppliquees" element={<StagesAppliqueesPage/>} />
-                    <Route path="/accueilEmployeur" element={<AccueilEmployeur />} />
+                    <Route path="/accueilEmployeur" element={<VisualiserOffres />} />
                     <Route path="/accueilGestionnaire" element={<AccueilGestionnaire />} />
                     <Route path="/accueilProfesseur" element={<AccueilProfesseur />} />
                     <Route path="/soumettre-offre" element={<SoumettreOffre />} />
-                    <Route path="visualiser-offres" element={<VisualiserOffres />} />
                     <Route path="/offre/:offreId/etudiants" element={<EtudiantPostulants />} />
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:email' element={<DetailsEtudiants />} />
-                    <Route path='detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
+                    <Route path='/detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
                     <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
+                    <Route path="/listeCandidatures" element={<ListeCandidature />}/>
+                    <Route path="/SignerContrat" element={<SignerContrat />} />
                     <Route path="/nonAutorise" element={<div>Accès non autorisé</div>} />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>

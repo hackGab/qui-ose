@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.security;
 
+import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.UserApp;
 import com.lacouf.rsbjwt.repository.UserAppRepository;
@@ -41,7 +42,7 @@ class JwtAuthenticationFilterTest {
         // Arrange
         String email = "email@gmail.com";
         String token = "Bearer validToken";
-        UserApp user = new Etudiant("John", "Doe", "email@gmail.com", "correctPassword", "1234567890", "Computer Science");
+        UserApp user = new Etudiant("John", "Doe", "email@gmail.com", "correctPassword", "1234567890", Departement.TECHNIQUES_INFORMATIQUE);
 
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);

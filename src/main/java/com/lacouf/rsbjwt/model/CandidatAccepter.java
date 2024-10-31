@@ -30,8 +30,8 @@ public class CandidatAccepter {
     @Override
     public String toString() {
         return "CandidatAccepter{" +
-                "id=" + id +
-                ", entrevue=" + entrevue.getId() +
+                "id=" + (id != null ? id : "null") +
+                ", entrevue=" + (entrevue != null ? entrevue.getId() : "null") +
                 ", accepte=" + accepte +
                 '}';
     }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,9 @@ function AccueilGestionnaire() {
     const { t } = useTranslation();
     const [refusNotification] = useState(0);
     const location = useLocation();
+    const navigate = useNavigate();
     const userData = location.state?.userData;
+    console.log("AccueilGestionnaire userData: ", userData)
 
     const sections = [
         { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
@@ -20,10 +22,15 @@ function AccueilGestionnaire() {
         { title: t("employeur"), notifications: 0, image: employeurImage, link: "/listeEmployeurs" },
     ];
 
+    const handleNavigateCandidatures = () => {
+        navigate('/listeCandidatures', { state: { userData } });
+    };
+
     return (
         <div className="container accueil-gestionnaire">
-            <h2 className="text-center my-2 text-capitalize"
-                style={{color: "#01579b"}}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
+            <h2 className="text-center my-2 text-capitalize" style={{ color: "#01579b" }}>
+                {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!
+            </h2>
 
             <h1>{t("Dashboard")}</h1>
             <div className="row justify-content-center">
@@ -43,6 +50,12 @@ function AccueilGestionnaire() {
                         </Link>
                     </div>
                 ))}
+            </div>
+
+            <div className="candidature-button-container mt-5">
+                <button className="candidature-button" onClick={handleNavigateCandidatures}>
+                    {t("Voir les Candidatures")}
+                </button>
             </div>
         </div>
     );

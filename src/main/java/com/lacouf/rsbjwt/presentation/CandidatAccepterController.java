@@ -51,4 +51,9 @@ public class CandidatAccepterController {
                 .map(decision -> ResponseEntity.ok().body(decision))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<CandidatAccepterDTO>> getAllCandidatures() {
+        return ResponseEntity.ok().body(candidatAccepterService.getAllCandidatures());
+    }
 }

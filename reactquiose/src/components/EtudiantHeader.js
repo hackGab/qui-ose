@@ -87,30 +87,37 @@ import i18n from "i18next";
             <header className="gestionnaire-header">
                 <nav className="navbar">
                     <div className="logo" onClick={handleClickLogo} style={{ cursor: 'pointer' }}>
-                        <img src={logo} alt="Logo" className="header-logo" />
+                        <img src={logo} alt="Logo" className="header-logo"/>
                         <div className="logo-text">Qui-Ose</div>
                     </div>
 
                     <div className="nav-links">
-                        {file && file.status === "validé" && (
-                            <div className="nav-text-center">
-                                <a className="nav-link" onClick={() => navigate('/stagesAppliquees', { state: { userData } })}>
-                                    <span>{t('stagesAppliquées')} ({stagesAppliquees.length})</span>
-                                </a>
-                            </div>
-                        )}
                         <span
                             className={`nav-link ${activeLink === '/accueilEtudiant' ? 'active' : ''}`}
                             onClick={() => handleLinkClick('/accueilEtudiant')}
-                            style={{ cursor: 'pointer' }}
                         >
                             {t('accueil')}
                         </span>
+                        {file && file.status === "validé" && (
+                            <span
+                                className={`nav-link ${activeLink === '/stagesAppliquees' ? 'active' : ''}`}
+                                onClick={() => handleLinkClick('/stagesAppliquees')}
+                            >
+                                {t('stagesAppliquées')} ({stagesAppliquees.length})
+                            </span>
+                        )}
+
                         <span
                             className={`nav-link ${activeLink === '/mesEntrevues' ? 'active' : ''}`}
                             onClick={() => handleLinkClick('/mesEntrevues')}
                         >
                             {t('mesEntrevues')} ({nbEntrevuesEnAttente || 0})
+                        </span>
+                        <span
+                            className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
+                            onClick={() => handleLinkClick('/signerContrat')}
+                        >
+                            {t('SignerContrat')}
                         </span>
                     </div>
 

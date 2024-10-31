@@ -30,6 +30,30 @@
     color: inherit;
 }
 
+.candidature-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.candidature-button {
+    background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.candidature-button:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    color: #333;
+}
+
 .section-image {
     position: absolute;
     bottom: 20px;

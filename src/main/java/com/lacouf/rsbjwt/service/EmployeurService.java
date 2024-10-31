@@ -1,20 +1,14 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
+import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class EmployeurService {
@@ -23,19 +17,23 @@ public class EmployeurService {
     private final EntrevueRepository entrevueRepository;
     private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
+
+    private final ContratRepository contratRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
         this.entrevueRepository = entrevueRepository;
         this.offreDeStageRepository = offreDeStageRepository;
         this.etudiantRepository = etudiantRepository;
+        this.contratRepository = contratRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
+
         try {
             String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
             Employeur employeur = new Employeur(
@@ -153,4 +151,40 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
+
+
+    public Optional<ContratDTO> signerContratEmployeur(String uuid, String password) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        Employeur employeur = getEmployeurFromContrat(contrat);
+
+        // Validation du mot de passe crypté
+        if (passwordEncoder.matches(password, employeur.getPassword())) {
+            System.out.println("Mot de passe correct : " + employeur.getPassword());
+            contrat.signerContratEmployeur();
+            Contrat savedContrat = contratRepository.save(contrat);
+            return Optional.of(new ContratDTO(savedContrat));
+        } else {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
+
+
+
+    private Employeur getEmployeurFromContrat(Contrat contrat) {
+        return Optional.ofNullable(contrat.getCandidature())
+                .map(CandidatAccepter::getEntrevue)
+                .map(Entrevue::getOffreDeStage)
+                .map(OffreDeStage::getEmployeur)
+                .orElseThrow(() -> new RuntimeException("Employeur non trouvé pour le contrat donné"));
+    }
+
+    public List<ContratDTO> getContratEmployeur(String employeurEmail) {
+        return employeurRepository.findByCredentials_email(employeurEmail)
+                .map(employeur -> contratRepository.findContratsByEmployeur(employeur).stream()
+                        .map(ContratDTO::new)
+                        .toList())
+                .orElse(Collections.emptyList());
+    }
 }

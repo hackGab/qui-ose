@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
+import static org.mockito.Mockito.*;
+
 @WebMvcTest(controllers = CVController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class CVControllerTest {
 
@@ -54,14 +56,27 @@ public class CVControllerTest {
     @Test
     public void shouldCreateCV() throws Exception {
         CVDTO cvDTO = new CVDTO("cvName", "cvType", "cvData", "cvStatus");
-        Mockito.when(etudiantService.creerCV(cvDTO, "email@gmail.com"))
+        cvDTO.setUploadDate(null);
+        when(etudiantService.creerCV(any(CVDTO.class), anyString()))
                 .thenReturn(Optional.of(cvDTO));
+
+        String email = "allo@ballo.com";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/cv/creerCV/{email}", email)
+                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf())
+                        .content(new ObjectMapper().writeValueAsString(cvDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(cvDTO)));
+
     }
 
     @Test
     public void shouldNotCreateCV() throws Exception {
         CVDTO cvDTO = new CVDTO("cvName", "cvType", "cvData", "cvStatus");
-        Mockito.when(etudiantService.creerCV(cvDTO, "notemail@gmail.com"))
+        when(etudiantService.creerCV(cvDTO, "notemail@gmail.com"))
                 .thenReturn(Optional.empty());
     }
 

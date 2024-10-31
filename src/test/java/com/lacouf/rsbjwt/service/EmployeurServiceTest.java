@@ -1,9 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.OffreDeStage;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.EmployeurController;
@@ -12,12 +9,14 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +30,14 @@ public class EmployeurServiceTest {
     private UserAppRepository userAppRepository;
     private OffreDeStageRepository offreDeStageRepository;
     private EtudiantRepository etudiantRepository;
+
+    private ContratRepository contratRepository;
     private EmployeurService employeurService;
-    private EmployeurController employeurController;
 
     private EmployeurDTO newEmployeur;
     private Employeur employeurEntity;
     private PasswordEncoder passwordEncoder;
+
 
     @BeforeEach
     void setUp() {
@@ -44,32 +45,16 @@ public class EmployeurServiceTest {
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         userAppRepository = Mockito.mock(UserAppRepository.class);
-        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class); // Mocking offreDeStageRepository
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
-        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository);
-        employeurController = new EmployeurController(employeurService);
+        contratRepository = Mockito.mock(ContratRepository.class);
+        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");
 
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
     }
-
-//    @Test
-//    void shouldCreateEmployeur() {
-//        // Arrange
-//        when(employeurRepository.save(any(Employeur.class)))
-//                .thenReturn(employeurEntity);
-//
-//        // Act
-//        ResponseEntity<EmployeurDTO> response = employeurController.creerEmployeur(newEmployeur);
-//
-//        // Assert
-//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//        assertEquals(newEmployeur.getFirstName(), response.getBody().getFirstName());
-//        assertEquals(newEmployeur.getLastName(), response.getBody().getLastName());
-//    }
 
     @Test
     void shouldCreateEmployeur() {
@@ -126,7 +111,9 @@ public class EmployeurServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<EmployeurDTO> response = employeurController.getEmployeurById(1L);
+        ResponseEntity<EmployeurDTO> response = employeurService.getEmployeurById(employeurId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -161,42 +148,63 @@ public class EmployeurServiceTest {
         assertTrue(response.isEmpty());
     }
 
-//    @Test
-//    void shouldCreateEntrevue() {
-//        // Arrange
-//        String email = "etudiant@gmail.com";
-//
-//        // Setup EntrevueDTO with necessary details
-//        EntrevueDTO entrevueDTO = new EntrevueDTO();
-//        entrevueDTO.setLocation("Lachine");
-//        entrevueDTO.setStatus("validé");
-//        entrevueDTO.setDateEntrevue(LocalDateTime.now());
-//
-//        // Mocking OffreDeStage and Etudiant
-//        OffreDeStage offreDeStage = new OffreDeStage();
-//        offreDeStage.setId(1L);
-//        offreDeStage.setTitre("Stage en développement");
-//
-//        Etudiant etudiant = new Etudiant("John", "Doe", email, "password", "123456789", "Département");
-//
-//        // Mocking the behavior of userAppRepository to return the Etudiant
-//        when(userAppRepository.findUserAppByEmail(email))
-//                .thenReturn(Optional.of(etudiant));
-//
-//        // Prepare a mock Entrevue entity to simulate the saved state
-//        Entrevue savedEntrevue = new Entrevue(LocalDateTime.now(), "Lachine", "validé", etudiant, offreDeStage);
-//        when(entrevueRepository.save(any(Entrevue.class)))
-//                .thenReturn(savedEntrevue);
-//
-//        // Act
-//        Optional<EntrevueDTO> response = employeurService.createEntrevue(entrevueDTO, email, 1L);
-//
-//        // Assert
-//        assertTrue(response.isPresent());
-//        assertEquals("Lachine", response.get().getLocation());
-//        assertEquals("validé", response.get().getStatus());
-//    }
-//
+    @Test
+    void shouldCreateEntrevue() {
+        // Arrange
+        String email = "etudiant@gmail.com";
+
+        Employeur employeur = new Employeur();
+        employeur.setId(1L);
+        employeur.setFirstName("John");
+        employeur.setLastName("Doe");
+        employeur.setCredentials(new Credentials("", "", Role.EMPLOYEUR));
+        employeur.setEntreprise("Entreprise");
+
+
+        List<OffreDeStage> offres = new ArrayList<>();
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setId(1L);
+        offreDeStage.setTitre("Stage en développement");
+        offreDeStage.setLocalisation("Paris");
+        offreDeStage.setDateLimite(LocalDate.now().plusDays(30));
+        offreDeStage.setData("Description du stage");
+        offreDeStage.setNbCandidats(10);
+        offreDeStage.setEmployeur(employeur);
+
+        offres.add(offreDeStage);
+
+        EntrevueDTO entrevueDTO = new EntrevueDTO();
+        entrevueDTO.setLocation("Lachine");
+        entrevueDTO.setStatus("validé");
+
+
+        Etudiant etudiant = new Etudiant("John", "Doe", email, "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        etudiant.setId(1L);
+        etudiant.setOffresAppliquees(offres);
+
+        when(userAppRepository.findUserAppByEmail(email))
+                .thenReturn(Optional.of(etudiant));
+
+
+        when(offreDeStageRepository.findById(1L))
+                .thenReturn(Optional.of(offreDeStage));
+
+        when(entrevueRepository.existsByEtudiantAndOffreDeStage(etudiant, offreDeStage))
+                .thenReturn(false);
+
+        Entrevue savedEntrevue = new Entrevue(LocalDateTime.now(), "Lachine", "validé", etudiant, offreDeStage);
+        when(entrevueRepository.save(any(Entrevue.class)))
+                .thenReturn(savedEntrevue);
+
+        // Act
+        Optional<EntrevueDTO> response = employeurService.createEntrevue(entrevueDTO, email, 1L);
+
+        // Assert
+        assertTrue(response.isPresent());
+        assertEquals("Lachine", response.get().getLocation());
+        assertEquals("validé", response.get().getStatus());
+    }
+
 
     @Test
     void shouldReturnEmptyWhenCreatingEntrevueFails() {
@@ -218,7 +226,7 @@ public class EmployeurServiceTest {
     void shouldGetEntrevueById() {
         // Arrange
         Long entrevueId = 1L;
-        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", "");
+        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", Departement.TECHNIQUES_INFORMATIQUE);
         Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", "En attente", etudiant, new OffreDeStage());
 
         OffreDeStage offreDeStage = new OffreDeStage();
@@ -249,8 +257,8 @@ public class EmployeurServiceTest {
     @Test
     void shouldReturnAllEntrevues() {
         // Arrange
-        Etudiant etudiant1 = new Etudiant("John", "Doe", "email1@gmail.com", "password1", "123456789", "departement1");
-        Etudiant etudiant2 = new Etudiant("Jane", "Doe", "email2@gmail.com", "password2", "987654321", "departement2");
+        Etudiant etudiant1 = new Etudiant("John", "Doe", "email1@gmail.com", "password1", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        Etudiant etudiant2 = new Etudiant("Jane", "Doe", "email2@gmail.com", "password2", "987654321", Departement.TECHNIQUES_INFORMATIQUE);
 
         OffreDeStage offreDeStage1 = new OffreDeStage();
         offreDeStage1.setTitre("Stage en développement");
@@ -322,6 +330,110 @@ public class EmployeurServiceTest {
         // Assert
         assertTrue(response.isEmpty()); // S'assurer que la réponse est vide
     }
+
+    @Test
+    void shouldSignContratEmployeurSuccessfully() {
+
+        // Arrange
+        String uuid = "unique-uuid";
+        String password = "password";
+
+        employeurEntity.getPassword();
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeurEntity);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+        contrat.setCandidature(candidature);
+        contrat.setEmployeurSigne(false);
+
+        // Act
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(password, employeurEntity.getPassword())).thenReturn(true);
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat);
+
+        Optional<ContratDTO> response = employeurService.signerContratEmployeur(uuid, password);
+
+        // Assert the results
+        assertTrue(response.isPresent());
+        assertTrue(contrat.isEmployeurSigne());
+    }
+
+    @Test
+    void shouldFailToSignContratWithIncorrectPassword() {
+        // Arrange
+        String uuid = "unique-uuid";
+        String incorrectPassword = "wrongPassword";
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeurEntity);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+        Contrat contrat = new Contrat();
+        contrat.setUUID(uuid);
+        contrat.setCandidature(candidature);
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(passwordEncoder.matches(incorrectPassword, employeurEntity.getPassword())).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> employeurService.signerContratEmployeur(uuid, incorrectPassword));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenContratNotFoundForSignature() {
+        // Arrange
+        String uuid = "non-existent-uuid";
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> employeurService.signerContratEmployeur(uuid, "password"));
+    }
+
+    @Test
+    void shouldReturnContratsForEmployeur() {
+        // Arrange
+        String emailEmployeur = "email@gmail.com";
+        Employeur employeur = new Employeur("John", "Doe", emailEmployeur, "password", "123456789", "Entreprise");
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeur);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setOffreDeStage(offreDeStage);
+
+        CandidatAccepter candidature = new CandidatAccepter();
+        candidature.setEntrevue(entrevue);
+
+        Contrat contrat = new Contrat();
+        contrat.setCandidature(candidature);
+
+        List<Contrat> contrats = List.of(contrat);
+
+        when(employeurRepository.findByCredentials_email(emailEmployeur)).thenReturn(Optional.of(employeur));
+        when(contratRepository.findContratsByEmployeur(employeur)).thenReturn(contrats);
+
+        // Act
+        List<ContratDTO> response = employeurService.getContratEmployeur(emailEmployeur);
+
+        // Assert
+        assertEquals(1, response.size());
+    }
+
 
 
 }

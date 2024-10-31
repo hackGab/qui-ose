@@ -13,9 +13,11 @@ function ListeCandidature() {
     const [contrats, setContrats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [minHeuresParSemaine, setMinHeuresParSemaine] = useState(0);
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [selectedContrat, setSelectedContrat] = useState(null);
     const [icon, setIcon] = useState(eyeOff);
+    const [errorMessage, setErrorMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -28,7 +30,7 @@ function ListeCandidature() {
         lieuStage: '',
         dateDebut: '',
         dateFin: '',
-        semaines: '',
+        nbSemaines: '',
         heureHorraireDebut: '',
         heureHorraireFin: '',
         heuresParSemaine: '',
@@ -185,13 +187,13 @@ function ListeCandidature() {
 
             if (dateDebut && dateFin && dateDebut <= dateFin) {
                 const diffInWeeks = Math.ceil((dateFin - dateDebut) / (7 * 24 * 60 * 60 * 1000));
-                updatedFormData.semaines = diffInWeeks;
+                updatedFormData.nbSemaines = diffInWeeks;
             } else {
-                updatedFormData.semaines = '';
+                updatedFormData.nbSemaines = '';
             }
         }
 
-        if (name === "heureHorraireDebut" || name === "heureHorraireFin" || name === "heuresParSemaine") {
+        if (name === "heureHorraireDebut" || name === "heureHorraireFin") {
             const startHour = updatedFormData.heureHorraireDebut.split(":");
             const endHour = updatedFormData.heureHorraireFin.split(":");
             const startDate = new Date();
@@ -202,9 +204,15 @@ function ListeCandidature() {
                 endDate.setHours(endHour[0], endHour[1]);
                 const diffInHours = (endDate - startDate) / (1000 * 60 * 60);
 
-                if (name === "heuresParSemaine" && parseFloat(value) < diffInHours) {
-                    return;
-                }
+                setMinHeuresParSemaine(diffInHours);
+            }
+        }
+
+        if (name === "heuresParSemaine") {
+            if (parseFloat(value) < minHeuresParSemaine) {
+                setErrorMessage("Le nombre d'heures par semaine doit être supérieur ou égal à la durée entre les heures de début et de fin.");
+            } else {
+                setErrorMessage('');
             }
         }
 
@@ -349,7 +357,7 @@ function ListeCandidature() {
                                                    value={formData.dateFin} onChange={handleChange} required/>
                                         </div>
                                     </div>
-                                    <p>{t('NombreTotalSemaines')} : {formData.semaines}</p>
+                                    <p>{t('NombreTotalSemaines')} : {formData.nbSemaines}</p>
 
                                     <h6>{t('HorraireTravail')}</h6>
                                     <div className="form-row">
@@ -378,8 +386,20 @@ function ListeCandidature() {
 
                                     <div className="form-group">
                                         <label>{t('NombreTotalHeuresParSemaine')} :</label>
-                                        <input type="number" className="form-control" name="heuresParSemaine"
-                                               value={formData.heuresParSemaine} onChange={handleChange} required/>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="heuresParSemaine"
+                                            value={formData.heuresParSemaine}
+                                            onChange={handleChange}
+                                            required
+                                            min={minHeuresParSemaine}
+                                        />
+                                        {errorMessage && (
+                                            <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+                                                {errorMessage}
+                                            </div>
+                                        )}
                                     </div>
 
                                     <h6>{t('Salaire')}</h6>

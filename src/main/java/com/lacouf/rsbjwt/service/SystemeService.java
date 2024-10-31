@@ -10,6 +10,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.lacouf.rsbjwt.model.Contrat;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,14 @@ import java.io.ByteArrayOutputStream;
 @Service
 public class SystemeService {
 
-    private final GestionnaireService gestionnaireService;
+    private ContratRepository contratRepository;
 
-    public SystemeService(GestionnaireService gestionnaireService) {
-        this.gestionnaireService = gestionnaireService;
+    public SystemeService(ContratRepository contratRepository) {
+        this.contratRepository = contratRepository;
     }
 
     public byte[] generateContratPDF(ContratDTO contrat) throws Exception {
-        Contrat contratRecu = gestionnaireService.getContratByUUID(contrat.getUUID()).orElse(null);
+        Contrat contratRecu = contratRepository.findByUUID(contrat.getUUID()).orElse(null);
 
         if (contratRecu == null) {
             throw new IllegalArgumentException("Contrat non trouvé");

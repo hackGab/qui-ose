@@ -74,7 +74,6 @@ public class  ContratController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-
     @PutMapping("/signer-etudiant/{uuid}")
     public ResponseEntity<ContratDTO> signerContratParEtudiant(@PathVariable String uuid, @RequestBody Map<String, String> request) {
         String password = request.get("password");
@@ -90,6 +89,16 @@ public class  ContratController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PutMapping("/signer-gestionnaire/{uuid}")
+    public ResponseEntity<ContratDTO> signerContratParGestionnaire(@PathVariable String uuid, @RequestBody Map<String, String> request, @PathVariable String email) {
+        String password = request.get("password");
+        Optional<ContratDTO> contratSigne = gestionnaireService.signerContratGestionnaire(uuid, password,email);
+
+        return contratSigne
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @GetMapping("/all")

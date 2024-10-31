@@ -130,4 +130,19 @@ public class GestionnaireService {
                 .map(ContratDTO::new)
                 .toList();
     }
+
+    public Optional<ContratDTO> signerContratGestionnaire(String uuid, String password, String email) {
+        Contrat contrat = contratRepository.findByUUID(uuid)
+                .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
+
+        Gestionnaire gestionnaire = gestionnaireRepository.findByEmail(email);
+
+        if (passwordEncoder.matches(password, gestionnaire.getPassword())) {
+            contrat.signerContratGestionnaire();
+            Contrat savedContrat = contratRepository.save(contrat);
+            return Optional.of(new ContratDTO(savedContrat));
+        } else {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
 }

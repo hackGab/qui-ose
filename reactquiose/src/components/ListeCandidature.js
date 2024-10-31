@@ -161,6 +161,11 @@ function ListeCandidature() {
         setPassword('');
     };
 
+    const handleCloseContractModal = () => {
+        setShowContractModal(false);
+        setSelectedContrat(null);
+    }
+
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
         console.log("Mot de passe saisi :", password);
@@ -231,7 +236,7 @@ function ListeCandidature() {
             if (response.ok) {
                 setContrats(prevContrats =>
                     prevContrats.map(contrat =>
-                        contrat.uuid === uuid ? { ...contrat, gestionnaireSigne: true } : contrat
+                        contrat.uuid === uuid ? { ...contrat, gestionnaireSigne: true, dateSignatureGestionnaire: new Date() } : contrat
                     )
                 );
                 return "Contrat signé avec succès.";
@@ -296,7 +301,7 @@ function ListeCandidature() {
                                                     </button>
                                                 ) : (
                                                     <button
-                                                        className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-primary' : 'btn-success'}`}
+                                                        className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-warning' : 'btn-success'}`}
                                                         disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
                                                         onClick={() => {
                                                             setSelectedContrat(contrat);
@@ -466,11 +471,11 @@ function ListeCandidature() {
                                 </div>
                                 {modalMessage && <p>{modalMessage}</p>}
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary"
+                                    <button type="button" className="btn btn-danger"
                                             onClick={handleClosePasswordModal}>
                                         {t('Fermer')}
                                     </button>
-                                    <button type="submit" className="btn btn-primary">
+                                    <button type="submit" className="btn btn-success">
                                         {t('Signer')}
                                     </button>
                                 </div>
@@ -490,12 +495,12 @@ function ListeCandidature() {
                             <div className="modal-body">
                                 <TableauContrat contrat={selectedContrat}/>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary"
-                                            onClick={handleClosePasswordModal}>
+                                    <button type="button" className="btn btn-danger"
+                                            onClick={handleCloseContractModal}>
                                         {t('Fermer')}
                                     </button>
                                     <button type="submit" 
-                                            className="btn btn-primary"
+                                            className="btn btn-success"
                                             onClick={() => {
                                                 setSelectedContrat(selectedContrat);
                                                 genererPDF();

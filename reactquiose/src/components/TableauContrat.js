@@ -6,7 +6,6 @@ function TableauContrat({ contrat }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(true);
 
-    // Liste des clés à exclure
     const excludedKeys = [
         'etudiantSigne',
         'employeurSigne',
@@ -24,7 +23,7 @@ function TableauContrat({ contrat }) {
 
     const renderRows = () => {
         return Object.keys(contrat)
-            .filter(key => !excludedKeys.includes(key)) // Filtrer les clés à exclure
+            .filter(key => !excludedKeys.includes(key))
             .map((key) => (
                 <tr key={key}>
                     <td><strong>{t(key)} :</strong></td>

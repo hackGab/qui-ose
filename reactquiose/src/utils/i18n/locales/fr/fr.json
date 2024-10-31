@@ -245,5 +245,6 @@
   "EtudiantDejaSigne": "L'étudiant a déjà signé",
   "EtudiantPasEncoreSigne": "L'étudiant n'a pas encore signé",
   "EnAttenteDesSignatures": "En attente des signatures",
-  "EntrezMotDePasse": "Entrez le mots de passe"
+  "EntrezMotDePasse": "Entrez le mots de passe",
+  "GenererPDF": "Générer version PDF du contrat"
 }

@@ -36,7 +36,6 @@ function ListeDeStage({ internships = [], userData }) {
     }, [internships]);
 
 
-    // Permet de gérer le mode plein écran pour les offres de stage
     useEffect(() => {
         const handleFullscreenChange = () => {
             const iframeModal = document.getElementById('pdfIframeModal');
@@ -72,8 +71,6 @@ function ListeDeStage({ internships = [], userData }) {
 
     const postulerAuStage = async (offreId) => {
         try {
-            // console.log('Postuler au stage :', offreId);
-            // console.log('Etudiant :', userData.credentials.email);
             const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offre/${offreId}`, {
                 method: 'POST',
                 headers: {
@@ -83,7 +80,7 @@ function ListeDeStage({ internships = [], userData }) {
             if (!response.ok) {
                 throw new Error(`Erreur lors de la soumission : ${response.status}`);
             }
-            const etudiantDTO = await response.json();
+            await response.json();
             setAppliedInternship([...appliedInternship, offreId])
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
@@ -130,7 +127,7 @@ function ListeDeStage({ internships = [], userData }) {
 
     const afficherButtonsOffre = (internship) => (
         <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
+            <Button variant="danger" onClick={handleCloseModal}>
                 {t('Fermer')}
             </Button>
 

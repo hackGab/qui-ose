@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 function AccueilProfesseur() {
     const location = useLocation();
-    const { userData } = location.state || {}; // Get userData from navigation state
+    const { userData } = location.state || {};
 
     return (
         <div className="container mt-3">

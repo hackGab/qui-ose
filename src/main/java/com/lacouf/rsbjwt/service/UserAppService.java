@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,8 +127,10 @@ public class UserAppService {
 
 
 
-    public List<Departement> getAllDepartements() {
-        return Departement.getAllDepartements();
+    public List<String> getAllDepartementDisplayNames() {
+        return Arrays.stream(Departement.values())
+                .map(Departement::getDisplayName)
+                .toList();
     }
 
 }

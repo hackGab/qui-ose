@@ -42,10 +42,11 @@ public enum Departement {
         this.displayName = displayName;
     }
 
-    public static List<Departement> getAllDepartements() {
-        return Arrays.asList(Departement.values());
+    public static List<String> getAllDepartementDisplayNames() {
+        return Arrays.stream(Departement.values())
+                .map(Departement::getDisplayName)
+                .toList();
     }
-
     public String getDisplayName() {
         return displayName;
     }

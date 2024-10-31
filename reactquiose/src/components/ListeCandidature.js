@@ -56,6 +56,32 @@ function ListeCandidature() {
         return options;
     };
 
+    const genererPDF = async () => {
+        try {
+            const response = await fetch("http://localhost:8081/generatePDF/contrat", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(selectedContrat)
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la génération du PDF");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Contrat_Stage.pdf';
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Erreur lors du téléchargement du PDF :", error);
+        }
+    };
+
     useEffect(() => {
         fetch('http://localhost:8081/candidatures/all')
             .then(response => response.json())
@@ -468,7 +494,13 @@ function ListeCandidature() {
                                             onClick={handleClosePasswordModal}>
                                         {t('Fermer')}
                                     </button>
-                                    <button type="submit" className="btn btn-primary">
+                                    <button type="submit" 
+                                            className="btn btn-primary"
+                                            onClick={() => {
+                                                setSelectedContrat(selectedContrat);
+                                                genererPDF();
+                                            }}
+                                    >
                                         {t('GenererPDF')}
                                     </button>
                                 </div>

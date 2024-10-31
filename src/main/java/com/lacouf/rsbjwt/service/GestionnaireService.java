@@ -130,4 +130,8 @@ public class GestionnaireService {
                 .map(ContratDTO::new)
                 .toList();
     }
+
+    public Optional<Contrat> getContratByUUID(String uuid) {
+        return contratRepository.findByUUID(uuid);
+    }
 }

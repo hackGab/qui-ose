@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -61,6 +62,16 @@ class ContratControllerTest {
     @MockBean
     private CandidatAccepterService candidatAccepterService;
 
+    private ContratDTO createContratDTO() {
+        ContratDTO contratDTO = new ContratDTO();
+        contratDTO.setEtudiantSigne(false);
+        contratDTO.setEmployeurSigne(false);
+        contratDTO.setGestionnaireSigne(false);
+        contratDTO.setCollegeEngagement("college");
+        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
+        return contratDTO;
+    }
+
     @Test
     @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
     void creerContrat() throws Exception {
@@ -76,16 +87,6 @@ class ContratControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(contratDTO)));
-    }
-
-    private ContratDTO createContratDTO() {
-        ContratDTO contratDTO = new ContratDTO();
-        contratDTO.setEtudiantSigne(false);
-        contratDTO.setEmployeurSigne(false);
-        contratDTO.setGestionnaireSigne(false);
-        contratDTO.setCollegeEngagement("college");
-        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
-        return contratDTO;
     }
 
     @Test
@@ -112,13 +113,5 @@ class ContratControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(Arrays.asList(contratDTO, contratDTO1))));
-
-
-
-    }
-
-    @Test
-    void signerContrat() {
-
     }
 }

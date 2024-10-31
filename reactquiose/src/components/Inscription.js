@@ -8,7 +8,7 @@ import { eye } from 'react-icons-kit/feather/eye';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/BoutonLangue.css'
-import i18n from "i18next";
+import Select from 'react-select';
 
 
 function Inscription() {
@@ -18,16 +18,46 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
+    const { t } = useTranslation();
     const [role, setRole] = useState('etudiant');
+    const roleOptions = [
+        { value: 'etudiant', label: t('etudiant') },
+        { value: 'prof', label: t('prof') },
+        { value: 'employeur', label: t('employeur') }
+    ];
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [typeConf, setTypeConf] = useState('password');
     const [iconConf, setIconConf] = useState(eyeOff);
     const [departement, setDepartement] = useState('');
+    const [selectedDepartement, setSelectedDepartement] = useState(null);
+    const optionsDepartement = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3' },
+        { value: 'option4', label: 'Option 4' },
+        { value: 'option5', label: 'Option 5' },
+        { value: 'option6', label: 'Option 6' },
+        { value: 'option7', label: 'Option 7' },
+        { value: 'option8', label: 'Option 8' },
+        { value: 'option9', label: 'Option 9' },
+        { value: 'option10', label: 'Option 10' },
+        { value: 'option11', label: 'Option 11' },
+        { value: 'option12', label: 'Option 12' },
+        { value: 'option13', label: 'Option 13' },
+        { value: 'option14', label: 'Option 14' },
+        { value: 'option15', label: 'Option 15' },
+        { value: 'option16', label: 'Option 16' }
+    ];
+
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const { t } = useTranslation();
+
+    const handleChangeDepartement = (option) => {
+        setSelectedDepartement(option);
+        setDepartement(option.value);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -162,6 +192,18 @@ function Inscription() {
         navigate(path, { state: { userData } });
     };
 
+
+    const customStyles = {
+        control: (provided) => ({
+            ...provided,
+            fontSize: '1rem'
+        }),
+        option: (provided) => ({
+            ...provided,
+            fontSize: '1rem'
+        }),
+    }
+
     return (
         <div>
             <form className='pt-0' onSubmit={handleSubmit}>
@@ -171,25 +213,39 @@ function Inscription() {
                     {errorMessages}
                 </div>}
 
-                <div className='row'>
-                    <div className='form-group' style={{display: "inline-flex"}}>
+                <div className='row' style={{ width: '-webkit-fill-available' }}>
+                    <div className='form-group' style={{ display: "inline-flex", textAlign: "end" }}>
                         <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                         &nbsp;
-                        <select
-                            className='form-control col-6'
-                            id='role'
-                            name='role'
-                            value={role}
-                            onChange={(e) => {
-                                setRole(e.target.value);
+                        {/*<select*/}
+                        {/*    className='form-control col-6'*/}
+                        {/*    id='role'*/}
+                        {/*    name='role'*/}
+                        {/*    value={role}*/}
+                        {/*    onChange={(e) => {*/}
+                        {/*        setRole(e.target.value);*/}
+                        {/*        setNomEntreprise('');*/}
+                        {/*        setDepartement('');*/}
+                        {/*    }}*/}
+                        {/*    required>*/}
+                        {/*    <option value='etudiant'>{t('etudiant')}</option>*/}
+                        {/*    <option value='prof'>{t('prof')}</option>*/}
+                        {/*    <option value='employeur'>{t('employeur')}</option>*/}
+                        {/*</select>*/}
+                        <Select
+                            id="role"
+                            name="role"
+                            value={roleOptions.find(option => option.value === role)}
+                            onChange={(option) => {
+                                setRole(option.value);
                                 setNomEntreprise('');
                                 setDepartement('');
                             }}
-                            required>
-                            <option value='etudiant'>{t('etudiant')}</option>
-                            <option value='prof'>{t('prof')}</option>
-                            <option value='employeur'>{t('employeur')}</option>
-                        </select>
+                            options={roleOptions}
+                            required
+                            isSearchable={false}
+                            styles={ customStyles }
+                        />
                     </div>
                 </div>
 
@@ -215,7 +271,7 @@ function Inscription() {
                                     <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
-                                           placeholder="Nom de l'entreprise"
+                                           placeholder={t('nomEntreprisePlaceholder')}
                                            value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                            pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                            autoComplete={"off"}
@@ -223,14 +279,19 @@ function Inscription() {
                                 </div>
                             </Then>
                             <Else>
-                                <div className="form-group">
-                                    <label htmlFor="departement">{t('Departement')}</label>
-                                    <input type="text" className="form-control" id="departement" name="departement"
-                                           placeholder={t('PlaceHolderDepartement')}
-                                           value={departement} onChange={(e) => setDepartement(e.target.value)}
-                                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
-                                           autoComplete={"off"}
-                                           required/>
+                                <div className="form-group mb-1">
+                                        <label htmlFor="departement">{t('Departement')}</label>
+                                        <Select
+                                            id="departement"
+                                            name="departement"
+                                            value={selectedDepartement}
+                                            onChange={handleChangeDepartement}
+                                            options={optionsDepartement}
+                                            placeholder={t('PlaceHolderDepartement')}
+                                            required
+                                            isSearchable={true}
+                                            styles={ customStyles }
+                                        />
                                 </div>
                             </Else>
                         </If>

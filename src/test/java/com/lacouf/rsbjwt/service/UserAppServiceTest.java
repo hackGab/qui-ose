@@ -1,6 +1,8 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.*;
+import com.lacouf.rsbjwt.model.auth.Credentials;
+import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.security.JwtTokenProvider;
 import com.lacouf.rsbjwt.service.dto.*;
@@ -11,10 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -140,5 +143,101 @@ class UserAppServiceTest {
         // Assert
         assertEquals("Admin", result.getFirstName());
         assertEquals("admin@example.com", result.getCredentials().getEmail());
+    }
+
+    @Test
+    void getAllDepartementDisplayNames_ShouldReturnAllDisplayNames() {
+        // Act
+        List<String> result = userAppService.getAllDepartementDisplayNames();
+
+        // Assert
+        assertEquals(Arrays.asList(
+                "Baccalauréat international en Sciences de la nature Option Sciences de la santé",
+                "Cinéma",
+                "Gestion de commerces",
+                "Gestion des opérations et de la chaîne logistique",
+                "Journalisme multimédia",
+                "Langues – profil Trilinguisme et cultures",
+                "Photographie et design graphique",
+                "Sciences de la nature",
+                "Sciences humaines – profil Administration et économie",
+                "Sciences humaines – profil Individu et relations humaines",
+                "Sciences humaines – profil Monde en action",
+                "Sciences humaines – profil Sciences humaines avec mathématiques",
+                "Soins infirmiers",
+                "Soins infirmiers pour auxiliaires",
+                "Techniques d'éducation à l'enfance",
+                "Techniques de bureautique",
+                "Techniques de comptabilité et de gestion",
+                "Techniques de l'informatique",
+                "Techniques de travail social",
+                "Technologie de l'architecture",
+                "Technologie de l'estimation et de l'évaluation en bâtiment",
+                "Technologie du génie civil",
+                "Technologie du génie électrique: automatisation et contrôle",
+                "Technologie du génie physique",
+                "Tremplin DEC"
+        ), result);
+    }
+
+    @Test
+    void getDepartementByEmail_ShouldReturnMessage_WhenUserRoleHasNoDepartment() {
+        // Arrange
+        String email = "user@example.com";
+        Gestionnaire user = new Gestionnaire();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setCredentials(new Credentials("john@gmail.com", "password", Role.GESTIONNAIRE));
+        when(userAppRepository.findUserAppByEmail(email)).thenReturn(Optional.of(user));
+
+        // Act
+        Optional<String> result = userAppService.getDepartementByEmail(email);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals("This user role does not have a department.", result.get());
+    }
+
+
+    @Test
+    void getDepartementByEmail_ShouldReturnDepartement_WhenUserIsProfesseur() {
+        // Arrange
+        String email = "prof@example.com";
+        Professeur professeur = new Professeur();
+        professeur.setFirstName("John");
+        professeur.setLastName("Doe");
+        professeur.setCredentials(new Credentials("john@gmail.com", "password", Role.PROFESSEUR));
+        professeur.setDepartement(Departement.TECHNIQUES_INFORMATIQUE);
+        when(userAppRepository.findUserAppByEmail(email)).thenReturn(Optional.of(professeur));
+        when(professeurRepository.findByEmail(email)).thenReturn(Optional.of(professeur));
+
+        // Act
+        Optional<String> result = userAppService.getDepartementByEmail(email);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals("Techniques de l'informatique", result.get());
+    }
+
+
+    @Test
+    void getDepartementByEmail_ShouldReturnDepartement_WhenUserIsEtudiant() {
+        // Arrange
+        String email = "student@example.com";
+        Etudiant user = new Etudiant();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setCredentials(new Credentials("john@gmail.com","password", Role.ETUDIANT));
+
+        user.setDepartement(Departement.TECHNIQUES_INFORMATIQUE);
+        when(userAppRepository.findUserAppByEmail(email)).thenReturn(Optional.of(user));
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        // Act
+        Optional<String> result = userAppService.getDepartementByEmail(email);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals("Techniques de l'informatique", result.get());
     }
 }

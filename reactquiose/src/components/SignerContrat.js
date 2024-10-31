@@ -121,7 +121,6 @@ function SignerContrat() {
         });
     };
 
-
     return (
         <>
             {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} /> : <EtudiantHeader userData={userData} />}
@@ -175,7 +174,8 @@ function SignerContrat() {
                                                 />
                                             </form>
                                             <div className="text-center mt-3">
-                                                <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3 w-75">
+                                                <button onClick={() => setSelectedContrat(null)}
+                                                        className="btn btn-secondary mt-3 w-75">
                                                     {t('Retour')}
                                                 </button>
                                             </div>

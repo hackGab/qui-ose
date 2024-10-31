@@ -145,4 +145,8 @@ public class GestionnaireService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
+
+ public Optional<Contrat> getContratByUUID(String uuid) {
+        return contratRepository.findByUUID(uuid);
+    }
 }

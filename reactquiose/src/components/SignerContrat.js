@@ -68,6 +68,13 @@ function SignerContrat() {
             if (data) {
                 handleAnimation(true, null);
                 updateContratSignStatus();
+                setSelectedContrat(data);
+
+                contrats.forEach((contrat, index) => {
+                    if (contrat.uuid === data.uuid) {
+                        contrats[index] = data;
+                    }
+                });
             } else {
                 handleAnimation(false, t('MotDePasseIncorrect'));
             }

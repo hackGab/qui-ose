@@ -38,7 +38,7 @@ function Formulaire(props) {
                     <img src={logo} style={{width: '4em', borderRadius: '1em'}} alt='logo'/>
                     &nbsp;
                     &nbsp;
-                    <h2 className='m-auto'>{title}</h2>
+                    <h2 className='m-auto'>{t(title)}</h2>
 
                     <div className='mt-auto mb-auto'>
                         <button onClick={() => changeLanguage('fr')} className="language-button">FR</button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
 import { Else, If, Then } from 'react-if';
@@ -8,7 +8,7 @@ import { eye } from 'react-icons-kit/feather/eye';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/BoutonLangue.css'
-import i18n from "i18next";
+import Select from 'react-select';
 
 
 function Inscription() {
@@ -18,16 +18,64 @@ function Inscription() {
     const [mpd, setMpd] = useState('');
     const [mpdConfirm, setMpdConfirm] = useState('');
     const [num, setNum] = useState('');
+    const { t } = useTranslation();
     const [role, setRole] = useState('etudiant');
+    const roleOptions = [
+        { value: 'etudiant', label: t('etudiant') },
+        { value: 'prof', label: t('prof') },
+        { value: 'employeur', label: t('employeur') }
+    ];
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [typeConf, setTypeConf] = useState('password');
     const [iconConf, setIconConf] = useState(eyeOff);
     const [departement, setDepartement] = useState('');
+    const [selectedDepartement, setSelectedDepartement] = useState(null);
+    const [optionsDepartement, setOptionsDepartement] = useState([]);
+    // const optionsDepartement = [
+    //     { value: 'option1', label: 'Option 1' },
+    //     { value: 'option2', label: 'Option 2' },
+    //     { value: 'option3', label: 'Option 3' },
+    //     { value: 'option4', label: 'Option 4' },
+    //     { value: 'option5', label: 'Option 5' },
+    //     { value: 'option6', label: 'Option 6' },
+    //     { value: 'option7', label: 'Option 7' },
+    //     { value: 'option8', label: 'Option 8' },
+    //     { value: 'option9', label: 'Option 9' },
+    //     { value: 'option10', label: 'Option 10' },
+    //     { value: 'option11', label: 'Option 11' },
+    //     { value: 'option12', label: 'Option 12' },
+    //     { value: 'option13', label: 'Option 13' },
+    //     { value: 'option14', label: 'Option 14' },
+    //     { value: 'option15', label: 'Option 15' },
+    //     { value: 'option16', label: 'Option 16' }
+    // ];
+
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const { t } = useTranslation();
+
+
+    // Get option departement
+    useEffect(() => {
+        fetch('http://localhost:8081/user/departements')
+            .then(response => response.json())
+            .then(data => {
+                const options = data.map(departement => {
+                    return { value: departement, label: departement }
+                });
+                setOptionsDepartement(options);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des départements:', error);
+            });
+    }, []);
+
+
+    const handleChangeDepartement = (option) => {
+        setSelectedDepartement(option);
+        setDepartement(option.value);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -154,13 +202,25 @@ function Inscription() {
 
     const navigateToDashboard = (userData) => {
         const path = `/${
-            userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
-                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
-                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+            userData.role == 'ETUDIANT' ? 'accueilEtudiant' :
+                userData.role == 'EMPLOYEUR' ? 'accueilEmployeur' :
+                    userData.role == 'GESTIONNAIRE' ? 'accueilGestionnaire' :
                         'accueilProfesseur'
         }`;
         navigate(path, { state: { userData } });
     };
+
+
+    const customStyles = {
+        control: (provided) => ({
+            ...provided,
+            fontSize: '1rem'
+        }),
+        option: (provided) => ({
+            ...provided,
+            fontSize: '1rem'
+        }),
+    }
 
     return (
         <div>
@@ -171,29 +231,28 @@ function Inscription() {
                     {errorMessages}
                 </div>}
 
-                <div className='row'>
-                    <div className='form-group' style={{display: "inline-flex"}}>
+                <div className='row' style={{ width: '-webkit-fill-available' }}>
+                    <div className='form-group' style={{ display: "inline-flex", textAlign: "end" }}>
                         <label htmlFor='role' className='col-6 m-auto'>{t('Jesuisun')}</label>
                         &nbsp;
-                        <select
-                            className='form-control col-6'
-                            id='role'
-                            name='role'
-                            value={role}
-                            onChange={(e) => {
-                                setRole(e.target.value);
+                        <Select
+                            id="role"
+                            name="role"
+                            value={roleOptions.find(option => option.value === role)}
+                            onChange={(option) => {
+                                setRole(option.value);
                                 setNomEntreprise('');
                                 setDepartement('');
                             }}
-                            required>
-                            <option value='etudiant'>{t('etudiant')}</option>
-                            <option value='prof'>{t('prof')}</option>
-                            <option value='employeur'>{t('employeur')}</option>
-                        </select>
+                            options={roleOptions}
+                            required
+                            isSearchable={false}
+                            styles={ customStyles }
+                        />
                     </div>
                 </div>
 
-                <div className='row'>
+                <div className='row' style={{ alignItems: "flex-end" }}>
                     <div className="form-group">
                         <label htmlFor="prenom">{t('prenom')}</label>
                         <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
@@ -215,7 +274,7 @@ function Inscription() {
                                     <label htmlFor="nomEntreprise">{t('nomEntreprise')}</label>
                                     <input type="text" className="form-control" id="nomEntreprise"
                                            name="nomEntreprise"
-                                           placeholder="Nom de l'entreprise"
+                                           placeholder={t('nomEntreprisePlaceholder')}
                                            value={nomEntreprise} onChange={(e) => setNomEntreprise(e.target.value)}
                                            pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
                                            autoComplete={"off"}
@@ -224,13 +283,18 @@ function Inscription() {
                             </Then>
                             <Else>
                                 <div className="form-group">
-                                    <label htmlFor="departement">{t('Departement')}</label>
-                                    <input type="text" className="form-control" id="departement" name="departement"
-                                           placeholder={t('PlaceHolderDepartement')}
-                                           value={departement} onChange={(e) => setDepartement(e.target.value)}
-                                           pattern={"^\\s*([a-zA-ZÀ-ÿ' ]+\\s*)+$"}
-                                           autoComplete={"off"}
-                                           required/>
+                                        <label htmlFor="departement">{t('Departement')}</label>
+                                        <Select
+                                            id="departement"
+                                            name="departement"
+                                            value={selectedDepartement}
+                                            onChange={handleChangeDepartement}
+                                            options={optionsDepartement}
+                                            placeholder={t('PlaceHolderDepartement')}
+                                            required
+                                            isSearchable={true}
+                                            styles={ customStyles }
+                                        />
                                 </div>
                             </Else>
                         </If>
@@ -298,7 +362,7 @@ function Inscription() {
                             </div>
 
                             <span onClick={afficherMdpConf} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
-                                <Icon icon={icon} size={20}/>
+                                <Icon icon={iconConf} size={20}/>
                             </span>
                         </div>
                     </div>

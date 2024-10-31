@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(POST, "/user/login").permitAll()
                         .requestMatchers(GET, "/user/me").permitAll()
+                        .requestMatchers(GET, "/user/departements").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/cv/creerCV/**").permitAll()
                         .requestMatchers(POST, "/entrevues/creerEntrevue/**").permitAll()

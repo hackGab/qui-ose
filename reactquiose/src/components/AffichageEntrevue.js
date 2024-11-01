@@ -19,7 +19,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: ("accepter"), // Assurez-vous d'utiliser JSON.stringify
+                body: ("accepter"),
             });
 
             if (response.ok) {
@@ -41,7 +41,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: ("refuser"), // Assurez-vous d'utiliser JSON.stringify
+                body: ("refuser"),
             });
 
             if (response.ok) {

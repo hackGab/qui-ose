@@ -263,10 +263,10 @@ function SoumettreOffre() {
                                     </div>
 
                                     <div className="modal-footer">
-                                        <button className="btn btn-primary" onClick={handleSubmit}>
+                                        <button className="btn btn-success" onClick={handleSubmit}>
                                             {t('Soumettre')}
                                         </button>
-                                        <button type="button" className="btn btn-secondary" onClick={fermerAffichageOffre}>
+                                        <button type="button" className="btn btn-danger" onClick={fermerAffichageOffre}>
                                             {t('Fermer')}
                                         </button>
                                     </div>

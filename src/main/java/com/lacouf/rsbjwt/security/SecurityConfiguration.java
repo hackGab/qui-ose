@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/entrevues/etudiantsAvecEntrevue").permitAll()
                         .requestMatchers(GET, "/etudiant/{email}/entrevues").permitAll()
                         .requestMatchers(GET, "/entrevues/**").permitAll()
+                        .requestMatchers(POST, "/generatePDF/contrat").permitAll()
                         .requestMatchers(POST, "/contrat/creerContrat").permitAll()
                         .requestMatchers(GET, "/contrat/all").permitAll()
                         .requestMatchers(GET, "/contrat/getContrats-employeur/{employeurEmail}").permitAll()

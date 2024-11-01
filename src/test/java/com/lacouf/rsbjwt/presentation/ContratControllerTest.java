@@ -24,7 +24,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+
 import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -111,6 +118,7 @@ class ContratControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(Arrays.asList(contratDTO, contratDTO1))));
+
 
 
 
@@ -253,5 +261,68 @@ class ContratControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(List.of(contratDTO))));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    void signerContratParEtudiant_IlligalException() {
+        String uuid = "unique-uuid";
+        String password = "password";
+
+        when(etudiantService.signerContratParEtudiant(uuid, password)).thenThrow(new IllegalArgumentException());
+
+        try {
+            mockMvc.perform(put("/contrat/signer-etudiant/{uuid}", uuid)
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .content(objectMapper.writeValueAsString(Map.of("password", password)))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"ETUDIANT"})
+    void signerContratParEtudiant_RuntimeException() {
+        String uuid = "unique-uuid";
+        String password = "password";
+
+        when(etudiantService.signerContratParEtudiant(uuid, password)).thenThrow(new RuntimeException());
+
+        try {
+            mockMvc.perform(put("/contrat/signer-etudiant/{uuid}", uuid)
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .content(objectMapper.writeValueAsString(Map.of("password", password)))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void signerContratParGestionnaire() {
+        String uuid = "unique-uuid";
+        String password = "password";
+        String email = "email@.com";
+
+        ContratDTO contratDTO = createContratDTO();
+
+
+        when(gestionnaireService.signerContratGestionnaire(uuid, password,email)).thenReturn(Optional.of(contratDTO));
+
+        try {
+            mockMvc.perform(put("/contrat/signer-gestionnaire/{uuid}/{email}", uuid, email)
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .content(objectMapper.writeValueAsString(Map.of("password", password)))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(contratDTO)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

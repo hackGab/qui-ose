@@ -16,7 +16,6 @@ function Connexion() {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
 
-    // Toggle password visibility
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);
         setType(type === 'password' ? 'text' : 'password');

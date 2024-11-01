@@ -38,6 +38,7 @@ public class GestionnaireServiceTest {
     private EntrevueRepository entrevueRepository;
 
     private ProfesseurRepository professeurRepository;
+    private Gestionnaire gestionnaire;
 
     private CV cvEntity;
     @BeforeEach
@@ -57,6 +58,11 @@ public class GestionnaireServiceTest {
 	cvEntity = new CV();
         cvEntity.setId(1L);
         cvEntity.setStatus("attend");
+
+         gestionnaire = new Gestionnaire();
+
+        gestionnaire.setId(1L);
+        gestionnaire.setCredentials(new Credentials("email", "password", Role.GESTIONNAIRE));
     }
 
     @Test
@@ -253,8 +259,76 @@ public class GestionnaireServiceTest {
         assertTrue(result.iterator().hasNext());
         assertEquals(2, result.spliterator().getExactSizeIfKnown());
     }
+    @Test
+    void signerContratGestionnaire() {
+        String uuid = "uuid";
+        String password = "password";
+        String email = "email";
+
+        Contrat contrat = new Contrat();
+        contrat.setId(1L);
+        contrat.setEtudiantSigne(true);
+        contrat.setEmployeurSigne(true);
+        contrat.setGestionnaireSigne(false);
+        contrat.setDateSignatureEtudiant(LocalDate.now());
+        contrat.setDateSignatureEmployeur(LocalDate.now());
+        contrat.setDateSignatureGestionnaire(null);
+        contrat.setCollegeEngagement("college");
+        contrat.setDateDebut(LocalDate.now());
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        Contrat contrat1 = new Contrat();
+        contrat1.setId(1L);
+        contrat1.setEtudiantSigne(true);
+        contrat1.setEmployeurSigne(true);
+        contrat1.setGestionnaireSigne(true);
+        contrat1.setDateSignatureEtudiant(LocalDate.now());
+        contrat1.setDateSignatureEmployeur(LocalDate.now());
+        contrat1.setDateSignatureGestionnaire(LocalDate.now());
+        contrat1.setCollegeEngagement("college");
+        contrat1.setDateDebut(LocalDate.now());
+        contrat1.setCandidature(new CandidatAccepter(new Entrevue(), true));
+
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
+        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat1);
+        when(passwordEncoder.matches(password, "password")).thenReturn(true);
+        when(gestionnaireRepository.findByEmail(email)).thenReturn(gestionnaire);
+
+        Optional<ContratDTO> result = gestionnaireService.signerContratGestionnaire(uuid, password, email);
+
+        assertTrue(result.isPresent());
+        assertTrue(result.get().isGestionnaireSigne());
+    }
 
     @Test
+    void testAssignerProfesseur_ContratNonSigne() {
+        // Arrange
+        Long etudiantId = 1L;
+        Long professeurId = 2L;
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setId(etudiantId);
+        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
+
+        Professeur professeur = new Professeur();
+        professeur.setId(professeurId);
+        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
+
+        Contrat contrat = new Contrat();
+        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
+        contrat.setGestionnaireSigne(false); // Contract not signed by the Gestionnaire
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
+        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> {
+            gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+        });
+    }
+
+     @Test
     void testAssignerProfesseur() {
         // Arrange
         Long etudiantId = 1L;
@@ -311,33 +385,5 @@ public class GestionnaireServiceTest {
 
         // Assert
         assertFalse(resultProfesseurNonExistant.isPresent());
-    }
-
-    @Test
-    void testAssignerProfesseur_ContratNonSigne() {
-        // Arrange
-        Long etudiantId = 1L;
-        Long professeurId = 2L;
-
-        Etudiant etudiant = new Etudiant();
-        etudiant.setId(etudiantId);
-        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
-
-        Professeur professeur = new Professeur();
-        professeur.setId(professeurId);
-        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
-
-        Contrat contrat = new Contrat();
-        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
-        contrat.setGestionnaireSigne(false); // Contract not signed by the Gestionnaire
-
-        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
-        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
-        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(IllegalStateException.class, () -> {
-            gestionnaireService.assignerProfesseur(etudiantId, professeurId);
-        });
     }
 }

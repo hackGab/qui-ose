@@ -34,14 +34,21 @@ public class EtudiantService {
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
         try {
             String encodedPassword = passwordEncoder.encode(etudiantDTO.getCredentials().getPassword());
+
+            Departement departementEnum = null;
+            if (etudiantDTO.getDepartement() != null) {
+                departementEnum = Departement.valueOf(etudiantDTO.getDepartement().name().toUpperCase());
+            }
+
             Etudiant etudiant = new Etudiant(
                     etudiantDTO.getFirstName(),
                     etudiantDTO.getLastName(),
                     etudiantDTO.getCredentials().getEmail(),
                     encodedPassword,
                     etudiantDTO.getPhoneNumber(),
-                    etudiantDTO.getDepartement()
+                    departementEnum
             );
+            System.out.println(etudiantDTO.getDepartement());
             Etudiant savedEtudiant = etudiantRepository.save(etudiant);
             return Optional.of(new EtudiantDTO(savedEtudiant));
         } catch (Exception e) {

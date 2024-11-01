@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.security;
 
 import com.lacouf.rsbjwt.repository.UserAppRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -64,10 +66,10 @@ public class SecurityConfiguration {
                         .requestMatchers(DELETE, "/cv/supprimerCV/**").permitAll()
                         .requestMatchers(DELETE, "/entrevues/retirerOffre/{offreId}").permitAll()
                         .requestMatchers("/etudiant/**").permitAll()
-                        .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(GET, "/etudiant/all").permitAll()
                         .requestMatchers(POST, "/etudiant/{etudiantId}/offre/{offreId}").permitAll()
                         .requestMatchers(GET, "/etudiant/{etudiantEmail}/offres").permitAll()
+                        .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
                         .requestMatchers(POST, "/employeur/creerEmployeur").permitAll()
                         .requestMatchers(POST, "/offreDeStage/creerOffreDeStage/**").permitAll()

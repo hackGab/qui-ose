@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import InputMask from 'react-input-mask';
 import { Else, If, Then } from 'react-if';
@@ -7,9 +7,8 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import '../CSS/BoutonLangue.css'
+import '../CSS/BoutonLangue.css';
 import Select from 'react-select';
-
 
 function Inscription() {
     const [prenom, setPrenom] = useState('');
@@ -32,38 +31,19 @@ function Inscription() {
     const [departement, setDepartement] = useState('');
     const [selectedDepartement, setSelectedDepartement] = useState(null);
     const [optionsDepartement, setOptionsDepartement] = useState([]);
-    // const optionsDepartement = [
-    //     { value: 'option1', label: 'Option 1' },
-    //     { value: 'option2', label: 'Option 2' },
-    //     { value: 'option3', label: 'Option 3' },
-    //     { value: 'option4', label: 'Option 4' },
-    //     { value: 'option5', label: 'Option 5' },
-    //     { value: 'option6', label: 'Option 6' },
-    //     { value: 'option7', label: 'Option 7' },
-    //     { value: 'option8', label: 'Option 8' },
-    //     { value: 'option9', label: 'Option 9' },
-    //     { value: 'option10', label: 'Option 10' },
-    //     { value: 'option11', label: 'Option 11' },
-    //     { value: 'option12', label: 'Option 12' },
-    //     { value: 'option13', label: 'Option 13' },
-    //     { value: 'option14', label: 'Option 14' },
-    //     { value: 'option15', label: 'Option 15' },
-    //     { value: 'option16', label: 'Option 16' }
-    // ];
-
     const [nomEntreprise, setNomEntreprise] = useState('');
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
 
-
-    // Get option departement
+    // Fetch options for departement
     useEffect(() => {
         fetch('http://localhost:8081/user/departements')
             .then(response => response.json())
             .then(data => {
-                const options = data.map(departement => {
-                    return { value: departement, label: departement }
-                });
+                const options = data.map(departement => ({
+                    value: departement.toUpperCase(),
+                    label: departement
+                }));
                 setOptionsDepartement(options);
             })
             .catch(error => {
@@ -71,10 +51,9 @@ function Inscription() {
             });
     }, []);
 
-
     const handleChangeDepartement = (option) => {
         setSelectedDepartement(option);
-        setDepartement(option.value);
+        setDepartement(option ? option.value : '');
     };
 
     const handleSubmit = async (event) => {
@@ -87,13 +66,14 @@ function Inscription() {
         const trimmedMpd = mpd.trim();
         const trimmedMpdConfirm = mpdConfirm.trim();
         const trimmedNum = num.trim();
-        const trimmedDepartement = departement.trim();
         const trimmedNomEntreprise = nomEntreprise.trim();
 
         if (trimmedMpd !== trimmedMpdConfirm) {
             setErrorMessages(t('mpdNonIdentique'));
             return;
         }
+
+
 
         const userData = {
             firstName: trimmedPrenom,
@@ -103,9 +83,10 @@ function Inscription() {
                 password: trimmedMpd
             },
             phoneNumber: trimmedNum,
-            departement: role === 'employeur' ? undefined : trimmedDepartement,
+            departement: role === 'employeur' ? undefined : departement.toUpperCase(),
             entreprise: role === 'employeur' ? trimmedNomEntreprise : undefined
         };
+
 
         let url;
         switch (role) {
@@ -122,70 +103,64 @@ function Inscription() {
                 console.error('Rôle inconnu');
                 return;
         }
-        const handleLogin = async (userData) => {
-            try {
-                const response = await fetch('http://localhost:8081/user/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData),
-                });
-
-                if (!response.ok) {
-                    throw new Error(t('connexionEchouee'));
-                }
-
-                const data = await response.json();
-                const accessToken = data.accessToken;
-
-                const userResponse = await fetch('http://localhost:8081/user/me', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-
-                const userDataResponse = await userResponse.json();
-
-                return { userData: userDataResponse, accessToken };
-
-            } catch (error) {
-                console.error('Erreur lors de la connexion:', error);
-                throw new Error(error.message || t('erreurLorsConnexion'));
-            }
-        };
-
+        console.log("Request URL:", url);
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify(userData),
+
             });
-
+            console.log(response)
+            console.log(userData)
+            console.log(role)
             if (response.status === 201) {
-                const loginData = {
-                    email: trimmedEmail,
-                    password: trimmedMpd
-                };
-
-                try {
-                    const { userData: fetchedUserData } = await handleLogin(loginData);
-                    navigateToDashboard(fetchedUserData);
-
-                } catch (error) {
-                    console.error('Erreur lors de la connexion:', error);
-                    setErrorMessages(t('erreurLorsConnexion'));
-                }
+                const loginData = { email: trimmedEmail, password: trimmedMpd };
+                const { userData: fetchedUserData } = await handleLogin(loginData);
+                navigateToDashboard(fetchedUserData);
             } else if (response.status === 409) {
                 setErrorMessages(t('utilisateurExiste'));
             } else {
                 setErrorMessages(t('erreurLorsCreationUser'));
             }
+            console.log(departement)
+            console.log(userData + " " + url)
         } catch (error) {
             console.error('Erreur lors de l\'inscription:', error);
             setErrorMessages(error.message || t('erreurLorsInscription'));
+        }
+    };
+
+    const handleLogin = async (loginData) => {
+        try {
+            const response = await fetch('http://localhost:8081/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData),
+            });
+
+            if (!response.ok) {
+                throw new Error(t('connexionEchouee'));
+            }
+
+            const data = await response.json();
+            const accessToken = data.accessToken;
+
+            const userResponse = await fetch('http://localhost:8081/user/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            return { userData: await userResponse.json(), accessToken };
+        } catch (error) {
+            console.error('Erreur lors de la connexion:', error);
+            throw new Error(error.message || t('erreurLorsConnexion'));
         }
     };
 
@@ -199,17 +174,15 @@ function Inscription() {
         setTypeConf(typeConf === 'password' ? 'text' : 'password');
     };
 
-
     const navigateToDashboard = (userData) => {
         const path = `/${
-            userData.role == 'ETUDIANT' ? 'accueilEtudiant' :
-                userData.role == 'EMPLOYEUR' ? 'accueilEmployeur' :
-                    userData.role == 'GESTIONNAIRE' ? 'accueilGestionnaire' :
+            userData.role === 'ETUDIANT' ? 'accueilEtudiant' :
+                userData.role === 'EMPLOYEUR' ? 'accueilEmployeur' :
+                    userData.role === 'GESTIONNAIRE' ? 'accueilGestionnaire' :
                         'accueilProfesseur'
         }`;
         navigate(path, { state: { userData } });
     };
-
 
     const customStyles = {
         control: (provided) => ({
@@ -220,14 +193,14 @@ function Inscription() {
             ...provided,
             fontSize: '1rem'
         }),
-    }
+    };
 
     return (
         <div>
             <form className='pt-0' onSubmit={handleSubmit}>
                 <legend>{t('ChampsObligatoires')} </legend>
 
-            {errorMessages && <div className='alert alert-danger' style={{textAlign: 'center', fontSize: '2vmin'}}>
+                {errorMessages && <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
                     {errorMessages}
                 </div>}
 
@@ -283,18 +256,18 @@ function Inscription() {
                             </Then>
                             <Else>
                                 <div className="form-group">
-                                        <label htmlFor="departement">{t('Departement')}</label>
-                                        <Select
-                                            id="departement"
-                                            name="departement"
-                                            value={selectedDepartement}
-                                            onChange={handleChangeDepartement}
-                                            options={optionsDepartement}
-                                            placeholder={t('PlaceHolderDepartement')}
-                                            required
-                                            isSearchable={true}
-                                            styles={ customStyles }
-                                        />
+                                    <label htmlFor="departement">{t('Departement')}</label>
+                                    <Select
+                                        id="departement"
+                                        name="departement"
+                                        value={selectedDepartement}
+                                        onChange={handleChangeDepartement}
+                                        options={optionsDepartement}
+                                        placeholder={t('PlaceHolderDepartement')}
+                                        required
+                                        isSearchable={true}
+                                        styles={ customStyles }
+                                    />
                                 </div>
                             </Else>
                         </If>
@@ -323,7 +296,6 @@ function Inscription() {
                         />
                     </div>
 
-
                     <div className="form-group mt-2">
                         <label htmlFor="mpd">{t('MotDePasse')}</label>
                         <div className="d-flex">
@@ -338,9 +310,8 @@ function Inscription() {
                                     required
                                 />
                             </div>
-
-                            <span onClick={afficherMdp} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
-                                <Icon icon={icon} size={20}/>
+                            <span onClick={afficherMdp} style={{ cursor: 'pointer', margin: "auto", marginLeft: "0.5em" }}>
+                                <Icon icon={icon} size={20} />
                             </span>
                         </div>
                     </div>
@@ -360,16 +331,15 @@ function Inscription() {
                                     required
                                 />
                             </div>
-
-                            <span onClick={afficherMdpConf} style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
-                                <Icon icon={iconConf} size={20}/>
+                            <span onClick={afficherMdpConf} style={{ cursor: 'pointer', margin: "auto", marginLeft: "0.5em" }}>
+                                <Icon icon={iconConf} size={20} />
                             </span>
                         </div>
                     </div>
 
                     <button type="submit" className="btn btn-primary w-50 mt-4 m-auto">{t('submit')}</button>
 
-                    <small style={{marginTop: '10px'}}>
+                    <small style={{ marginTop: '10px' }}>
                         {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
                     </small>
                 </div>

@@ -40,11 +40,12 @@ function Inscription() {
         fetch('http://localhost:8081/user/departements')
             .then(response => response.json())
             .then(data => {
-                const options = data.map(departement => ({
-                    value: departement.toUpperCase(),
+                const formattedDepartements = data.map(departement => ({
+                    value: departement.toUpperCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
                     label: departement
                 }));
-                setOptionsDepartement(options);
+                console.log("Départements formatés :", formattedDepartements);
+                setOptionsDepartement(formattedDepartements);
             })
             .catch(error => {
                 console.error('Erreur lors de la récupération des départements:', error);
@@ -60,33 +61,22 @@ function Inscription() {
         event.preventDefault();
         setErrorMessages('');
 
-        const trimmedPrenom = prenom.trim();
-        const trimmedNom = nom.trim();
-        const trimmedEmail = email.trim();
-        const trimmedMpd = mpd.trim();
-        const trimmedMpdConfirm = mpdConfirm.trim();
-        const trimmedNum = num.trim();
-        const trimmedNomEntreprise = nomEntreprise.trim();
-
-        if (trimmedMpd !== trimmedMpdConfirm) {
+        if (mpd.trim() !== mpdConfirm.trim()) {
             setErrorMessages(t('mpdNonIdentique'));
             return;
         }
 
-
-
         const userData = {
-            firstName: trimmedPrenom,
-            lastName: trimmedNom,
+            firstName: prenom.trim(),
+            lastName: nom.trim(),
             credentials: {
-                email: trimmedEmail,
-                password: trimmedMpd
+                email: email.trim(),
+                password: mpd.trim()
             },
-            phoneNumber: trimmedNum,
-            departement: role === 'employeur' ? undefined : departement.toUpperCase(),
-            entreprise: role === 'employeur' ? trimmedNomEntreprise : undefined
+            phoneNumber: num.trim(),
+            departement: role === 'employeur' ? undefined : departement,
+            entreprise: role === 'employeur' ? nomEntreprise.trim() : undefined
         };
-
 
         let url;
         switch (role) {
@@ -103,22 +93,16 @@ function Inscription() {
                 console.error('Rôle inconnu');
                 return;
         }
-        console.log("Request URL:", url);
+
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),
-
             });
-            console.log(response)
-            console.log(userData)
-            console.log(role)
+
             if (response.status === 201) {
-                const loginData = { email: trimmedEmail, password: trimmedMpd };
+                const loginData = { email: email.trim(), password: mpd.trim() };
                 const { userData: fetchedUserData } = await handleLogin(loginData);
                 navigateToDashboard(fetchedUserData);
             } else if (response.status === 409) {
@@ -126,8 +110,6 @@ function Inscription() {
             } else {
                 setErrorMessages(t('erreurLorsCreationUser'));
             }
-            console.log(departement)
-            console.log(userData + " " + url)
         } catch (error) {
             console.error('Erreur lors de l\'inscription:', error);
             setErrorMessages(error.message || t('erreurLorsInscription'));
@@ -142,19 +124,14 @@ function Inscription() {
                 body: JSON.stringify(loginData),
             });
 
-            if (!response.ok) {
-                throw new Error(t('connexionEchouee'));
-            }
+            if (!response.ok) throw new Error(t('connexionEchouee'));
 
             const data = await response.json();
             const accessToken = data.accessToken;
 
             const userResponse = await fetch('http://localhost:8081/user/me', {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                }
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
             });
 
             return { userData: await userResponse.json(), accessToken };
@@ -164,15 +141,8 @@ function Inscription() {
         }
     };
 
-    const afficherMdp = () => {
-        setIcon(type === 'password' ? eye : eyeOff);
-        setType(type === 'password' ? 'text' : 'password');
-    };
-
-    const afficherMdpConf = () => {
-        setIconConf(typeConf === 'password' ? eye : eyeOff);
-        setTypeConf(typeConf === 'password' ? 'text' : 'password');
-    };
+    const afficherMdp = () => setType(type === 'password' ? 'text' : 'password');
+    const afficherMdpConf = () => setTypeConf(typeConf === 'password' ? 'text' : 'password');
 
     const navigateToDashboard = (userData) => {
         const path = `/${
@@ -185,24 +155,15 @@ function Inscription() {
     };
 
     const customStyles = {
-        control: (provided) => ({
-            ...provided,
-            fontSize: '1rem'
-        }),
-        option: (provided) => ({
-            ...provided,
-            fontSize: '1rem'
-        }),
+        control: (provided) => ({ ...provided, fontSize: '1rem' }),
+        option: (provided) => ({ ...provided, fontSize: '1rem' })
     };
-
     return (
         <div>
             <form className='pt-0' onSubmit={handleSubmit}>
-                <legend>{t('ChampsObligatoires')} </legend>
+                <legend>{t('ChampsObligatoires')}</legend>
+                {errorMessages && <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>{errorMessages}</div>}
 
-                {errorMessages && <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                    {errorMessages}
-                </div>}
 
                 <div className='row' style={{ width: '-webkit-fill-available' }}>
                     <div className='form-group' style={{ display: "inline-flex", textAlign: "end" }}>
@@ -225,7 +186,7 @@ function Inscription() {
                     </div>
                 </div>
 
-                <div className='row' style={{ alignItems: "flex-end" }}>
+                <div className='row' style={{alignItems: "flex-end"}}>
                     <div className="form-group">
                         <label htmlFor="prenom">{t('prenom')}</label>
                         <input type="text" className="form-control" id="prenom" name="prenom" placeholder="John"
@@ -266,7 +227,7 @@ function Inscription() {
                                         placeholder={t('PlaceHolderDepartement')}
                                         required
                                         isSearchable={true}
-                                        styles={ customStyles }
+                                        styles={customStyles}
                                     />
                                 </div>
                             </Else>
@@ -310,8 +271,9 @@ function Inscription() {
                                     required
                                 />
                             </div>
-                            <span onClick={afficherMdp} style={{ cursor: 'pointer', margin: "auto", marginLeft: "0.5em" }}>
-                                <Icon icon={icon} size={20} />
+                            <span onClick={afficherMdp}
+                                  style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                                <Icon icon={icon} size={20}/>
                             </span>
                         </div>
                     </div>
@@ -331,17 +293,16 @@ function Inscription() {
                                     required
                                 />
                             </div>
-                            <span onClick={afficherMdpConf} style={{ cursor: 'pointer', margin: "auto", marginLeft: "0.5em" }}>
-                                <Icon icon={iconConf} size={20} />
+                            <span onClick={afficherMdpConf}
+                                  style={{cursor: 'pointer', margin: "auto", marginLeft: "0.5em"}}>
+                                <Icon icon={iconConf} size={20}/>
                             </span>
                         </div>
                     </div>
 
                     <button type="submit" className="btn btn-primary w-50 mt-4 m-auto">{t('submit')}</button>
-
-                    <small style={{ marginTop: '10px' }}>
-                        {t('DejaUnCompte')} <a href="/login">{t('connectezVous')}</a>
-                    </small>
+                    <small style={{marginTop: '10px'}}>{t('DejaUnCompte')} <a
+                        href="/login">{t('connectezVous')}</a></small>
                 </div>
             </form>
         </div>

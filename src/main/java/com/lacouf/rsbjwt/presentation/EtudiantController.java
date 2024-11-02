@@ -21,15 +21,23 @@ public class EtudiantController {
     }
 
     @PostMapping("/creerEtudiant")
-    public ResponseEntity<EtudiantDTO> creerEtudiant(@RequestBody EtudiantDTO newEtudiant) {
-        if (newEtudiant == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<EtudiantDTO> creerEtudiant(@RequestBody EtudiantDTO etudiantDTO) {
+        try {
+            Optional<EtudiantDTO> etudiantCree = etudiantService.creerEtudiant(etudiantDTO);
+
+            if (etudiantCree.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(etudiantCree.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        } catch (IllegalArgumentException e) {
+            // En cas de département invalide
+            System.out.println("Erreur : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la création de l'étudiant : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        Optional<EtudiantDTO> etudiantDTO = etudiantService.creerEtudiant(newEtudiant);
-
-        return etudiantDTO.map(etudiant -> ResponseEntity.status(HttpStatus.CREATED).body(etudiant))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
     @GetMapping("/{id}")

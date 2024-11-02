@@ -128,9 +128,12 @@ public class UserAppService {
 
 
     public List<String> getAllDepartementDisplayNames() {
-        return Arrays.stream(Departement.values())
+        List<String> departementDisplayNames = Arrays.stream(Departement.values())
                 .map(Departement::getDisplayName)
                 .toList();
+        System.out.println("Départements disponibles : " + departementDisplayNames); // Debug print
+        return departementDisplayNames;
     }
+
 
 }

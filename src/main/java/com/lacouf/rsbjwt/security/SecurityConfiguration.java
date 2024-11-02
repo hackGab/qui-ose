@@ -45,9 +45,11 @@ public class SecurityConfiguration {
                         .disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/departements/**").permitAll()
                         .requestMatchers(POST, "/user/login").permitAll()
                         .requestMatchers(GET, "/user/me").permitAll()
                         .requestMatchers(GET, "/user/departements").permitAll()
+                        .requestMatchers(POST, "/etudiant/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/cv/creerCV/**").permitAll()
                         .requestMatchers(POST, "/entrevues/creerEntrevue/**").permitAll()
@@ -65,11 +67,11 @@ public class SecurityConfiguration {
                         .requestMatchers(PUT, "/entrevues/changerStatus/{emailEtudiant}/{idOffreDeStage}").permitAll()
                         .requestMatchers(DELETE, "/cv/supprimerCV/**").permitAll()
                         .requestMatchers(DELETE, "/entrevues/retirerOffre/{offreId}").permitAll()
-                        .requestMatchers("/etudiant/**").permitAll()
+                        .requestMatchers("/professeur/**").permitAll()
+                        .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(GET, "/etudiant/all").permitAll()
                         .requestMatchers(POST, "/etudiant/{etudiantId}/offre/{offreId}").permitAll()
                         .requestMatchers(GET, "/etudiant/{etudiantEmail}/offres").permitAll()
-                        .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(POST, "/professeur/creerProfesseur").permitAll()
                         .requestMatchers(POST, "/employeur/creerEmployeur").permitAll()
                         .requestMatchers(POST, "/offreDeStage/creerOffreDeStage/**").permitAll()
@@ -92,8 +94,8 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/candidatures/{entrevueId}").permitAll()
                         .requestMatchers(GET, "/candidatures/all").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
-                        .requestMatchers("/professeur/**").hasAuthority("PROFESSEUR")
-                        .requestMatchers("/etudiant/**").hasAuthority("ETUDIANT")
+//                        .requestMatchers("/professeur/**").hasAuthority("PROFESSEUR")
+//                        .requestMatchers("/etudiant/**").hasAuthority("ETUDIANT")
                         .requestMatchers("/employeur/**").hasAuthority("EMPLOYEUR")
                         .anyRequest().denyAll()
                 )
@@ -135,4 +137,5 @@ public class SecurityConfiguration {
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
 }

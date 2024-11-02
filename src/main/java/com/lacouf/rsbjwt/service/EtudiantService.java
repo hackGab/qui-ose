@@ -6,6 +6,7 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +36,13 @@ public class EtudiantService {
         try {
             String encodedPassword = passwordEncoder.encode(etudiantDTO.getCredentials().getPassword());
 
+            // Convertir le displayName en enum Departement
             Departement departementEnum = null;
             if (etudiantDTO.getDepartement() != null) {
-                departementEnum = Departement.valueOf(etudiantDTO.getDepartement().name().toUpperCase());
+                departementEnum = Arrays.stream(Departement.values())
+                        .filter(dept -> dept.getDisplayName().equalsIgnoreCase(etudiantDTO.getDepartement().toString()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + etudiantDTO.getDepartement()));
             }
 
             Etudiant etudiant = new Etudiant(
@@ -46,15 +51,20 @@ public class EtudiantService {
                     etudiantDTO.getCredentials().getEmail(),
                     encodedPassword,
                     etudiantDTO.getPhoneNumber(),
-                    departementEnum
+                    departementEnum // Utilisation de l'enum Departement
             );
-            System.out.println(etudiantDTO.getDepartement());
+
             Etudiant savedEtudiant = etudiantRepository.save(etudiant);
             return Optional.of(new EtudiantDTO(savedEtudiant));
         } catch (Exception e) {
+            System.out.println("Erreur lors de la création de l'étudiant : " + e.getMessage());
             return Optional.empty();
         }
     }
+
+
+
+
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)

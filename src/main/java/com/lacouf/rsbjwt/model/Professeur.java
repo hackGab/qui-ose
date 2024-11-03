@@ -36,6 +36,7 @@ public class Professeur extends UserApp {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", role='" + getRole() + '\'' +
                 ", departement='" + departement + '\'' +
+                ", etudiants='" + etudiants + '\'' +
                 '}';
     }
 

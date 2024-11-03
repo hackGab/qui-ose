@@ -9,7 +9,6 @@ function AccueilProfesseur() {
         <div className="container mt-3">
             <h1 className="text-center mb-4">Accueil Professeur</h1>
 
-            {/* Optionally display some of the professor's data */}
             <div className="card bg-light mb-3">
                 <div className="card-body text-center">
                     <h5 className="card-title">Bienvenue, {userData?.firstName}</h5>

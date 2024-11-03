@@ -13,7 +13,8 @@ function DetailsProfesseur() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
+    console.log('Professeur details:', professeur);
+    console.log('Etudiants:', etudiants);
 
 
     // useEffect(() => {

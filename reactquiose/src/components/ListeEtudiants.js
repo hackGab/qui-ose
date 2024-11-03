@@ -36,8 +36,13 @@ function ListeEtudiants() {
             });
     }, []);
 
+
     if (loading) {
-        return <p className="text-center mt-5">{t('chargementEtudiants')}</p>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementEtudiants')}</span>
+        </div>;
     }
 
     if (error) {

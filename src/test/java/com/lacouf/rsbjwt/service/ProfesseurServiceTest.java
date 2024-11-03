@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.ProfesseurController;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
@@ -26,6 +27,8 @@ public class ProfesseurServiceTest {
     private ProfesseurService professeurService;
     private ProfesseurController professeurController;
 
+    private EtudiantRepository etudiantRepository;
+
     private ProfesseurDTO newProfesseur;
     private Professeur professeurEntity;
     private PasswordEncoder passwordEncoder;
@@ -34,7 +37,7 @@ public class ProfesseurServiceTest {
     void setUp() {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        professeurService = new ProfesseurService(professeurRepository, passwordEncoder);
+        professeurService = new ProfesseurService(professeurRepository, etudiantRepository,passwordEncoder);
         professeurController = new ProfesseurController(professeurService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");

@@ -19,6 +19,8 @@
   "telephoneDetail": "Numéro de téléphone",
   "departmentDetail": "Départment",
 
+  "department": "Département",
+
   "Sinscrire": "S'inscrire",
   "DejaUnCompte": "Déjà un compte? ",
   "NoAccount": "Pas de compte? ",
@@ -53,10 +55,18 @@
   "studentListSubtitle": "Voici la liste des étudiants inscrits à notre programme de stages.",
   "employerListTitle": "Liste des Employeurs",
   "employerListSubtitle": "Voici la liste des employeurs inscrits à notre programme de stages.",
+  "profListTitle": "Liste des Professeurs",
+  "profListSubtitle": "Voici la liste des professeurs inscrits à notre programme de stages.",
   "entrevueListTitle": "Liste des Entrevues",
   "entrevueListSubtitle": "Voici la liste de vos entrevues acceptées et en attente d'une réponse.",
   "entrevueListConseil": "* Veuillez appuyer sur une entrevue pour faire votre choix",
   "studentDetailsTitle": "Détails de l'Étudiant",
+  "profDetailsTitle": "Détails du Professeur",
+  "searchStudents": "Rechercher des étudiants",
+  "unassignedStudents": "Étudiants non assignés",
+  "assignedStudents": "Étudiants assignés",
+  "assignStudents": "Assigner des étudiants",
+  "studentsInSameDepartment": "Étudiants dans le même département",
   "vosEntrevues": "Vos Entrevues :",
 
   "validated": "validé",

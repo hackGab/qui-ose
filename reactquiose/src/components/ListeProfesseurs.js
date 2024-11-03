@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
-import '../CSS/ListeEtudiants.css';
+import '../CSS/ListeProfesseurs.css';
 
 function ListeProfesseurs() {
     const { t } = useTranslation();
     const [professeurs, setProfesseurs] = useState([]);
+    const [departments, setDepartments] = useState({});
+    const [collapsed, setCollapsed] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
         fetch('http://localhost:8081/professeur/all', {
@@ -27,7 +30,14 @@ function ListeProfesseurs() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                const groupedByDepartment = data.reduce((acc, prof) => {
+                    if (!acc[prof.departement]) {
+                        acc[prof.departement] = [];
+                    }
+                    acc[prof.departement].push(prof);
+                    return acc;
+                }, {});
+                setDepartments(groupedByDepartment);
                 setProfesseurs(data);
                 setLoading(false);
             })
@@ -36,6 +46,14 @@ function ListeProfesseurs() {
                 setLoading(false);
             });
     }, []);
+
+    const toggleCollapse = (department) => {
+        setCollapsed(prevState => ({
+            ...prevState,
+            [department]: !prevState[department]
+        }));
+    };
+
 
     if (loading) {
         return <p className="text-center mt-5">{t('chargementProfesseurs')}</p>;
@@ -50,39 +68,54 @@ function ListeProfesseurs() {
             <GestionnaireHeader/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
-                    <h1 className="mb-4 text-center">{t('employerListTitle')}</h1>
+                    <h1 className="mb-4 text-center">{t('profListTitle')}</h1>
 
-                    {professeurs.length === 0 ? (
-                        <p className="text-center mt-5">{t('AucunEmployeurTrouve')}</p>
+                    {Object.keys(departments).length === 0 ? (
+                        <p className="text-center mt-5">{t('AucunProfesseurTrouve')}</p>
                     ) : (
-                        <p className="text-center mb-4">{t('employerListSubtitle')}</p>
+                        <p className="text-center mb-4">{t('profListSubtitle')}</p>
                     )}
 
                     <div className="row">
-                        {professeurs.map((offreDeStage) => {
-                            const status = offreDeStage ? offreDeStage.status : null; // Vérification si l'offre existe
+                        {Object.keys(departments).map((department) => {
                             return (
-                                <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
-                                    <Link
-                                        to={`/detailsEmployeur/${offreDeStage.employeur.email}/${offreDeStage.id}`}
-                                        className="text-decoration-none"
-                                        state={{offre: offreDeStage}}>
+                                <div key={department} className="col-12 col-md-6 col-lg-4 mb-4">
+                                    <div className="department-header entrevuesTitreBox" onClick={() => toggleCollapse(department)}>
+                                        {department}
+                                        <span>
+                                            ({departments[department].length})
+                                            &nbsp;
+                                            {collapsed[department] ? <FaChevronUp/> : <FaChevronDown/>}
+                                        </span>
+                                    </div>
+                                    <div className={`collapse ${collapsed[department] ? 'show' : ''}`}>
+                                        <div>
+                                            <div className="row p-1 shadow w-100 m-auto entrevueBox border-0">
+                                                {departments[department].map((prof) => {
+                                                    return (
+                                                        <div className="col mb-4" key={prof.id}>
+                                                            <Link
+                                                                to={`/detailsProfesseur/${prof.email}`}
+                                                                className="text-decoration-none"
+                                                                state={{professeur: prof}}>
 
-                                        <div
-                                            className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
-                                            <div className="card-body">
-                                                <h5 className="card-title">{offreDeStage.employeur.entreprise + " - " + offreDeStage.titre}</h5>
-                                                <p className="card-text">
-                                                    <FaEnvelope/> {offreDeStage.employeur.credentials?.email}
-                                                    <br/>
-                                                    <FaPhone/> {offreDeStage.employeur.phoneNumber}
-                                                    <br/>
-                                                    <span
-                                                        className="badge bg-primary">{offreDeStage.localisation}</span>
-                                                </p>
+                                                                <div className="card shadow w-100">
+                                                                    <div className="card-body">
+                                                                        <h5 className="card-title text-capitalize">{prof.firstName + " " + prof.lastName}</h5>
+                                                                        <p className="card-text">
+                                                                            <FaEnvelope/> {prof.email} <br/>
+                                                                            <FaPhone/> {prof.phoneNumber} <br/>
+                                                                            <span className="badge bg-info">{t('department')}: {prof.departement}</span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </Link>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
-                                    </Link>
+                                    </div>
                                 </div>
                             );
                         })}

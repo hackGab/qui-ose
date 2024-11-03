@@ -70,12 +70,11 @@ function ListeEtudiants() {
                                         <div
                                             className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
                                             <div className="card-body">
-                                                <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
+                                                <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                                 <p className="card-text">
                                                     <FaEnvelope/> {etudiant.credentials.email}<br/>
                                                     <FaPhone/> {etudiant.phoneNumber}<br/>
-                                                    <span
-                                                        className="badge bg-info">{t('department')}: {etudiant.departement}</span>
+                                                    <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
                                                 </p>
                                             </div>
                                         </div>

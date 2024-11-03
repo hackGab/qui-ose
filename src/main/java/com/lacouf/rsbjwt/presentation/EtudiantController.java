@@ -96,4 +96,10 @@ public class EtudiantController {
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+
+    @GetMapping("/departement/{departement}")
+    public ResponseEntity<Iterable<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
+        return ResponseEntity.ok(etudiantService.getEtudiantsByDepartement(departement));
+    }
 }

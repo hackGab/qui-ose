@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,4 +49,19 @@ public class ProfesseurController {
     public ResponseEntity<Iterable<ProfesseurDTO>> getAllProfesseurs() {
         return ResponseEntity.ok(professeurService.getAllProfesseurs());
     }
+
+
+    // Assigner une liste d'étudiants à un professeur
+    @PostMapping("/assignerEtudiants/{professeurEmail}")
+    public ResponseEntity<ProfesseurDTO> assignerEtudiants(@PathVariable String professeurEmail, @RequestBody List<String> etudiantsEmails) {
+        if(professeurEmail == null || etudiantsEmails == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<ProfesseurDTO> professeurDTO = professeurService.assignerEtudiants(professeurEmail, etudiantsEmails);
+
+        return professeurDTO.map(professeur -> ResponseEntity.ok().body(professeur))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
 }

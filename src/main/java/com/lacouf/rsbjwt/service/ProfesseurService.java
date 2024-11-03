@@ -6,7 +6,9 @@ import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfesseurService {
@@ -39,5 +41,13 @@ public class ProfesseurService {
     public Optional<ProfesseurDTO> getProfesseurById(Long id) {
         return professeurRepository.findById(id)
                 .map(ProfesseurDTO::new);
+    }
+
+
+    public List<ProfesseurDTO> getAllProfesseurs() {
+        return professeurRepository.findAll()
+                .stream()
+                .map(ProfesseurDTO::new)
+                .collect(Collectors.toList());
     }
 }

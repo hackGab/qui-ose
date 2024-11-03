@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeEtudiants.css';
 
-function ListeEmployeurs() {
+function ListeProfesseurs() {
     const { t } = useTranslation();
-    const [employeurs, setEmployeurs] = useState([]);
+    const [professeurs, setProfesseurs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:8081/offreDeStage/all', {
+        fetch('http://localhost:8081/professeur/all', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ function ListeEmployeurs() {
             })
             .then(data => {
                 console.log(data);
-                setEmployeurs(data);
+                setProfesseurs(data);
                 setLoading(false);
             })
             .catch(error => {
@@ -37,9 +37,8 @@ function ListeEmployeurs() {
             });
     }, []);
 
-
     if (loading) {
-        return <p className="text-center mt-5">{t('chargementEmployeurs')}</p>;
+        return <p className="text-center mt-5">{t('chargementProfesseurs')}</p>;
     }
 
     if (error) {
@@ -53,14 +52,14 @@ function ListeEmployeurs() {
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('employerListTitle')}</h1>
 
-                    {employeurs.length === 0 ? (
+                    {professeurs.length === 0 ? (
                         <p className="text-center mt-5">{t('AucunEmployeurTrouve')}</p>
                     ) : (
                         <p className="text-center mb-4">{t('employerListSubtitle')}</p>
                     )}
 
                     <div className="row">
-                        {employeurs.map((offreDeStage) => {
+                        {professeurs.map((offreDeStage) => {
                             const status = offreDeStage ? offreDeStage.status : null; // Vérification si l'offre existe
                             return (
                                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
@@ -94,4 +93,4 @@ function ListeEmployeurs() {
     );
 }
 
-export default ListeEmployeurs;
+export default ListeProfesseurs;

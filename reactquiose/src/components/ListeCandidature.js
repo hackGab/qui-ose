@@ -6,6 +6,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Icon} from "react-icons-kit";
 import {eye, eyeOff} from "react-icons-kit/feather";
 import TableauContrat from "./TableauContrat";
+import {If, Then} from "react-if";
 
 function ListeCandidature() {
     const [candidatures, setCandidatures] = useState([]);
@@ -262,8 +263,8 @@ function ListeCandidature() {
         return contrat.etudiantSigne && contrat.employeurSigne && contrat.gestionnaireSigne;
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <p className="text-center mt-5">{t('chargementsDesCandidatures')}</p>;
+    if (error) return  <p className="text-center mt-5 text-danger">Error: {error}</p>;
 
     return (
         <>
@@ -271,64 +272,76 @@ function ListeCandidature() {
             <div className="container-fluid p-4 page-liste-candidature">
                 <div className="container text-center">
                     <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
-                    <table className="table table-striped table-hover">
-                        <thead className="thead-dark">
-                        <tr>
-                            <th>{t('Etudiant')}</th>
-                            <th>{t('OffreDeStage')}</th>
-                            <th>{t('Employeur')}</th>
-                            <th>{t('Actions')}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {candidatures.map(candidat => {
-                            const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
-                            const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
-                            return (
-                                <tr key={candidat.id}>
-                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` : "N/A"}</td>
-                                    <td>{candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}</td>
-                                    <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` : "N/A"}</td>
-                                    <td>
-                                        {!hasContrat ? (
-                                            <button className="btn btn-success"
-                                                    onClick={() => handleGenerateContract(candidat)}>
-                                                {t('GenererContrat')}
-                                            </button>
-                                        ) : (
-                                            <>
-                                                {isContractSigned(contrat) ? (
+                    <If condition={candidatures.length === 0}>
+                        <Then>
+                            <p className="text-center mt-5">{t('AucuneCandidatureTrouvee')}</p>
+                        </Then>
+                    </If>
+
+                    <If condition={candidatures.length > 0}>
+                        <Then>
+
+                            <table className="table table-striped table-hover">
+                                <thead className="thead-dark">
+                                <tr>
+                                    <th>{t('Etudiant')}</th>
+                                    <th>{t('OffreDeStage')}</th>
+                                    <th>{t('Employeur')}</th>
+                                    <th>{t('Actions')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {candidatures.map(candidat => {
+                                    const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
+                                    const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
+
+                                    return (
+                                        <tr key={candidat.id}>
+                                            <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.etudiantDTO.firstName} ${candidat.entrevueDetails.etudiantDTO.lastName}` : "N/A"}</td>
+                                            <td>{candidat.entrevueDetails ? candidat.entrevueDetails.offreDeStageDTO.titre : "N/A"}</td>
+                                            <td>{candidat.entrevueDetails ? `${candidat.entrevueDetails.offreDeStageDTO.employeur.firstName} ${candidat.entrevueDetails.offreDeStageDTO.employeur.lastName}` : "N/A"}</td>
+                                            <td>
+                                                {!hasContrat ? (
                                                     <button className="btn btn-success"
-                                                            onClick={() => {
-                                                                setSelectedContrat(contrat);
-                                                                handleOpenContractModal()
-                                                            }}
-                                                    >
-                                                        {t('GenererPDF')}
+                                                            onClick={() => handleGenerateContract(candidat)}>
+                                                        {t('GenererContrat')}
                                                     </button>
                                                 ) : (
-                                                    <button
-                                                        className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-warning' : 'btn-success'}`}
-                                                        disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
-                                                        onClick={() => {
-                                                            setSelectedContrat(contrat);
-                                                            handleOpenPasswordModal();
-                                                        }}
-                                                    >
-                                                        {contrat.etudiantSigne && contrat.employeurSigne
-                                                            ? t('SignerContrat')
-                                                            : t('EnAttenteDesSignatures')}
-                                                    </button>
+                                                    <>
+                                                        {isContractSigned(contrat) ? (
+                                                            <button className="btn btn-success"
+                                                                    onClick={() => {
+                                                                        setSelectedContrat(contrat);
+                                                                        handleOpenContractModal()
+                                                                    }}
+                                                            >
+                                                                {t('GenererPDF')}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-warning' : 'btn-success'}`}
+                                                                disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
+                                                                onClick={() => {
+                                                                    setSelectedContrat(contrat);
+                                                                    handleOpenPasswordModal();
+                                                                }}
+                                                            >
+                                                                {contrat.etudiantSigne && contrat.employeurSigne
+                                                                    ? t('SignerContrat')
+                                                                    : t('EnAttenteDesSignatures')}
+                                                            </button>
+                                                        )}
+                                                    </>
                                                 )}
-                                            </>
-                                        )}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                </tbody>
+                            </table>
+                        </Then>
+                    </If>
                 </div>
             </div>
 

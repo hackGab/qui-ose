@@ -6,7 +6,6 @@ import {If, Then} from "react-if";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import i18n from "i18next";
-import InscriptionEtudiant from "./InscriptionEtudiant";
 
 function Formulaire(props) {
     const { title } = props;

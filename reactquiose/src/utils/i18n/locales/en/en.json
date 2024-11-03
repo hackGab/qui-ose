@@ -40,6 +40,12 @@
   "Dashboard": "Dashboard",
   "studentDetailsTitle": "Student Details",
   "RequiredFields": "Required Fields *",
+
+  "AucunEtudiantTrouve": "No student found",
+  "AucunEmployeurTrouve": "No employer found",
+  "AucunProfesseurTrouve": "No teacher found",
+  "AucuneCandidatureTrouvee": "No application found",
+
   "studentListTitle": "Student List",
   "employerListSubtitle": "Here is the list of employers registered in our internship program.",
   "studentListSubtitle": "Here is the list of students registered in our internship program.",
@@ -159,6 +165,9 @@
   "à": "at",
   "pour": "for",
   "chargementEtudiants": "Loading Students ...",
+  "chargementEmployeurs": "Loading Employers ...",
+  "chargementProfesseurs": "Loading Teachers ...",
+  "chargementsDesCandidatures": "Loading Applications ...",
   "AucuneEtudiantAPostuler": "No student has applied for this internship",
   "VisualiserLesEntrevueAccepte": "View Accepted Interviews",
   "VisualiserLesEntrevueAccepteClick": "Click here to view accepted interviews",

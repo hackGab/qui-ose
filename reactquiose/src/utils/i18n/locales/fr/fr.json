@@ -41,6 +41,11 @@
   "offreNotFound": "Offre non trouvée",
   "RequiredFields": "Champs Obligatoires *",
 
+  "AucunEtudiantTrouve": "Aucun étudiant trouvé",
+  "AucunEmployeurTrouve": "Aucun employeur trouvé",
+  "AucunProfesseurTrouve": "Aucun professeur trouvé",
+  "AucuneCandidatureTrouvee": "Aucune candidature trouvée",
+
   "Dashboard": "Tableau de Bord",
 
   "studentListTitle": "Liste des Étudiants",
@@ -170,6 +175,9 @@
   "à" : "à",
   "pour" : "pour",
   "chargementEtudiants": "Chargement des étudiants ...",
+  "chargementEmployeurs": "Chargement des employeurs ...",
+  "chargementProfesseurs": "Chargement des professeurs ...",
+  "chargementsDesCandidatures": "Chargement des candidatures ...",
   "AucuneEtudiantAPostuler": "Aucun étudiant n'a postulé pour ce stage",
   "VisualiserLesEntrevueAccepte": "Visualiser les entrevues acceptées",
   "VisualiserLesEntrevueAccepteClick": "Cliquez ici pour visualiser les entrevues acceptées",

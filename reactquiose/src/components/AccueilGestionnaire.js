@@ -18,7 +18,7 @@ function AccueilGestionnaire() {
 
     const sections = [
         { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
-        { title: t("prof"), notifications: 0, image: professeurImage },
+        { title: t("prof"), notifications: 0, image: professeurImage, link: "/listeProfesseurs" },
         { title: t("employeur"), notifications: 0, image: employeurImage, link: "/listeEmployeurs" },
     ];
 

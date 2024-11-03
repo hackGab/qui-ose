@@ -37,7 +37,7 @@ function ListeEtudiants() {
     }, []);
 
     if (loading) {
-        return <p className="text-center mt-5">{t('loading')}</p>;
+        return <p className="text-center mt-5">{t('chargementEtudiants')}</p>;
     }
 
     if (error) {
@@ -50,7 +50,13 @@ function ListeEtudiants() {
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
-                    <p className="text-center mb-4">{t('studentListSubtitle')}</p>
+
+                    {etudiants.length === 0 ? (
+                        <p className="text-center mt-5">{t('AucunEtudiantTrouve')}</p>
+                    ) : (
+                        <p className="text-center mb-4">{t('studentListSubtitle')}</p>
+                        )}
+
                     <div className="row">
                         {etudiants.map((etudiant) => {
                             const status = etudiant.cv ? etudiant.cv.status : null;

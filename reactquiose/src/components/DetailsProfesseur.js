@@ -56,6 +56,9 @@ function DetailsProfesseur() {
     };
 
     const assignStudentsToProfessor = () => {
+        if (etudiantsSelectionner.length === 0 && !professeur) {
+            return;
+        }
         fetch(`http://localhost:8081/professeur/assignerEtudiants/${professeur.email}`, {
             method: 'POST',
             headers: {
@@ -79,10 +82,6 @@ function DetailsProfesseur() {
             <br/>
             <span className="sr-only">Loading...</span>
         </div>;
-    }
-
-    if (!professeur) {
-        return <div>{t('studentNotFound')}</div>;
     }
 
 

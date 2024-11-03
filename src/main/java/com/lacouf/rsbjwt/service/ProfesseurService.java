@@ -56,21 +56,26 @@ public class ProfesseurService {
     }
 
     public Optional<ProfesseurDTO> assignerEtudiants(String professeurEmail, List<String> etudiantsEmails) {
-        Optional<Professeur> professeur = professeurRepository.findByEmail(professeurEmail);
-        if (professeur.isEmpty()) {
+        Optional<Professeur> professeurOpt = professeurRepository.findByEmail(professeurEmail);
+        if (professeurOpt.isEmpty()) {
             return Optional.empty();
         }
 
+        Professeur professeur = professeurOpt.get();
         List<Etudiant> etudiants = etudiantRepository.findAllByEmailIn(etudiantsEmails);
         if (etudiants.isEmpty()) {
             return Optional.empty();
         }
 
         for (Etudiant etudiant : etudiants) {
-            etudiant.setProfesseur(professeur.get());
+            etudiant.setProfesseur(professeur);
         }
-        etudiantRepository.saveAll(etudiants);
 
-        return Optional.of(new ProfesseurDTO(professeur.get()));
+        professeur.getEtudiants().addAll(etudiants);
+
+        etudiantRepository.saveAll(etudiants);
+        professeurRepository.save(professeur);
+
+        return Optional.of(new ProfesseurDTO(professeur));
     }
 }

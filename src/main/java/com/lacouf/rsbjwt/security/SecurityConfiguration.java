@@ -70,7 +70,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/professeur/**").permitAll()
                         .requestMatchers(GET, "/professeur/all").permitAll()
                         .requestMatchers(GET, "/professeur/{professeurId}").permitAll()
-                        .requestMatchers(POST, "/professeur/assignerEtudiants").permitAll()
+                        .requestMatchers(POST, "/professeur/assignerEtudiants/{professeurEmail}").permitAll()
                         .requestMatchers(POST, "/etudiant/creerEtudiant").permitAll()
                         .requestMatchers(GET, "/etudiant/all").permitAll()
                         .requestMatchers(POST, "/etudiant/{etudiantId}/offre/{offreId}").permitAll()

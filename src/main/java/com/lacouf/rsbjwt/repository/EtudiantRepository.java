@@ -16,6 +16,5 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
 
     List<Etudiant> findAllByDepartement(Departement departementEnum);
 
-    @Query("SELECT e FROM Etudiant e WHERE e.professeur.credentials.email = ?1")
-    List<Etudiant> findAllByEmailIn(List<String> etudiantsEmails);
+    List<Etudiant> findAllByEmailIn(List<String> emails);
 }

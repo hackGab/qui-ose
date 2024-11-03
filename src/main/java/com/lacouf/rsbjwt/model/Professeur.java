@@ -1,13 +1,12 @@
 package com.lacouf.rsbjwt.model;
 
 import com.lacouf.rsbjwt.model.auth.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -18,6 +17,9 @@ public class Professeur extends UserApp {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "DEPARTEMENT")
     private Departement departement;
+
+    @OneToMany(mappedBy = "professeur")
+    private List<Etudiant> etudiants;
 
     public Professeur(String firstName, String lastName, String email, String password, String phoneNumber, Departement departement) {
         super(firstName, lastName, email, password, phoneNumber, Role.PROFESSEUR);

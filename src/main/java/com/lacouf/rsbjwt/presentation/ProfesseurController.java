@@ -51,10 +51,12 @@ public class ProfesseurController {
     }
 
 
-    // Assigner une liste d'étudiants à un professeur
     @PostMapping("/assignerEtudiants/{professeurEmail}")
-    public ResponseEntity<ProfesseurDTO> assignerEtudiants(@PathVariable String professeurEmail, @RequestBody List<String> etudiantsEmails) {
-        if(professeurEmail == null || etudiantsEmails == null) {
+    public ResponseEntity<ProfesseurDTO> assignerEtudiants(
+            @PathVariable String professeurEmail,
+            @RequestBody List<String> etudiantsEmails) {
+
+        if (professeurEmail == null || etudiantsEmails == null || etudiantsEmails.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -63,5 +65,4 @@ public class ProfesseurController {
         return professeurDTO.map(professeur -> ResponseEntity.ok().body(professeur))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
 }

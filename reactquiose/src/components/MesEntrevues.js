@@ -67,7 +67,11 @@ function MesEntrevues() {
 
 
     if (loading) {
-        return <div>Chargement...</div>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementEntrevues')}</span>
+        </div>;
     }
 
     if (error) {

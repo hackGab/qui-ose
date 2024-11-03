@@ -98,7 +98,7 @@ function DetailsProfesseur() {
                     <div className="col-md-6">
                         <h5>{t('personalInfo')}</h5>
                         <div className="details-info">
-                            <p><strong>{t('nomDetail')}:</strong> {professeur.firstName} {professeur.lastName}</p>
+                            <p className="text-capitalize"><strong>{t('nomDetail')}:</strong> {professeur.firstName} {professeur.lastName}</p>
                             <p><strong>{t('emailDetail')}:</strong> {professeur.credentials.email}</p>
                             <p><strong>{t('telephoneDetail')}:</strong> {professeur.phoneNumber}</p>
                             <p><strong>{t('departmentDetail')}:</strong> {professeur.departement}</p>
@@ -127,7 +127,6 @@ function DetailsProfesseur() {
                                         />
                                     </div>
                                     &nbsp;
-                                    {/*<span className="text-capitalize">{etudiant.firstName} {etudiant.lastName}</span>*/}
                                     {etudiant.email}
                                 </li>
                             ))}
@@ -155,7 +154,7 @@ function DetailsProfesseur() {
                                                 />
                                             </div>
                                             &nbsp;
-                                            {etudiant.firstName} {etudiant.lastName}
+                                            {etudiant.email}
                                         </li>
                                     ))}
                                 </ul>

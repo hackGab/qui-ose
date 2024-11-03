@@ -198,7 +198,11 @@ function MesEntrevueAccepte() {
 
 
     if (isLoading) {
-        return <div style={{ fontSize: "1.5rem" }}>{t('ChargementDesEntrevues')}</div>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('ChargementDesEntrevues')}</span>
+        </div>;
     }
 
     if (error) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaPhone, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import {FaEnvelope, FaPhone, FaChevronDown, FaChevronUp, FaSearch} from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeProfesseurs.css';
@@ -13,6 +13,8 @@ function ListeProfesseurs() {
     const [collapsed, setCollapsed] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+
 
 
     useEffect(() => {
@@ -54,9 +56,35 @@ function ListeProfesseurs() {
         }));
     };
 
+    const collapseAll = () => {
+        const newCollapsed = {};
+        Object.keys(departments).forEach(department => {
+            newCollapsed[department] = true;
+        });
+        setCollapsed(newCollapsed);
+    };
+
+    const expandAll = () => {
+        const newCollapsed = {};
+        Object.keys(departments).forEach(department => {
+            newCollapsed[department] = false;
+        });
+        setCollapsed(newCollapsed);
+    };
+
+    const filteredProfessors = professeurs.filter(prof =>
+        prof.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prof.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prof.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
 
     if (loading) {
-        return <p className="text-center mt-5">{t('chargementProfesseurs')}</p>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementProfesseurs')}</span>
+        </div>;
     }
 
     if (error) {
@@ -76,14 +104,38 @@ function ListeProfesseurs() {
                         <p className="text-center mb-4">{t('profListSubtitle')}</p>
                     )}
 
+                    <div className="d-flex justify-content-between mb-4">
+                        <div className="input-group w-25 search-bar">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={t('searchProfessors')}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text"><FaSearch/></span>
+                            </div>
+                        </div>
+                        <div>
+                            <button className="btn btn-secondary" onClick={collapseAll}>
+                                <FaChevronUp/> {t('collapseAll')}</button>
+                            &nbsp;
+                            <button className="btn btn-secondary" onClick={expandAll}><FaChevronDown/> {t('expandAll')}
+                            </button>
+                        </div>
+                    </div>
+
                     <div className="row">
                         {Object.keys(departments).map((department) => {
+                            const filteredDepartmentProfessors = filteredProfessors.filter(prof => prof.departement === department);
                             return (
                                 <div key={department} className="col-12 col-md-6 col-lg-4 mb-4">
-                                    <div className="department-header entrevuesTitreBox" onClick={() => toggleCollapse(department)}>
+                                    <div className="department-header entrevuesTitreBox"
+                                         onClick={() => toggleCollapse(department)}>
                                         {department}
                                         <span>
-                                            ({departments[department].length})
+                                            ({filteredDepartmentProfessors.length})
                                             &nbsp;
                                             {collapsed[department] ? <FaChevronUp/> : <FaChevronDown/>}
                                         </span>
@@ -91,7 +143,7 @@ function ListeProfesseurs() {
                                     <div className={`collapse ${collapsed[department] ? 'show' : ''}`}>
                                         <div>
                                             <div className="row p-1 shadow w-100 m-auto entrevueBox border-0">
-                                                {departments[department].map((prof) => {
+                                                {filteredDepartmentProfessors.map((prof) => {
                                                     return (
                                                         <div className="col mb-4" key={prof.id}>
                                                             <Link
@@ -105,7 +157,8 @@ function ListeProfesseurs() {
                                                                         <p className="card-text">
                                                                             <FaEnvelope/> {prof.email} <br/>
                                                                             <FaPhone/> {prof.phoneNumber} <br/>
-                                                                            <span className="badge bg-info">{t('department')}: {prof.departement}</span>
+                                                                            <span
+                                                                                className="badge bg-info">{t('department')}: {prof.departement}</span>
                                                                         </p>
                                                                     </div>
                                                                 </div>

@@ -263,7 +263,14 @@ function ListeCandidature() {
         return contrat.etudiantSigne && contrat.employeurSigne && contrat.gestionnaireSigne;
     };
 
-    if (loading) return <p className="text-center mt-5">{t('chargementsDesCandidatures')}</p>;
+    if (loading) {
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementsDesCandidatures')}</span>
+        </div>;
+    }
+
     if (error) return  <p className="text-center mt-5 text-danger">Error: {error}</p>;
 
     return (

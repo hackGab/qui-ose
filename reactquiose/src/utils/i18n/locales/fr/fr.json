@@ -269,5 +269,6 @@
   "EtudiantPasEncoreSigne": "L'étudiant n'a pas encore signé",
   "EnAttenteDesSignatures": "En attente des signatures",
   "EntrezMotDePasse": "Entrez le mots de passe",
-  "GenererPDF": "Générer version PDF du contrat"
+  "GenererPDF": "Générer version PDF du contrat",
+  "studentListTitleForEvaluation": "Liste des Étudiants pour l'évaluation"
 }

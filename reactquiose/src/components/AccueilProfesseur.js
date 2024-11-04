@@ -35,7 +35,7 @@ function AccueilProfesseur() {
                     style={{color: "#01579b"}}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>
 
                 <div className="container flex-grow-1 pt-5 mt-5">
-                    <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
+                    <h1 className="mb-4 text-center">{t('studentListTitleForEvaluation')}</h1>
 
                     {listeEtudiants.length === 0 ? (
                         <p className="text-center mt-5">{t('AucunEtudiantTrouve')}</p>
@@ -49,7 +49,7 @@ function AccueilProfesseur() {
                             return (
                                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
                                         <div
-                                            className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                            className={`card shadow w-100`}>
                                             <div className="card-body">
                                                 <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                                 <p className="card-text">

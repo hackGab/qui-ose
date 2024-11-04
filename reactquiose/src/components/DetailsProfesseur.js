@@ -59,6 +59,7 @@ function DetailsProfesseur() {
         if (etudiantsSelectionner.length === 0 && !professeur) {
             return;
         }
+
         fetch(`http://localhost:8081/professeur/assignerEtudiants/${professeur.email}`, {
             method: 'POST',
             headers: {
@@ -69,6 +70,15 @@ function DetailsProfesseur() {
             .then(response => response.json())
             .then(data => {
                 setSuccessMessage(data.message);
+                setEtudiants(prevEtudiants => {
+                    const updatedEtudiants = prevEtudiants.map(etudiant => {
+                        if (etudiantsSelectionner.includes(etudiant.email)) {
+                            return { ...etudiant, professeur: { email: professeur.email } };
+                        }
+                        return etudiant;
+                    });
+                    return updatedEtudiants;
+                });
                 setEtudiantsSelectionner([]);
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
@@ -85,8 +95,37 @@ function DetailsProfesseur() {
     }
 
 
-    const unassignedStudents = etudiants.filter(etudiant => (!etudiant.professeur || etudiant.professeur.id !== professeur.id) && etudiant.email.toLowerCase().includes(searchTerm.toLowerCase()));
-    const assignedStudents = etudiants.filter(etudiant => etudiant.professeur && etudiant.professeur.id === professeur.id);
+    const unassignedStudents = etudiants.filter(etudiant =>
+        !etudiant.professeur && etudiant.email.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const assignedStudents = etudiants.filter(etudiant =>
+        etudiant.professeur && etudiant.professeur.email === professeur.email);
+
+
+    function unassignStudentFromProfessor(email) {
+        fetch(`http://localhost:8081/professeur/unassignerEtudiant/${professeur.email}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(email)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setSuccessMessage(data.message);
+                setEtudiants(prevEtudiants => {
+                    const updatedEtudiants = prevEtudiants.map(etudiant => {
+                        if (etudiant.email === email) {
+                            return { ...etudiant, professeur: null };
+                        }
+                        return etudiant;
+                    });
+                    return updatedEtudiants;
+                });
+                setTimeout(() => setSuccessMessage(''), 3000);
+            })
+            .catch(error => console.error('Error unassigning student:', error));
+    }
 
 
     return (
@@ -155,6 +194,12 @@ function DetailsProfesseur() {
                                             </div>
                                             &nbsp;
                                             {etudiant.email}
+                                            <button
+                                                className="btn btn-danger btn-sm ms-auto"
+                                                onClick={() => unassignStudentFromProfessor(etudiant.email)}
+                                            >
+                                                {t('unassign')}
+                                            </button>
                                         </li>
                                     ))}
                                 </ul>

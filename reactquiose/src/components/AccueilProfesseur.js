@@ -1,9 +1,20 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useLocation } from "react-router-dom";
 
 function AccueilProfesseur() {
     const location = useLocation();
     const { userData } = location.state || {};
+
+    useEffect(() => {
+        if (userData) {
+            const url = `http://localhost:8081/professeur/etudiants/${userData.credentials.email}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => console.log(data)
+            );
+        }
+    }, []);
 
     return (
         <div className="container mt-3">

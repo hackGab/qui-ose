@@ -4,10 +4,12 @@ import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,11 +81,21 @@ public class ProfesseurService {
         return Optional.of(new ProfesseurDTO(professeur));
     }
 
-    public Optional<List<String>> getEtudiants(String professeurEmail) {
-        return professeurRepository.findByEmail(professeurEmail)
+    public List<EtudiantDTO> getEtudiants(String professeurEmail) {
+          List<EtudiantDTO> etudiantsRecu = new ArrayList<>();
+
+          Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail)
                 .map(Professeur::getEtudiants)
                 .map(etudiants -> etudiants.stream()
                         .map(Etudiant::getEmail)
                         .collect(Collectors.toList()));
+
+          for (String email : listeEmailsEtudiants.get()) {
+              Etudiant etudiant = etudiantRepository.findByEmail(email).get();
+
+              etudiantsRecu.add(new EtudiantDTO(etudiant));
+          }
+
+          return etudiantsRecu;
     }
 }

@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.service.ProfesseurService;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,14 +67,13 @@ public class ProfesseurController {
     }
 
     @GetMapping("/etudiants/{professeurEmail}")
-    public ResponseEntity<List<String>> getEtudiants(@PathVariable String professeurEmail) {
+    public ResponseEntity<List<EtudiantDTO>> getEtudiants(@PathVariable String professeurEmail) {
         if(professeurEmail == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<List<String>> etudiants = professeurService.getEtudiants(professeurEmail);
+        List<EtudiantDTO> etudiants = professeurService.getEtudiants(professeurEmail);
 
-        return etudiants.map(etudiant -> ResponseEntity.ok().body(etudiant))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok().body(etudiants);
     }
 }

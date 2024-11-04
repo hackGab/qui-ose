@@ -50,6 +50,7 @@ class ProfesseurTest {
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_PROFESSEUR'" +
                 ", departement='Techniques de l'informatique'" +
+                ", etudiants='null'" +
                 '}';
         assertEquals(expected, result);
     }

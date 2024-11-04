@@ -82,20 +82,21 @@ public class ProfesseurService {
     }
 
     public List<EtudiantDTO> getEtudiants(String professeurEmail) {
-          List<EtudiantDTO> etudiantsRecu = new ArrayList<>();
-
-          Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail)
-                .map(Professeur::getEtudiants)
-                .map(etudiants -> etudiants.stream()
-                        .map(Etudiant::getEmail)
+        List<EtudiantDTO> etudiantsRecu = new ArrayList<>();
+        Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail).map(Professeur::getEtudiants).map(etudiants -> etudiants.stream()
+                .map(Etudiant::getEmail)
                         .collect(Collectors.toList()));
 
-          for (String email : listeEmailsEtudiants.get()) {
-              Etudiant etudiant = etudiantRepository.findByEmail(email).get();
+        if (listeEmailsEtudiants.isEmpty()) {
+            return etudiantsRecu;
+        }
 
-              etudiantsRecu.add(new EtudiantDTO(etudiant));
-          }
+        for (String email : listeEmailsEtudiants.get()) {
+            Etudiant etudiant = etudiantRepository.findByEmail(email).get();
 
-          return etudiantsRecu;
+            etudiantsRecu.add(new EtudiantDTO(etudiant));
+        }
+
+        return etudiantsRecu;
     }
 }

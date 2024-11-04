@@ -45,7 +45,6 @@ public class ProfesseurController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-
     @GetMapping("/all")
     public ResponseEntity<Iterable<ProfesseurDTO>> getAllProfesseurs() {
         return ResponseEntity.ok(professeurService.getAllProfesseurs());

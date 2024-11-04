@@ -50,7 +50,6 @@ public class ProfesseurController {
         return ResponseEntity.ok(professeurService.getAllProfesseurs());
     }
 
-
     @PostMapping("/assignerEtudiants/{professeurEmail}")
     public ResponseEntity<ProfesseurDTO> assignerEtudiants(
             @PathVariable String professeurEmail,
@@ -63,6 +62,18 @@ public class ProfesseurController {
         Optional<ProfesseurDTO> professeurDTO = professeurService.assignerEtudiants(professeurEmail, etudiantsEmails);
 
         return professeurDTO.map(professeur -> ResponseEntity.ok().body(professeur))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/etudiants/{professeurEmail}")
+    public ResponseEntity<List<String>> getEtudiants(@PathVariable String professeurEmail) {
+        if(professeurEmail == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<List<String>> etudiants = professeurService.getEtudiants(professeurEmail);
+
+        return etudiants.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

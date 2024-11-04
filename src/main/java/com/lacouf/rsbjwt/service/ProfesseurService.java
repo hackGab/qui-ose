@@ -78,4 +78,12 @@ public class ProfesseurService {
 
         return Optional.of(new ProfesseurDTO(professeur));
     }
+
+    public Optional<List<String>> getEtudiants(String professeurEmail) {
+        return professeurRepository.findByEmail(professeurEmail)
+                .map(Professeur::getEtudiants)
+                .map(etudiants -> etudiants.stream()
+                        .map(Etudiant::getEmail)
+                        .collect(Collectors.toList()));
+    }
 }

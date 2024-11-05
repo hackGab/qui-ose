@@ -157,7 +157,8 @@ function ListeProfesseurs() {
                                                                         <p className="card-text mb-2">
                                                                             <FaEnvelope/> {prof.email} <br/>
                                                                             <FaPhone/> {prof.phoneNumber} <br/>
-                                                                            <span className="badge bg-info">
+                                                                            <span
+                                                                                className="badge bg-info badge-responsive">
                                                                                 {t('department')}: {prof.departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
                                                                             </span>
                                                                         </p>

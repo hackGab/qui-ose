@@ -32,3 +32,13 @@
     align-items: center;
     height: 100%;
 }
+
+.badge-responsive {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    display: block;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+

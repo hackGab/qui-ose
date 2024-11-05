@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.service.UserAppService;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.JWTAuthResponse;
 import com.lacouf.rsbjwt.service.dto.LoginDTO;
 import com.lacouf.rsbjwt.service.dto.UserDTO;
@@ -44,9 +45,23 @@ public class UserController {
 			userService.getMe(request.getHeader("Authorization")));
 	}
 
+
 	@GetMapping("/departements")
-	public ResponseEntity<List<String>> getAllDepartementDisplayNames() {
-		List<String> departementDisplayNames = userService.getAllDepartementDisplayNames();
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departementDisplayNames);
+	public ResponseEntity<List<String>> getAllDepartements() {
+		List<String> departementValues = userService.getAllDepartements();
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departementValues);
+	}
+
+
+	@GetMapping("/etudiants/departement/{departement}")
+	public ResponseEntity<List<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
+		try {
+			System.out.println("Fetching students for department: " + departement);
+			List<EtudiantDTO> etudiants = userService.getEtudiantsByDepartement(departement);
+			System.out.println("Students found: " + etudiants);
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(etudiants);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
 	}
 }

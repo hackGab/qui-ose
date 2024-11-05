@@ -99,6 +99,8 @@ public class SecurityConfiguration {
                         .requestMatchers(PUT, "/candidatures/refuser/{entrevueId}").permitAll()
                         .requestMatchers(GET, "/candidatures/{entrevueId}").permitAll()
                         .requestMatchers(GET, "/candidatures/all").permitAll()
+                        .requestMatchers(GET, "/user/etudiants/departement/{departement}").permitAll()
+                        .requestMatchers(PUT, "/gestionnaire/etudiants/deassignerProfesseur/{email}").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .requestMatchers("/employeur/**").hasAuthority("EMPLOYEUR")
                         .anyRequest().denyAll()

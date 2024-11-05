@@ -168,4 +168,17 @@ public class GestionnaireService {
         return Optional.empty();
     }
 
+    public Optional<EtudiantDTO> deassignerProfesseur(String email) {
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findByEmail(email);
+
+        if (etudiantOpt.isPresent()) {
+            Etudiant etudiant = etudiantOpt.get();
+            etudiant.setProfesseur(null);
+            etudiantRepository.save(etudiant);
+
+            return Optional.of(new EtudiantDTO(etudiant));
+        }
+        return Optional.empty();
+    }
+
 }

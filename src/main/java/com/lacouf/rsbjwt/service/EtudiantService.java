@@ -36,8 +36,9 @@ public class EtudiantService {
 
             Departement departementEnum = null;
             if (etudiantDTO.getDepartement() != null) {
+                // Match the department using the enum name directly
                 departementEnum = Arrays.stream(Departement.values())
-                        .filter(dept -> dept.getDisplayName().equalsIgnoreCase(etudiantDTO.getDepartement().toString()))
+                        .filter(dept -> dept.name().equalsIgnoreCase(etudiantDTO.getDepartement().name()))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + etudiantDTO.getDepartement()));
             }
@@ -58,6 +59,7 @@ public class EtudiantService {
             return Optional.empty();
         }
     }
+
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)

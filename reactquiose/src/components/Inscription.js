@@ -38,14 +38,22 @@ function Inscription() {
     // Fetch options for departement
     useEffect(() => {
         fetch('http://localhost:8081/user/departements')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch departments');
+                }
+                return response.json();
+            })
             .then(data => {
-                const formattedDepartements = data.map(departement => ({
-                    value: departement.toUpperCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-                    label: departement
-                }));
-                console.log("Départements formatés :", formattedDepartements);
-                setOptionsDepartement(formattedDepartements);
+                if (Array.isArray(data)) {
+                    const formattedDepartements = data.map(departement => ({
+                        value: departement,
+                        label: departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())
+                    }));
+                    setOptionsDepartement(formattedDepartements);
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
             })
             .catch(error => {
                 console.error('Erreur lors de la récupération des départements:', error);

@@ -72,7 +72,7 @@ function DetailsEtudiants() {
                             <p><strong>{t('nomDetail')}:</strong> {student.firstName} {student.lastName}</p>
                             <p><strong>{t('emailDetail')}:</strong> {student.credentials.email}</p>
                             <p><strong>{t('telephoneDetail')}:</strong> {student.phoneNumber}</p>
-                            <p><strong>{t('departmentDetail')}:</strong> {student.departement}</p>
+                            <p><strong>{t('departmentDetail')}:</strong> {student.departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</p>
                         </div>
                     </div>
 

@@ -44,9 +44,11 @@ public class UserController {
 			userService.getMe(request.getHeader("Authorization")));
 	}
 
+
 	@GetMapping("/departements")
-	public ResponseEntity<List<String>> getAllDepartementDisplayNames() {
-		List<String> departementDisplayNames = userService.getAllDepartementDisplayNames();
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departementDisplayNames);
+	public ResponseEntity<List<String>> getAllDepartements() {
+		List<String> departementValues = userService.getAllDepartements();
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(departementValues);
 	}
+
 }

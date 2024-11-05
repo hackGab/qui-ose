@@ -135,5 +135,16 @@ public class UserAppService {
         return departementDisplayNames;
     }
 
+    public List<String> getAllDepartements() {
+        List<String> departementValues = Arrays.stream(Departement.values())
+                .map(Departement::name) // Get the enum value (e.g., TECHNIQUES_INFORMATIQUE)
+                .toList();
+
+        System.out.println("Départements disponibles : " + departementValues); // Debug print
+        return departementValues;
+    }
+
+
+
 
 }

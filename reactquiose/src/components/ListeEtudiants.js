@@ -21,7 +21,7 @@ function ListeEtudiants() {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('lors de la récupération des données');
+                    throw new Error('Erreur lors de la récupération des données');
                 }
                 return response.json();
             })
@@ -36,6 +36,11 @@ function ListeEtudiants() {
             });
     }, []);
 
+    const formatDepartementLabel = (departement) => {
+        return departement
+            ? departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())
+            : '';
+    };
 
     if (loading) {
         return <div className="text-center mt-5">
@@ -60,7 +65,7 @@ function ListeEtudiants() {
                         <p className="text-center mt-5">{t('AucunEtudiantTrouve')}</p>
                     ) : (
                         <p className="text-center mb-4">{t('studentListSubtitle')}</p>
-                        )}
+                    )}
 
                     <div className="row">
                         {etudiants.map((etudiant) => {
@@ -70,16 +75,17 @@ function ListeEtudiants() {
                                     <Link
                                         to={`/detailsEtudiant/${etudiant.email}`}
                                         className="text-decoration-none"
-                                        state={{student: etudiant}}
+                                        state={{ student: etudiant }}
                                     >
-                                        <div
-                                            className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                        <div className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
                                             <div className="card-body">
                                                 <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                                 <p className="card-text">
                                                     <FaEnvelope/> {etudiant.credentials.email}<br/>
                                                     <FaPhone/> {etudiant.phoneNumber}<br/>
-                                                    <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
+                                                    <span className="badge bg-info d-block department-label">
+                                                        {t('department')}: {formatDepartementLabel(etudiant.departement)}
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>

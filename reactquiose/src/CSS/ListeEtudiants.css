@@ -94,3 +94,11 @@ p {
 .card.sans-cv {
     border: 5px solid gray;
 }
+
+.department-label {
+    display: block;
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}

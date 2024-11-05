@@ -3,9 +3,9 @@ package com.lacouf.rsbjwt.model;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 @Getter
 public enum Departement {
@@ -42,23 +42,9 @@ public enum Departement {
         this.displayName = displayName;
     }
 
-    public static List<String> getAllDepartementDisplayNames() {
-        return Arrays.stream(Departement.values())
-                .map(Departement::getDisplayName)
-                .toList();
-    }
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public Set<Departement> getRelatedDepartments() {
-        return relatedDepartments;
-    }
 
     @Override
     public String toString() {
-        return displayName;
+        return name();
     }
-
-
 }

@@ -19,6 +19,8 @@ import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 import ListeCandidature from "./components/ListeCandidature";
 import SignerContrat from "./components/SignerContrat";
+import ListeProfesseurs from "./components/ListeProfesseurs";
+import DetailsProfesseur from "./components/DetailsProfesseur";
 
 function App() {
 
@@ -41,8 +43,10 @@ function App() {
                     <Route path="/update-offre" element={<UpdateOffre />} />
                     <Route path='/listeEtudiants' element={<ListeEtudiants />} />
                     <Route path='/detailsEtudiant/:email' element={<DetailsEtudiants />} />
+                    <Route path='/detailsProfesseur/:email' element={<DetailsProfesseur />} />
                     <Route path='/detailsEmployeur/:email/:id' element={<DetailsEmployeurs />} />
 		            <Route path='/listeEmployeurs' element={<ListeEmployeurs />} />
+                    <Route path='/listeProfesseurs' element={<ListeProfesseurs />} />
 		            <Route path="/listeDeStage" element={<ListeDeStage />} />
                     <Route path="/visualiser-entrevue-accepter" element={<ListeEntrevuesAcceptees />} />
                     <Route path="/listeCandidatures" element={<ListeCandidature />}/>

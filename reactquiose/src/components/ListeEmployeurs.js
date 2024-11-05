@@ -37,6 +37,15 @@ function ListeEmployeurs() {
             });
     }, []);
 
+
+    if (loading) {
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementEmployeurs')}</span>
+        </div>;
+    }
+
     if (error) {
         return <p className="text-center mt-5 text-danger">Erreur: {error}</p>;
     }
@@ -47,7 +56,13 @@ function ListeEmployeurs() {
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('employerListTitle')}</h1>
-                    <p className="text-center mb-4">{t('employerListSubtitle')}</p>
+
+                    {employeurs.length === 0 ? (
+                        <p className="text-center mt-5">{t('AucunEmployeurTrouve')}</p>
+                    ) : (
+                        <p className="text-center mb-4">{t('employerListSubtitle')}</p>
+                    )}
+
                     <div className="row">
                         {employeurs.map((offreDeStage) => {
                             const status = offreDeStage ? offreDeStage.status : null; // Vérification si l'offre existe

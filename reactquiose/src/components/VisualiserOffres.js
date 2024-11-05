@@ -157,8 +157,13 @@ function VisualiserOffres() {
         navigate(`/offre/${offre.id}/etudiants`, { state: { userData, offre } });
     };
 
+
     if (isLoading) {
-        return <div>{t('ChargementDesOffres')}</div>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('ChargementDesOffres')}</span>
+        </div>;
     }
 
     if (error) {

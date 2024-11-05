@@ -1,6 +1,8 @@
 package com.lacouf.rsbjwt.service;
 
+import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.Professeur;
+import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,10 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProfesseurService {
     private final ProfesseurRepository professeurRepository;
+    private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfesseurService(ProfesseurRepository professeurRepository, PasswordEncoder passwordEncoder) {
+    public ProfesseurService(ProfesseurRepository professeurRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder) {
         this.professeurRepository = professeurRepository;
+        this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -49,5 +53,29 @@ public class ProfesseurService {
                 .stream()
                 .map(ProfesseurDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<ProfesseurDTO> assignerEtudiants(String professeurEmail, List<String> etudiantsEmails) {
+        Optional<Professeur> professeurOpt = professeurRepository.findByEmail(professeurEmail);
+        if (professeurOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Professeur professeur = professeurOpt.get();
+        List<Etudiant> etudiants = etudiantRepository.findAllByEmailIn(etudiantsEmails);
+        if (etudiants.isEmpty()) {
+            return Optional.empty();
+        }
+
+        for (Etudiant etudiant : etudiants) {
+            etudiant.setProfesseur(professeur);
+        }
+
+        professeur.getEtudiants().addAll(etudiants);
+
+        etudiantRepository.saveAll(etudiants);
+        professeurRepository.save(professeur);
+
+        return Optional.of(new ProfesseurDTO(professeur));
     }
 }

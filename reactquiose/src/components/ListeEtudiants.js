@@ -36,8 +36,13 @@ function ListeEtudiants() {
             });
     }, []);
 
+
     if (loading) {
-        return <p className="text-center mt-5">{t('loading')}</p>;
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('chargementEtudiants')}</span>
+        </div>;
     }
 
     if (error) {
@@ -50,7 +55,13 @@ function ListeEtudiants() {
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>
-                    <p className="text-center mb-4">{t('studentListSubtitle')}</p>
+
+                    {etudiants.length === 0 ? (
+                        <p className="text-center mt-5">{t('AucunEtudiantTrouve')}</p>
+                    ) : (
+                        <p className="text-center mb-4">{t('studentListSubtitle')}</p>
+                        )}
+
                     <div className="row">
                         {etudiants.map((etudiant) => {
                             const status = etudiant.cv ? etudiant.cv.status : null;
@@ -64,12 +75,11 @@ function ListeEtudiants() {
                                         <div
                                             className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
                                             <div className="card-body">
-                                                <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
+                                                <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                                 <p className="card-text">
                                                     <FaEnvelope/> {etudiant.credentials.email}<br/>
                                                     <FaPhone/> {etudiant.phoneNumber}<br/>
-                                                    <span
-                                                        className="badge bg-info">{t('department')}: {etudiant.departement}</span>
+                                                    <span className="badge bg-info">{t('department')}: {etudiant.departement}</span>
                                                 </p>
                                             </div>
                                         </div>

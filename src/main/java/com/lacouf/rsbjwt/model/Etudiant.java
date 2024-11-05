@@ -29,7 +29,6 @@ public class Etudiant extends UserApp {
     )
     private List<OffreDeStage> offresAppliquees;
 
-
     @ManyToOne
     @JoinColumn(name = "professeur_id")
     private Professeur professeur;

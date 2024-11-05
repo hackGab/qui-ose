@@ -1,82 +1,135 @@
 package com.lacouf.rsbjwt.model;
 
+import com.lacouf.rsbjwt.model.auth.Credentials;
+import com.lacouf.rsbjwt.model.auth.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EntrevueTest {
+class EntrevueTest {
+    private Entrevue entrevue;
 
-    @Test
-    void testConstructorAndGetters() {
-        // Arrange
-        LocalDateTime dateHeure = LocalDateTime.now();
-        Etudiant etudiant = new Etudiant();
-        OffreDeStage offreDeStage = new OffreDeStage();
-        Entrevue entrevue = new Entrevue(dateHeure, "Room 101", "Scheduled", etudiant, offreDeStage);
-
-        // Assert
-        assertEquals(dateHeure, entrevue.getDateHeure());
-        assertEquals("Room 101", entrevue.getLocation());
-        assertEquals("Scheduled", entrevue.getStatus());
-        assertEquals(etudiant, entrevue.getEtudiant());
-        assertEquals(offreDeStage, entrevue.getOffreDeStage());
+    @BeforeEach
+    void setUp() {
+        initEntrevue();
     }
 
-    @Test
-    void testNoArgsConstructor() {
-        // Act
-        Entrevue entrevue = new Entrevue();
+    private void initEntrevue() {
+        entrevue = new Entrevue();
+        entrevue.setId(1L);
+        entrevue.setDateHeure(null);
+        entrevue.setLocation("location");
+        entrevue.setStatus("status");
 
-        // Assert
-        assertNotNull(entrevue);
-    }
-
-    @Test
-    void testSetters() {
-        // Arrange
-        Entrevue entrevue = new Entrevue();
-        LocalDateTime dateHeure = LocalDateTime.now();
         Etudiant etudiant = new Etudiant();
-        OffreDeStage offreDeStage = new OffreDeStage();
-
-        // Act
-        entrevue.setDateHeure(dateHeure);
-        entrevue.setLocation("Room 101");
-        entrevue.setStatus("Scheduled");
+        etudiant.setCredentials(new Credentials("email", "password", Role.ETUDIANT));
         entrevue.setEtudiant(etudiant);
-        entrevue.setOffreDeStage(offreDeStage);
 
-        // Assert
-        assertEquals(dateHeure, entrevue.getDateHeure());
-        assertEquals("Room 101", entrevue.getLocation());
-        assertEquals("Scheduled", entrevue.getStatus());
-        assertEquals(etudiant, entrevue.getEtudiant());
-        assertEquals(offreDeStage, entrevue.getOffreDeStage());
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setTitre("offreDeStage");
+        entrevue.setOffreDeStage(offreDeStage);
     }
+
 
     @Test
     void testToString() {
-        // Arrange
-        LocalDateTime dateHeure = LocalDateTime.now();
-        Etudiant etudiant = new Etudiant("joe", "doe", "joe@gmail.com", "123", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        Entrevue entrevue = new Entrevue();
+        entrevue.setId(1L);
+        entrevue.setDateHeure(null);
+        entrevue.setLocation("location");
+        entrevue.setStatus("status");
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setCredentials(new Credentials("email", "password", Role.ETUDIANT));
+        entrevue.setEtudiant(etudiant);
+
         OffreDeStage offreDeStage = new OffreDeStage();
-        offreDeStage.setTitre("Software Internship");
-        Entrevue entrevue = new Entrevue(dateHeure, "Room 101", "Scheduled", etudiant, offreDeStage);
+        offreDeStage.setTitre("offreDeStage");
+        entrevue.setOffreDeStage(offreDeStage);
 
-        // Act
-        String result = entrevue.toString();
+        String expected = "Entrevue{id=1, dateHeure=null, location='location', status='status', " +
+                "etudiant=email, offreDeStage=offreDeStage}";
+        assertEquals(expected, entrevue.toString());
+    }
 
-        // Assert
-        String expected = "Entrevue{" +
-                "id=null" +
-                ", dateHeure=" + dateHeure +
-                ", location='Room 101'" +
-                ", status='Scheduled'" +
-                ", etudiant=joe@gmail.com" +
-                ", offreDeStage=Software Internship" +
-                '}';
-        assertEquals(expected, result);
+    @Test
+    void getId() {
+        assertEquals(1L, entrevue.getId());
+    }
+
+    @Test
+    void getDateHeure() {
+        assertNull(entrevue.getDateHeure());
+    }
+
+    @Test
+    void getLocation() {
+        assertEquals("location", entrevue.getLocation());
+    }
+
+    @Test
+    void getStatus() {
+        assertEquals("status", entrevue.getStatus());
+    }
+
+    @Test
+    void getEtudiant() {
+        assertEquals("email", entrevue.getEtudiant().getCredentials().getEmail());
+    }
+
+    @Test
+    void getOffreDeStage() {
+        assertEquals("offreDeStage", entrevue.getOffreDeStage().getTitre());
+    }
+
+    @Test
+    void setId() {
+        entrevue.setId(2L);
+
+        assertEquals(2L, entrevue.getId());
+    }
+
+    @Test
+    void setDateHeure() {
+        entrevue.setDateHeure(null);
+
+        assertNull(entrevue.getDateHeure());
+    }
+
+    @Test
+    void setLocation() {
+
+        entrevue.setLocation("newLocation");
+
+        assertEquals("newLocation", entrevue.getLocation());
+    }
+
+    @Test
+    void setStatus() {
+        entrevue.setStatus("newStatus");
+
+        assertEquals("newStatus", entrevue.getStatus());
+    }
+
+    @Test
+    void setEtudiant() {
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setCredentials(new Credentials("newEmail", "newPassword", Role.ETUDIANT));
+        entrevue.setEtudiant(etudiant);
+
+        assertEquals("newEmail", entrevue.getEtudiant().getCredentials().getEmail());
+    }
+
+    @Test
+    void setOffreDeStage() {
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setTitre("newOffreDeStage");
+        entrevue.setOffreDeStage(offreDeStage);
+
+        assertEquals("newOffreDeStage", entrevue.getOffreDeStage().getTitre());
+
     }
 }

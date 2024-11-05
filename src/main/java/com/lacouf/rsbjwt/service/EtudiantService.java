@@ -6,9 +6,7 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EtudiantService {
@@ -36,7 +34,6 @@ public class EtudiantService {
         try {
             String encodedPassword = passwordEncoder.encode(etudiantDTO.getCredentials().getPassword());
 
-            // Convertir le displayName en enum Departement
             Departement departementEnum = null;
             if (etudiantDTO.getDepartement() != null) {
                 departementEnum = Arrays.stream(Departement.values())
@@ -51,7 +48,7 @@ public class EtudiantService {
                     etudiantDTO.getCredentials().getEmail(),
                     encodedPassword,
                     etudiantDTO.getPhoneNumber(),
-                    departementEnum // Utilisation de l'enum Departement
+                    departementEnum
             );
 
             Etudiant savedEtudiant = etudiantRepository.save(etudiant);
@@ -61,10 +58,6 @@ public class EtudiantService {
             return Optional.empty();
         }
     }
-
-
-
-
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)
@@ -278,4 +271,17 @@ public class EtudiantService {
         }
     }
 
+
+    public Iterable<EtudiantDTO> getEtudiantsByDepartement(String departement) {
+        System.out.println("Département : " + departement);
+
+        Departement departementEnum = Arrays.stream(Departement.values())
+                .filter(dept -> dept.getDisplayName().equalsIgnoreCase(departement))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + departement));
+
+        return etudiantRepository.findAllByDepartement(departementEnum).stream()
+                .map(EtudiantDTO::new)
+                .toList();
+    }
 }

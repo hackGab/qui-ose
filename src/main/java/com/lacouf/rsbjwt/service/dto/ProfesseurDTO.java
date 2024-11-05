@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class ProfesseurDTO extends UserDTO {
     private Long id;
     private CredentialDTO credentials;
     private Departement departement;
+    private List<EtudiantDTO> etudiants;
 
     public ProfesseurDTO(String firstName, String lastName, Role role, String phoneNumber, CredentialDTO credentials, Departement departement) {
         super(firstName, lastName, phoneNumber, role);

@@ -36,12 +36,22 @@ function Inscription() {
     const navigate = useNavigate();
 
     // Fetch options for departement
+    const formatDepartementValue = (departement) => {
+        return departement
+            .toUpperCase()
+            .replace(/\s+/g, '_')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/['’]/g, ""); // Remove apostrophes
+    };
+
+// Fetch options for departement
     useEffect(() => {
         fetch('http://localhost:8081/user/departements')
             .then(response => response.json())
             .then(data => {
                 const formattedDepartements = data.map(departement => ({
-                    value: departement.toUpperCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    value: formatDepartementValue(departement),
                     label: departement
                 }));
                 console.log("Départements formatés :", formattedDepartements);

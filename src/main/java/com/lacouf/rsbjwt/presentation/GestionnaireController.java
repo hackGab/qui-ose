@@ -5,6 +5,7 @@ import com.lacouf.rsbjwt.service.dto.CVDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,4 +65,13 @@ public class GestionnaireController {
         }
     }
 
+    @PutMapping("/etudiants/deassignerProfesseur/{email}")
+    public ResponseEntity<EtudiantDTO> deassignerProfesseur(@PathVariable String email) {
+        Optional<EtudiantDTO> etudiantDTO = gestionnaireService.deassignerProfesseur(email);
+        if (etudiantDTO.isPresent()) {
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(etudiantDTO.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

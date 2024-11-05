@@ -133,7 +133,7 @@ function ListeProfesseurs() {
                                 <div key={department} className="col-12 col-md-6 col-lg-4 mb-4">
                                     <div className="department-header entrevuesTitreBox"
                                          onClick={() => toggleCollapse(department)}>
-                                        {department}
+                                        {department.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
                                         <span>
                                             ({filteredDepartmentProfessors.length})
                                             &nbsp;
@@ -145,20 +145,21 @@ function ListeProfesseurs() {
                                             <div className="row p-1 shadow w-100 m-auto entrevueBox border-0">
                                                 {filteredDepartmentProfessors.map((prof) => {
                                                     return (
-                                                        <div className="col mb-4" key={prof.id}>
+                                                        <div className="col-12 mb-4" key={prof.id}>
                                                             <Link
                                                                 to={`/detailsProfesseur/${prof.email}`}
                                                                 className="text-decoration-none"
                                                                 state={{professeur: prof}}>
 
                                                                 <div className="card shadow w-100">
-                                                                    <div className="card-body">
+                                                                    <div className="card-body overflow-hidden text-nowrap">
                                                                         <h5 className="card-title text-capitalize">{prof.firstName + " " + prof.lastName}</h5>
-                                                                        <p className="card-text">
+                                                                        <p className="card-text mb-2">
                                                                             <FaEnvelope/> {prof.email} <br/>
                                                                             <FaPhone/> {prof.phoneNumber} <br/>
-                                                                            <span
-                                                                                className="badge bg-info">{t('department')}: {prof.departement}</span>
+                                                                            <span className="badge bg-info">
+                                                                                {t('department')}: {prof.departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
+                                                                            </span>
                                                                         </p>
                                                                     </div>
                                                                 </div>

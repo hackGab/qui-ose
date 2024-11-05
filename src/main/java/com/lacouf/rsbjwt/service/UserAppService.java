@@ -146,5 +146,14 @@ public class UserAppService {
 
 
 
+    public List<EtudiantDTO> getEtudiantsByDepartement(String departement) {
+        System.out.println("Fetching students for department: " + departement);
+        List<EtudiantDTO> etudiants = etudiantRepository.findAllByDepartement(Departement.valueOf(departement)).stream()
+                .map(EtudiantDTO::new)
+                .toList();
+        System.out.println("Students found: " + etudiants);
+        return etudiants;
+    }
+
 
 }

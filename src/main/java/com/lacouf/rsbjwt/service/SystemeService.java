@@ -12,9 +12,11 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 
 @Service
 public class SystemeService {
@@ -209,5 +211,9 @@ public class SystemeService {
         document.close();
 
         return byteArrayOutputStream.toByteArray();
+    }
+
+    public void creerEvaluationStageProf(Optional<EtudiantDTO> etudiantDTO) {
+        System.out.println("Création de l'évaluation de stage pour l'étudiant " + etudiantDTO.get().getFirstName());
     }
 }

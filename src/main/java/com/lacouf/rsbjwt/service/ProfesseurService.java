@@ -1,8 +1,10 @@
 package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
+import com.lacouf.rsbjwt.repository.EvaluationStageProfRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
@@ -18,12 +20,15 @@ import java.util.stream.Collectors;
 public class ProfesseurService {
     private final ProfesseurRepository professeurRepository;
     private final EtudiantRepository etudiantRepository;
+
+    private final EvaluationStageProfRepository evaluationStageProfRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfesseurService(ProfesseurRepository professeurRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder) {
+    public ProfesseurService(ProfesseurRepository professeurRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, EvaluationStageProfRepository evaluationStageProfRepository) {
         this.professeurRepository = professeurRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
+        this.evaluationStageProfRepository = evaluationStageProfRepository;
     }
 
     public Optional<ProfesseurDTO> creerProfesseur(ProfesseurDTO professeurDTO) {
@@ -98,5 +103,21 @@ public class ProfesseurService {
         }
 
         return etudiantsRecu;
+    }
+
+    public void creerEvaluationStage(String professeurEmail, List<String> etudiantsEmails) {
+        Professeur professeur = professeurRepository.findByEmail(professeurEmail).get();
+        try {
+            for (String email : etudiantsEmails) {
+                Etudiant etudiant = etudiantRepository.findByEmail(email).get();
+                EvaluationStageProf evaluationStageProf = new EvaluationStageProf();
+                evaluationStageProf.setEtudiant(etudiant);
+                evaluationStageProf.setProfesseur(professeur);
+                evaluationStageProfRepository.save(evaluationStageProf);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

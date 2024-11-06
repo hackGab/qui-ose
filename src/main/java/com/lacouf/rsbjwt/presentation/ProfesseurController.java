@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.presentation;
 import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
+import com.lacouf.rsbjwt.service.SystemeService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class ProfesseurController {
 
     private final ProfesseurService professeurService;
     private final EtudiantService etudiantService;
+
 
     public ProfesseurController(ProfesseurService professeurService, EtudiantService etudiantService) {
         this.professeurService = professeurService;
@@ -64,7 +66,7 @@ public class ProfesseurController {
         }
 
         Optional<ProfesseurDTO> professeurDTO = professeurService.assignerEtudiants(professeurEmail, etudiantsEmails);
-
+        professeurService.creerEvaluationStage(professeurEmail, etudiantsEmails);
         return professeurDTO.map(professeur -> ResponseEntity.ok().body(professeur))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }

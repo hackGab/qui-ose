@@ -28,6 +28,8 @@ public class ProfesseurServiceTest {
 
     private ProfesseurRepository professeurRepository;
     private EtudiantRepository etudiantRepository;
+
+    private EvaluationStageProfRepository evaluationStageProfRepository;
     private ProfesseurService professeurService;
 
     private EtudiantService etudiantService;
@@ -53,8 +55,9 @@ public class ProfesseurServiceTest {
     void setUp() {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        evaluationStageProfRepository = Mockito.mock(EvaluationStageProfRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        professeurService = new ProfesseurService(professeurRepository, etudiantRepository,passwordEncoder);
+        professeurService = new ProfesseurService(professeurRepository, etudiantRepository,passwordEncoder, evaluationStageProfRepository);
         etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
         professeurController = new ProfesseurController(professeurService, etudiantService);
 

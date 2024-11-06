@@ -1,11 +1,11 @@
 package com.lacouf.rsbjwt.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.access.method.P;
 
 @Setter
 @Getter
@@ -14,8 +14,15 @@ import lombok.Setter;
 @Entity
 public class EvaluationStageProf {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Ajout de l'annotation pour la génération automatique de l'ID
     private Long id;
     // Identification de l'entreprise
+    @ManyToOne
+    private Professeur professeur;
+
+
+    @ManyToOne
+    private Etudiant etudiant;
 
     private String nomEntreprise;
     private String personneContact;
@@ -62,7 +69,6 @@ public class EvaluationStageProf {
 
 
 
-    // Enum pour les options d'évaluation
     public enum EvaluationConformite {
         TOTAL_EN_ACCORD,
         PLUTOT_EN_ACCORD,

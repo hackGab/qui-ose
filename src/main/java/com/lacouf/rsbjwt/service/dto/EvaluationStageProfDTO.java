@@ -1,28 +1,17 @@
-package com.lacouf.rsbjwt.model;
+package com.lacouf.rsbjwt.service.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.security.access.method.P;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class EvaluationStageProf {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class EvaluationStageProfDTO {
+    private Long professeurId;
+    private Long etudiantId;
+
     // Identification de l'entreprise
-    @ManyToOne
-    private Professeur professeur;
-
-    @ManyToOne
-    private Etudiant etudiant;
-
     private String nomEntreprise;
     private String personneContact;
     private String adresse;
@@ -66,8 +55,6 @@ public class EvaluationStageProf {
     private String signatureEnseignant;
     private String dateSignature;
 
-
-
     public enum EvaluationConformite {
         TOTAL_EN_ACCORD,
         PLUTOT_EN_ACCORD,
@@ -76,4 +63,3 @@ public class EvaluationStageProf {
         IMPOSSIBLE_SE_PRONONCER
     }
 }
-

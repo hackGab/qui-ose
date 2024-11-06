@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.EvaluationStageProf;
+import com.lacouf.rsbjwt.model.OffreDeStage;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.EvaluationStageProfRepository;
@@ -113,11 +114,23 @@ public class ProfesseurService {
                 EvaluationStageProf evaluationStageProf = new EvaluationStageProf();
                 evaluationStageProf.setEtudiant(etudiant);
                 evaluationStageProf.setProfesseur(professeur);
-                evaluationStageProfRepository.save(evaluationStageProf);
+                EvaluationStageProf evaluationStageProfRemplie =  remplireEvaluationStage(evaluationStageProf,etudiant);
+                evaluationStageProfRepository.save(evaluationStageProfRemplie);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private EvaluationStageProf remplireEvaluationStage(EvaluationStageProf evaluationStageProf, Etudiant etudiant) {
+        evaluationStageProf.setNomStagiaire(etudiant.getFirstName() + " " + etudiant.getLastName());
+        System.out.println(etudiant.getId());
+        OffreDeStage offreDeStage = etudiantRepository.findOffreDeStageByEntrevue(etudiant.getId());
+        System.out.println(offreDeStage);
+        evaluationStageProf.setNomEntreprise(offreDeStage.getEmployeur().getEntreprise());
+        evaluationStageProf.setAdresse(offreDeStage.getLocalisation());
+        evaluationStageProf.setTelephone(offreDeStage.getEmployeur().getPhoneNumber());
+        return evaluationStageProf;
     }
 }

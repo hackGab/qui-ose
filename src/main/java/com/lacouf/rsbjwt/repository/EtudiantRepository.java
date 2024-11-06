@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.repository;
 
 import com.lacouf.rsbjwt.model.Departement;
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.OffreDeStage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,16 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
             "ON ca.id = c.candidature.id " +
             "WHERE e.departement = :departement AND c.etudiantSigne = true AND c.employeurSigne = true AND c.gestionnaireSigne = true AND en.etudiant.id = e.id" )
     List<Etudiant> findEtudiantsAvecContratByDepartement(@Param("departement") Departement departement);
+
+    @Query("SELECT offre FROM OffreDeStage offre " +
+            "JOIN Entrevue en " +
+            "ON offre.id = en.offreDeStage.id " +
+            "JOIN Etudiant e " +
+            "ON en.etudiant.id = e.id " +
+            "JOIN CandidatAccepter ca " +
+            "ON en.id = ca.entrevue.id " +
+            "JOIN Contrat c " +
+            "ON ca.id = c.candidature.id " +
+            "WHERE e.id = :id AND c.etudiantSigne = true AND c.employeurSigne = true AND c.gestionnaireSigne = true AND en.etudiant.id = e.id" )
+    OffreDeStage findOffreDeStageByEntrevue(@Param("id") Long id);
 }

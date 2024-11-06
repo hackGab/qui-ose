@@ -202,6 +202,7 @@ function AccueilProfesseur() {
                             <input
                                 type="number"
                                 className="form-control"
+                                min={1}
                                 value={evaluation.heuresEncadrementPremierMois}
                                 onChange={(e) => handleChange(e, "heuresEncadrementPremierMois")}
                                 placeholder="Heures"
@@ -212,6 +213,7 @@ function AccueilProfesseur() {
                             <label>Deuxième mois:</label>
                             <input
                                 type="number"
+                                min={1}
                                 className="form-control"
                                 value={evaluation.heuresEncadrementDeuxiemeMois}
                                 onChange={(e) => handleChange(e, "heuresEncadrementDeuxiemeMois")}
@@ -223,6 +225,7 @@ function AccueilProfesseur() {
                             <label>Troisième mois:</label>
                             <input
                                 type="number"
+                                min={1}
                                 className="form-control"
                                 value={evaluation.heuresEncadrementTroisiemeMois}
                                 onChange={(e) => handleChange(e, "heuresEncadrementTroisiemeMois")}
@@ -425,6 +428,7 @@ function AccueilProfesseur() {
                             <input
                                 type="number"
                                 className="form-control"
+                                min={1}
                                 value={evaluation.nombreStagiairesAccueillis || ""}
                                 onChange={(e) => handleChange(e, "nombreStagiairesAccueillis")}
                                 placeholder="Nombre de stagiaires"

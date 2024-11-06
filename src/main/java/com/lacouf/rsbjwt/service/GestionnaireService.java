@@ -5,6 +5,7 @@ import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,8 +20,9 @@ public class GestionnaireService {
     private final OffreDeStageRepository offreDeStageRepository;
     private final EntrevueRepository entrevueRepository;
     private final ProfesseurRepository professeurRepository;
+    private final EvaluationStageProfRepository evaluationStageProfRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository, EvaluationStageProfRepository evaluationStageProfRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
@@ -29,6 +31,7 @@ public class GestionnaireService {
         this.contratRepository = contratRepository;
         this.entrevueRepository = entrevueRepository;
         this.professeurRepository = professeurRepository;
+        this.evaluationStageProfRepository = evaluationStageProfRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -168,6 +171,7 @@ public class GestionnaireService {
         return Optional.empty();
     }
 
+    @Transactional
     public Optional<EtudiantDTO> deassignerProfesseur(String email) {
         Optional<Etudiant> etudiantOpt = etudiantRepository.findByEmail(email);
 
@@ -175,6 +179,8 @@ public class GestionnaireService {
             Etudiant etudiant = etudiantOpt.get();
             etudiant.setProfesseur(null);
             etudiantRepository.save(etudiant);
+
+            evaluationStageProfRepository.deleteByEtudiant(etudiant);
 
             return Optional.of(new EtudiantDTO(etudiant));
         }

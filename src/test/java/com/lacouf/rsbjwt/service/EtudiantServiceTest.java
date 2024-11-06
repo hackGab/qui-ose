@@ -532,4 +532,14 @@ class EtudiantServiceTest {
         assertTrue(response.isEmpty());
     }
 
+    @Test
+    void getEtudiantsAvecContratByDepartement() {
+
+        when(etudiantRepository.findEtudiantsAvecContratByDepartement("TI")).thenReturn(List.of(etudiantEntity));
+
+        List<EtudiantDTO> response = etudiantService.getEtudiantsAvecContratByDepartement("TI");
+
+        assertEquals(1, response.size());
+        assertEquals(Departement.TECHNIQUES_INFORMATIQUE, response.get(0).getDepartement());
+    }
 }

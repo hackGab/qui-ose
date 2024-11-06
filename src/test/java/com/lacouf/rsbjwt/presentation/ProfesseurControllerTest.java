@@ -188,4 +188,24 @@ public class ProfesseurControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(Collections.emptyList())));
     }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"PROFESSEUR"})
+    void getEtudiantsByDepartement() {
+        EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
+        List<EtudiantDTO> etudiants = List.of(etudiantDTO);
+        String departementString = "TECHNIQUES_INFORMATIQUE";
+
+        Mockito.when(etudiantService.getEtudiantsAvecContratByDepartement(departementString)).thenReturn(etudiants);
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders
+                            .get("/professeur/etudiants/departement/" + departementString)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(etudiants)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

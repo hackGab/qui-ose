@@ -14,12 +14,11 @@ import org.springframework.security.access.method.P;
 @Entity
 public class EvaluationStageProf {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Ajout de l'annotation pour la génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // Identification de l'entreprise
+
     @ManyToOne
     private Professeur professeur;
-
 
     @ManyToOne
     private Etudiant etudiant;

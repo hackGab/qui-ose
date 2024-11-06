@@ -95,6 +95,4 @@ public class ProfesseurController {
 //
         return ResponseEntity.ok().body(etudiants);
     }
-
-
 }

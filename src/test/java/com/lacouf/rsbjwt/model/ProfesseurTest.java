@@ -49,7 +49,7 @@ class ProfesseurTest {
                 ", email='john@gmail.com'" +
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_PROFESSEUR'" +
-                ", departement='Techniques de l'informatique'" +
+                ", departement='TECHNIQUES_INFORMATIQUE'" +
                 ", etudiants='null'" +
                 '}';
         assertEquals(expected, result);

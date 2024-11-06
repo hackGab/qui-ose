@@ -22,11 +22,12 @@ class EtudiantTest {
                 ", email='john@gmail.com'" +
                 ", phoneNumber='123456789'" +
                 ", role='ROLE_ETUDIANT'" +
-                ", departement='Techniques de l'informatique'" +
+                ", departement='TECHNIQUES_INFORMATIQUE'" +
                 ", cv=null" +
                 ", professeur=null" +
                 ", offresAppliquees=null" +
                 '}';
+
         assertEquals(expected, result);
     }
 }

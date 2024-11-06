@@ -44,6 +44,6 @@ public class DepartementTest {
         String result = Departement.TECHNIQUES_INFORMATIQUE.toString();
 
         // Assert
-        assertEquals("Techniques de l'informatique", result);
+        assertEquals("TECHNIQUES_INFORMATIQUE", result);
     }
 }

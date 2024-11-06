@@ -19,6 +19,7 @@ function AccueilProfesseur() {
     const { userData } = location.state || {};
     const [listeEtudiants, setListeEtudiants] = useState([]);
     const [selectedEtudiant, setSelectedEtudiant] = useState(null);
+    const [listeEvaluations, setListeEvaluations] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
     const [evaluation, setEvaluation] = useState({
@@ -43,13 +44,34 @@ function AccueilProfesseur() {
     });
 
     useEffect(() => {
-        if (userData) {
-            const url = `http://localhost:8081/professeur/etudiants/${userData.credentials.email}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => setListeEtudiants(data));
-        }
+        const fetchData = async () => {
+            if (userData) {
+                try {
+                    const etudiantsResponse = await fetch(`http://localhost:8081/professeur/etudiants/${userData.credentials.email}`);
+                    const etudiantsData = await etudiantsResponse.json();
+                    setListeEtudiants(etudiantsData);
+
+                    console.log("Début du fetch pour les évaluations");
+                    const evaluationsResponse = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const evaluationsData = await evaluationsResponse.json();
+                    console.log("Données des évaluations reçues :", evaluationsData);
+                    setListeEvaluations(evaluationsData);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des données :", error);
+                }
+            }
+        };
+
+        fetchData();
     }, [userData]);
+
+
+
 
     const handleShowModal = (etudiant) => {
         setSelectedEtudiant(etudiant);

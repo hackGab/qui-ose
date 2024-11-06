@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.model.Departement;
+import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
 import com.lacouf.rsbjwt.service.SystemeService;
@@ -94,5 +95,16 @@ public class ProfesseurController {
         List<EtudiantDTO> etudiants = etudiantService.getEtudiantsAvecContratByDepartement(departementEnum);
 //
         return ResponseEntity.ok().body(etudiants);
+    }
+
+    @GetMapping("/evaluations/{professeurEmail}")
+    public ResponseEntity<List<EvaluationStageProf>> getEvaluations(@PathVariable String professeurEmail) {
+        if (professeurEmail == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<EvaluationStageProf> evaluationsStageProf = professeurService.getEvaluationsStageProf(professeurEmail);
+
+        return ResponseEntity.ok().body(evaluationsStageProf);
     }
 }

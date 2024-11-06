@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.presentation;
 
+import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class ProfesseurController {
 
     private final ProfesseurService professeurService;
+    private final EtudiantService etudiantService;
 
-    public ProfesseurController(ProfesseurService professeurService) {
+    public ProfesseurController(ProfesseurService professeurService, EtudiantService etudiantService) {
         this.professeurService = professeurService;
+        this.etudiantService = etudiantService;
     }
 
     @PostMapping("/creerProfesseur")
@@ -72,6 +75,17 @@ public class ProfesseurController {
         }
 
         List<EtudiantDTO> etudiants = professeurService.getEtudiants(professeurEmail);
+
+        return ResponseEntity.ok().body(etudiants);
+    }
+
+    @GetMapping("/etudiants/departement/{departement}")
+    public ResponseEntity<List<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
+        if(departement == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<EtudiantDTO> etudiants = etudiantService.getEtudiantsAvecContratByDepartement(departement);
 
         return ResponseEntity.ok().body(etudiants);
     }

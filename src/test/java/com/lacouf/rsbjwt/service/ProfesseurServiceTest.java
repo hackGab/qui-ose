@@ -5,8 +5,7 @@ import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.ProfesseurController;
-import com.lacouf.rsbjwt.repository.EtudiantRepository;
-import com.lacouf.rsbjwt.repository.ProfesseurRepository;
+import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
@@ -30,7 +29,20 @@ public class ProfesseurServiceTest {
     private ProfesseurRepository professeurRepository;
     private EtudiantRepository etudiantRepository;
     private ProfesseurService professeurService;
+
+    private EtudiantService etudiantService;
     private ProfesseurController professeurController;
+
+    private UserAppRepository userAppRepository;
+
+    private CVRepository cvRepository;
+
+    private OffreDeStageRepository offreDeStageRepository;
+
+    private EntrevueRepository entrevueRepository;
+
+    private ContratRepository contratRepository;
+
 
     private ProfesseurDTO newProfesseur;
     private Professeur professeurEntity;
@@ -43,7 +55,8 @@ public class ProfesseurServiceTest {
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         professeurService = new ProfesseurService(professeurRepository, etudiantRepository,passwordEncoder);
-        professeurController = new ProfesseurController(professeurService);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
+        professeurController = new ProfesseurController(professeurService, etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, Departement.TECHNIQUES_INFORMATIQUE );

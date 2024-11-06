@@ -286,4 +286,11 @@ public class EtudiantService {
                 .map(EtudiantDTO::new)
                 .toList();
     }
+
+
+    public List<EtudiantDTO> getEtudiantsAvecContratByDepartement(String departement) {
+        return etudiantRepository.findEtudiantsAvecContratByDepartement(departement).stream()
+                .map(EtudiantDTO::new)
+                .toList();
+    }
 }

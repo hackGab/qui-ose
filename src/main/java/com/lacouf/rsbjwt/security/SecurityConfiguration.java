@@ -101,6 +101,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/candidatures/all").permitAll()
                         .requestMatchers(GET, "/user/etudiants/departement/{departement}").permitAll()
                         .requestMatchers(PUT, "/gestionnaire/etudiants/deassignerProfesseur/{email}").permitAll()
+                        .requestMatchers(GET, "/professeur/etudiants/departement/{departement}").permitAll() ///allo angel
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .requestMatchers("/employeur/**").hasAuthority("EMPLOYEUR")
                         .anyRequest().denyAll()

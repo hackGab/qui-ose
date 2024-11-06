@@ -7,13 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class EvaluationStage {
+public class EvaluationStageProf {
     @Id
     private Long id;
     // Identification de l'entreprise

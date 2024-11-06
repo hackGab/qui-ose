@@ -19,7 +19,7 @@ function DetailsProfesseur() {
     // Fetch students by department
     useEffect(() => {
         if (professeur && professeur.departement) {
-            fetch(`http://localhost:8081/user/etudiants/departement/${professeur.departement}`, {
+            fetch(`http://localhost:8081/professeur/etudiants/departement/${professeur.departement}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -194,13 +194,13 @@ public class ProfesseurControllerTest {
     void getEtudiantsByDepartement() {
         EtudiantDTO etudiantDTO = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
         List<EtudiantDTO> etudiants = List.of(etudiantDTO);
-        String departementString = "TECHNIQUES_INFORMATIQUE";
+        Departement departement = Departement.TECHNIQUES_INFORMATIQUE;
 
-        Mockito.when(etudiantService.getEtudiantsAvecContratByDepartement(departementString)).thenReturn(etudiants);
+        Mockito.when(etudiantService.getEtudiantsAvecContratByDepartement(departement)).thenReturn(etudiants);
 
         try {
             mockMvc.perform(MockMvcRequestBuilders
-                            .get("/professeur/etudiants/departement/" + departementString)
+                            .get("/professeur/etudiants/departement/" + departement)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(etudiants)));

@@ -21,10 +21,12 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
     List<Etudiant> findAllByEmailIn(List<String> emails);
 
     @Query("SELECT e FROM Etudiant e " +
+            "JOIN  Entrevue en " +
+            "ON e.id = en.etudiant.id " +
+            "JOIN CandidatAccepter ca " +
+            "ON en.id = ca.entrevue.id " +
             "JOIN Contrat c " +
-            "JOIN c.candidature condidature " +
-            "JOIN condidature.entrevue entrevue " +
-            "JOIN entrevue.etudiant etudiant " +
-            "WHERE e.departement = :departement AND c.employeurSigne = true AND c.gestionnaireSigne = true AND c.etudiantSigne = true AND e.id = etudiant.id" )
-    List<Etudiant> findEtudiantsAvecContratByDepartement(@Param("departement") String departement);
+            "ON ca.id = c.candidature.id " +
+            "WHERE e.departement = :departement AND c.etudiantSigne = true AND c.employeurSigne = true AND c.gestionnaireSigne = true AND en.etudiant.id = e.id" )
+    List<Etudiant> findEtudiantsAvecContratByDepartement(@Param("departement") Departement departement);
 }

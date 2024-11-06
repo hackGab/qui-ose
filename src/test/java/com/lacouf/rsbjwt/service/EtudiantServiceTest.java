@@ -535,9 +535,11 @@ class EtudiantServiceTest {
     @Test
     void getEtudiantsAvecContratByDepartement() {
 
-        when(etudiantRepository.findEtudiantsAvecContratByDepartement("TI")).thenReturn(List.of(etudiantEntity));
+        Departement departement = Departement.TECHNIQUES_INFORMATIQUE;
 
-        List<EtudiantDTO> response = etudiantService.getEtudiantsAvecContratByDepartement("TI");
+        when(etudiantRepository.findEtudiantsAvecContratByDepartement(departement)).thenReturn(List.of(etudiantEntity));
+
+        List<EtudiantDTO> response = etudiantService.getEtudiantsAvecContratByDepartement(departement);
 
         assertEquals(1, response.size());
         assertEquals(Departement.TECHNIQUES_INFORMATIQUE, response.get(0).getDepartement());

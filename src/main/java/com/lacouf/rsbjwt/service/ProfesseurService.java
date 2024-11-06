@@ -132,4 +132,14 @@ public class ProfesseurService {
 
         return evaluationsStageProf;
     }
+private EvaluationStageProf remplireEvaluationStage(EvaluationStageProf evaluationStageProf, Etudiant etudiant) {
+        evaluationStageProf.setNomStagiaire(etudiant.getFirstName() + " " + etudiant.getLastName());
+        System.out.println(etudiant.getId());
+        OffreDeStage offreDeStage = etudiantRepository.findOffreDeStageByEntrevue(etudiant.getId());
+        System.out.println(offreDeStage);
+        evaluationStageProf.setNomEntreprise(offreDeStage.getEmployeur().getEntreprise());
+        evaluationStageProf.setAdresse(offreDeStage.getLocalisation());
+        evaluationStageProf.setTelephone(offreDeStage.getEmployeur().getPhoneNumber());
+        return evaluationStageProf;
+    }
 }

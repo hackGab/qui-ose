@@ -5,6 +5,7 @@ import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.ProfesseurService;
 import com.lacouf.rsbjwt.service.SystemeService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,14 +86,26 @@ public class ProfesseurController {
     @GetMapping("/etudiants/departement/{departement}")
     public ResponseEntity<List<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
         System.out.println("Departement: " + departement);
-//        if(departement == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
+        if(departement == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Departement departementEnum = Departement.valueOf(departement);
-//
+
         List<EtudiantDTO> etudiants = etudiantService.getEtudiantsAvecContratByDepartement(departementEnum);
-//
+
         return ResponseEntity.ok().body(etudiants);
+    }
+
+    @PutMapping("evaluerStage/")
+    public ResponseEntity<EvaluationStageProfDTO> evaluerStage(@RequestBody EvaluationStageProfDTO evaluationStageProfDTO) {
+        if(evaluationStageProfDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<EvaluationStageProfDTO> evaluationStageProfDTOUpdated = professeurService.evaluerStage(evaluationStageProfDTO);
+
+        return evaluationStageProfDTOUpdated.map(evaluationStageProf -> ResponseEntity.ok().body(evaluationStageProf))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

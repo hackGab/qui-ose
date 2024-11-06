@@ -1,5 +1,6 @@
 package com.lacouf.rsbjwt.service.dto;
 
+import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,21 +27,21 @@ public class EvaluationStageProfDTO {
     private int numeroStage;
 
     // Évaluation des tâches
-    private EvaluationConformite tachesConformite;
-    private EvaluationConformite accueilIntegration;
-    private EvaluationConformite encadrementSuffisant;
+    private EvaluationStageProf.EvaluationConformite tachesConformite;
+    private EvaluationStageProf.EvaluationConformite accueilIntegration;
+    private EvaluationStageProf.EvaluationConformite encadrementSuffisant;
     private int heuresEncadrementPremierMois;
     private int heuresEncadrementDeuxiemeMois;
     private int heuresEncadrementTroisiemeMois;
 
-    private EvaluationConformite respectNormesHygiene;
-    private EvaluationConformite climatDeTravail;
-    private EvaluationConformite accesTransportCommun;
-    private EvaluationConformite salaireInteressant;
+    private EvaluationStageProf.EvaluationConformite respectNormesHygiene;
+    private EvaluationStageProf.EvaluationConformite climatDeTravail;
+    private EvaluationStageProf.EvaluationConformite accesTransportCommun;
+    private EvaluationStageProf.EvaluationConformite salaireInteressant;
     private double salaireHoraire;
-    private EvaluationConformite communicationSuperviseur;
-    private EvaluationConformite equipementAdequat;
-    private EvaluationConformite volumeTravailAcceptable;
+    private EvaluationStageProf.EvaluationConformite communicationSuperviseur;
+    private EvaluationStageProf.EvaluationConformite equipementAdequat;
+    private EvaluationStageProf.EvaluationConformite volumeTravailAcceptable;
 
     // Observations générales
     private boolean privilegiePremierStage;
@@ -54,6 +55,47 @@ public class EvaluationStageProfDTO {
     private String commentaires;
     private String signatureEnseignant;
     private String dateSignature;
+
+    public EvaluationStageProfDTO(EvaluationStageProf evaluationStageProf) {
+        this.professeurId = evaluationStageProf.getProfesseur().getId();
+        this.etudiantId = evaluationStageProf.getEtudiant().getId();
+
+        this.nomEntreprise = evaluationStageProf.getNomEntreprise();
+        this.personneContact = evaluationStageProf.getPersonneContact();
+        this.adresse = evaluationStageProf.getAdresse();
+        this.ville = evaluationStageProf.getVille();
+        this.codePostal = evaluationStageProf.getCodePostal();
+        this.telephone = evaluationStageProf.getTelephone();
+        this.telecopieur = evaluationStageProf.getTelecopieur();
+
+        this.nomStagiaire = evaluationStageProf.getNomStagiaire();
+        this.dateStage = evaluationStageProf.getDateStage().toString();
+        this.numeroStage = evaluationStageProf.getNumeroStage();
+
+        this.tachesConformite = evaluationStageProf.getTachesConformite();
+        this.accueilIntegration = evaluationStageProf.getAccueilIntegration();
+        this.encadrementSuffisant = evaluationStageProf.getEncadrementSuffisant();
+        this.heuresEncadrementPremierMois = evaluationStageProf.getHeuresEncadrementPremierMois();
+        this.heuresEncadrementDeuxiemeMois = evaluationStageProf.getHeuresEncadrementDeuxiemeMois();
+        this.heuresEncadrementTroisiemeMois = evaluationStageProf.getHeuresEncadrementTroisiemeMois();
+
+        this.respectNormesHygiene = evaluationStageProf.getRespectNormesHygiene();
+        this.climatDeTravail = evaluationStageProf.getClimatDeTravail();
+        this.accesTransportCommun = evaluationStageProf.getAccesTransportCommun();
+        this.salaireInteressant = evaluationStageProf.getSalaireInteressant();
+        this.salaireHoraire = evaluationStageProf.getSalaireHoraire();
+        this.communicationSuperviseur = evaluationStageProf.getCommunicationSuperviseur();
+        this.equipementAdequat = evaluationStageProf.getEquipementAdequat();
+        this.volumeTravailAcceptable = evaluationStageProf.getVolumeTravailAcceptable();
+
+        this.privilegiePremierStage = evaluationStageProf.isPrivilegiePremierStage();
+        this.privilegieDeuxiemeStage = evaluationStageProf.isPrivilegieDeuxiemeStage();
+        this.nombreStagiairesAccueillis = evaluationStageProf.getNombreStagiairesAccueillis();
+
+        this.souhaiteRevoirStagiaire = evaluationStageProf.isSouhaiteRevoirStagiaire();
+        this.offreQuartsVariables = evaluationStageProf.isOffreQuartsVariables();
+        this.horairesQuartsDeTravail = evaluationStageProf.getHorairesQuartsDeTravail();
+    }
 
     public enum EvaluationConformite {
         TOTAL_EN_ACCORD,

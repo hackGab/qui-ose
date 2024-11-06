@@ -1,13 +1,11 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.EvaluationStageProf;
-import com.lacouf.rsbjwt.model.OffreDeStage;
-import com.lacouf.rsbjwt.model.Professeur;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.EvaluationStageProfRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -125,12 +123,76 @@ public class ProfesseurService {
 
     private EvaluationStageProf remplireEvaluationStage(EvaluationStageProf evaluationStageProf, Etudiant etudiant) {
         evaluationStageProf.setNomStagiaire(etudiant.getFirstName() + " " + etudiant.getLastName());
-        System.out.println(etudiant.getId());
         OffreDeStage offreDeStage = etudiantRepository.findOffreDeStageByEntrevue(etudiant.getId());
-        System.out.println(offreDeStage);
+        Contrat contrat = etudiantRepository.findContratByEntrevue(etudiant.getId());
+        evaluationStageProf.setDateStage(contrat.getDateDebut());
         evaluationStageProf.setNomEntreprise(offreDeStage.getEmployeur().getEntreprise());
         evaluationStageProf.setAdresse(offreDeStage.getLocalisation());
         evaluationStageProf.setTelephone(offreDeStage.getEmployeur().getPhoneNumber());
         return evaluationStageProf;
     }
+
+    public Optional<EvaluationStageProfDTO> evaluerStage(EvaluationStageProfDTO evaluationStageProfDTO) {
+
+        Optional<EvaluationStageProf> evaluationStageProf = evaluationStageProfRepository.findByProsseurID(evaluationStageProfDTO.getProfesseurId());
+        if (evaluationStageProf.isEmpty()) {
+            return Optional.empty();
+        }
+
+        EvaluationStageProfDTO evaluationStageProCopie = new EvaluationStageProfDTO(evaluationStageProf.get());
+        EvaluationStageProfDTO evaluationStageProfDTOaSave = updateEvaluationStageProf(evaluationStageProfDTO, evaluationStageProCopie);
+
+        EvaluationStageProf evaluationStageProfUpdated = new EvaluationStageProf(evaluationStageProfDTOaSave);
+        evaluationStageProfRepository.save(evaluationStageProfUpdated);
+
+        return Optional.of(evaluationStageProfDTOaSave);
+    }
+
+    private EvaluationStageProfDTO updateEvaluationStageProf(EvaluationStageProfDTO evaluationStageProfDTO, EvaluationStageProfDTO evaluationStageProfDTOUpdated) {
+
+        evaluationStageProfDTOUpdated.setNomEntreprise(evaluationStageProfDTO.getNomEntreprise());
+        evaluationStageProfDTOUpdated.setPersonneContact(evaluationStageProfDTO.getPersonneContact());
+        evaluationStageProfDTOUpdated.setAdresse(evaluationStageProfDTO.getAdresse());
+        evaluationStageProfDTOUpdated.setVille(evaluationStageProfDTO.getVille());
+        evaluationStageProfDTOUpdated.setCodePostal(evaluationStageProfDTO.getCodePostal());
+        evaluationStageProfDTOUpdated.setTelephone(evaluationStageProfDTO.getTelephone());
+        evaluationStageProfDTOUpdated.setTelecopieur(evaluationStageProfDTO.getTelecopieur());
+
+        evaluationStageProfDTOUpdated.setNomStagiaire(evaluationStageProfDTO.getNomStagiaire());
+        evaluationStageProfDTOUpdated.setDateStage(evaluationStageProfDTO.getDateStage());
+        evaluationStageProfDTOUpdated.setNumeroStage(evaluationStageProfDTO.getNumeroStage());
+
+        // Évaluation des tâches
+        evaluationStageProfDTOUpdated.setTachesConformite(evaluationStageProfDTO.getTachesConformite());
+        evaluationStageProfDTOUpdated.setAccueilIntegration(evaluationStageProfDTO.getAccueilIntegration());
+        evaluationStageProfDTOUpdated.setEncadrementSuffisant(evaluationStageProfDTO.getEncadrementSuffisant());
+        evaluationStageProfDTOUpdated.setHeuresEncadrementPremierMois(evaluationStageProfDTO.getHeuresEncadrementPremierMois());
+        evaluationStageProfDTOUpdated.setHeuresEncadrementDeuxiemeMois(evaluationStageProfDTO.getHeuresEncadrementDeuxiemeMois());
+        evaluationStageProfDTOUpdated.setHeuresEncadrementTroisiemeMois(evaluationStageProfDTO.getHeuresEncadrementTroisiemeMois());
+
+        evaluationStageProfDTOUpdated.setRespectNormesHygiene(evaluationStageProfDTO.getRespectNormesHygiene());
+        evaluationStageProfDTOUpdated.setClimatDeTravail(evaluationStageProfDTO.getClimatDeTravail());
+        evaluationStageProfDTOUpdated.setAccesTransportCommun(evaluationStageProfDTO.getAccesTransportCommun());
+        evaluationStageProfDTOUpdated.setSalaireInteressant(evaluationStageProfDTO.getSalaireInteressant());
+        evaluationStageProfDTOUpdated.setSalaireHoraire(evaluationStageProfDTO.getSalaireHoraire());
+        evaluationStageProfDTOUpdated.setCommunicationSuperviseur(evaluationStageProfDTO.getCommunicationSuperviseur());
+        evaluationStageProfDTOUpdated.setEquipementAdequat(evaluationStageProfDTO.getEquipementAdequat());
+        evaluationStageProfDTOUpdated.setVolumeTravailAcceptable(evaluationStageProfDTO.getVolumeTravailAcceptable());
+
+        // Observations générales
+        evaluationStageProfDTOUpdated.setPrivilegiePremierStage(evaluationStageProfDTO.isPrivilegiePremierStage());
+        evaluationStageProfDTOUpdated.setPrivilegieDeuxiemeStage(evaluationStageProfDTO.isPrivilegieDeuxiemeStage());
+        evaluationStageProfDTOUpdated.setNombreStagiairesAccueillis(evaluationStageProfDTO.getNombreStagiairesAccueillis());
+        evaluationStageProfDTOUpdated.setSouhaiteRevoirStagiaire(evaluationStageProfDTO.isSouhaiteRevoirStagiaire());
+        evaluationStageProfDTOUpdated.setOffreQuartsVariables(evaluationStageProfDTO.isOffreQuartsVariables());
+        evaluationStageProfDTOUpdated.setHorairesQuartsDeTravail(evaluationStageProfDTO.getHorairesQuartsDeTravail());
+
+        // Commentaires et date
+        evaluationStageProfDTOUpdated.setCommentaires(evaluationStageProfDTO.getCommentaires());
+        evaluationStageProfDTOUpdated.setSignatureEnseignant(evaluationStageProfDTO.getSignatureEnseignant());
+        evaluationStageProfDTOUpdated.setDateSignature(evaluationStageProfDTO.getDateSignature());
+
+        return evaluationStageProfDTOUpdated;
+    }
+
 }

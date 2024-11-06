@@ -16,7 +16,7 @@ public class EvaluationStageProf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // Identification de l'entreprise
+
     @ManyToOne
     private Professeur professeur;
 

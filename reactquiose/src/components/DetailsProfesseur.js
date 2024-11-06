@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
+import '../CSS/DetailsProf.css';
 
 function DetailsProfesseur() {
     const { t } = useTranslation();
@@ -159,7 +160,7 @@ function DetailsProfesseur() {
                         <ul className="list-group">
                             {unassignedStudents.map(etudiant => (
                                 <li key={etudiant.email} className="list-group-item d-flex align-items-center">
-                                    <div className="form-check form-switch">
+                                    <div className="form-check checkbox-responsive form-switch">
                                         <input
                                             className="form-check-input"
                                             type="checkbox"
@@ -168,7 +169,7 @@ function DetailsProfesseur() {
                                         />
                                     </div>
                                     &nbsp;
-                                    {etudiant.email}
+                                    <span className="email-text">{etudiant.email}</span>
                                 </li>
                             ))}
                         </ul>
@@ -186,7 +187,7 @@ function DetailsProfesseur() {
                                 <ul className="list-group">
                                     {assignedStudents.map(etudiant => (
                                         <li key={etudiant.email} className="list-group-item d-flex align-items-center">
-                                            <div className="form-check form-switch">
+                                            <div className="form-check checkbox-responsive form-switch">
                                                 <input
                                                     className="form-check-input"
                                                     type="checkbox"
@@ -195,7 +196,7 @@ function DetailsProfesseur() {
                                                 />
                                             </div>
                                             &nbsp;
-                                            {etudiant.email}
+                                            <span className="email-text">{etudiant.email}</span>
                                             <button
                                                 className="btn btn-danger btn-sm ms-auto"
                                                 onClick={() => unassignStudentFromProfessor(etudiant.email)}

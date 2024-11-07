@@ -45,19 +45,24 @@ public class EmployeurController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PostMapping("/creerEvaluationEtudiant")
-    public ResponseEntity<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(@RequestBody EmployeurDTO employeur, @RequestBody EtudiantDTO etudiant, @RequestBody EvaluationStageEmployeurDTO evaluationStageEmployeur) {
-        if (employeur == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    @PostMapping("/creerEvaluationEtudiant/{emailEmployeur}/{emailEtudiant}")
+    public ResponseEntity<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(
+            @PathVariable String emailEmployeur,
+            @PathVariable String emailEtudiant,
+            @RequestBody EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+
+        if (emailEmployeur == null || emailEmployeur.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        if(etudiant == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (emailEtudiant == null || emailEtudiant.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        if(evaluationStageEmployeur == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (evaluationStageEmployeur == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        Optional<EvaluationStageEmployeurDTO> evaluationStageEmployeurDTO = employeurService.creerEvaluationEtudiant(employeur, etudiant, evaluationStageEmployeur);
+        Optional<EvaluationStageEmployeurDTO> evaluationStageEmployeurDTO = employeurService.creerEvaluationEtudiant(
+                emailEmployeur, emailEtudiant, evaluationStageEmployeur);
 
         return evaluationStageEmployeurDTO.map(evaluation -> ResponseEntity.status(HttpStatus.CREATED).body(evaluation))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());

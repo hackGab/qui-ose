@@ -166,12 +166,12 @@ public class EmployeurService {
                 .orElse(Collections.emptyList());
     }
 
-    public Optional<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(EmployeurDTO employeur, EtudiantDTO etudiant, EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+    public Optional<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(String employeurEmail, String etudiantEmail, EvaluationStageEmployeurDTO evaluationStageEmployeur) {
         try {
-            Employeur employeurEntity = employeurRepository.findByCredentials_email(employeur.getCredentials().getEmail())
+            Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
                     .orElseThrow(() -> new Exception("Employeur non trouvé"));
 
-            Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiant.getCredentials().getEmail())
+            Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
                     .orElseThrow(() -> new Exception("Etudiant non trouvé"));
 
             EvaluationStageEmployeur evaluationStageEmployeurEntity = new EvaluationStageEmployeur(

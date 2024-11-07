@@ -62,7 +62,7 @@ public class EvaluationStageEmployeur {
     private String travailSecuritaire;
     private String sensResponsabilite;
     private String ponctualiteAssiduite;
-    private String habiletePersonnelles;
+    private String commentairesPersonellesSkill;
 
     private String appreciationGlobale;
     private String commentairesAppreciation;

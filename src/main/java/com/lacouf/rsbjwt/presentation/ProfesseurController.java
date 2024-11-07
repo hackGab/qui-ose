@@ -104,10 +104,10 @@ public class ProfesseurController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<EvaluationStageProf> evaluationsStageProf = professeurService.getEvaluationsStageProf(professeurEmail);
+        List<EvaluationStageProfDTO> evaluationsStageProf = professeurService.getEvaluationsStageProf(professeurEmail);
 
 
-
+        return ResponseEntity.ok().body(evaluationsStageProf);
     }
 
     @PutMapping("evaluerStage/")

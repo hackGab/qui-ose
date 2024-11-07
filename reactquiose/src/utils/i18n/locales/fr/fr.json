@@ -278,7 +278,7 @@
   "DesMesuresAccueil": "Des mesures d’accueil facilitent l’intégration du nouveau stagiaire.",
   "NombreHeuresSemaine": "Nombre d'heures/semaine",
   "DeuxiemeMois": "Deuxième mois",
-  "TroisiemeMois": "Troisième mois"
+  "TroisiemeMois": "Troisième mois",
   "AutresCriteresEvaluation": "Autres critères d'évaluation",
   "Criteres": "Critères",
   "RespectNormesHygiene": "L’environnement de travail respecte les normes d’hygiène et de sécurité au travail.",
@@ -293,6 +293,7 @@
   "MilieuPrivilegierPourStage": "Ce milieu est à privilégier pour le stage",
   "PremierStage": "Premier stage",
   "DeuxiemeStage": "Deuxième stage",
+  "TroisiemeStage": "Troisième stage",
   "MilieuOuvertAccueillir": "Ce milieu est ouvert à accueillir",
   "NombreDeStagiaires": "Nombre de stagiaires",
   "MilieuDesireAccueillirMemeStagiaire": "Ce milieu désire accueillir le même stagiaire pour un prochain stage",
@@ -301,12 +302,18 @@
   "MilieuOffreQuartsTravailVariables": "Ce milieu offre des quarts de travail variables",
   "De": "De",
   "A": "à",
-  "EncadrementSuffisant": "Le temps réel consacré à l’encadrement du stagiaire est suffisant."
+  "EncadrementSuffisant": "Le temps réel consacré à l’encadrement du stagiaire est suffisant.",
   "LocationDuStage": "Location du stage",
   "DateDuStage": "Date du stage",
   "NomEntreprise": "Nom de l'entreprise",
   "TelephoneEmployeur": "Téléphone de l'employeur",
   "PremierMois": "Premier mois",
-  "Heures": "Heures"
-
+  "Heures": "Heures",
+  "TotalementEnAccord": "Totalement en accord",
+  "PlutotEnAccord": "Plutôt en accord",
+  "PlutotEnDesaccord": "Plutôt en désaccord",
+  "TotalementEnDesaccord": "Totalement en désaccord",
+  "ImpossibleDeSePrononcer": "Impossible de se prononcer",
+  "AjoutezVosCommentairesIci": "Ajoutez vos commentaires ici",
+  "NombreStagiairesAccueillis": "Nombre de stagiaires accueillis"
 }

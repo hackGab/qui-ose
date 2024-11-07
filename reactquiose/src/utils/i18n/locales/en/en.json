@@ -283,6 +283,7 @@
   "MilieuPrivilegierPourStage": "This environment is to be preferred for the internship",
   "PremierStage": "First internship",
   "DeuxiemeStage": "Second internship",
+  "TroisiemeStage": "Third internship",
   "MilieuOuvertAccueillir": "This environment is open to welcoming",
   "NombreDeStagiaires": "Number of interns",
   "MilieuDesireAccueillirMemeStagiaire": "This environment wants to welcome the same intern for another internship",
@@ -291,12 +292,18 @@
   "MilieuOffreQuartsTravailVariables": "This environment offers variable work shifts",
   "De": "From",
   "A": "To",
-  "EncadrementSuffisant": "The actual time spent supervising the intern is sufficient."
+  "EncadrementSuffisant": "The actual time spent supervising the intern is sufficient.",
   "LocationDuStage": "Internship Location",
   "DateDuStage": "Internship Date",
   "NomEntreprise": "Company Name",
   "TelephoneEmployeur": "Employer's Phone",
   "PremierMois": "First month",
   "Heures": "Hours",
-
+  "TotalementEnAccord": "Totally agree",
+  "PlutotEnAccord": "Somewhat agree",
+  "PlutotEnDesaccord": "Somewhat disagree",
+  "TotalementEnDesaccord": "Totally disagree",
+  "ImpossibleDeSePrononcer": "Unable to decide",
+  "AjoutezVosCommentairesIci": "Add your comments here",
+  "NombreStagiairesAccueillis": "Number of interns welcomed"
 }

@@ -52,7 +52,6 @@
     content: "SIGNER";
 }
 
-
 .onclick {
     width: 3rem;
     border-color: var(--gray);
@@ -104,7 +103,6 @@
     }
 }
 
-/* Add this to your CSS file */
 .btn-signer.invalid {
     background-color: red;
     color: white;

@@ -102,7 +102,10 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/candidatures/all").permitAll()
                         .requestMatchers(GET, "/user/etudiants/departement/{departement}").permitAll()
                         .requestMatchers(PUT, "/gestionnaire/etudiants/deassignerProfesseur/{email}").permitAll()
-                        .requestMatchers(GET, "/professeur/etudiants/departement/{departement}").permitAll() ///allo angel
+                        .requestMatchers(GET, "/professeur/etudiants/departement/{departement}").permitAll()
+                        .requestMatchers(GET, "/professeur/evaluations/{professeurEmail}").permitAll()
+                        .requestMatchers(PUT, "/professeur/evaluerStage").permitAll()
+                        .requestMatchers(POST, "/generatePDF/evaluationProf").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .requestMatchers("/employeur/**").hasAuthority("EMPLOYEUR")
                         .anyRequest().denyAll()

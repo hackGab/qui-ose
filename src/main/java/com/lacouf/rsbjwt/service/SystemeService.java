@@ -1,18 +1,17 @@
 package com.lacouf.rsbjwt.service;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.lacouf.rsbjwt.model.Contrat;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -212,6 +211,169 @@ public class SystemeService {
 
         return byteArrayOutputStream.toByteArray();
     }
+
+    public byte[] generateEvaluationProfPDF(EvaluationStageProfDTO evaluation) throws DocumentException {
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Titre
+        Font titleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+        document.add(new Paragraph("ÉVALUATION DU MILIEU DE STAGE", titleFont));
+        document.add(Chunk.NEWLINE);
+
+        // Identification de l'entreprise
+        document.add(new Paragraph("IDENTIFICATION DE L'ENTREPRISE"));
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+
+        table.addCell("Nom de l'entreprise :");
+        table.addCell(evaluation.getNomEntreprise());
+        table.addCell("Personne contact :");
+        table.addCell(evaluation.getPersonneContact());
+        table.addCell("Adresse :");
+        table.addCell(evaluation.getAdresse());
+        table.addCell("Téléphone :");
+        table.addCell(evaluation.getTelephone());
+
+        document.add(table);
+        document.add(Chunk.NEWLINE);
+
+        // Identification du stagiaire
+        document.add(new Paragraph("IDENTIFICATION DU STAGIAIRE"));
+        PdfPTable table2 = new PdfPTable(2);
+        table2.setWidthPercentage(100);
+
+        table2.addCell("Nom du stagiaire :");
+        table2.addCell(evaluation.getNomStagiaire());
+        table2.addCell("Date du stage :");
+        table2.addCell(evaluation.getDateStage().toString());
+
+        document.add(table2);
+        document.add(Chunk.NEWLINE);
+
+        // Évaluation des tâches
+        document.add(new Paragraph("ÉVALUATION DES TÂCHES"));
+        PdfPTable evaluationTable = new PdfPTable(6);
+        evaluationTable.setWidthPercentage(100);
+
+        // Header de l'évaluation
+        evaluationTable.addCell("Évaluation");
+        evaluationTable.addCell("Totalement en accord");
+        evaluationTable.addCell("Plutôt en accord");
+        evaluationTable.addCell("Plutôt en désaccord");
+        evaluationTable.addCell("Totalement en désaccord");
+        evaluationTable.addCell("Impossible de se prononcer");
+
+        // Evaluation cochées
+        addEvaluationRow(evaluationTable, "Les tâches confiées au stagiaire sont conformes", convertToDtoConformite(evaluation.getTachesConformite()));
+        addEvaluationRow(evaluationTable, "Accueil et intégration", convertToDtoConformite(evaluation.getAccueilIntegration()));
+        addEvaluationRow(evaluationTable, "Encadrement suffisant", convertToDtoConformite(evaluation.getEncadrementSuffisant()));
+        addEvaluationRow(evaluationTable, "Respect des normes d'hygiène", convertToDtoConformite(evaluation.getRespectNormesHygiene()));
+        addEvaluationRow(evaluationTable, "Climat de travail", convertToDtoConformite(evaluation.getClimatDeTravail()));
+        addEvaluationRow(evaluationTable, "Accès transport commun", convertToDtoConformite(evaluation.getAccesTransportCommun()));
+        addEvaluationRow(evaluationTable,
+                "Salaire intéressant: " + String.format("%.2f", evaluation.getSalaireHoraire()) + "$/l'heure",
+                convertToDtoConformite(evaluation.getSalaireInteressant()));
+        addEvaluationRow(evaluationTable, "Communication superviseur", convertToDtoConformite(evaluation.getCommunicationSuperviseur()));
+        addEvaluationRow(evaluationTable, "Équipement adéquat", convertToDtoConformite(evaluation.getEquipementAdequat()));
+        addEvaluationRow(evaluationTable, "Volume de travail acceptable", convertToDtoConformite(evaluation.getVolumeTravailAcceptable()));
+
+        document.add(evaluationTable);
+        document.add(Chunk.NEWLINE);
+
+        // Préciser le nombre d'heures/semaine
+        document.add(new Paragraph("Préciser le nombre d'heures/semaine :"));
+        PdfPTable hoursTable = new PdfPTable(2);
+        hoursTable.setWidthPercentage(100);
+        hoursTable.setSpacingBefore(5f);
+
+        // Premier mois
+        hoursTable.addCell("Premier mois :");
+        hoursTable.addCell(new Phrase(evaluation.getHeuresEncadrementPremierMois() + " heures"));
+
+        // Deuxième mois
+        hoursTable.addCell("Deuxième mois :");
+        hoursTable.addCell(new Phrase(evaluation.getHeuresEncadrementDeuxiemeMois() + " heures"));
+
+        // Troisième mois
+        hoursTable.addCell("Troisième mois :");
+        hoursTable.addCell(new Phrase(evaluation.getHeuresEncadrementTroisiemeMois() + " heures"));
+
+        document.add(hoursTable);
+        document.add(Chunk.NEWLINE);
+
+
+        // Comments and signature
+        document.add(new Paragraph("\nCOMMENTAIRES"));
+        document.add(new Paragraph(evaluation.getCommentaires()));
+        document.add(Chunk.NEWLINE);
+
+        // Observations générales
+        document.add(new Paragraph("OBSERVATIONS GÉNÉRALES"));
+        PdfPTable observationsTable = new PdfPTable(2);
+        observationsTable.setWidthPercentage(100);
+
+        observationsTable.addCell("Ce milieu est à privilégier pour :");
+        observationsTable.addCell(evaluation.isPrivilegiePremierStage() ? "premier stage" : "deuxième stage");
+        observationsTable.addCell("Nombre de stagiaires accueillis :");
+        observationsTable.addCell(String.valueOf(evaluation.getNombreStagiairesAccueillis()));
+        observationsTable.addCell("Souhaite revoir le stagiaire :");
+        observationsTable.addCell(evaluation.isSouhaiteRevoirStagiaire() ? "Oui" : "Non");
+
+        document.add(observationsTable);
+        document.add(Chunk.NEWLINE);
+        document.add(Chunk.NEWLINE);
+
+        // Signature et date
+        PdfPTable signatureTable = new PdfPTable(2);
+        signatureTable.setWidthPercentage(100);
+        signatureTable.setSpacingBefore(10f);
+
+        PdfPCell emailCell = new PdfPCell(new Phrase(evaluation.getSignatureEnseignant()));
+        emailCell.setBorder(PdfPCell.NO_BORDER);
+        emailCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        PdfPCell dateOfSignatureCell = new PdfPCell(new Phrase(evaluation.getDateSignature()));
+        dateOfSignatureCell.setBorder(PdfPCell.NO_BORDER);
+        dateOfSignatureCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        signatureTable.addCell(emailCell);
+        signatureTable.addCell(dateOfSignatureCell);
+
+        PdfPCell signatureCell = new PdfPCell(new Phrase("Signature de l'enseignant responsable du stagiaire"));
+        signatureCell.setBorder(PdfPCell.TOP);
+        signatureCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        signatureCell.setPaddingTop(10f);
+
+        PdfPCell dateCell = new PdfPCell(new Phrase("Date"));
+        dateCell.setBorder(PdfPCell.TOP);
+        dateCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        dateCell.setPaddingTop(10f);
+
+        signatureTable.addCell(signatureCell);
+        signatureTable.addCell(dateCell);
+
+        document.add(signatureTable);
+
+        document.close();
+        return baos.toByteArray();
+    }
+
+    private void addEvaluationRow(PdfPTable table, String description, EvaluationStageProfDTO.EvaluationConformite conformite) {
+        table.addCell(description);
+        table.addCell(conformite == EvaluationStageProfDTO.EvaluationConformite.TOTAL_EN_ACCORD ? "X" : "");
+        table.addCell(conformite == EvaluationStageProfDTO.EvaluationConformite.PLUTOT_EN_ACCORD ? "X" : "");
+        table.addCell(conformite == EvaluationStageProfDTO.EvaluationConformite.PLUTOT_EN_DESACCORD ? "X" : "");
+        table.addCell(conformite == EvaluationStageProfDTO.EvaluationConformite.TOTAL_EN_DESACCORD ? "X" : "");
+        table.addCell(conformite == EvaluationStageProfDTO.EvaluationConformite.IMPOSSIBLE_SE_PRONONCER ? "X" : "");
+    }
+
+    private EvaluationStageProfDTO.EvaluationConformite convertToDtoConformite(EvaluationStageProf.EvaluationConformite conformite) {
+        return EvaluationStageProfDTO.EvaluationConformite.valueOf(conformite.name());
+    }
+
 
     public void creerEvaluationStageProf(Optional<EtudiantDTO> etudiantDTO) {
         System.out.println("Création de l'évaluation de stage pour l'étudiant " + etudiantDTO.get().getFirstName());

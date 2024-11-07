@@ -18,6 +18,7 @@ function AccueilProfesseur() {
     ];
     const location = useLocation();
     const {userData} = location.state || {};
+    console.log("userData", userData);
     const [listeEvaluations, setListeEvaluations] = useState([]);
     const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -185,6 +186,8 @@ function AccueilProfesseur() {
                 <div className="container">
                     <h1 className="mb-4 text-center">{t('studentListTitleForEvaluation')}</h1>
 
+                    <h5 className="mb-4 text-center">{t('studentListSubtitleForEvaluation')}</h5>
+
                     {listeEvaluations.length === 0 ? (
                         <p className="text-center">{t('AucunEtudiantTrouve')}</p>
                     ) : (
@@ -201,14 +204,24 @@ function AccueilProfesseur() {
                                         style={{cursor: "pointer"}}
                                     >
                                         <div className="card-body">
-                                            <h5 className="card-title">{`${evaluation.nomStagiaire}`}</h5>
-                                            {evaluation.signatureEnseignant ? (
+                                            <h5 className="card-title text-primary">{evaluation.nomStagiaire}</h5>
+                                            <p className="card-text">
+                                                <span
+                                                    className="fw-bold">{t('Entreprise')}: </span>{evaluation.nomEntreprise}
+                                            </p>
+                                            <p className="card-text">
+                                                <span
+                                                    className="fw-bold">{t('Departement')}: </span>{userData.departement}
+                                            </p>
+
+                                            {evaluation.signatureEnseignant && (
                                                 <Button onClick={() => generationPDF(evaluation)}
-                                                        className="btn-success">
-                                                    Générer Évaluation en PDF
+                                                        className="btn btn-success mt-3">
+                                                    {t('GenererEvaluationPDF')}
                                                 </Button>
-                                            ) : null}
+                                            )}
                                         </div>
+
                                     </div>
                                 </div>
                             ))}
@@ -226,7 +239,7 @@ function AccueilProfesseur() {
 
                         <div className="mb-3">
                             <p>
-                                <strong>{t('LocationDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.adresse : null}
+                            <strong>{t('LocationDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.adresse : null}
                             </p>
                             <p>
                                 <strong>{t('DateDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.dateStage : null}

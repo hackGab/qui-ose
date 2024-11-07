@@ -305,5 +305,9 @@
   "TotalementEnDesaccord": "Totally disagree",
   "ImpossibleDeSePrononcer": "Unable to decide",
   "AjoutezVosCommentairesIci": "Add your comments here",
-  "NombreStagiairesAccueillis": "Number of interns welcomed"
+  "NombreStagiairesAccueillis": "Number of interns welcomed",
+  "Entreprise" : "Entreprise",
+  "PersonneContact" : "Contact Person",
+  "studentListSubtitleForEvaluation": "Click on a student to make an evaluation or generate a PDF version of the evaluation.",
+  "GenererEvaluationPDF": "Genaerate PDF"
 }

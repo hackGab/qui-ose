@@ -48,27 +48,52 @@ function AccueilProfesseur() {
             if (userData) {
                 try {
                     const etudiantsResponse = await fetch(`http://localhost:8081/professeur/etudiants/${userData.credentials.email}`);
+                    if (!etudiantsResponse.ok) {
+                        throw new Error("Erreur lors de la récupération des étudiants");
+                    }
+
                     const etudiantsData = await etudiantsResponse.json();
                     setListeEtudiants(etudiantsData);
 
-                    console.log("Début du fetch pour les évaluations");
-                    const evaluationsResponse = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    const evaluationsData = await evaluationsResponse.json();
-                    console.log("Données des évaluations reçues :", evaluationsData);
-                    setListeEvaluations(evaluationsData);
+                    console.log("etudiantsData", etudiantsData);
+
                 } catch (error) {
                     console.error("Erreur lors de la récupération des données :", error);
                 }
+
+
             }
         };
 
         fetchData();
     }, [userData]);
+
+    // useEffect(() => {
+    //     if (userData?.credentials?.email) {
+    //         console.log("userData", userData);
+    //         const fetchEvaluations = async () => {
+    //             try {
+    //                 const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
+    //
+    //                 if (!response.ok) {
+    //                     throw new Error("Erreur lors de la récupération des évaluations");
+    //                 }
+    //
+    //                 console.log("response", response);
+    //
+    //                 // const data = await response.json();
+    //                 // console.log("data", data);
+    //                 // setListeEvaluations(data);
+    //             } catch (error) {
+    //                 console.error("Erreur lors de la récupération des données :", error);
+    //             }
+    //         };
+    //
+    //         fetchEvaluations();
+    //     }
+    // }, [userData?.credentials?.email]);
+
+
 
 
 
@@ -105,7 +130,7 @@ function AccueilProfesseur() {
 
     return (
         <>
-            <ProfesseurHeader userData={userData} />
+            {/*<ProfesseurHeader userData={userData} />*/}
             <div className="container-fluid p-4">
                 <h2 className="text-center my-4" style={{ color: "#01579b" }}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!

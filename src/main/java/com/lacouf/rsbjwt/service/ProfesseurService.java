@@ -195,4 +195,15 @@ public class ProfesseurService {
         return evaluationStageProfDTOUpdated;
     }
 
+    public List<EvaluationStageProf> getEvaluationsStageProf(String professeurEmail) {
+        Optional<Professeur> professeurOpt = professeurRepository.findByEmail(professeurEmail);
+        System.out.println("Professeur: " + professeurOpt);
+        if (professeurOpt.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<EvaluationStageProf> evaluationsStageProf = evaluationStageProfRepository.findAllByProfesseur(professeurOpt.get());
+        System.out.println("Evaluations: " + evaluationsStageProf.get(0).getDateStage());
+        return evaluationsStageProf;
+    }
 }

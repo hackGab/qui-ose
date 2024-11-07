@@ -169,7 +169,7 @@ function SignerContrat() {
                                                 </div>
                                                 <button
                                                     type="submit"
-                                                    className={`btn-signer ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                                    className={`btn-success btn ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
                                                     disabled={isButtonDisabled()}
                                                 />
                                             </form>
@@ -205,9 +205,13 @@ function SignerContrat() {
                                             <p className="card-text">
                                                 {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
                                             </p>
-                                            <p className={`card-text ${contrat.etudiantSigne ? 'text-success' : 'text-danger'}`}>
-                                                {userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne')) : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))}
+                                            <p className={`card-text ${userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? 'text-success' : 'text-danger') : (contrat.etudiantSigne ? 'text-success' : 'text-danger')}`}>
+                                                {userData.role === 'EMPLOYEUR'
+                                                    ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne'))
+                                                    : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))
+                                                }
                                             </p>
+
                                         </div>
                                     </div>
                                 </div>

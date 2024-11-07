@@ -211,7 +211,7 @@ function AccueilProfesseur() {
                                             </p>
                                             <p className="card-text">
                                                 <span
-                                                    className="fw-bold">{t('Departement')}: </span>{userData.departement}
+                                                    className="fw-bold">{t('department')}: </span>{userData.departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
                                             </p>
 
                                             {evaluation.signatureEnseignant && (
@@ -608,11 +608,11 @@ function AccueilProfesseur() {
 
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>
+                        <Button variant="danger" onClick={handleCloseModal}>
                             {t('close')}
                         </Button>
-                        <Button variant="primary" type="submit">
-                            Submit
+                        <Button variant="success" type="submit">
+                            {t('submit')}
                         </Button>
                     </Modal.Footer>
                 </form>

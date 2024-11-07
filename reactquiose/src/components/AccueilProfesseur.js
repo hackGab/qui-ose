@@ -547,21 +547,6 @@ function AccueilProfesseur() {
                                     />
                                     <label className="form-check-label">{t('DeuxiemeStage')}</label>
                                 </div>
-                                <div className="form-check">
-                                    <input
-                                        type="radio"
-                                        className="form-check-input"
-                                        name="stagePrivilege"
-                                        checked={evaluation.privilegieTroisiemeStage}
-                                        onChange={() => setEvaluation({
-                                            ...evaluation,
-                                            privilegiePremierStage: false,
-                                            privilegieDeuxiemeStage: false,
-                                            privilegieTroisiemeStage: true
-                                        })}
-                                    />
-                                    <label className="form-check-label">{t('TroisiemeStage')}</label>
-                                </div>
                             </div>
 
                         </div>

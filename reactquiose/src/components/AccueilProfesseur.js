@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 import ProfesseurHeader from "./ProfesseurHeader";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 
-
 function AccueilProfesseur() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const EvaluationConformiteOptions = [
-        { label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD" },
-        { label: t("PlutotEnAccord"), value: "PLUTOT_EN_ACCORD" },
-        { label: t("PlutotEnDesaccord"), value: "PLUTOT_EN_DESACCORD" },
-        { label: t("TotalementEnDesaccord"), value: "TOTAL_EN_DESACCORD" },
-        { label: t("ImpossibleDeSePrononcer"), value: "IMPOSSIBLE_SE_PRONONCER" }
+        {label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD"},
+        {label: t("PlutotEnAccord"), value: "PLUTOT_EN_ACCORD"},
+        {label: t("PlutotEnDesaccord"), value: "PLUTOT_EN_DESACCORD"},
+        {label: t("TotalementEnDesaccord"), value: "TOTAL_EN_DESACCORD"},
+        {label: t("ImpossibleDeSePrononcer"), value: "IMPOSSIBLE_SE_PRONONCER"}
     ];
     const location = useLocation();
-    const { userData } = location.state || {};
+    const {userData} = location.state || {};
     const [listeEvaluations, setListeEvaluations] = useState([]);
     const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -40,34 +39,35 @@ function AccueilProfesseur() {
         commentaires: "",
         privilegiePremierStage: false,
         privilegieDeuxiemeStage: false,
+        privilegieTroisiemeStage: false,
         nombreStagiairesAccueillis: "",
         souhaiteRevoirStagiaire: null,
     });
 
     useEffect(() => {
-         if (userData?.credentials?.email) {
-             console.log("userData", userData);
-             const fetchEvaluations = async () => {
-                 try {
-                     const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
+        if (userData?.credentials?.email) {
+            console.log("userData", userData);
+            const fetchEvaluations = async () => {
+                try {
+                    const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
 
-                     if (!response.ok) {
-                         throw new Error("Erreur lors de la récupération des évaluations");
-                     }
+                    if (!response.ok) {
+                        throw new Error("Erreur lors de la récupération des évaluations");
+                    }
 
-                     console.log("response", response);
+                    console.log("response", response);
 
-                     const data = await response.json();
-                     console.log("data", data);
-                     setListeEvaluations(data);
-                 } catch (error) {
-                     console.error("Erreur lors de la récupération des données :", error);
-                 }
-             };
+                    const data = await response.json();
+                    console.log("data", data);
+                    setListeEvaluations(data);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des données :", error);
+                }
+            };
 
-             fetchEvaluations();
-         }
-     }, [userData?.credentials?.email]);
+            fetchEvaluations();
+        }
+    }, [userData?.credentials?.email]);
 
     const handleShowModal = (evaluation) => {
         setSelectedEvaluation(evaluation);
@@ -176,9 +176,9 @@ function AccueilProfesseur() {
 
     return (
         <>
-            <ProfesseurHeader userData={userData} />
+            <ProfesseurHeader userData={userData}/>
             <div className="container-fluid p-4">
-                <h2 className="text-center my-4" style={{ color: "#01579b" }}>
+                <h2 className="text-center my-4" style={{color: "#01579b"}}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!
                 </h2>
 
@@ -198,12 +198,13 @@ function AccueilProfesseur() {
                                                 handleShowModal(evaluation);
                                             }
                                         }}
-                                        style={{ cursor: "pointer" }}
+                                        style={{cursor: "pointer"}}
                                     >
                                         <div className="card-body">
                                             <h5 className="card-title">{`${evaluation.nomStagiaire}`}</h5>
                                             {evaluation.signatureEnseignant ? (
-                                                <Button onClick={() => generationPDF(evaluation)} className="btn-success">
+                                                <Button onClick={() => generationPDF(evaluation)}
+                                                        className="btn-success">
                                                     Générer Évaluation en PDF
                                                 </Button>
                                             ) : null}
@@ -359,7 +360,7 @@ function AccueilProfesseur() {
                             </thead>
                             <tbody>
                             <tr>
-                            <td>{t('RespectNormesHygiene')}</td>
+                                <td>{t('RespectNormesHygiene')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -375,18 +376,18 @@ function AccueilProfesseur() {
                             </tr>
                             <tr>
                                 <td>{t('ClimatDeTravail')}</td>
-                            {EvaluationConformiteOptions.map((option) => (
-                                <td key={option.value} className="text-center">
-                                    <input
-                                        type="radio"
-                                        name="climatDeTravail"
-                                        value={option.value}
-                                        checked={evaluation.climatDeTravail === option.value}
-                                        onChange={(e) => handleChange(e, "climatDeTravail")}
-                                        required
-                                    />
-                                </td>
-                            ))}
+                                {EvaluationConformiteOptions.map((option) => (
+                                    <td key={option.value} className="text-center">
+                                        <input
+                                            type="radio"
+                                            name="climatDeTravail"
+                                            value={option.value}
+                                            checked={evaluation.climatDeTravail === option.value}
+                                            onChange={(e) => handleChange(e, "climatDeTravail")}
+                                            required
+                                        />
+                                    </td>
+                                ))}
                             </tr>
                             <tr>
                                 <td>{t('AccesTransportCommun')}</td>
@@ -463,22 +464,22 @@ function AccueilProfesseur() {
                                     </td>
                                 ))}
                             </tr>
-                        </tbody>
-                    </table>
-                    <h5 style={{
-                        fontSize: "1.25rem",
-                        fontWeight: "bold",
-                        backgroundColor: "#f8f9fa",
-                        padding: "10px",
-                        borderRadius: "5px",
-                        border: "1px solid #dee2e6",
-                        marginBottom: "15px",
-                        textAlign: "center"
-                    }}>
-                        {t('Commentaires')}
-                    </h5>
+                            </tbody>
+                        </table>
+                        <h5 style={{
+                            fontSize: "1.25rem",
+                            fontWeight: "bold",
+                            backgroundColor: "#f8f9fa",
+                            padding: "10px",
+                            borderRadius: "5px",
+                            border: "1px solid #dee2e6",
+                            marginBottom: "15px",
+                            textAlign: "center"
+                        }}>
+                            {t('Commentaires')}
+                        </h5>
 
-                    <div className="mb-3">
+                        <div className="mb-3">
                             <textarea
                                 className="form-control"
                                 value={evaluation.commentaires || ""}
@@ -486,67 +487,71 @@ function AccueilProfesseur() {
                                 placeholder={t('AjoutezVosCommentairesIci')}
                                 required
                             />
-                    </div>
+                        </div>
                         <h5 style={{
                             fontSize: "1.25rem",
                             fontWeight: "bold",
                             backgroundColor: "#f8f9fa",
-                                padding: "10px",
-                                borderRadius: "5px",
-                                border: "1px solid #dee2e6",
-                                marginBottom: "15px",
-                                textAlign: "center"
-                            }}>
-                                {t('ObservationsGenerales')}
-                            </h5>
+                            padding: "10px",
+                            borderRadius: "5px",
+                            border: "1px solid #dee2e6",
+                            marginBottom: "15px",
+                            textAlign: "center"
+                        }}>
+                            {t('ObservationsGenerales')}
+                        </h5>
 
+                        <div className="mb-3">
+                            <label>{t('MilieuPrivilegierPourStage')}:</label>
                             <div className="mb-3">
-                                <label>{t('MilieuPrivilegierPourStage')}:</label>
                                 <div className="form-check">
                                     <input
-                                        type="checkbox"
+                                        type="radio"
                                         className="form-check-input"
+                                        name="stagePrivilege"
                                         checked={evaluation.privilegiePremierStage}
-                                        onChange={(e) => {
-                                            setEvaluation({
-                                                ...evaluation,
-                                                privilegiePremierStage: e.target.checked,
-                                                privilegieDeuxiemeStage: !e.target.checked
-                                            });
-                                        }}
+                                        onChange={() => setEvaluation({
+                                            ...evaluation,
+                                            privilegiePremierStage: true,
+                                            privilegieDeuxiemeStage: false,
+                                            privilegieTroisiemeStage: false
+                                        })}
                                     />
-                                    <label className="form-check-label">{t('PremierStage')}</label></div>
+                                    <label className="form-check-label">{t('PremierStage')}</label>
+                                </div>
                                 <div className="form-check">
                                     <input
-                                        type="checkbox"
+                                        type="radio"
                                         className="form-check-input"
+                                        name="stagePrivilege"
                                         checked={evaluation.privilegieDeuxiemeStage}
-                                        onChange={(e) => {
-                                            setEvaluation({
-                                                ...evaluation,
-                                                privilegiePremierStage: !e.target.checked,
-                                                privilegieDeuxiemeStage: e.target.checked
-                                            });
-                                        }}
+                                        onChange={() => setEvaluation({
+                                            ...evaluation,
+                                            privilegiePremierStage: false,
+                                            privilegieDeuxiemeStage: true,
+                                            privilegieTroisiemeStage: false
+                                        })}
                                     />
                                     <label className="form-check-label">{t('DeuxiemeStage')}</label>
                                 </div>
-                            </div>
-                            <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    checked={evaluation.privilegieDeuxiemeStage}
-                                    onChange={(e) => {
-                                        setEvaluation({
+                                <div className="form-check">
+                                    <input
+                                        type="radio"
+                                        className="form-check-input"
+                                        name="stagePrivilege"
+                                        checked={evaluation.privilegieTroisiemeStage}
+                                        onChange={() => setEvaluation({
                                             ...evaluation,
-                                            privilegiePremierStage: !e.target.checked,
-                                            privilegieDeuxiemeStage: e.target.checked
-                                        });
-                                    }}
-                                />
-                                <label className="form-check-label">{t('TroisiemeStage')}</label>
+                                            privilegiePremierStage: false,
+                                            privilegieDeuxiemeStage: false,
+                                            privilegieTroisiemeStage: true
+                                        })}
+                                    />
+                                    <label className="form-check-label">{t('TroisiemeStage')}</label>
+                                </div>
                             </div>
+
+                        </div>
                         <div className="mb-3">
                             <label>{t('MilieuOuvertAccueillir')}</label>
                             <input
@@ -562,6 +567,7 @@ function AccueilProfesseur() {
 
                         <div className="mb-3">
                             <label>{t('MilieuDesireAccueillirMemeStagiaire')}</label>
+                            <br/>
                             <div className="form-check form-check-inline">
                                 <input
                                     type="radio"
@@ -571,6 +577,7 @@ function AccueilProfesseur() {
                                     onChange={() => setEvaluation({...evaluation, souhaiteRevoirStagiaire: true})}
                                     required
                                 />
+
                                 <label className="form-check-label">{t('Oui')}</label>
                             </div>
                             <div className="form-check form-check-inline">

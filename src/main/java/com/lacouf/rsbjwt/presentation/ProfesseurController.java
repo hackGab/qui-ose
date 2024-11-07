@@ -99,7 +99,7 @@ public class ProfesseurController {
     }
 
     @GetMapping("/evaluations/{professeurEmail}")
-    public ResponseEntity<String> getEvaluations(@PathVariable String professeurEmail) {
+    public ResponseEntity<List<EvaluationStageProfDTO>> getEvaluations(@PathVariable String professeurEmail) {
         if (professeurEmail == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -107,7 +107,7 @@ public class ProfesseurController {
         List<EvaluationStageProf> evaluationsStageProf = professeurService.getEvaluationsStageProf(professeurEmail);
 
 
-        return ResponseEntity.ok().body(evaluationsStageProf.get(0).getAdresse());
+
     }
 
     @PutMapping("evaluerStage/")

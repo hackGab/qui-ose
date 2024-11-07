@@ -110,7 +110,7 @@ public class ProfesseurController {
         return ResponseEntity.ok().body(evaluationsStageProf);
     }
 
-    @PutMapping("evaluerStage/")
+    @PutMapping("/evaluerStage")
     public ResponseEntity<EvaluationStageProfDTO> evaluerStage(@RequestBody EvaluationStageProfDTO evaluationStageProfDTO) {
         if(evaluationStageProfDTO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

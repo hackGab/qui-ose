@@ -68,35 +68,30 @@ function AccueilProfesseur() {
         fetchData();
     }, [userData]);
 
-    // useEffect(() => {
-    //     if (userData?.credentials?.email) {
-    //         console.log("userData", userData);
-    //         const fetchEvaluations = async () => {
-    //             try {
-    //                 const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
-    //
-    //                 if (!response.ok) {
-    //                     throw new Error("Erreur lors de la récupération des évaluations");
-    //                 }
-    //
-    //                 console.log("response", response);
-    //
-    //                 // const data = await response.json();
-    //                 // console.log("data", data);
-    //                 // setListeEvaluations(data);
-    //             } catch (error) {
-    //                 console.error("Erreur lors de la récupération des données :", error);
-    //             }
-    //         };
-    //
-    //         fetchEvaluations();
-    //     }
-    // }, [userData?.credentials?.email]);
+    useEffect(() => {
+         if (userData?.credentials?.email) {
+             console.log("userData", userData);
+             const fetchEvaluations = async () => {
+                 try {
+                     const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
 
+                     if (!response.ok) {
+                         throw new Error("Erreur lors de la récupération des évaluations");
+                     }
 
+                     console.log("response", response);
 
+                     const data = await response.json();
+                     console.log("data", data);
+                     setListeEvaluations(data);
+                 } catch (error) {
+                     console.error("Erreur lors de la récupération des données :", error);
+                 }
+             };
 
-
+             fetchEvaluations();
+         }
+     }, [userData?.credentials?.email]);
 
     const handleShowModal = (etudiant) => {
         setSelectedEtudiant(etudiant);

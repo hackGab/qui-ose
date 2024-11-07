@@ -20,4 +20,7 @@ public interface EvaluationStageProfRepository extends JpaRepository<EvaluationS
     Optional<EvaluationStageProf> findByProsseurID(Long professeurId);
     @Query("SELECT e FROM EvaluationStageProf e WHERE e.professeur.id = ?1")
     List<EvaluationStageProf> findAllByProfesseurById(Long id);
+
+    @Query("SELECT e FROM EvaluationStageProf e WHERE e.etudiant.id = ?1")
+    EvaluationStageProf findByEtudiantID(Long etudiantId);
 }

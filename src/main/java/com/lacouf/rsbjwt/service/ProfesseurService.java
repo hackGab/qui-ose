@@ -10,6 +10,7 @@ import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -134,65 +135,48 @@ public class ProfesseurService {
 
     public Optional<EvaluationStageProfDTO> evaluerStage(EvaluationStageProfDTO evaluationStageProfDTO) {
 
-        Optional<EvaluationStageProf> evaluationStageProf = evaluationStageProfRepository.findByProsseurID(evaluationStageProfDTO.getProfesseurId());
-        if (evaluationStageProf.isEmpty()) {
-            return Optional.empty();
-        }
+        EvaluationStageProf evaluationStageProfDTOaSave = new EvaluationStageProf();
+        EvaluationStageProf evaluationStageProf = evaluationStageProfRepository.findByEtudiantID(evaluationStageProfDTO.getEtudiantId());
+        System.out.println("EvaluationStageProf: " + evaluationStageProf.getId());
 
-        EvaluationStageProfDTO evaluationStageProCopie = new EvaluationStageProfDTO(evaluationStageProf.get());
-        EvaluationStageProfDTO evaluationStageProfDTOaSave = updateEvaluationStageProf(evaluationStageProfDTO, evaluationStageProCopie);
 
-        EvaluationStageProf evaluationStageProfUpdated = new EvaluationStageProf(evaluationStageProfDTOaSave);
-        evaluationStageProfRepository.save(evaluationStageProfUpdated);
+        evaluationStageProfDTOaSave = updateEvaluationStageProf(evaluationStageProf, evaluationStageProfDTO);
 
-        return Optional.of(evaluationStageProfDTOaSave);
+        evaluationStageProfRepository.save(evaluationStageProfDTOaSave);
+
+        EvaluationStageProfDTO evaluationStageProfDTOaReturn = new EvaluationStageProfDTO(evaluationStageProfDTOaSave);
+
+        return Optional.of(evaluationStageProfDTOaReturn);
     }
 
-    private EvaluationStageProfDTO updateEvaluationStageProf(EvaluationStageProfDTO evaluationStageProfDTO, EvaluationStageProfDTO evaluationStageProfDTOUpdated) {
+    private EvaluationStageProf updateEvaluationStageProf(EvaluationStageProf evaluationStageProf, EvaluationStageProfDTO evaluationStageProfDTO) {
+        evaluationStageProf.setCommentaires(evaluationStageProfDTO.getCommentaires());
+        evaluationStageProf.setTachesConformite(evaluationStageProfDTO.getTachesConformite());
+        evaluationStageProf.setNumeroStage(evaluationStageProfDTO.getNumeroStage());
+        evaluationStageProf.setAccueilIntegration(evaluationStageProfDTO.getAccueilIntegration());
+        evaluationStageProf.setEncadrementSuffisant(evaluationStageProfDTO.getEncadrementSuffisant());
+        evaluationStageProf.setHeuresEncadrementPremierMois(evaluationStageProfDTO.getHeuresEncadrementPremierMois());
+        evaluationStageProf.setHeuresEncadrementDeuxiemeMois(evaluationStageProfDTO.getHeuresEncadrementDeuxiemeMois());
+        evaluationStageProf.setHeuresEncadrementTroisiemeMois(evaluationStageProfDTO.getHeuresEncadrementTroisiemeMois());
+        evaluationStageProf.setRespectNormesHygiene(evaluationStageProfDTO.getRespectNormesHygiene());
+        evaluationStageProf.setClimatDeTravail(evaluationStageProfDTO.getClimatDeTravail());
+        evaluationStageProf.setAccesTransportCommun(evaluationStageProfDTO.getAccesTransportCommun());
+        evaluationStageProf.setSalaireInteressant(evaluationStageProfDTO.getSalaireInteressant());
+        evaluationStageProf.setSalaireHoraire(evaluationStageProfDTO.getSalaireHoraire());
+        evaluationStageProf.setCommunicationSuperviseur(evaluationStageProfDTO.getCommunicationSuperviseur());
+        evaluationStageProf.setEquipementAdequat(evaluationStageProfDTO.getEquipementAdequat());
+        evaluationStageProf.setVolumeTravailAcceptable(evaluationStageProfDTO.getVolumeTravailAcceptable());
+        evaluationStageProf.setPrivilegiePremierStage(evaluationStageProfDTO.isPrivilegiePremierStage());
+        evaluationStageProf.setPrivilegieDeuxiemeStage(evaluationStageProfDTO.isPrivilegieDeuxiemeStage());
+        evaluationStageProf.setNombreStagiairesAccueillis(evaluationStageProfDTO.getNombreStagiairesAccueillis());
+        evaluationStageProf.setSouhaiteRevoirStagiaire(evaluationStageProfDTO.isSouhaiteRevoirStagiaire());
+        evaluationStageProf.setOffreQuartsVariables(evaluationStageProfDTO.isOffreQuartsVariables());
+        evaluationStageProf.setHorairesQuartsDeTravail(evaluationStageProfDTO.getHorairesQuartsDeTravail());
+        evaluationStageProf.setSignatureEnseignant(evaluationStageProfDTO.getSignatureEnseignant());
+        evaluationStageProf.setDateSignature(evaluationStageProfDTO.getDateSignature());
+        return evaluationStageProf;
 
-        evaluationStageProfDTOUpdated.setNomEntreprise(evaluationStageProfDTO.getNomEntreprise());
-        evaluationStageProfDTOUpdated.setPersonneContact(evaluationStageProfDTO.getPersonneContact());
-        evaluationStageProfDTOUpdated.setAdresse(evaluationStageProfDTO.getAdresse());
-        evaluationStageProfDTOUpdated.setVille(evaluationStageProfDTO.getVille());
-        evaluationStageProfDTOUpdated.setCodePostal(evaluationStageProfDTO.getCodePostal());
-        evaluationStageProfDTOUpdated.setTelephone(evaluationStageProfDTO.getTelephone());
-        evaluationStageProfDTOUpdated.setTelecopieur(evaluationStageProfDTO.getTelecopieur());
 
-        evaluationStageProfDTOUpdated.setNomStagiaire(evaluationStageProfDTO.getNomStagiaire());
-        evaluationStageProfDTOUpdated.setDateStage(evaluationStageProfDTO.getDateStage());
-        evaluationStageProfDTOUpdated.setNumeroStage(evaluationStageProfDTO.getNumeroStage());
-
-        // Évaluation des tâches
-        evaluationStageProfDTOUpdated.setTachesConformite(evaluationStageProfDTO.getTachesConformite());
-        evaluationStageProfDTOUpdated.setAccueilIntegration(evaluationStageProfDTO.getAccueilIntegration());
-        evaluationStageProfDTOUpdated.setEncadrementSuffisant(evaluationStageProfDTO.getEncadrementSuffisant());
-        evaluationStageProfDTOUpdated.setHeuresEncadrementPremierMois(evaluationStageProfDTO.getHeuresEncadrementPremierMois());
-        evaluationStageProfDTOUpdated.setHeuresEncadrementDeuxiemeMois(evaluationStageProfDTO.getHeuresEncadrementDeuxiemeMois());
-        evaluationStageProfDTOUpdated.setHeuresEncadrementTroisiemeMois(evaluationStageProfDTO.getHeuresEncadrementTroisiemeMois());
-
-        evaluationStageProfDTOUpdated.setRespectNormesHygiene(evaluationStageProfDTO.getRespectNormesHygiene());
-        evaluationStageProfDTOUpdated.setClimatDeTravail(evaluationStageProfDTO.getClimatDeTravail());
-        evaluationStageProfDTOUpdated.setAccesTransportCommun(evaluationStageProfDTO.getAccesTransportCommun());
-        evaluationStageProfDTOUpdated.setSalaireInteressant(evaluationStageProfDTO.getSalaireInteressant());
-        evaluationStageProfDTOUpdated.setSalaireHoraire(evaluationStageProfDTO.getSalaireHoraire());
-        evaluationStageProfDTOUpdated.setCommunicationSuperviseur(evaluationStageProfDTO.getCommunicationSuperviseur());
-        evaluationStageProfDTOUpdated.setEquipementAdequat(evaluationStageProfDTO.getEquipementAdequat());
-        evaluationStageProfDTOUpdated.setVolumeTravailAcceptable(evaluationStageProfDTO.getVolumeTravailAcceptable());
-
-        // Observations générales
-        evaluationStageProfDTOUpdated.setPrivilegiePremierStage(evaluationStageProfDTO.isPrivilegiePremierStage());
-        evaluationStageProfDTOUpdated.setPrivilegieDeuxiemeStage(evaluationStageProfDTO.isPrivilegieDeuxiemeStage());
-        evaluationStageProfDTOUpdated.setNombreStagiairesAccueillis(evaluationStageProfDTO.getNombreStagiairesAccueillis());
-        evaluationStageProfDTOUpdated.setSouhaiteRevoirStagiaire(evaluationStageProfDTO.isSouhaiteRevoirStagiaire());
-        evaluationStageProfDTOUpdated.setOffreQuartsVariables(evaluationStageProfDTO.isOffreQuartsVariables());
-        evaluationStageProfDTOUpdated.setHorairesQuartsDeTravail(evaluationStageProfDTO.getHorairesQuartsDeTravail());
-
-        // Commentaires et date
-        evaluationStageProfDTOUpdated.setCommentaires(evaluationStageProfDTO.getCommentaires());
-        evaluationStageProfDTOUpdated.setSignatureEnseignant(evaluationStageProfDTO.getSignatureEnseignant());
-        evaluationStageProfDTOUpdated.setDateSignature(evaluationStageProfDTO.getDateSignature());
-
-        return evaluationStageProfDTOUpdated;
     }
 
     public List<EvaluationStageProfDTO> getEvaluationsStageProf(String professeurEmail) {

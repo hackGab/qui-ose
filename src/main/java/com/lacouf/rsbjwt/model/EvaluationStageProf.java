@@ -79,7 +79,7 @@ public class EvaluationStageProf {
         this.telecopieur = evaluationStageProfDTOaSave.getTelecopieur();
 
         this.nomStagiaire = evaluationStageProfDTOaSave.getNomStagiaire();
-        this.dateStage = LocalDate.parse(evaluationStageProfDTOaSave.getDateStage());
+        this.dateStage = evaluationStageProfDTOaSave.getDateStage();
         this.numeroStage = evaluationStageProfDTOaSave.getNumeroStage();
 
         this.tachesConformite = evaluationStageProfDTOaSave.getTachesConformite();

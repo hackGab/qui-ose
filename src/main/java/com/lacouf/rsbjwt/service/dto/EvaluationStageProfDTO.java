@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class EvaluationStageProfDTO {
 
     // Identification du stagiaire
     private String nomStagiaire;
-    private String dateStage;
+    private LocalDate dateStage;
     private int numeroStage;
 
     // Évaluation des tâches
@@ -69,7 +71,7 @@ public class EvaluationStageProfDTO {
         this.telecopieur = evaluationStageProf.getTelecopieur();
 
         this.nomStagiaire = evaluationStageProf.getNomStagiaire();
-        this.dateStage = evaluationStageProf.getDateStage().toString();
+        this.dateStage = evaluationStageProf.getDateStage();
         this.numeroStage = evaluationStageProf.getNumeroStage();
 
         this.tachesConformite = evaluationStageProf.getTachesConformite();

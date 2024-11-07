@@ -11,6 +11,7 @@ function DetailsProfesseur() {
     const professeur = location.state?.professeur;
     const [etudiants, setEtudiants] = useState([]);
     const [etudiantsSelectionner, setEtudiantsSelectionner] = useState([]);
+    const [etudiantsSelectionnerRetire, setEtudiantsSelectionnerRetire] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -51,6 +52,14 @@ function DetailsProfesseur() {
         );
     };
 
+    const handleStudentSelectionRetire = (etudiantEmail) => {
+        setEtudiantsSelectionnerRetire(prevState =>
+            prevState.includes(etudiantEmail)
+                ? prevState.filter(email => email !== etudiantEmail)
+                : [...prevState, etudiantEmail]
+        );
+    };
+
     const assignStudentsToProfessor = () => {
         if (etudiantsSelectionner.length === 0 || !professeur) {
             return;
@@ -81,34 +90,65 @@ function DetailsProfesseur() {
             .catch(error => console.error('Error assigning students:', error));
     };
 
-    const unassignStudentFromProfessor = (etudiantEmail) => {
-        console.log('Unassigning student:', etudiantEmail);
-        fetch(`http://localhost:8081/gestionnaire/etudiants/deassignerProfesseur/${encodeURIComponent(etudiantEmail)}`, {
+    // const unassignStudentFromProfessor = (etudiantEmail) => {
+    const unassignStudentFromProfessor = () => {
+        if (etudiantsSelectionnerRetire.length === 0 || !professeur) {
+            return;
+        }
+
+        console.log('Unassigning students:', etudiantsSelectionnerRetire);
+
+        fetch(`http://localhost:8081/professeur/deassignerEtudiants/${professeur.email}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            body: JSON.stringify(etudiantsSelectionnerRetire)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la désassignation de l\'étudiant');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                setSuccessMessage('Étudiant désassigné avec succès');
+                setSuccessMessage(data.message);
                 setEtudiants(prevEtudiants => {
                     const updatedEtudiants = prevEtudiants.map(etudiant => {
-                        if (etudiant.email === etudiantEmail) {
+                        if (etudiantsSelectionnerRetire.includes(etudiant.email)) {
                             return { ...etudiant, professeur: null };
                         }
                         return etudiant;
                     });
                     return updatedEtudiants;
                 });
+                setEtudiantsSelectionnerRetire([]);
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
-            .catch(error => console.error('Error unassigning student:', error));
+            .catch(error => console.error('Error unassigning students:', error));
+
+        // console.log('Unassigning student:', etudiantEmail);
+        // fetch(`http://localhost:8081/gestionnaire/etudiants/deassignerProfesseur/${encodeURIComponent(etudiantEmail)}`, {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     }
+        // })
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error('Erreur lors de la désassignation de l\'étudiant');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         setSuccessMessage('Étudiant désassigné avec succès');
+        //         setEtudiants(prevEtudiants => {
+        //             const updatedEtudiants = prevEtudiants.map(etudiant => {
+        //                 if (etudiant.email === etudiantEmail) {
+        //                     return { ...etudiant, professeur: null };
+        //                 }
+        //                 return etudiant;
+        //             });
+        //             return updatedEtudiants;
+        //         });
+        //         setTimeout(() => setSuccessMessage(''), 3000);
+        //     })
+        //     .catch(error => console.error('Error unassigning student:', error));
     };
 
 
@@ -148,36 +188,49 @@ function DetailsProfesseur() {
                     </div>
 
                     <div className="col-md-6">
-                        <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
-                        <input
-                            type="text"
-                            className="form-control mb-3"
-                            placeholder={t('searchStudents')}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <h6>{t('unassignedStudents')}</h6>
-                        <ul className="list-group">
-                            {unassignedStudents.map(etudiant => (
-                                <li key={etudiant.email} className="list-group-item d-flex align-items-center">
-                                    <div className="form-check checkbox-responsive form-switch">
-                                        <input
-                                            className="form-check-input"
-                                            type="checkbox"
-                                            checked={etudiantsSelectionner.includes(etudiant.email)}
-                                            onChange={() => handleStudentSelection(etudiant.email)}
-                                        />
-                                    </div>
-                                    &nbsp;
-                                    <span className="email-text">{etudiant.email}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <button className="btn btn-primary mt-3"
-                                onClick={assignStudentsToProfessor}
-                                disabled={etudiantsSelectionner.length === 0}>
-                            {t('assignStudents')}
-                        </button>
+                        { unassignedStudents.length !== 0 || assignedStudents.length !== 0 ? (
+                            <>
+                                <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
+                                <input
+                                    type="text"
+                                    className="form-control mb-3"
+                                    placeholder={t('searchStudents')}
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </>
+                        ) : (
+                            <h5>{t('noStudentsInDepartment')}</h5>
+                        )}
+
+
+                        { unassignedStudents.length !== 0 && (
+                            <div>
+                                <h6>{t('unassignedStudents')}</h6>
+
+                                <ul className="list-group">
+                                    {unassignedStudents.map(etudiant => (
+                                        <li key={etudiant.email} className="list-group-item d-flex align-items-center">
+                                            <div className="form-check checkbox-responsive form-switch">
+                                                <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    checked={etudiantsSelectionner.includes(etudiant.email)}
+                                                    onChange={() => handleStudentSelection(etudiant.email)}
+                                                />
+                                            </div>
+                                            &nbsp;
+                                            <span className="email-text">{etudiant.email}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button className="btn btn-primary mt-3"
+                                        onClick={assignStudentsToProfessor}
+                                        disabled={etudiantsSelectionner.length === 0}>
+                                    {t('assignStudents')}
+                                </button>
+                            </div>
+                        )}
 
                         {successMessage && <div className="alert alert-success mt-3">{successMessage}</div>}
 
@@ -191,21 +244,33 @@ function DetailsProfesseur() {
                                                 <input
                                                     className="form-check-input"
                                                     type="checkbox"
-                                                    checked
-                                                    disabled
+                                                    // checked
+                                                    checked={etudiantsSelectionnerRetire.includes(etudiant.email)}
+                                                    onChange={() => handleStudentSelectionRetire(etudiant.email)}
+                                                    // onClick={() => unassignStudentFromProfessor(etudiant.email)}
+                                                    // disabled
                                                 />
                                             </div>
                                             &nbsp;
                                             <span className="email-text">{etudiant.email}</span>
-                                            <button
-                                                className="btn btn-danger btn-sm ms-auto"
-                                                onClick={() => unassignStudentFromProfessor(etudiant.email)}
-                                            >
-                                                {t('unassign')}
-                                            </button>
+                                            {/*<button*/}
+                                            {/*    className="btn btn-danger btn-sm ms-auto"*/}
+                                            {/*    onClick={() => unassignStudentFromProfessor(etudiant.email)}*/}
+                                            {/*>*/}
+                                            {/*    {t('unassign')}*/}
+                                            {/*</button>*/}
                                         </li>
                                     ))}
                                 </ul>
+
+                                <button
+                                    // className="btn btn-danger btn-sm ms-auto"
+                                    className="btn btn-danger mt-3"
+                                    onClick={() => unassignStudentFromProfessor()}
+                                    disabled={etudiantsSelectionnerRetire.length === 0}
+                                >
+                                    {t('unassign')}
+                                </button>
                             </div>
                         )}
                     </div>

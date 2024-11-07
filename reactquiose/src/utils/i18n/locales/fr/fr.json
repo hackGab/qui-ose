@@ -68,6 +68,7 @@
   "assignedStudents": "Étudiants assignés",
   "assignStudents": "Assigner des étudiants",
   "unassign": "Désassigner",
+  "noStudentsInDepartment": "Aucun étudiant n'a été trouvé dans ce département",
   "studentsInSameDepartment": "Étudiants dans le même département",
   "vosEntrevues": "Vos Entrevues :",
 

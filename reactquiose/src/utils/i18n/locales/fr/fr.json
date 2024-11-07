@@ -300,5 +300,13 @@
   "Non": "Non",
   "MilieuOffreQuartsTravailVariables": "Ce milieu offre des quarts de travail variables",
   "De": "De",
-  "A": "à"
+  "A": "à",
+  "EncadrementSuffisant": "Le temps réel consacré à l’encadrement du stagiaire est suffisant."
+  "LocationDuStage": "Location du stage",
+  "DateDuStage": "Date du stage",
+  "NomEntreprise": "Nom de l'entreprise",
+  "TelephoneEmployeur": "Téléphone de l'employeur",
+  "PremierMois": "Premier mois",
+  "Heures": "Heures"
+
 }

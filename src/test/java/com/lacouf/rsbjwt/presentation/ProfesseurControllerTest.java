@@ -3,10 +3,14 @@ package com.lacouf.rsbjwt.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacouf.rsbjwt.model.Departement;
+import com.lacouf.rsbjwt.model.Etudiant;
+import com.lacouf.rsbjwt.model.EvaluationStageProf;
+import com.lacouf.rsbjwt.model.Professeur;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import jakarta.persistence.GeneratedValue;
 import org.junit.jupiter.api.Test;
@@ -22,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -207,5 +212,35 @@ public class ProfesseurControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"PROFESSEUR"})
+    void getEvaluations() {
+        Etudiant etudiant = new Etudiant("John", "Doe", "allo", "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
+        Professeur professeur = new Professeur("John", "Doe", "allo", "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
+
+        EvaluationStageProf evaluationStageProf = new EvaluationStageProf();
+        evaluationStageProf.setEtudiant(etudiant);
+        evaluationStageProf.setProfesseur(professeur);
+        evaluationStageProf.setId(1L);
+        evaluationStageProf.setDateStage(LocalDate.now());
+
+        EvaluationStageProfDTO evaluationStageProfDTO = new EvaluationStageProfDTO(evaluationStageProf);
+
+        List<EvaluationStageProfDTO> evaluations = List.of(evaluationStageProfDTO);
+
+        Mockito.when(professeurService.getEvaluationsStageProf(any(String.class))).thenReturn(evaluations);
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders
+                            .get("/professeur/evaluations/" + professeur.getEmail())
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(evaluations)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

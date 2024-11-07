@@ -1,11 +1,14 @@
 package com.lacouf.rsbjwt.model;
 
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.access.method.P;
+
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -33,7 +36,7 @@ public class EvaluationStageProf {
 
     // Identification du stagiaire
     private String nomStagiaire;
-    private String dateStage;
+    private LocalDate dateStage;
     private int numeroStage;
 
     // Évaluation des tâches
@@ -66,6 +69,42 @@ public class EvaluationStageProf {
     private String signatureEnseignant;
     private String dateSignature;
 
+    public EvaluationStageProf(EvaluationStageProfDTO evaluationStageProfDTOaSave) {
+        this.nomEntreprise = evaluationStageProfDTOaSave.getNomEntreprise();
+        this.personneContact = evaluationStageProfDTOaSave.getPersonneContact();
+        this.adresse = evaluationStageProfDTOaSave.getAdresse();
+        this.ville = evaluationStageProfDTOaSave.getVille();
+        this.codePostal = evaluationStageProfDTOaSave.getCodePostal();
+        this.telephone = evaluationStageProfDTOaSave.getTelephone();
+        this.telecopieur = evaluationStageProfDTOaSave.getTelecopieur();
+
+        this.nomStagiaire = evaluationStageProfDTOaSave.getNomStagiaire();
+        this.dateStage = evaluationStageProfDTOaSave.getDateStage();
+        this.numeroStage = evaluationStageProfDTOaSave.getNumeroStage();
+
+        this.tachesConformite = evaluationStageProfDTOaSave.getTachesConformite();
+        this.accueilIntegration = evaluationStageProfDTOaSave.getAccueilIntegration();
+        this.encadrementSuffisant = evaluationStageProfDTOaSave.getEncadrementSuffisant();
+        this.heuresEncadrementPremierMois = evaluationStageProfDTOaSave.getHeuresEncadrementPremierMois();
+        this.heuresEncadrementDeuxiemeMois = evaluationStageProfDTOaSave.getHeuresEncadrementDeuxiemeMois();
+        this.heuresEncadrementTroisiemeMois = evaluationStageProfDTOaSave.getHeuresEncadrementTroisiemeMois();
+
+        this.respectNormesHygiene = evaluationStageProfDTOaSave.getRespectNormesHygiene();
+        this.climatDeTravail = evaluationStageProfDTOaSave.getClimatDeTravail();
+        this.accesTransportCommun = evaluationStageProfDTOaSave.getAccesTransportCommun();
+        this.salaireInteressant = evaluationStageProfDTOaSave.getSalaireInteressant();
+        this.salaireHoraire = evaluationStageProfDTOaSave.getSalaireHoraire();
+        this.communicationSuperviseur = evaluationStageProfDTOaSave.getCommunicationSuperviseur();
+        this.equipementAdequat = evaluationStageProfDTOaSave.getEquipementAdequat();
+        this.volumeTravailAcceptable = evaluationStageProfDTOaSave.getVolumeTravailAcceptable();
+
+        this.privilegiePremierStage = evaluationStageProfDTOaSave.isPrivilegiePremierStage();
+        this.privilegieDeuxiemeStage = evaluationStageProfDTOaSave.isPrivilegieDeuxiemeStage();
+        this.nombreStagiairesAccueillis = evaluationStageProfDTOaSave.getNombreStagiairesAccueillis();
+        this.souhaiteRevoirStagiaire = evaluationStageProfDTOaSave.isSouhaiteRevoirStagiaire();
+        this.offreQuartsVariables = evaluationStageProfDTOaSave.isOffreQuartsVariables();
+        this.horairesQuartsDeTravail = evaluationStageProfDTOaSave.getHorairesQuartsDeTravail();
+    }
 
 
     public enum EvaluationConformite {

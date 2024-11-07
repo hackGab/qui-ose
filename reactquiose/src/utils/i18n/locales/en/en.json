@@ -290,5 +290,13 @@
   "Non": "No",
   "MilieuOffreQuartsTravailVariables": "This environment offers variable work shifts",
   "De": "From",
-  "A": "To"
+  "A": "To",
+  "EncadrementSuffisant": "The actual time spent supervising the intern is sufficient."
+  "LocationDuStage": "Internship Location",
+  "DateDuStage": "Internship Date",
+  "NomEntreprise": "Company Name",
+  "TelephoneEmployeur": "Employer's Phone",
+  "PremierMois": "First month",
+  "Heures": "Hours",
+
 }

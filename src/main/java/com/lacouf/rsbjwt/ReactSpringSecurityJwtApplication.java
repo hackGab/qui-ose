@@ -9,9 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @SpringBootApplication
 public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
@@ -38,16 +35,16 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        gestionnaireService.creerGestionnaire(
-                new GestionnaireDTO(
-                        "Thiraiyan",
-                        "Moon",
-                        "123-456-7890",
-                        Role.GESTIONNAIRE,
-                        new CredentialDTO("mike@bike.com", "1")
-                )
-        );
-
-        userService.authenticateUser(new LoginDTO("mike@bike.com", "1"));
+//        gestionnaireService.creerGestionnaire(
+//                new GestionnaireDTO(
+//                        "Thiraiyan",
+//                        "Moon",
+//                        "123-456-7890",
+//                        Role.GESTIONNAIRE,
+//                        new CredentialDTO("mike@bike.com", "1")
+//                )
+//        );
+//
+//        userService.authenticateUser(new LoginDTO("mike@bike.com", "1"));
     }
 }

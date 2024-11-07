@@ -13,6 +13,7 @@ import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -207,6 +208,19 @@ public class SystemeService {
         gestionnaireTable.addCell(gestionnaireDateLabelCell);
 
         document.add(gestionnaireTable);
+
+        document.close();
+
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public byte[] generateEvaluationProfPDF(EvaluationStageProfDTO evaluationStageProf) throws Exception {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Document document = new Document();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
+        document.open();
+
+        document.add(new Paragraph("Evaluation de stage"));
 
         document.close();
 

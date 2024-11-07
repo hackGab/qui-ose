@@ -1,13 +1,12 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.Departement;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.Professeur;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.presentation.ProfesseurController;
 import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,12 +57,12 @@ public class ProfesseurServiceTest {
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         evaluationStageProfRepository = Mockito.mock(EvaluationStageProfRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        professeurService = new ProfesseurService(professeurRepository, etudiantRepository,passwordEncoder, evaluationStageProfRepository);
+        professeurService = new ProfesseurService(professeurRepository, etudiantRepository, passwordEncoder, evaluationStageProfRepository);
         etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
         professeurController = new ProfesseurController(professeurService, etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
-        newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, Departement.TECHNIQUES_INFORMATIQUE );
+        newProfesseur = new ProfesseurDTO("John", "Doe", Role.PROFESSEUR, "23456789", credentials, Departement.TECHNIQUES_INFORMATIQUE);
         professeurEntity = new Professeur("John", "Doe", "email@gmail.com", "password", "23456789", Departement.TECHNIQUES_INFORMATIQUE);
         professeurEntity.setEtudiants(new ArrayList<>());
         etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
@@ -97,7 +97,7 @@ public class ProfesseurServiceTest {
     }
 
     @Test
-void shouldReturnProfesseurById() {
+    void shouldReturnProfesseurById() {
         // Arrange
         Long professeurId = 1L;
 
@@ -236,5 +236,129 @@ void shouldReturnProfesseurById() {
 
         // Assert
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void creerEvaluationStage() {
+
+        Professeur professeur = new Professeur("A", "B", "C", "D", "E", Departement.TECHNIQUES_INFORMATIQUE);
+        List<Etudiant> etudiants = List.of(new Etudiant("B", "C", "D", "E", "F", Departement.TECHNIQUES_INFORMATIQUE));
+
+        professeur.setEtudiants(etudiants);
+
+        Employeur employeur = new Employeur();
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+
+        offreDeStage.setEmployeur(employeur);
+        offreDeStage.setEtudiants(etudiants);
+
+        Entrevue entrevue = new Entrevue();
+
+        entrevue.setEtudiant(new Etudiant("B", "C", "D", "E", "F", Departement.TECHNIQUES_INFORMATIQUE));
+        entrevue.setOffreDeStage(offreDeStage);
+
+        Contrat contrat = new Contrat();
+
+        CandidatAccepter candidatAccepter = new CandidatAccepter();
+
+        contrat.setCandidature(candidatAccepter);
+
+        candidatAccepter.setEntrevue(entrevue);
+
+        when(professeurRepository.findByEmail(any(String.class))).thenReturn(Optional.of(professeur));
+        when(etudiantRepository.findByEmail(any(String.class))).thenReturn(Optional.of(etudiantEntity));
+        when(etudiantRepository.findOffreDeStageByEntrevue(etudiants.get(0).getId())).thenReturn((offreDeStage));
+        when(etudiantRepository.findContratByEntrevue(etudiants.get(0).getId())).thenReturn(contrat);
+        when(evaluationStageProfRepository.findByProsseurID(any(Long.class))).thenReturn(Optional.of(new EvaluationStageProf()));
+        when(evaluationStageProfRepository.save(any())).thenReturn(null);
+
+
+        professeurService.creerEvaluationStage("A", List.of("B"));
+
+        Mockito.verify(evaluationStageProfRepository, Mockito.times(1)).save(any());
+    }
+
+    @Test
+    void evaluerStage() {
+
+        EvaluationStageProf evaluationStageProf = getEvaluationStageProf();
+
+
+        when(evaluationStageProfRepository.findByProsseurID(any(Long.class))).thenReturn(Optional.of(evaluationStageProf));
+        when(evaluationStageProfRepository.save(any())).thenReturn(null);
+
+        EvaluationStageProfDTO evaluationStageProfDTO = new EvaluationStageProfDTO(evaluationStageProf);
+
+        professeurService.evaluerStage(evaluationStageProfDTO);
+
+        Mockito.verify(evaluationStageProfRepository, Mockito.times(1)).save(any());
+
+
+    }
+
+    private static EvaluationStageProf getEvaluationStageProf() {
+        Etudiant etudiant = new Etudiant("B", "C", "D", "E", "F", Departement.TECHNIQUES_INFORMATIQUE);
+        etudiant.setId(1L);
+        Professeur professeur = new Professeur("A", "B", "C", "D", "E", Departement.TECHNIQUES_INFORMATIQUE);
+        professeur.setId(1L);
+
+        EvaluationStageProf evaluationStageProf = new EvaluationStageProf();
+
+        evaluationStageProf.setEtudiant(etudiant);
+        evaluationStageProf.setProfesseur(professeur);
+        evaluationStageProf.setNomEntreprise("A");
+        evaluationStageProf.setPersonneContact("B");
+        evaluationStageProf.setAdresse("C");
+        evaluationStageProf.setVille("D");
+        evaluationStageProf.setCodePostal("E");
+        evaluationStageProf.setTelephone("F");
+        evaluationStageProf.setTelecopieur("G");
+        evaluationStageProf.setNomStagiaire("H");
+        evaluationStageProf.setDateStage(LocalDate.now());
+        evaluationStageProf.setNumeroStage(1);
+        evaluationStageProf.setTachesConformite(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+        evaluationStageProf.setAccueilIntegration(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+        evaluationStageProf.setEncadrementSuffisant(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+
+        evaluationStageProf.setHeuresEncadrementPremierMois(1);
+        evaluationStageProf.setHeuresEncadrementDeuxiemeMois(1);
+        evaluationStageProf.setHeuresEncadrementTroisiemeMois(1);
+        evaluationStageProf.setRespectNormesHygiene(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+
+        evaluationStageProf.setSalaireHoraire(1);
+        evaluationStageProf.setClimatDeTravail(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+        evaluationStageProf.setAccesTransportCommun(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+        evaluationStageProf.setSalaireInteressant(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
+        evaluationStageProf.setPrivilegiePremierStage(true);
+        evaluationStageProf.setPrivilegieDeuxiemeStage(true);
+        evaluationStageProf.setNombreStagiairesAccueillis(1);
+        evaluationStageProf.setSouhaiteRevoirStagiaire(true);
+        evaluationStageProf.setOffreQuartsVariables(true);
+        evaluationStageProf.setHorairesQuartsDeTravail("A");
+        evaluationStageProf.setCommentaires("B");
+        evaluationStageProf.setSignatureEnseignant("C");
+        evaluationStageProf.setDateSignature("D");
+
+        return evaluationStageProf;
+    }
+
+    @Test
+    void getEvaluationsStageProf() {
+        Professeur professeur = new Professeur("A", "B", "C@b.vom", "D", "E", Departement.TECHNIQUES_INFORMATIQUE);
+        professeur.setId(1L);
+
+        EvaluationStageProf evaluationStageProf = getEvaluationStageProf();
+
+        List<EvaluationStageProf> evaluationStageProfs = List.of(evaluationStageProf);
+
+
+        when(professeurRepository.findByEmail(any(String.class))).thenReturn(Optional.of(professeur));
+        when(evaluationStageProfRepository.findAllByProfesseur(professeur)).thenReturn(evaluationStageProfs);
+
+        List<EvaluationStageProfDTO> result = professeurService.getEvaluationsStageProf("C@b.vom");
+
+        assertEquals(1, result.size());
+
     }
 }

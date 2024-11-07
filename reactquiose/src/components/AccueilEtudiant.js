@@ -44,7 +44,6 @@ function AccueilEtudiant() {
                             setRejectionMessage("");
                         }
 
-                        // Vérifiez si le statut est valide
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');

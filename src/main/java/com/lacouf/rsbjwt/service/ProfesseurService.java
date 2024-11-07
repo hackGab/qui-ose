@@ -130,17 +130,19 @@ public class ProfesseurService {
         evaluationStageProf.setNomEntreprise(offreDeStage.getEmployeur().getEntreprise());
         evaluationStageProf.setAdresse(offreDeStage.getLocalisation());
         evaluationStageProf.setTelephone(offreDeStage.getEmployeur().getPhoneNumber());
+        evaluationStageProf.setPersonneContact(offreDeStage.getEmployeur().getFirstName() + " " + offreDeStage.getEmployeur().getLastName());
+        evaluationStageProf.setSalaireHoraire(contrat.getTauxHoraire());
         return evaluationStageProf;
     }
 
     public Optional<EvaluationStageProfDTO> evaluerStage(EvaluationStageProfDTO evaluationStageProfDTO) {
 
-        EvaluationStageProf evaluationStageProfDTOaSave = new EvaluationStageProf();
+
         EvaluationStageProf evaluationStageProf = evaluationStageProfRepository.findByEtudiantID(evaluationStageProfDTO.getEtudiantId());
         System.out.println("EvaluationStageProf: " + evaluationStageProf.getId());
 
 
-        evaluationStageProfDTOaSave = updateEvaluationStageProf(evaluationStageProf, evaluationStageProfDTO);
+        EvaluationStageProf evaluationStageProfDTOaSave = updateEvaluationStageProf(evaluationStageProf, evaluationStageProfDTO);
 
         evaluationStageProfRepository.save(evaluationStageProfDTOaSave);
 
@@ -152,7 +154,6 @@ public class ProfesseurService {
     private EvaluationStageProf updateEvaluationStageProf(EvaluationStageProf evaluationStageProf, EvaluationStageProfDTO evaluationStageProfDTO) {
         evaluationStageProf.setCommentaires(evaluationStageProfDTO.getCommentaires());
         evaluationStageProf.setTachesConformite(evaluationStageProfDTO.getTachesConformite());
-        evaluationStageProf.setNumeroStage(evaluationStageProfDTO.getNumeroStage());
         evaluationStageProf.setAccueilIntegration(evaluationStageProfDTO.getAccueilIntegration());
         evaluationStageProf.setEncadrementSuffisant(evaluationStageProfDTO.getEncadrementSuffisant());
         evaluationStageProf.setHeuresEncadrementPremierMois(evaluationStageProfDTO.getHeuresEncadrementPremierMois());

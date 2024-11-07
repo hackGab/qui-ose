@@ -243,4 +243,33 @@ public class ProfesseurControllerTest {
         }
 
     }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"PROFESSEUR"})
+    void evaluerStage() {
+        EvaluationStageProfDTO evaluationStageProfDTO = new EvaluationStageProfDTO();
+
+        Etudiant etudiant = new Etudiant("John", "Doe", "allo", "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
+        etudiant.setId(1L);
+        Professeur professeur = new Professeur("John", "Doe", "allo", "123456789", null, Departement.TECHNIQUES_INFORMATIQUE);
+        professeur.setId(1L);
+
+        Mockito.when(professeurService.evaluerStage(any(EvaluationStageProfDTO.class))).thenReturn(Optional.of(evaluationStageProfDTO));
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders
+                            .put("/professeur/evaluerStage")
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .content(objectMapper.writeValueAsString(evaluationStageProfDTO))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(evaluationStageProfDTO)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 }

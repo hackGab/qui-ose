@@ -18,15 +18,13 @@ public class EvaluationStageProfDTO {
     private String nomEntreprise;
     private String personneContact;
     private String adresse;
-    private String ville;
-    private String codePostal;
     private String telephone;
-    private String telecopieur;
+
 
     // Identification du stagiaire
     private String nomStagiaire;
     private LocalDate dateStage;
-    private int numeroStage;
+
 
     // Évaluation des tâches
     private EvaluationStageProf.EvaluationConformite tachesConformite;
@@ -65,14 +63,10 @@ public class EvaluationStageProfDTO {
         this.nomEntreprise = evaluationStageProf.getNomEntreprise();
         this.personneContact = evaluationStageProf.getPersonneContact();
         this.adresse = evaluationStageProf.getAdresse();
-        this.ville = evaluationStageProf.getVille();
-        this.codePostal = evaluationStageProf.getCodePostal();
         this.telephone = evaluationStageProf.getTelephone();
-        this.telecopieur = evaluationStageProf.getTelecopieur();
-
         this.nomStagiaire = evaluationStageProf.getNomStagiaire();
         this.dateStage = evaluationStageProf.getDateStage();
-        this.numeroStage = evaluationStageProf.getNumeroStage();
+
 
         this.tachesConformite = evaluationStageProf.getTachesConformite();
         this.accueilIntegration = evaluationStageProf.getAccueilIntegration();
@@ -97,6 +91,10 @@ public class EvaluationStageProfDTO {
         this.souhaiteRevoirStagiaire = evaluationStageProf.isSouhaiteRevoirStagiaire();
         this.offreQuartsVariables = evaluationStageProf.isOffreQuartsVariables();
         this.horairesQuartsDeTravail = evaluationStageProf.getHorairesQuartsDeTravail();
+
+        this.commentaires = evaluationStageProf.getCommentaires();
+        this.signatureEnseignant = evaluationStageProf.getSignatureEnseignant();
+        this.dateSignature = evaluationStageProf.getDateSignature();
     }
 
     public enum EvaluationConformite {

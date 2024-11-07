@@ -285,7 +285,7 @@ public class ProfesseurServiceTest {
         EvaluationStageProf evaluationStageProf = getEvaluationStageProf();
 
 
-        when(evaluationStageProfRepository.findByProsseurID(any(Long.class))).thenReturn(Optional.of(evaluationStageProf));
+        when(evaluationStageProfRepository.findByEtudiantID(any(Long.class))).thenReturn(evaluationStageProf);
         when(evaluationStageProfRepository.save(any())).thenReturn(null);
 
         EvaluationStageProfDTO evaluationStageProfDTO = new EvaluationStageProfDTO(evaluationStageProf);
@@ -304,19 +304,18 @@ public class ProfesseurServiceTest {
         professeur.setId(1L);
 
         EvaluationStageProf evaluationStageProf = new EvaluationStageProf();
+        evaluationStageProf.setId(1L);
 
         evaluationStageProf.setEtudiant(etudiant);
         evaluationStageProf.setProfesseur(professeur);
         evaluationStageProf.setNomEntreprise("A");
         evaluationStageProf.setPersonneContact("B");
         evaluationStageProf.setAdresse("C");
-        evaluationStageProf.setVille("D");
-        evaluationStageProf.setCodePostal("E");
+
         evaluationStageProf.setTelephone("F");
-        evaluationStageProf.setTelecopieur("G");
         evaluationStageProf.setNomStagiaire("H");
         evaluationStageProf.setDateStage(LocalDate.now());
-        evaluationStageProf.setNumeroStage(1);
+
         evaluationStageProf.setTachesConformite(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
         evaluationStageProf.setAccueilIntegration(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);
         evaluationStageProf.setEncadrementSuffisant(EvaluationStageProf.EvaluationConformite.TOTAL_EN_ACCORD);

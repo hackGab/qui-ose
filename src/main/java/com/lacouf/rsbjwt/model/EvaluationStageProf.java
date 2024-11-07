@@ -29,15 +29,15 @@ public class EvaluationStageProf {
     private String nomEntreprise;
     private String personneContact;
     private String adresse;
-    private String ville;
-    private String codePostal;
+
+
     private String telephone;
-    private String telecopieur;
+
 
     // Identification du stagiaire
     private String nomStagiaire;
     private LocalDate dateStage;
-    private int numeroStage;
+
 
     // Évaluation des tâches
     private EvaluationConformite tachesConformite;
@@ -73,14 +73,13 @@ public class EvaluationStageProf {
         this.nomEntreprise = evaluationStageProfDTOaSave.getNomEntreprise();
         this.personneContact = evaluationStageProfDTOaSave.getPersonneContact();
         this.adresse = evaluationStageProfDTOaSave.getAdresse();
-        this.ville = evaluationStageProfDTOaSave.getVille();
-        this.codePostal = evaluationStageProfDTOaSave.getCodePostal();
+
         this.telephone = evaluationStageProfDTOaSave.getTelephone();
-        this.telecopieur = evaluationStageProfDTOaSave.getTelecopieur();
+
 
         this.nomStagiaire = evaluationStageProfDTOaSave.getNomStagiaire();
         this.dateStage = evaluationStageProfDTOaSave.getDateStage();
-        this.numeroStage = evaluationStageProfDTOaSave.getNumeroStage();
+
 
         this.tachesConformite = evaluationStageProfDTOaSave.getTachesConformite();
         this.accueilIntegration = evaluationStageProfDTOaSave.getAccueilIntegration();

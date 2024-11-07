@@ -97,6 +97,10 @@ public class EvaluationStageProfDTO {
         this.souhaiteRevoirStagiaire = evaluationStageProf.isSouhaiteRevoirStagiaire();
         this.offreQuartsVariables = evaluationStageProf.isOffreQuartsVariables();
         this.horairesQuartsDeTravail = evaluationStageProf.getHorairesQuartsDeTravail();
+
+        this.commentaires = evaluationStageProf.getCommentaires();
+        this.signatureEnseignant = evaluationStageProf.getSignatureEnseignant();
+        this.dateSignature = evaluationStageProf.getDateSignature();
     }
 
     public enum EvaluationConformite {

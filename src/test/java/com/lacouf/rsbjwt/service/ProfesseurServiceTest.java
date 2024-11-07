@@ -356,7 +356,7 @@ public class ProfesseurServiceTest {
         when(professeurRepository.findByEmail(any(String.class))).thenReturn(Optional.of(professeur));
         when(evaluationStageProfRepository.findAllByProfesseur(professeur)).thenReturn(evaluationStageProfs);
 
-        List<EvaluationStageProf> result = professeurService.getEvaluationsStageProf("C@b.vom");
+        List<EvaluationStageProfDTO> result = professeurService.getEvaluationsStageProf("C@b.vom");
 
         assertEquals(1, result.size());
 

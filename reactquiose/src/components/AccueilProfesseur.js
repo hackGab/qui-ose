@@ -17,11 +17,9 @@ function AccueilProfesseur() {
     const { t } = useTranslation();
     const location = useLocation();
     const { userData } = location.state || {};
-    const [listeEtudiants, setListeEtudiants] = useState([]);
-    const [selectedEtudiant, setSelectedEtudiant] = useState(null);
     const [listeEvaluations, setListeEvaluations] = useState([]);
+    const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
     const [evaluation, setEvaluation] = useState({
         tachesConformite: "",
         accueilIntegration: "",
@@ -42,31 +40,6 @@ function AccueilProfesseur() {
         nombreStagiairesAccueillis: "",
         souhaiteRevoirStagiaire: null,
     });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (userData) {
-                try {
-                    const etudiantsResponse = await fetch(`http://localhost:8081/professeur/etudiants/${userData.credentials.email}`);
-                    if (!etudiantsResponse.ok) {
-                        throw new Error("Erreur lors de la récupération des étudiants");
-                    }
-
-                    const etudiantsData = await etudiantsResponse.json();
-                    setListeEtudiants(etudiantsData);
-
-                    console.log("etudiantsData", etudiantsData);
-
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des données :", error);
-                }
-
-
-            }
-        };
-
-        fetchData();
-    }, [userData]);
 
     useEffect(() => {
          if (userData?.credentials?.email) {
@@ -93,14 +66,15 @@ function AccueilProfesseur() {
          }
      }, [userData?.credentials?.email]);
 
-    const handleShowModal = (etudiant) => {
-        setSelectedEtudiant(etudiant);
+    const handleShowModal = (evaluation) => {
+        setSelectedEvaluation(evaluation);
+        console.log("Selected Evaluation:", evaluation);
         setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedEtudiant(null);
+        setSelectedEvaluation(null);
     };
 
     const handleChange = (e, field) => {
@@ -110,17 +84,61 @@ function AccueilProfesseur() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const isFormComplete = Object.values(evaluation).every(value => value !== "");
+        selectedEvaluation.tachesConformite = evaluation.tachesConformite;
+        selectedEvaluation.accueilIntegration = evaluation.accueilIntegration;
+        selectedEvaluation.encadrementSuffisant = evaluation.encadrementSuffisant;
+        selectedEvaluation.respectNormesHygiene = evaluation.respectNormesHygiene;
+        selectedEvaluation.climatDeTravail = evaluation.climatDeTravail;
+        selectedEvaluation.accesTransportCommun = evaluation.accesTransportCommun;
+        selectedEvaluation.salaireInteressant = evaluation.salaireInteressant;
+        selectedEvaluation.communicationSuperviseur = evaluation.communicationSuperviseur;
+        selectedEvaluation.equipementAdequat = evaluation.equipementAdequat;
+        selectedEvaluation.volumeTravailAcceptable = evaluation.volumeTravailAcceptable;
+        selectedEvaluation.heuresEncadrementPremierMois = evaluation.heuresEncadrementPremierMois;
+        selectedEvaluation.heuresEncadrementDeuxiemeMois = evaluation.heuresEncadrementDeuxiemeMois;
+        selectedEvaluation.heuresEncadrementTroisiemeMois = evaluation.heuresEncadrementTroisiemeMois;
+        selectedEvaluation.commentaires = evaluation.commentaires;
+        selectedEvaluation.privilegiePremierStage = evaluation.privilegiePremierStage;
+        selectedEvaluation.privilegieDeuxiemeStage = evaluation.privilegieDeuxiemeStage;
+        selectedEvaluation.nombreStagiairesAccueillis = evaluation.nombreStagiairesAccueillis;
+        selectedEvaluation.souhaiteRevoirStagiaire = evaluation.souhaiteRevoirStagiaire;
+        const date = new Date();
+        const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+        selectedEvaluation.dateSignature = formattedDate;
+        selectedEvaluation.signatureEnseignant = userData.credentials.email;
 
-        if (!isFormComplete) {
-            alert("Veuillez remplir tous les champs obligatoires.");
-            return;
-        }
+        setEvaluation({
+            tachesConformite: "",
+            accueilIntegration: "",
+            encadrementSuffisant: "",
+            respectNormesHygiene: "",
+            climatDeTravail: "",
+            accesTransportCommun: "",
+            salaireInteressant: "",
+            communicationSuperviseur: "",
+            equipementAdequat: "",
+            volumeTravailAcceptable: "",
+            heuresEncadrementPremierMois: "",
+            heuresEncadrementDeuxiemeMois: "",
+            heuresEncadrementTroisiemeMois: "",
+            commentaires: "",
+            privilegiePremierStage: false,
+            privilegieDeuxiemeStage: false,
+            nombreStagiairesAccueillis: "",
+            souhaiteRevoirStagiaire: null,
+        });
 
-        console.log("Evaluation Data:", evaluation);
+        await fetch(`http://localhost:8081/professeur/evaluerStage`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(selectedEvaluation)
+        });
+        handleCloseModal();
     };
 
     return (
@@ -134,23 +152,23 @@ function AccueilProfesseur() {
                 <div className="container">
                     <h1 className="mb-4 text-center">{t('studentListTitleForEvaluation')}</h1>
 
-                    {listeEtudiants.length === 0 ? (
+                    {listeEvaluations.length === 0 ? (
                         <p className="text-center">{t('AucunEtudiantTrouve')}</p>
                     ) : (
                         <div className="row">
-                            {listeEtudiants.map((etudiant) => (
-                                <div className="col-12 col-md-6 col-lg-4 mb-4" key={etudiant.id}>
+                            {listeEvaluations.map((evaluation) => (
+                                <div className="col-12 col-md-6 col-lg-4 mb-4" key={evaluation.id}>
                                     <div
                                         className="card shadow"
-                                        onClick={() => handleShowModal(etudiant)}
+                                        onClick={() => {
+                                            if (!evaluation.signatureEnseignant) {
+                                                handleShowModal(evaluation);
+                                            }
+                                        }}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div className="card-body">
-                                            <h5 className="card-title">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
-                                            <p className="card-text">
-                                                {etudiant.credentials.email}<br />
-                                                {etudiant.phoneNumber}
-                                            </p>
+                                            <h5 className="card-title">{`${evaluation.nomStagiaire}`}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +181,7 @@ function AccueilProfesseur() {
             <Modal show={showModal} onHide={handleCloseModal} size="lg">
                 <form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Évaluation de {selectedEtudiant?.firstName} {selectedEtudiant?.lastName}</Modal.Title>
+                        <Modal.Title>Évaluation de {selectedEvaluation ? selectedEvaluation.nomStagiaire : null}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <h5 style={{

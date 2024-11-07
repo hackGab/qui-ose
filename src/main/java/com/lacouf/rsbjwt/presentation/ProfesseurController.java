@@ -116,6 +116,8 @@ public class ProfesseurController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
+        System.out.println("EvaluationStageProfDTO: " + evaluationStageProfDTO);
+
         Optional<EvaluationStageProfDTO> evaluationStageProfDTOUpdated = professeurService.evaluerStage(evaluationStageProfDTO);
 
         return evaluationStageProfDTOUpdated.map(evaluationStageProf -> ResponseEntity.ok().body(evaluationStageProf))

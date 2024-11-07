@@ -20,6 +20,7 @@ function AccueilProfesseur() {
     const [listeEvaluations, setListeEvaluations] = useState([]);
     const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [showModal, setShowModal] = useState(false);
+
     const [evaluation, setEvaluation] = useState({
         tachesConformite: "",
         accueilIntegration: "",
@@ -106,7 +107,7 @@ function AccueilProfesseur() {
         selectedEvaluation.nombreStagiairesAccueillis = evaluation.nombreStagiairesAccueillis;
         selectedEvaluation.souhaiteRevoirStagiaire = evaluation.souhaiteRevoirStagiaire;
         const date = new Date();
-        const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+        const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getFullYear()).padStart(2, '0')}`;
         selectedEvaluation.dateSignature = formattedDate;
         selectedEvaluation.signatureEnseignant = userData.credentials.email;
 
@@ -141,6 +142,36 @@ function AccueilProfesseur() {
         handleCloseModal();
     };
 
+    const generationPDF = async (evaluation) => {
+        try {
+            const response = await fetch(`http://localhost:8081/generatePDF/evaluationProf`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(evaluation)
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la génération du PDF");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "Evaluation_Stage_Prof.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            console.log("PDF généré et téléchargé avec succès");
+        } catch (error) {
+            console.error("Erreur lors de la génération du PDF :", error);
+        }
+    };
+
+
     return (
         <>
             <ProfesseurHeader userData={userData} />
@@ -169,6 +200,11 @@ function AccueilProfesseur() {
                                     >
                                         <div className="card-body">
                                             <h5 className="card-title">{`${evaluation.nomStagiaire}`}</h5>
+                                            {evaluation.signatureEnseignant ? (
+                                                <Button onClick={() => generationPDF(evaluation)} className="btn-success">
+                                                    Générer Évaluation en PDF
+                                                </Button>
+                                            ) : null}
                                         </div>
                                     </div>
                                 </div>
@@ -181,7 +217,7 @@ function AccueilProfesseur() {
             <Modal show={showModal} onHide={handleCloseModal} size="lg">
                 <form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Évaluation de {selectedEvaluation ? selectedEvaluation.nomStagiaire : null}</Modal.Title>
+                        <Modal.Title>{t('Évaluation de')} {selectedEvaluation ? selectedEvaluation.nomStagiaire : null}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <h5 style={{
@@ -194,12 +230,12 @@ function AccueilProfesseur() {
                             marginBottom: "15px",
                             textAlign: "center"
                         }}>
-                            Évaluation des tâches
+                            {t('Évaluation des tâches')}
                         </h5>
                         <table className="table table-bordered">
                             <thead>
                             <tr>
-                                <th>Critères</th>
+                                <th>{t('Critères')}</th>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <th key={option.value} className="text-center">{option.label}</th>
                                 ))}
@@ -207,9 +243,7 @@ function AccueilProfesseur() {
                             </thead>
                             <tbody>
                             <tr>
-                                <td>Les tâches confiées au stagiaire sont conformes aux tâches annoncées dans l'entente
-                                    de stage.
-                                </td>
+                                <td>{t('LesTachesConformite')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -224,7 +258,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>Des mesures d’accueil facilitent l’intégration du nouveau stagiaire.</td>
+                                <td>{t('DesMesuresAccueil')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -239,7 +273,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>Le temps réel consacré à l’encadrement du stagiaire est suffisant.</td>
+                                <td>{t('EncadrementSuffisant')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -256,49 +290,39 @@ function AccueilProfesseur() {
                             </tbody>
                         </table>
 
-                        <h5>Nombre d'heures/semaine</h5>
+                        <h5>{t('NombreHeuresSemaine')}</h5>
                         <div className="mb-3">
-                            <label>Premier mois:</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                min={1}
-                                value={evaluation.heuresEncadrementPremierMois}
-                                onChange={(e) => handleChange(e, "heuresEncadrementPremierMois")}
-                                placeholder="Heures"
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label>Deuxième mois:</label>
-                            <input
-                                type="number"
-                                min={1}
-                                className="form-control"
-                                value={evaluation.heuresEncadrementDeuxiemeMois}
-                                onChange={(e) => handleChange(e, "heuresEncadrementDeuxiemeMois")}
-                                placeholder="Heures"
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label>Troisième mois:</label>
-                            <input
-                                type="number"
-                                min={1}
-                                className="form-control"
-                                value={evaluation.heuresEncadrementTroisiemeMois}
-                                onChange={(e) => handleChange(e, "heuresEncadrementTroisiemeMois")}
-                                placeholder="Heures"
-                                required
-                            />
+                            <p>
+                                <strong>{t('LocationDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.adresse : null}
+                            </p>
+                            <p>
+                                <strong>{t('DateDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.dateStage : null}
+                            </p>
+                            <p>
+                                <strong>{t('NomEntreprise')}: </strong>{selectedEvaluation ? selectedEvaluation.nomEntreprise : null}
+                            </p>
+                            <p>
+                                <strong>{t('TelephoneEmployeur')}: </strong>{selectedEvaluation ? selectedEvaluation.telephone : null}
+                            </p>
                         </div>
 
-                        <h5>Autres critères d'évaluation</h5>
+
+                        <h5 style={{
+                            fontSize: "1.25rem",
+                            fontWeight: "bold",
+                            backgroundColor: "#f8f9fa",
+                            padding: "10px",
+                            borderRadius: "5px",
+                            border: "1px solid #dee2e6",
+                            marginBottom: "15px",
+                            textAlign: "center"
+                        }}>
+                            {t('Évaluation des tâches')}
+                        </h5>
                         <table className="table table-bordered">
                             <thead>
                             <tr>
-                                <th>Critères</th>
+                                <th>{t('Critères')}</th>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <th key={option.value} className="text-center">{option.label}</th>
                                 ))}
@@ -306,9 +330,104 @@ function AccueilProfesseur() {
                             </thead>
                             <tbody>
                             <tr>
-                                <td>L’environnement de travail respecte les normes d’hygiène et de sécurité au
-                                    travail.
-                                </td>
+                                <td>{t('LesTachesConformite')}</td>
+                                {EvaluationConformiteOptions.map((option) => (
+                                    <td key={option.value} className="text-center">
+                                        <input
+                                            type="radio"
+                                            name="tachesConformite"
+                                            value={option.value}
+                                            checked={evaluation.tachesConformite === option.value}
+                                            onChange={(e) => handleChange(e, "tachesConformite")}
+                                            required
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr>
+                                <td>{t('DesMesuresAccueil')}</td>
+                                {EvaluationConformiteOptions.map((option) => (
+                                    <td key={option.value} className="text-center">
+                                        <input
+                                            type="radio"
+                                            name="accueilIntegration"
+                                            value={option.value}
+                                            checked={evaluation.accueilIntegration === option.value}
+                                            onChange={(e) => handleChange(e, "accueilIntegration")}
+                                            required
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr>
+                                <td>{t('EncadrementSuffisant')}</td>
+                                {EvaluationConformiteOptions.map((option) => (
+                                    <td key={option.value} className="text-center">
+                                        <input
+                                            type="radio"
+                                            name="encadrementSuffisant"
+                                            value={option.value}
+                                            checked={evaluation.encadrementSuffisant === option.value}
+                                            onChange={(e) => handleChange(e, "encadrementSuffisant")}
+                                            required
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>{t('NombreHeuresSemaine')}</h5>
+                        <div className="mb-3">
+                            <label>{t('PremierMois')}:</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                min={1}
+                                value={evaluation.heuresEncadrementPremierMois}
+                                onChange={(e) => handleChange(e, "heuresEncadrementPremierMois")}
+                                placeholder={t('Heures')}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label>{t('DeuxiemeMois')}:</label>
+                            <input
+                                type="number"
+                                min={1}
+                                className="form-control"
+                                value={evaluation.heuresEncadrementDeuxiemeMois}
+                                onChange={(e) => handleChange(e, "heuresEncadrementDeuxiemeMois")}
+                                placeholder={t('Heures')}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label>{t('TroisiemeMois')}:</label>
+                            <input
+                                type="number"
+                                min={1}
+                                className="form-control"
+                                value={evaluation.heuresEncadrementTroisiemeMois}
+                                onChange={(e) => handleChange(e, "heuresEncadrementTroisiemeMois")}
+                                placeholder={t('Heures')}
+                                required
+                            />
+                        </div>
+
+                        <h5>{t('AutresCriteresEvaluation')}</h5>
+                        <table className="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>{t('Criteres')}</th>
+                                {EvaluationConformiteOptions.map((option) => (
+                                    <th key={option.value} className="text-center">{option.label}</th>
+                                ))}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                            <td>{t('RespectNormesHygiene')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -323,22 +442,22 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>Le climat de travail est agréable.</td>
-                                {EvaluationConformiteOptions.map((option) => (
-                                    <td key={option.value} className="text-center">
-                                        <input
-                                            type="radio"
-                                            name="climatDeTravail"
-                                            value={option.value}
-                                            checked={evaluation.climatDeTravail === option.value}
-                                            onChange={(e) => handleChange(e, "climatDeTravail")}
-                                            required
-                                        />
-                                    </td>
-                                ))}
+                                <td>{t('ClimatDeTravail')}</td>
+                            {EvaluationConformiteOptions.map((option) => (
+                                <td key={option.value} className="text-center">
+                                    <input
+                                        type="radio"
+                                        name="climatDeTravail"
+                                        value={option.value}
+                                        checked={evaluation.climatDeTravail === option.value}
+                                        onChange={(e) => handleChange(e, "climatDeTravail")}
+                                        required
+                                    />
+                                </td>
+                            ))}
                             </tr>
                             <tr>
-                                <td>Le milieu de stage est accessible par transport en commun.</td>
+                                <td>{t('AccesTransportCommun')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -353,7 +472,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>Le salaire offert est intéressant pour le stagiaire.</td>
+                                <td>{t('SalaireInteressant')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -368,7 +487,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>La communication avec le superviseur de stage facilite le déroulement du stage.</td>
+                                <td>{t('CommunicationSuperviseur')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -383,7 +502,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>L’équipement fourni est adéquat pour réaliser les tâches confiées.</td>
+                                <td>{t('EquipementAdequat')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -398,7 +517,7 @@ function AccueilProfesseur() {
                                 ))}
                             </tr>
                             <tr>
-                                <td>Le volume de travail est acceptable.</td>
+                                <td>{t('VolumeTravailAcceptable')}</td>
                                 {EvaluationConformiteOptions.map((option) => (
                                     <td key={option.value} className="text-center">
                                         <input
@@ -412,22 +531,22 @@ function AccueilProfesseur() {
                                     </td>
                                 ))}
                             </tr>
-                            </tbody>
-                        </table>
-                        <h5 style={{
-                            fontSize: "1.25rem",
-                            fontWeight: "bold",
-                            backgroundColor: "#f8f9fa",
-                            padding: "10px",
-                            borderRadius: "5px",
-                            border: "1px solid #dee2e6",
-                            marginBottom: "15px",
-                            textAlign: "center"
-                        }}>
-                            Commentaires
-                        </h5>
+                        </tbody>
+                    </table>
+                    <h5 style={{
+                        fontSize: "1.25rem",
+                        fontWeight: "bold",
+                        backgroundColor: "#f8f9fa",
+                        padding: "10px",
+                        borderRadius: "5px",
+                        border: "1px solid #dee2e6",
+                        marginBottom: "15px",
+                        textAlign: "center"
+                    }}>
+                        {t('Commentaires')}
+                    </h5>
 
-                        <div className="mb-3">
+                    <div className="mb-3">
                             <textarea
                                 className="form-control"
                                 value={evaluation.commentaires || ""}
@@ -435,36 +554,51 @@ function AccueilProfesseur() {
                                 placeholder="Ajoutez vos commentaires ici"
                                 required
                             />
-                        </div>
-                        <h5 style={{
-                            fontSize: "1.25rem",
-                            fontWeight: "bold",
-                            backgroundColor: "#f8f9fa",
-                            padding: "10px",
-                            borderRadius: "5px",
-                            border: "1px solid #dee2e6",
-                            marginBottom: "15px",
-                            textAlign: "center"
-                        }}>
-                            Observations Générales
-                        </h5>
+                            </div>
+                            <h5 style={{
+                                fontSize: "1.25rem",
+                                fontWeight: "bold",
+                                backgroundColor: "#f8f9fa",
+                                padding: "10px",
+                                borderRadius: "5px",
+                                border: "1px solid #dee2e6",
+                                marginBottom: "15px",
+                                textAlign: "center"
+                            }}>
+                                {t('ObservationsGenerales')}
+                            </h5>
 
-                        <div className="mb-3">
-                            <label>Ce milieu est à privilégier pour le stage :</label>
-                            <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    checked={evaluation.privilegiePremierStage}
-                                    onChange={(e) => {
-                                        setEvaluation({
-                                            ...evaluation,
-                                            privilegiePremierStage: e.target.checked,
-                                            privilegieDeuxiemeStage: !e.target.checked
-                                        });
-                                    }}
-                                />
-                                <label className="form-check-label">Premier stage</label>
+                            <div className="mb-3">
+                                <label>{t('MilieuPrivilegierPourStage')}:</label>
+                                <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        checked={evaluation.privilegiePremierStage}
+                                        onChange={(e) => {
+                                            setEvaluation({
+                                                ...evaluation,
+                                                privilegiePremierStage: e.target.checked,
+                                                privilegieDeuxiemeStage: !e.target.checked
+                                            });
+                                        }}
+                                    />
+                                    <label className="form-check-label">{t('PremierStage')}</label></div>
+                                <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        checked={evaluation.privilegieDeuxiemeStage}
+                                        onChange={(e) => {
+                                            setEvaluation({
+                                                ...evaluation,
+                                                privilegiePremierStage: !e.target.checked,
+                                                privilegieDeuxiemeStage: e.target.checked
+                                            });
+                                        }}
+                                    />
+                                    <label className="form-check-label">{t('DeuxiemeStage')}</label>
+                                </div>
                             </div>
                             <div className="form-check">
                                 <input
@@ -479,36 +613,19 @@ function AccueilProfesseur() {
                                         });
                                     }}
                                 />
-                                <label className="form-check-label">Deuxième stage</label>
+                                <label className="form-check-label">{t('DeuxiemeStage')}</label>
                             </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <label>Ce milieu est ouvert à accueillir :</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                min={1}
-                                value={evaluation.nombreStagiairesAccueillis || ""}
-                                onChange={(e) => handleChange(e, "nombreStagiairesAccueillis")}
-                                placeholder="Nombre de stagiaires"
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label>Ce milieu désire accueillir le même stagiaire pour un prochain stage :</label>
-                            <br></br>
-                            <div className="form-check form-check-inline">
-                                <input
-                                    type="radio"
-                                    className="form-check-input"
-                                    name="souhaiteRevoirStagiaire"
-                                    checked={evaluation.souhaiteRevoirStagiaire === true}
-                                    onChange={() => setEvaluation({...evaluation, souhaiteRevoirStagiaire: true})}
+                            <div className="mb-3">
+                                <label>{t('MilieuOuvertAccueillir')}</label>                                <input
+                                    type="number"
+                                    className="form-control"
+                                    min={1}
+                                    value={evaluation.nombreStagiairesAccueillis || ""}
+                                    onChange={(e) => handleChange(e, "nombreStagiairesAccueillis")}
+                                    placeholder="Nombre de stagiaires"
                                     required
                                 />
-                                <label className="form-check-label">Oui</label>
+                                <label className="form-check-label">{t('Oui')}</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input
@@ -519,35 +636,34 @@ function AccueilProfesseur() {
                                     onChange={() => setEvaluation({...evaluation, souhaiteRevoirStagiaire: false})}
                                     required
                                 />
-                                <label className="form-check-label">Non</label>
+                                <label className="form-check-label">{t('Non')}</label>
                             </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <label>Ce milieu offre des quarts de travail variables :</label>
-                            <div className="row">
-                                {[1, 2, 3].map((i) => (
-                                    <div className="col-4 mb-2" key={i}>
-                                        <label>De:</label>
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            value={evaluation[`quartTravailDe${i}`] || ""}
-                                            onChange={(e) => handleChange(e, `quartTravailDe${i}`)}
-                                            required
-                                        />
-                                        <label>à</label>
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            value={evaluation[`quartTravailA${i}`] || ""}
-                                            onChange={(e) => handleChange(e, `quartTravailA${i}`)}
-                                            required
-                                        />
-                                    </div>
-                                ))}
+                            <div className="mb-3">
+                                <label>{t('MilieuDesireAccueillirMemeStagiaire')}</label>
+                                <br></br>
+                                <div className="form-check form-check-inline">
+                                    <input
+                                        type="radio"
+                                        className="form-check-input"
+                                        name="souhaiteRevoirStagiaire"
+                                        checked={evaluation.souhaiteRevoirStagiaire === true}
+                                        onChange={() => setEvaluation({...evaluation, souhaiteRevoirStagiaire: true})}
+                                        required
+                                    />
+                                    <label className="form-check-label">{t('Oui')}</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input
+                                        type="radio"
+                                        className="form-check-input"
+                                        name="souhaiteRevoirStagiaire"
+                                        checked={evaluation.souhaiteRevoirStagiaire === false}
+                                        onChange={() => setEvaluation({...evaluation, souhaiteRevoirStagiaire: false})}
+                                        required
+                                    />
+                                    <label className="form-check-label">{('Non')}</label>
+                                </div>
                             </div>
-                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleCloseModal}>

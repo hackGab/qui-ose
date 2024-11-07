@@ -130,7 +130,7 @@ function AccueilProfesseur() {
 
     return (
         <>
-            {/*<ProfesseurHeader userData={userData} />*/}
+            <ProfesseurHeader userData={userData} />
             <div className="container-fluid p-4">
                 <h2 className="text-center my-4" style={{ color: "#01579b" }}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!

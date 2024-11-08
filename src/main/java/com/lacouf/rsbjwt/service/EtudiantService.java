@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EtudiantService {
@@ -59,7 +60,6 @@ public class EtudiantService {
             return Optional.empty();
         }
     }
-
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)
@@ -185,7 +185,7 @@ public class EtudiantService {
             Etudiant etudiant = etudiantOptional.get();
             Long etudiantId = etudiant.getId();
             return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                    .filter(entrevue -> entrevue.getStatus().equals("En attente"))
+                    .filter(entrevue -> entrevue.getStatus().equals("Attente"))
                     .map(EntrevueDTO::new)
                     .toList();
         } else {
@@ -287,10 +287,33 @@ public class EtudiantService {
                 .toList();
     }
 
-
     public List<EtudiantDTO> getEtudiantsAvecContratByDepartement(Departement departement) {
         return etudiantRepository.findEtudiantsAvecContratByDepartement(departement).stream()
                 .map(EtudiantDTO::new)
                 .toList();
+    }
+
+    public int getNombreCVEnAttente() {
+        // Step 1: Retrieve all students
+        List<Etudiant> etudiants = etudiantRepository.findAll();
+        System.out.println("Etudiants: " + etudiants);
+
+// Step 2: Map each student to their CV
+        List<CV> cvs = etudiants.stream()
+                .map(Etudiant::getCv)
+                .toList();
+        System.out.println("CVs: " + cvs);
+
+// Step 3: Filter CVs with status "Attente"
+        List<CV> cvsEnAttente = cvs.stream()
+                .filter(cv -> cv != null && "Attente".equals(cv.getStatus()))
+                .toList();
+        System.out.println("CVs en attente: " + cvsEnAttente);
+
+// Step 4: Count the filtered CVs
+        int nbCV = cvsEnAttente.size();
+        System.out.println("Nombre de CV en attente: " + nbCV);
+
+        return nbCV;
     }
 }

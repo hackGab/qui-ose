@@ -374,7 +374,6 @@ public class SystemeService {
         return EvaluationStageProfDTO.EvaluationConformite.valueOf(conformite.name());
     }
 
-
     public void creerEvaluationStageProf(Optional<EtudiantDTO> etudiantDTO) {
         System.out.println("Création de l'évaluation de stage pour l'étudiant " + etudiantDTO.get().getFirstName());
     }

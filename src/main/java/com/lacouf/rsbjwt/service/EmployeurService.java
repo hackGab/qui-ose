@@ -56,7 +56,6 @@ public class EmployeurService {
                 .map(EmployeurDTO::new);
     }
 
-
     public Optional<Employeur> findByCredentials_Email(String email) {
         return employeurRepository.findByCredentials_email(email);
     }
@@ -131,7 +130,6 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
-
     public Optional<ContratDTO> signerContratEmployeur(String uuid, String password) {
         Contrat contrat = contratRepository.findByUUID(uuid)
                 .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
@@ -148,7 +146,6 @@ public class EmployeurService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
-
 
     private Employeur getEmployeurFromContrat(Contrat contrat) {
         return Optional.ofNullable(contrat.getCandidature())
@@ -204,11 +201,23 @@ public class EmployeurService {
                     evaluationStageEmployeur.getCommentairesRelationsInterpersonnelles(),
                     evaluationStageEmployeur.getInteretMotivationTravail(),
                     evaluationStageEmployeur.getExprimerIdees(),
-                    evaluationStageEmployeur.getInitiative()
+                    evaluationStageEmployeur.getInitiative(),
+                    evaluationStageEmployeur.getTravailSecuritaire(),
+                    evaluationStageEmployeur.getSensResponsabilite(),
+                    evaluationStageEmployeur.getPonctualiteAssiduite(),
+                    evaluationStageEmployeur.getHabiletePersonnelles(),
+                    evaluationStageEmployeur.getAppreciationGlobale(),
+                    evaluationStageEmployeur.getCommentairesAppreciation(),
+                    evaluationStageEmployeur.isEvaluationDiscuteeAvecStagiaire(),
+                    evaluationStageEmployeur.getHeuresEncadrementParSemaine(),
+                    evaluationStageEmployeur.getEntrepriseSouhaiteProchainStage(),
+                    evaluationStageEmployeur.getCommentairesFormationTechnique(),
+                    evaluationStageEmployeur.getSignatureEmployeur(),
+                    evaluationStageEmployeur.getDateSignature()
             );
 
-            EvaluationStageEmployeur savedEvaluationStageEmployeur = evaluationStageEmployeurEntity;
-            return Optional.of(new EvaluationStageEmployeurDTO(savedEvaluationStageEmployeur));
+            evaluationStageEmployeurRepository.save(evaluationStageEmployeurEntity);
+            return Optional.of(new EvaluationStageEmployeurDTO(evaluationStageEmployeurEntity));
 
         } catch (Exception e) {
             throw new RuntimeException(e);

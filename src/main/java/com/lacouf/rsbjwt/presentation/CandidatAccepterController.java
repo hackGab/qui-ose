@@ -19,7 +19,6 @@ public class CandidatAccepterController {
         this.candidatAccepterService = candidatAccepterService;
     }
 
-    // Endpoint pour accepter une candidature
     @PutMapping("/accepter/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> accepterCandidature(@PathVariable Long entrevueId) {
         Optional<CandidatAccepterDTO> candidatAccepterOpt = candidatAccepterService.accepterCandidature(entrevueId);

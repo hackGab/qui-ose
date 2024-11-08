@@ -54,8 +54,6 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new);
     }
 
-
-
     public String deleteOffreDeStage(Long id) {
         try {
             offreDeStageRepository.deleteById(id);
@@ -64,7 +62,6 @@ public class OffreDeStageService {
             return "Erreur lors de la suppression de l'offre de stage";
         }
     }
-
 
     public Optional<OffreDeStageDTO> updateOffreDeStage(Long id, OffreDeStageDTO offreDeStageDTO) {
         return offreDeStageRepository.findById(id)
@@ -104,7 +101,6 @@ public class OffreDeStageService {
             throw new IllegalArgumentException("Offre de stage introuvable");
         }
 
-
         List<EtudiantDTO> etudiants = offreOpt.get().getEtudiants().stream()
                 .map(EtudiantDTO::new)
                 .distinct()
@@ -112,9 +108,5 @@ public class OffreDeStageService {
 
         return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
     }
-
-
-
-
 }
 

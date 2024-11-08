@@ -77,7 +77,6 @@ public class EtudiantController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-
     @GetMapping("/{etudiantEmail}/offres")
     public ResponseEntity<Iterable<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
         return ResponseEntity.ok(etudiantService.getOffresDeStage(etudiantEmail));
@@ -95,8 +94,7 @@ public class EtudiantController {
 
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
+    } 
 
     @GetMapping("/departement/{departement}")
     public ResponseEntity<Iterable<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {

@@ -174,7 +174,6 @@ function AccueilProfesseur() {
         }
     };
 
-
     return (
         <>
             <ProfesseurHeader userData={userData}/>

@@ -80,24 +80,28 @@ public class EvaluationStageEmployeur {
     public EvaluationStageEmployeur(
                                     Employeur employeurEntity,
                                     Etudiant etudiantEntity,
+                                    // Basic Information
                                     String nomEleve,
                                     String programmeEtude,
                                     String nomEntreprise,
                                     String nomSuperviseur,
                                     String fonction,
                                     String telephone,
+                                    // Productivity Section (Changement des types de EvaluationConformite à String)
                                     String planifOrganiserTravail,
                                     String comprendreDirectives,
                                     String maintenirRythmeTravail,
                                     String etablirPriorites,
                                     String respecterEcheanciers,
                                     String commentairesProductivite,
+                                    // Quality of Work Section
                                     String respecterMandats,
                                     String attentionAuxDetails,
                                     String verifierTravail,
                                     String perfectionnement,
                                     String analyseProblemes,
                                     String commentairesQualiteTravail,
+                                    // Interpersonal Relations Section
                                     String etablirContacts,
                                     String contribuerTravailEquipe,
                                     String adapterCultureEntreprise,
@@ -105,9 +109,27 @@ public class EvaluationStageEmployeur {
                                     String respectueux,
                                     String ecouteActive,
                                     String commentairesRelationsInterpersonnelles,
+                                    // Personal Skills Section
                                     String interetMotivationTravail,
                                     String exprimerIdees,
-                                    String initiative)
+                                    String initiative,
+                                    String travailSecuritaire,
+                                    String sensResponsabilite,
+                                    String ponctualiteAssiduite,
+                                    String commentairesPersonellesSkill,
+
+                                    String appreciationGlobale,
+                                    String commentairesAppreciation,
+
+                                    // Additional Fields
+                                    boolean evaluationDiscuteeAvecStagiaire,
+                                    double heuresEncadrementParSemaine,
+                                    String entrepriseSouhaiteProchainStage,
+                                    String commentairesFormationTechnique,
+
+                                    String signatureEmployeur,
+                                    String dateSignature
+    )
     {
         this.etudiant = etudiantEntity;
         this.employeur = employeurEntity;
@@ -139,5 +161,17 @@ public class EvaluationStageEmployeur {
         this.interetMotivationTravail = interetMotivationTravail;
         this.exprimerIdees = exprimerIdees;
         this.initiative = initiative;
+        this.travailSecuritaire = travailSecuritaire;
+        this.sensResponsabilite = sensResponsabilite;
+        this.ponctualiteAssiduite = ponctualiteAssiduite;
+        this.commentairesPersonellesSkill = commentairesPersonellesSkill;
+        this.appreciationGlobale = appreciationGlobale;
+        this.commentairesAppreciation = commentairesAppreciation;
+        this.evaluationDiscuteeAvecStagiaire = evaluationDiscuteeAvecStagiaire;
+        this.heuresEncadrementParSemaine = heuresEncadrementParSemaine;
+        this.entrepriseSouhaiteProchainStage = entrepriseSouhaiteProchainStage;
+        this.commentairesFormationTechnique = commentairesFormationTechnique;
+        this.signatureEmployeur = signatureEmployeur;
+        this.dateSignature = dateSignature;
     }
 }

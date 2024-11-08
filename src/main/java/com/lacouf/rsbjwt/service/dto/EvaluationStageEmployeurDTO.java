@@ -188,5 +188,17 @@ public class EvaluationStageEmployeurDTO {
         this.interetMotivationTravail = savedEvaluationStageEmployeur.getInteretMotivationTravail();
         this.exprimerIdees = savedEvaluationStageEmployeur.getExprimerIdees();
         this.initiative = savedEvaluationStageEmployeur.getInitiative();
+        this.travailSecuritaire = savedEvaluationStageEmployeur.getTravailSecuritaire();
+        this.sensResponsabilite = savedEvaluationStageEmployeur.getSensResponsabilite();
+        this.ponctualiteAssiduite = savedEvaluationStageEmployeur.getPonctualiteAssiduite();
+        this.habiletePersonnelles = savedEvaluationStageEmployeur.getCommentairesPersonellesSkill();
+        this.appreciationGlobale = savedEvaluationStageEmployeur.getAppreciationGlobale();
+        this.commentairesAppreciation = savedEvaluationStageEmployeur.getCommentairesAppreciation();
+        this.evaluationDiscuteeAvecStagiaire = savedEvaluationStageEmployeur.isEvaluationDiscuteeAvecStagiaire();
+        this.heuresEncadrementParSemaine = savedEvaluationStageEmployeur.getHeuresEncadrementParSemaine();
+        this.entrepriseSouhaiteProchainStage = savedEvaluationStageEmployeur.getEntrepriseSouhaiteProchainStage();
+        this.commentairesFormationTechnique = savedEvaluationStageEmployeur.getCommentairesFormationTechnique();
+        this.signatureEmployeur = savedEvaluationStageEmployeur.getSignatureEmployeur();
+        this.dateSignature = savedEvaluationStageEmployeur.getDateSignature();
     }
 }

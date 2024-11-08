@@ -40,6 +40,7 @@ function MesEntrevueAccepte() {
         employeur: userData,
         etudiant: "",
         nomEleve: "",
+        programmeEtude: "",
         nomEntreprise: userData.entreprise,
         nomSuperviseur: userData.firstName + " " + userData.lastName,
         fonction: "",
@@ -73,7 +74,7 @@ function MesEntrevueAccepte() {
         travailSecuritaire: "",
         sensResponsabilite: "",
         ponctualiteAssiduite: "",
-        commentairesPersonellesSkill: "",
+        habiletePersonnelles: "",
         // Overall Appreciation
         appreciationGlobale: "",
         commentairesAppreciation: "",
@@ -338,8 +339,12 @@ function MesEntrevueAccepte() {
                 throw new Error('Erreur lors de la création de l\'évaluation');
             }
 
-            const data = await response.json();
-            console.log(data);
+            if(response.status === 201) {
+                const data = await response.json();
+                console.log(data);
+                closeDetailsModal()
+            }
+
         } catch (error) {
             console.error('Erreur lors de la création de l\'évaluation:', error);
         }
@@ -957,11 +962,11 @@ function MesEntrevueAccepte() {
                             <div className="mb-3">
                         <textarea
                             className="form-control"
-                            name="commentairesPersonellesSkill"
-                            value={evaluation.commentairesPersonellesSkill}
+                            name="habiletePersonnelles"
+                            value={evaluation.habiletePersonnelles}
                             onChange={(e) => setEvaluation({
                                 ...evaluation,
-                                commentairesPersonellesSkill: e.target.value
+                                habiletePersonnelles: e.target.value
                             })}
                             rows="4"
                             placeholder="Entrez vos commentaires ici"

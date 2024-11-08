@@ -87,14 +87,14 @@ public class ProfesseurController {
     @GetMapping("/etudiants/departement/{departement}")
     public ResponseEntity<List<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
         System.out.println("Departement: " + departement);
-//        if(departement == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
+        if(departement == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Departement departementEnum = Departement.valueOf(departement);
-//
+
         List<EtudiantDTO> etudiants = etudiantService.getEtudiantsAvecContratByDepartement(departementEnum);
-//
+
         return ResponseEntity.ok().body(etudiants);
     }
 

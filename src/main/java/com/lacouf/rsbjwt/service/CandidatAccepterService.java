@@ -20,7 +20,6 @@ public class CandidatAccepterService {
         this.entrevueRepository = entrevueRepository;
     }
 
-    // Accepter une candidature
     public Optional<CandidatAccepterDTO> accepterCandidature(Long entrevueId) {
         Optional<Entrevue> entrevueOptional = entrevueRepository.findById(entrevueId);
 
@@ -34,7 +33,6 @@ public class CandidatAccepterService {
         return Optional.empty();
     }
 
-    // Refuser une candidature
     public Optional<CandidatAccepterDTO> refuserCandidature(Long entrevueId) {
         Optional<Entrevue> entrevueOptional = entrevueRepository.findById(entrevueId);
 

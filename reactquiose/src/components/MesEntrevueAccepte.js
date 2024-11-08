@@ -33,6 +33,7 @@ function MesEntrevueAccepte() {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [currentAction, setCurrentAction] = useState(null);
     const [currentEntrevue, setCurrentEntrevue] = useState(null);
+    const [evaluationCree, setEvaluationCree] = useState(false);
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
     const { t } = useTranslation();
 
@@ -171,11 +172,16 @@ function MesEntrevueAccepte() {
         setShowModal(true);
     };
 
-    const handleInterviewClick = (entrevue) => {
+    const handleInterviewClick = async (entrevue) => {
         console.log("entrevue", entrevue);
-        setSelectedEntrevue(entrevue);
-        setShowDetailsModal(true);
-        console.log("selectedEntrevue", selectedEntrevue)
+        const candidature = asCandidature(entrevue);
+        console.log("A la candidature", candidature);
+
+        if(candidature){
+            setSelectedEntrevue(entrevue);
+            setShowDetailsModal(true);
+            console.log("selectedEntrevue", selectedEntrevue);
+        }
     };
 
     useEffect(() => {
@@ -254,6 +260,11 @@ function MesEntrevueAccepte() {
                 },
             });
 
+            if (response.status === 404) {
+                console.error("Candidature non trouvée");
+                return null;
+            }
+
             if (response.ok) {
                 const data = await response.json();
                 if (data === null || data === undefined) {
@@ -268,6 +279,30 @@ function MesEntrevueAccepte() {
             console.error('Erreur réseau:', error);
         }
         return null;
+    }
+
+    const asCandidature = async (entrevue) => {
+        try {
+            const response = await fetch(`http://localhost:8081/candidatures/${entrevue.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 404) {
+                console.error("Candidature non trouvée");
+                closeDetailsModal()
+                return false;
+            }
+
+            if (response.ok) {
+                return true
+            }
+
+        } catch (error) {
+            console.error('Erreur réseau:', error);
+        }
     }
 
     const groupInterviewsByOffer = (entrevues) => {
@@ -342,6 +377,7 @@ function MesEntrevueAccepte() {
             if(response.status === 201) {
                 const data = await response.json();
                 console.log(data);
+                setEvaluationCree(true);
                 closeDetailsModal()
             }
 
@@ -349,6 +385,11 @@ function MesEntrevueAccepte() {
             console.error('Erreur lors de la création de l\'évaluation:', error);
         }
     }
+
+    const genererPdf = () => {
+        console.log("Génération du PDF");
+        // Ajoutez ici la logique de génération de PDF
+    };
 
     if (isLoading) {
         return <div className="text-center mt-5">
@@ -423,7 +464,11 @@ function MesEntrevueAccepte() {
 
                                                 {entrevue.etudiantDTO.professeur ? (
                                                     <div className="evaluation-possible">
-                                                        <strong>{t('EvaluationPossible')}</strong>
+                                                        {evaluationCree ? (
+                                                            <button onClick={genererPdf}>Générer un PDF</button>
+                                                        ) : (
+                                                            <strong>{t('EvaluationPossible')}</strong>
+                                                        )}
                                                     </div>
                                                 ) : null}
 

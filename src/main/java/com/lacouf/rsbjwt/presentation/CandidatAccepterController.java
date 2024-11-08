@@ -28,7 +28,6 @@ public class CandidatAccepterController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Endpoint pour refuser une candidature
     @PutMapping("/refuser/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> refuserCandidature(@PathVariable Long entrevueId) {
         Optional<CandidatAccepterDTO> candidatAccepterOpt = candidatAccepterService.refuserCandidature(entrevueId);
@@ -38,7 +37,6 @@ public class CandidatAccepterController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Endpoint pour récupérer la décision d'une entrevue
     @GetMapping("/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> getCandidatureDecision(@PathVariable Long entrevueId) {
         Optional<CandidatAccepterDTO> decisionOpt = candidatAccepterService.getCandidatureDecision(entrevueId);

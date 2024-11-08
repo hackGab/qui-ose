@@ -177,7 +177,7 @@ function MesEntrevueAccepte() {
         const candidature = asCandidature(entrevue);
         console.log("A la candidature", candidature);
 
-        if(candidature){
+        if(candidature && entrevue.etudiantDTO.professeur){
             setSelectedEntrevue(entrevue);
             setShowDetailsModal(true);
             console.log("selectedEntrevue", selectedEntrevue);

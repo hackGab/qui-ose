@@ -35,6 +35,7 @@ function MesEntrevueAccepte() {
     const [currentEntrevue, setCurrentEntrevue] = useState(null);
     const [evaluationCree, setEvaluationCree] = useState(false);
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
+    const [evaluations, setEvaluations] = useState([]);
     const { t } = useTranslation();
 
     const [evaluation, setEvaluation] = useState({
@@ -127,6 +128,28 @@ function MesEntrevueAccepte() {
         });
     }, [entrevues]);
 
+    useEffect(() => {
+        console.log("selectedEntrevue a été mis à jour : ", selectedEntrevue);
+    }, [selectedEntrevue])
+
+    useEffect(() => {
+        const fetchEvaluations = async () => {
+            try {
+                const response = await fetch("http://localhost:8081/employeur/evaluationEmployeur/all");
+                if (response.ok) {
+                    const data = await response.json();
+                    setEvaluations(data);
+                    console.log("Evaluations:", evaluations)
+                } else {
+                    console.error("Erreur lors de la récupération des évaluations:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des évaluations:", error);
+            }
+        };
+        fetchEvaluations();
+    }, []);
+
     const handleCandidatureAcceptee = (entrevueAcceptee) => {
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
@@ -183,10 +206,6 @@ function MesEntrevueAccepte() {
             console.log("selectedEntrevue", selectedEntrevue);
         }
     };
-
-    useEffect(() => {
-        console.log("selectedEntrevue a été mis à jour : ", selectedEntrevue);
-    }, [selectedEntrevue])
 
     const closeDetailsModal = () => {
         setShowDetailsModal(false);
@@ -388,7 +407,6 @@ function MesEntrevueAccepte() {
 
     const genererPdf = () => {
         console.log("Génération du PDF");
-        // Ajoutez ici la logique de génération de PDF
     };
 
     if (isLoading) {
@@ -462,15 +480,15 @@ function MesEntrevueAccepte() {
                                                     </span>
                                                 </div>
 
-                                                {entrevue.etudiantDTO.professeur ? (
+                                                {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
-                                                        {evaluationCree ? (
-                                                            <button onClick={genererPdf}>Générer un PDF</button>
+                                                        {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
+                                                            <button className="btn btn-success" onClick={genererPdf}>Générer un PDF de l'evaluation</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}
                                                     </div>
-                                                ) : null}
+                                                )}
 
                                                 {showButtonsIfDateBeforeToday(entrevue) && (
                                                     <>

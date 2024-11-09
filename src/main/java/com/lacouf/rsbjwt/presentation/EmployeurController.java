@@ -67,4 +67,9 @@ public class EmployeurController {
         return evaluationStageEmployeurDTO.map(evaluation -> ResponseEntity.status(HttpStatus.CREATED).body(evaluation))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
+
+    @GetMapping("/evaluationEmployeur/all")
+    public ResponseEntity<Iterable<EvaluationStageEmployeurDTO>> getAllEvaluations() {
+        return ResponseEntity.ok().body(employeurService.getAllEvaluations());
+    }
 }

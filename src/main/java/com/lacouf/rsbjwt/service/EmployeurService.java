@@ -171,6 +171,11 @@ public class EmployeurService {
             Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
                     .orElseThrow(() -> new Exception("Etudiant non trouvé"));
 
+            Optional<EvaluationStageEmployeur> evaluationExistante = evaluationStageEmployeurRepository
+                    .findByEmployeurAndEtudiant(employeurEntity, etudiantEntity);
+
+            evaluationExistante.ifPresent(evaluationStageEmployeurRepository::delete);
+
             EvaluationStageEmployeur evaluationStageEmployeurEntity = new EvaluationStageEmployeur(
                     employeurEntity,
                     etudiantEntity,
@@ -222,5 +227,11 @@ public class EmployeurService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<EvaluationStageEmployeurDTO> getAllEvaluations() {
+        return evaluationStageEmployeurRepository.findAll().stream()
+                .map(EvaluationStageEmployeurDTO::new)
+                .toList();
     }
 }

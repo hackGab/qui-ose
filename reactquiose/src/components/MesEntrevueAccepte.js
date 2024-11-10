@@ -441,7 +441,10 @@ function MesEntrevueAccepte() {
     }
 
     const genererPdf = async (entrevue) => {
-        const evaluationChoisit = getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
+        const evaluationChoisit = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
+        console.log("evaluationChoisit", evaluationChoisit)
+        console.log("evaluationChoisit", evaluationChoisit.etudiant)
+        console.log("evaluationChoisit", evaluationChoisit.employeur)
         await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
             method: 'POST',
             headers: {

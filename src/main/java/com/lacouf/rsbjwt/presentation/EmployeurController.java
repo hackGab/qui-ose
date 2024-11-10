@@ -68,6 +68,25 @@ public class EmployeurController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
+    @GetMapping("/evaluationEmployeur/{emailEmployeur}/{emailEtudiant}")
+    public ResponseEntity<EvaluationStageEmployeurDTO> getEvaluationEtudiant(
+            @PathVariable String emailEmployeur,
+            @PathVariable String emailEtudiant) {
+
+        if (emailEmployeur == null || emailEmployeur.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        if (emailEtudiant == null || emailEtudiant.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        Optional<EvaluationStageEmployeurDTO> evaluationStageEmployeurDTO = employeurService.getEvaluationEtudiant(
+                emailEmployeur, emailEtudiant);
+
+        return evaluationStageEmployeurDTO.map(evaluation -> ResponseEntity.ok().body(evaluation))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
     @GetMapping("/evaluationEmployeur/all")
     public ResponseEntity<Iterable<EvaluationStageEmployeurDTO>> getAllEvaluations() {
         return ResponseEntity.ok().body(employeurService.getAllEvaluations());

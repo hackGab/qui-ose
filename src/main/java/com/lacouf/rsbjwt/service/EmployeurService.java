@@ -229,6 +229,17 @@ public class EmployeurService {
         }
     }
 
+    public Optional<EvaluationStageEmployeurDTO> getEvaluationEtudiant(String employeurEmail, String etudiantEmail) {
+        Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
+                .orElseThrow(() -> new RuntimeException("Employeur non trouvé"));
+
+        Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+
+        return evaluationStageEmployeurRepository.findByEmployeurAndEtudiant(employeurEntity, etudiantEntity)
+                .map(EvaluationStageEmployeurDTO::new);
+    }
+
     public List<EvaluationStageEmployeurDTO> getAllEvaluations() {
         return evaluationStageEmployeurRepository.findAll().stream()
                 .map(EvaluationStageEmployeurDTO::new)

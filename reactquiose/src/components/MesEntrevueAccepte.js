@@ -23,7 +23,6 @@ function MesEntrevueAccepte() {
 
     const location = useLocation();
     const userData = location.state?.userData;
-    console.log("userData", userData)
     const employeurEmail = userData.credentials.email;
     const [entrevues, setEntrevues] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -98,18 +97,15 @@ function MesEntrevueAccepte() {
             }
 
             try {
-                console.log("employeurEmail", employeurEmail)
                 const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}`);
                 const entrevuesAccepteData = await responseEntrevuesAccepte.json();
 
-                console.log("t", t)
 
                 if (responseEntrevuesAccepte.status === 404) {
                     setEntrevues([]);
                     return;
                 }
 
-                console.log("entrevuesAccepteData", entrevuesAccepteData)
                 setEntrevues(entrevuesAccepteData);
 
             } catch (error) {
@@ -124,13 +120,9 @@ function MesEntrevueAccepte() {
 
     useEffect(() => {
         entrevues.forEach(entrevue => {
-            setDecisionCandidate(entrevue).then(r => console.log("Decision updated"));
+            setDecisionCandidate(entrevue);
         });
     }, [entrevues]);
-
-    useEffect(() => {
-        console.log("selectedEntrevue a été mis à jour : ", selectedEntrevue);
-    }, [selectedEntrevue])
 
     useEffect(() => {
         const fetchEvaluations = async () => {
@@ -158,7 +150,7 @@ function MesEntrevueAccepte() {
                     : entrevue
             )
         );
-        setDecisionCandidate(entrevueAcceptee).then(r => console.log("Decision updated"));
+        setDecisionCandidate(entrevueAcceptee);
     }
 
     const handleCandidatureRejete = (entrevueRejete) => {
@@ -170,7 +162,7 @@ function MesEntrevueAccepte() {
             )
         );
 
-        setDecisionCandidate(entrevueRejete).then(r => console.log("Decision updated"));
+        setDecisionCandidate(entrevueRejete);
     }
 
     const setDecisionCandidate = async (entrevue) => {
@@ -405,8 +397,21 @@ function MesEntrevueAccepte() {
         }
     }
 
-    const genererPdf = () => {
-        console.log("Génération du PDF");
+    const genererPdf = async (evaluationChoisit) => {
+        console.log("evaluationChoisit", evaluationChoisit);
+        await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(evaluationChoisit),
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erreur lors de la génération du PDF');
+            }
+        }).catch(error => {
+            console.error('Erreur réseau:', error);
+        })
     };
 
     if (isLoading) {
@@ -483,7 +488,7 @@ function MesEntrevueAccepte() {
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
                                                         {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={genererPdf}>Générer un PDF de l'evaluation</button>
+                                                            <button className="btn btn-success" onClick={() => genererPdf(evaluation)}>Générer un PDF de l'evaluation</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}

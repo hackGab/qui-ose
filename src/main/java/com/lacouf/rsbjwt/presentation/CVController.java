@@ -44,4 +44,10 @@ public class CVController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/attentes")
+    public ResponseEntity<Integer> getCVAttentes() {
+        int nbCV = etudiantService.getNombreCVEnAttente();
+        return ResponseEntity.ok(nbCV);
+    }
 }

@@ -407,6 +407,7 @@ function MesEntrevueAccepte() {
 
     const genererPdf = () => {
         console.log("Génération du PDF");
+        closeDetailsModal()
     };
 
     if (isLoading) {
@@ -483,7 +484,7 @@ function MesEntrevueAccepte() {
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
                                                         {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={genererPdf}>Générer un PDF de l'evaluation</button>
+                                                            <button className="btn btn-success" onClick={genererPdf} >Générer un PDF de l'evaluation</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}

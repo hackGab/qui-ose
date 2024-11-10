@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/AccueilGestionnaire.css';
@@ -10,20 +10,34 @@ import employeurImage from '../images/Employeur.png';
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();
-    const [refusNotification] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const userData = location.state?.userData;
-    console.log("AccueilGestionnaire userData: ", userData)
+    console.log("AccueilGestionnaire userData: ", userData);
+    const [cvAttentes, setCvAttentes] = useState(0); // Initialisé à 0 au lieu d'une liste vide
 
     const sections = [
-        { title: t("etudiant"), notifications: refusNotification, image: etudiantImage, link: "/listeEtudiants" },
+        { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
         { title: t("prof"), notifications: 0, image: professeurImage, link: "/listeProfesseurs" },
         { title: t("employeur"), notifications: 0, image: employeurImage, link: "/listeEmployeurs" },
     ];
 
     const handleNavigateCandidatures = () => {
         navigate('/listeCandidatures', { state: { userData } });
+    };
+
+    useEffect(() => {
+        fetchCvAttentes();
+    }, []);
+
+    const fetchCvAttentes = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/cv/attentes');
+            const data = await response.json();
+            setCvAttentes(data);  // Met à jour l'état avec les données récupérées (entier attendu)
+        } catch (error) {
+            console.error('Erreur lors de la récupération des CV en attente:', error);
+        }
     };
 
     return (

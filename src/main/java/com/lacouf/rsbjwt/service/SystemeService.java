@@ -11,6 +11,7 @@ import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageEmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import org.springframework.stereotype.Service;
 
@@ -372,5 +373,9 @@ public class SystemeService {
 
     private EvaluationStageProfDTO.EvaluationConformite convertToDtoConformite(EvaluationStageProf.EvaluationConformite conformite) {
         return EvaluationStageProfDTO.EvaluationConformite.valueOf(conformite.name());
+    }
+
+    public byte[] generateEvaluationEmployeurPDF(EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+        return new byte[0];
     }
 }

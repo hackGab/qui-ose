@@ -2,6 +2,7 @@ package com.lacouf.rsbjwt.presentation;
 
 import com.lacouf.rsbjwt.service.SystemeService;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
+import com.lacouf.rsbjwt.service.dto.EvaluationStageEmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,27 @@ public class PDFController {
             byte[] pdfBytes = systemeService.generateEvaluationProfPDF(evaluationStageProf);
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=Evaluation_Stage_Prof.pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/evaluationEmployeur")
+    public ResponseEntity<byte[]> generateEvaluationEmployeurPDF(@RequestBody EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+        System.out.println("EvaluationStageEmployeurDTO: " + evaluationStageEmployeur);
+
+        try {
+            byte[] pdfBytes = systemeService.generateEvaluationEmployeurPDF(evaluationStageEmployeur);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=Evaluation_Stage_Employeur.pdf");
 
             return ResponseEntity.ok()
                     .headers(headers)

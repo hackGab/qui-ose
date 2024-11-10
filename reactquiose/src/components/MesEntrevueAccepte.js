@@ -405,9 +405,21 @@ function MesEntrevueAccepte() {
         }
     }
 
-    const genererPdf = () => {
-        console.log("Génération du PDF");
-        closeDetailsModal()
+    const genererPdf = async (evaluationChoisit) => {
+        console.log("evaluationChoisit", evaluationChoisit);
+        await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(evaluationChoisit),
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erreur lors de la génération du PDF');
+            }
+        }).catch(error => {
+            console.error('Erreur réseau:', error);
+        })
     };
 
     if (isLoading) {
@@ -484,7 +496,7 @@ function MesEntrevueAccepte() {
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
                                                         {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={genererPdf} >Générer un PDF de l'evaluation</button>
+                                                            <button className="btn btn-success" onClick={() => genererPdf(evaluation)}>Générer un PDF de l'evaluation</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}

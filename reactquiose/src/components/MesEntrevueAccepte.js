@@ -200,6 +200,12 @@ function MesEntrevueAccepte() {
         const candidature = asCandidature(entrevue);
         console.log("A la candidature", candidature);
 
+        const evaluation = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
+        if(evaluation) {
+            setShowDetailsModal(false);
+            return;
+        }
+
         if(candidature && entrevue.etudiantDTO.professeur){
             setSelectedEntrevue(entrevue);
             setShowDetailsModal(true);
@@ -405,8 +411,37 @@ function MesEntrevueAccepte() {
         }
     }
 
-    const genererPdf = async (evaluationChoisit) => {
-        console.log("evaluationChoisit", evaluationChoisit);
+    const getEvaluationEtudiant = async (emailEmployeur, emailEtudiant) => {
+        try {
+            const response = await fetch(`http://localhost:8081/employeur/evaluationEmployeur/${emailEmployeur}/${emailEtudiant}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.error("Évaluation non trouvée");
+                } else if (response.status === 400) {
+                    console.error("Requête incorrecte, email manquant");
+                } else {
+                    console.error("Erreur lors de la récupération de l'évaluation");
+                }
+                return;
+            }
+
+            const evaluationData = await response.json();
+            console.log('Données de l\'évaluation:', evaluationData);
+            return evaluationData;
+
+        } catch (error) {
+            console.error('Erreur réseau:', error);
+        }
+    }
+
+    const genererPdf = async (entrevue) => {
+        const evaluationChoisit = getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
         await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
             method: 'POST',
             headers: {
@@ -496,7 +531,7 @@ function MesEntrevueAccepte() {
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
                                                         {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={() => genererPdf(evaluation)}>Générer un PDF de l'evaluation</button>
+                                                            <button className="btn btn-success" onClick={() => genererPdf(entrevue)}>Générer un PDF de l'evaluation</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}

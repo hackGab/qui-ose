@@ -47,6 +47,7 @@
   "assignedStudents": "Assigned Students",
   "assignStudents": "Assign Students",
   "unassign": "Unassign",
+  "noStudentsInDepartment": "No students in this department",
   "studentsInSameDepartment": "Students in the same department",
   "RequiredFields": "Required Fields *",
 

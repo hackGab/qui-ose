@@ -13,9 +13,11 @@ import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageEmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
+import org.apache.catalina.valves.rewrite.InternalRewriteMap;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.security.UnresolvedPermission;
 import java.util.Optional;
 
 @Service
@@ -375,7 +377,151 @@ public class SystemeService {
         return EvaluationStageProfDTO.EvaluationConformite.valueOf(conformite.name());
     }
 
-    public byte[] generateEvaluationEmployeurPDF(EvaluationStageEmployeurDTO evaluationStageEmployeur) {
-        return new byte[0];
+    public byte[] generateEvaluationEmployeurPDF(EvaluationStageEmployeurDTO evaluation) throws DocumentException {
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Title
+        Font titleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+        Font h2Font = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        document.add(new Paragraph("FICHE D'ÉVALUATION DU STAGIAIRE", titleFont));
+        document.add(Chunk.NEWLINE);
+
+        // Basic Information Section
+        document.add(new Paragraph("Nom de l'élève: " + evaluation.getNomEleve()));
+        document.add(new Paragraph("Programme d'études: " + evaluation.getEtudiant().getDepartement()));
+        document.add(new Paragraph("Nom de l'entreprise: " + evaluation.getNomEntreprise()));
+        document.add(new Paragraph("Nom du superviseur: " + evaluation.getNomSuperviseur()));
+        document.add(new Paragraph("Fonction: " + evaluation.getFonction()));
+        document.add(new Paragraph("Téléphone: " + evaluation.getTelephone()));
+        document.add(Chunk.NEWLINE);
+
+        // Productivity Section
+        document.add(new Paragraph("1. PRODUCTIVITÉ", h2Font));
+        document.add(new Paragraph("Capacité d'optimiser son rendement au travail"));
+        document.add(Chunk.NEWLINE);
+        PdfPTable productivityTable = createEvaluationTable();
+        addEvaluationRow(productivityTable, "Planifier et organiser son travail", evaluation.getPlanifOrganiserTravail());
+        addEvaluationRow(productivityTable, "Comprendre rapidement les directives", evaluation.getComprendreDirectives());
+        addEvaluationRow(productivityTable, "Maintenir un rythme de travail soutenu", evaluation.getMaintenirRythmeTravail());
+        addEvaluationRow(productivityTable, "Établir ses priorités", evaluation.getEtablirPriorites());
+        addEvaluationRow(productivityTable, "Respecter ses échéanciers", evaluation.getRespecterEcheanciers());
+        document.add(productivityTable);
+        document.add(new Paragraph("Commentaires: " + evaluation.getCommentairesProductivite()));
+        document.add(Chunk.NEWLINE);
+
+        // Quality of Work Section
+        document.add(new Paragraph("2. QUALITÉ DU TRAVAIL", h2Font));
+        document.add(new Paragraph("Capacité de s'acquitter des tâches sous sa responsabilité en s'imposant personnellement des normes de qualité"));
+        document.add(Chunk.NEWLINE);
+        PdfPTable qualityTable = createEvaluationTable();
+        addEvaluationRow(qualityTable, "Respecter les mandats confiés", evaluation.getRespecterMandats());
+        addEvaluationRow(qualityTable, "Attention aux détails", evaluation.getAttentionAuxDetails());
+        addEvaluationRow(qualityTable, "Vérifier son travail", evaluation.getVerifierTravail());
+        addEvaluationRow(qualityTable, "Rechercher des occasions de se perfectionner", evaluation.getPerfectionnement());
+        addEvaluationRow(qualityTable, "Analyse des problèmes rencontrés", evaluation.getAnalyseProblemes());
+        document.add(qualityTable);
+        document.add(new Paragraph("Commentaires: " + evaluation.getCommentairesQualiteTravail()));
+        document.add(Chunk.NEWLINE);
+
+        // Interpersonal Relations Section
+        document.add(new Paragraph("3. QUALITÉS DES RELATIONS INTERPERSONNELLES", h2Font));
+        document.add(new Paragraph("Capacité d'établir des interrelations harmonieuses dans son milieu de travail"));
+        document.add(Chunk.NEWLINE);
+        PdfPTable relationsTable = createEvaluationTable();
+        addEvaluationRow(relationsTable, "Établir facilement des contacts", evaluation.getEtablirContacts());
+        addEvaluationRow(relationsTable, "Contribuer au travail d'équipe", evaluation.getContribuerTravailEquipe());
+        addEvaluationRow(relationsTable, "Adapter à la culture de l'entreprise", evaluation.getAdapterCultureEntreprise());
+        addEvaluationRow(relationsTable, "Accepter les critiques constructives", evaluation.getAccepterCritiques());
+        addEvaluationRow(relationsTable, "Être respectueux", evaluation.getRespectueux());
+        addEvaluationRow(relationsTable, "Écoute active", evaluation.getEcouteActive());
+        document.add(relationsTable);
+        document.add(new Paragraph("Commentaires: " + evaluation.getCommentairesRelationsInterpersonnelles()));
+        document.add(Chunk.NEWLINE);
+
+        // Personal Skills Section
+        document.add(new Paragraph("4. HABILETÉS PERSONNELLES", h2Font));
+        document.add(new Paragraph("Capacité de faire preuve d'attitudes ou de comportements matures et responsables"));
+        document.add(Chunk.NEWLINE);
+        PdfPTable personalSkillsTable = createEvaluationTable();
+        addEvaluationRow(personalSkillsTable, "Intérêt et motivation au travail", evaluation.getInteretMotivationTravail());
+        addEvaluationRow(personalSkillsTable, "Exprimer ses idées", evaluation.getExprimerIdees());
+        addEvaluationRow(personalSkillsTable, "Faire preuve d'initiative", evaluation.getInitiative());
+        addEvaluationRow(personalSkillsTable, "Travailler de façon sécuritaire", evaluation.getTravailSecuritaire());
+        addEvaluationRow(personalSkillsTable, "Sens des responsabilités", evaluation.getSensResponsabilite());
+        addEvaluationRow(personalSkillsTable, "Ponctualité et assiduité", evaluation.getPonctualiteAssiduite());
+        document.add(personalSkillsTable);
+        document.add(new Paragraph("Commentaires: " + evaluation.getHabiletePersonnelles()));
+        document.add(Chunk.NEWLINE);
+
+        // Overall Appreciation
+        document.add(new Paragraph("APPRÉCIATION GLOBALE DU STAGIAIRE", h2Font));
+        document.add(new Paragraph("Les habiletés démontrées " + evaluation.getAppreciationGlobale() + " aux attentes"));
+        document.add(Chunk.NEWLINE);
+        document.add(new Paragraph("PRÉCISEZ VOTRE APPRÉCIATION: \n" + evaluation.getCommentairesAppreciation()));
+        document.add(Chunk.NEWLINE);
+        document.add(new Paragraph("Cette évaluation a été discutée avec le stagiaire: " +
+                (evaluation.isEvaluationDiscuteeAvecStagiaire() ? "Oui" : "Non")));
+        document.add(Chunk.NEWLINE);
+        document.add((new Paragraph("------------------------------------------------------------------------------------------------------------------------")));
+
+        // Heures
+        document.add(new Paragraph("Nombre d'heures d'encadrement par semaine: " + evaluation.getHeuresEncadrementParSemaine()));
+        document.add((new Paragraph("------------------------------------------------------------------------------------------------------------------------")));
+
+        // Additional Fields
+        document.add(new Paragraph("L'ENTREPRISE AIMERAIT ACCUEILLIR CET ÉLÈVE POUR SON PROCHAIN STAGE: " + evaluation.getEntrepriseSouhaiteProchainStage()));
+        document.add(Chunk.NEWLINE);
+        document.add(new Paragraph("La formation technique du stagiaire était-elle suffisante pour accomplir le mandat de stage?: \n" + evaluation.getCommentairesFormationTechnique()));
+        document.add(Chunk.NEWLINE);
+
+        // Signature and Date
+        document.add(new Paragraph("Nom: " + evaluation.getEmployeur().getFirstName().toUpperCase() + " " + evaluation.getEmployeur().getLastName().toUpperCase()));
+        // Create a table with 2 columns
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100); // Set table width to 100% of the page
+
+        PdfPCell signatureCell = new PdfPCell();
+        signatureCell.setBorder(PdfPCell.NO_BORDER);
+        signatureCell.addElement(new Paragraph("Signature : " + evaluation.getSignatureEmployeur(), FontFactory.getFont(FontFactory.HELVETICA, 12)));
+        table.addCell(signatureCell);
+
+        PdfPCell dateCell = new PdfPCell();
+        dateCell.setBorder(PdfPCell.NO_BORDER);
+        dateCell.addElement(new Paragraph("Date : " + evaluation.getDateSignature(), FontFactory.getFont(FontFactory.HELVETICA, 12)));
+        table.addCell(dateCell);
+
+        document.add(table);
+
+
+        document.add(Chunk.NEWLINE);
+        document.add(Chunk.NEWLINE);
+        document.add(new Paragraph("Nous vous remercions de votre appuis !", h2Font));
+
+        document.close();
+        return baos.toByteArray();
     }
+
+    // Helper method to create an evaluation table with headers
+    private PdfPTable createEvaluationTable() throws DocumentException {
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.addCell("Évaluation");
+        table.addCell("Totalement en accord");
+        table.addCell("Plutôt en accord");
+        table.addCell("Plutôt en désaccord");
+        table.addCell("Totalement en désaccord");
+        return table;
+    }
+
+    private void addEvaluationRow(PdfPTable table, String description, String evaluation) {
+        table.addCell(description);
+        table.addCell(evaluation != null && evaluation.equalsIgnoreCase("TOTAL_EN_ACCORD") ? "X" : "");
+        table.addCell(evaluation != null && evaluation.equalsIgnoreCase("PLUTOT_EN_ACCORD") ? "X" : "");
+        table.addCell(evaluation != null && evaluation.equalsIgnoreCase("PLUTOT_EN_DESACCORD") ? "X" : "");
+        table.addCell(evaluation != null && evaluation.equalsIgnoreCase("TOTAL_EN_DESACCORD") ? "X" : "");
+    }
+
 }

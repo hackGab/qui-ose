@@ -442,22 +442,25 @@ function MesEntrevueAccepte() {
 
     const genererPdf = async (entrevue) => {
         const evaluationChoisit = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
-        console.log("evaluationChoisit", evaluationChoisit)
-        console.log("evaluationChoisit", evaluationChoisit.etudiant)
-        console.log("evaluationChoisit", evaluationChoisit.employeur)
-        await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
+        await fetch('http://localhost:8081/generatePDF/evaluationEmployeur', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(evaluationChoisit),
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Erreur lors de la génération du PDF');
-            }
-        }).catch(error => {
-            console.error('Erreur réseau:', error);
         })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Evaluation_Stage_Employeur.pdf');
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            })
+            .catch(error => console.error('Error downloading PDF:', error));
+
     };
 
     if (isLoading) {

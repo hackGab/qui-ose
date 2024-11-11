@@ -5,10 +5,31 @@ import '../CSS/Header.css'
 import logo from '../images/logo.png';
 import "../CSS/BoutonLangue.css";
 import i18n from "i18next";
+import {FaCross, FaTimes} from "react-icons/fa";
 
     function EtudiantHeader({ userData }) {
         const { t } = useTranslation();
         const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+        const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
+        const [notifications, setNotifications] = useState([
+            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+        ]);
         const navigate = useNavigate();
         const location = useLocation();
         const [file, setFile] = useState(null);
@@ -28,13 +49,26 @@ import i18n from "i18next";
             }
         };
 
+        const handleDeleteNotification = (index) => {
+            setNotifications((prevNotifications) =>
+                prevNotifications.filter((_, i) => i !== index)
+            );
+        };
+
         const toggleProfileMenu = () => {
             setProfileMenuOpen(!profileMenuOpen);
+            setNotificationMenuOpen(false);
         };
+
+        function toggleNotificationMenu() {
+            setNotificationMenuOpen(!notificationMenuOpen);
+            setProfileMenuOpen(false)
+        }
 
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
         };
+
        useEffect(() => {
             if (userData) {
                 const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
@@ -82,6 +116,26 @@ import i18n from "i18next";
         }, [userData]);
 
 
+        // Pas encore le constructeur pour
+        // useEffect(() => {
+        //     if (userData) {
+        //         const url = `http://localhost:8081/notifications/${userData.credentials.email}`;
+        //
+        //         fetch(url)
+        //             .then((response) => {
+        //                 if (!response.ok) {
+        //                     throw new Error(`Erreur lors de la requête: ${response.status}`);
+        //                 }
+        //                 return response.json();
+        //             })
+        //             .then((data) => {
+        //                 setNotifications(data);
+        //             })
+        //             .catch((error) => {
+        //                 console.error('Erreur:', error);
+        //             });
+        //     }
+        // }, [userData]);
 
         return (
             <header className="gestionnaire-header">
@@ -122,15 +176,34 @@ import i18n from "i18next";
                     </div>
 
                     <div className="profile-menu">
-                        <div className="notification-icon">🕭</div>
-                        <div
-                            className="profile-button"
-                            onClick={toggleProfileMenu}
-                        >
+                        <div className="notification-icon" onClick={toggleNotificationMenu}>
+                            🕭 <span className="notification-count">{notifications.length}</span>
+                        </div>
+                        {notificationMenuOpen && (
+                            <div className="dropdown notification-dropdown">
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification, index) => (
+                                        <div key={index} className="dropdown-link">
+                                            <div onClick={() => handleLinkClick(notification.url)}>
+                                                {notification.description} - {notification.tempsDepuisReception}
+                                            </div>
+                                            <div onClick={() => handleDeleteNotification(index)}
+                                                  style={{cursor: 'pointer', fontSize: 'large'}}>
+                                                <FaTimes/>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="dropdown-link">{t('noNotifications')}</div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="profile-button" onClick={toggleProfileMenu}>
                             {t('profile')} ▼
                         </div>
                         {profileMenuOpen && (
-                            <div className="profile-dropdown">
+                            <div className="dropdown profile-dropdown">
                                 <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                                 <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                                 <Link className="dropdown-link" to="/login">{t('logout')}</Link>

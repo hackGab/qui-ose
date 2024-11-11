@@ -10,7 +10,6 @@ import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +85,31 @@ public class ProfesseurService {
         return Optional.of(new ProfesseurDTO(professeur));
     }
 
+    public Optional<ProfesseurDTO> deassignerEtudiants(String professeurEmail, List<String> etudiantsEmails) {
+        Optional<Professeur> professeurOpt = professeurRepository.findByEmail(professeurEmail);
+        if (professeurOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Professeur professeur = professeurOpt.get();
+        List<Etudiant> etudiants = etudiantRepository.findAllByEmailIn(etudiantsEmails);
+        if (etudiants.isEmpty()) {
+            return Optional.empty();
+        }
+
+        for (Etudiant etudiant : etudiants) {
+            etudiant.setProfesseur(null);
+        }
+
+        professeur.getEtudiants().removeAll(etudiants);
+
+        etudiantRepository.saveAll(etudiants);
+        professeurRepository.save(professeur);
+
+        return Optional.of(new ProfesseurDTO(professeur));
+    }
+
+
     public List<EtudiantDTO> getEtudiants(String professeurEmail) {
         List<EtudiantDTO> etudiantsRecu = new ArrayList<>();
         Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail).map(Professeur::getEtudiants).map(etudiants -> etudiants.stream()
@@ -120,6 +144,19 @@ public class ProfesseurService {
             e.printStackTrace();
         }
 
+    }
+
+    public void supprimerEvaluationStage(String professeurEmail, List<String> etudiantsEmails) {
+        Professeur professeur = professeurRepository.findByEmail(professeurEmail).get();
+        try {
+            for (String email : etudiantsEmails) {
+                Etudiant etudiant = etudiantRepository.findByEmail(email).get();
+                EvaluationStageProf evaluationStageProf = evaluationStageProfRepository.findByEtudiantID(etudiant.getId());
+                evaluationStageProfRepository.delete(evaluationStageProf);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private EvaluationStageProf remplireEvaluationStage(EvaluationStageProf evaluationStageProf, Etudiant etudiant) {

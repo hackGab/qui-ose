@@ -73,6 +73,22 @@ public class ProfesseurController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    @PutMapping("/deassignerEtudiants/{professeurEmail}")
+    public ResponseEntity<ProfesseurDTO> deassignerEtudiants(
+            @PathVariable String professeurEmail,
+            @RequestBody List<String> etudiantsEmails) {
+
+        if (professeurEmail == null || etudiantsEmails == null || etudiantsEmails.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<ProfesseurDTO> professeurDTO = professeurService.deassignerEtudiants(professeurEmail, etudiantsEmails);
+        professeurService.supprimerEvaluationStage(professeurEmail, etudiantsEmails);
+        return professeurDTO.map(professeur -> ResponseEntity.ok().body(professeur))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+
     @GetMapping("/etudiants/{professeurEmail}")
     public ResponseEntity<List<EtudiantDTO>> getEtudiants(@PathVariable String professeurEmail) {
         if(professeurEmail == null) {

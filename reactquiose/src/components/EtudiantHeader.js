@@ -21,7 +21,7 @@ function EtudiantHeader({ userData }) {
     useEffect(() => {
         const storedData = localStorage.getItem('userData');
         if (storedData) {
-            setStoredUserData(JSON.parse(storedData)); // On récupère et stocke les données dans le state
+            setStoredUserData(JSON.parse(storedData));
         }
     }, []);
 

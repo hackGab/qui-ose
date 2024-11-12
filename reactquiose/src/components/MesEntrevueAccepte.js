@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import EmployeurHeader from "./EmployeurHeader";
+import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {FaCalendarAlt, FaCheck, FaTimes} from "react-icons/fa";

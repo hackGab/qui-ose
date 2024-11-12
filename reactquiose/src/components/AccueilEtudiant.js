@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import EtudiantHeader from "./EtudiantHeader";
+import EtudiantHeader from "./Header/EtudiantHeader";
 import "../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
 import ListeDeStage from "./ListeDeStage";

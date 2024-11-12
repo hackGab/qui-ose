@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/Header.css'
-import logo from '../images/logo.png';
-import "../CSS/BoutonLangue.css";
+import '../../CSS/Header.css'
+import logo from '../../images/logo.png';
+import "../../CSS/BoutonLangue.css";
 import i18n from "i18next";
 import {FaCross, FaTimes} from "react-icons/fa";
 
@@ -185,9 +185,9 @@ import {FaCross, FaTimes} from "react-icons/fa";
                                     notifications.map((notification, index) => (
                                         <div key={index} className="dropdown-link">
                                             <div onClick={() => handleLinkClick(notification.url)}>
-                                                {notification.description} - {notification.tempsDepuisReception}
+                                                {notification.description} - {notification.tempsDepuisReception} avant
                                             </div>
-                                            <div onClick={() => handleDeleteNotification(index)}
+                                            <div data-testid="delete-icon" onClick={() => handleDeleteNotification(index)}
                                                   style={{cursor: 'pointer', fontSize: 'large'}}>
                                                 <FaTimes/>
                                             </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import GestionnaireHeader from './GestionnaireHeader';
+import GestionnaireHeader from './Header/GestionnaireHeader';
 import '../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
 import {useLocation, useNavigate} from "react-router-dom";

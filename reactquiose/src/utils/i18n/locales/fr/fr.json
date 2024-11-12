@@ -321,5 +321,7 @@
   "PersonneContact" : "Employeur à contacter",
   "studentListSubtitleForEvaluation": "Cliquer sur un étudiant pour faire l'évaluation ou générer le PDF de l'évaluation",
   "GenererEvaluationPDF": "Générer le PDF",
-  "AucunCV": "Aucun CV n'a été remis"
+  "AucunCV": "Aucun CV",
+  "validé": "validé",
+  "Attente": "En attente"
 }

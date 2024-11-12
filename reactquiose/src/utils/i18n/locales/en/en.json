@@ -311,5 +311,8 @@
   "PersonneContact" : "Contact Person",
   "studentListSubtitleForEvaluation": "Click on a student to make an evaluation or generate a PDF version of the evaluation.",
   "GenererEvaluationPDF": "Genaerate PDF",
-  "AucunCV": "No CV"
+  "AucunCV": "No CV",
+  "validé": "validated",
+  "Validé": "validated",
+  "Attente": "pending"
 }

@@ -76,8 +76,8 @@ function ListeEmployeurs() {
                                         <div
                                             className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
                                             {status && (
-                                                <span className="position-absolute top-0 end-0 badge bg-secondary m-2">
-                                                    {status}
+                                                <span className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                    {t(status)}
                                                 </span>
                                             )}
                                             <div className="card-body">

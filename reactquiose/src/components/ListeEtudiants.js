@@ -79,8 +79,9 @@ function ListeEtudiants() {
                                     >
                                         <div
                                             className={`card shadow w-100 position-relative ${status ? status.toLowerCase() : 'sans-cv'}`}>
-                                             <span className="position-absolute top-0 end-0 badge bg-secondary m-2">
-                                                {status ? status : t('AucunCV')}
+                                             <span
+                                                 className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                {status ? t(status) : t('AucunCV')}
                                             </span>
                                             <div className="card-body">
                                                 <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>

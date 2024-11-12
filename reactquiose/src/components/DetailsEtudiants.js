@@ -57,6 +57,8 @@ function DetailsEtudiants() {
     }
 
     const isCvMissing = !student.cv?.data;
+    const isCvValidated = student.cv?.status === 'validé';
+    const isCvRejected = student.cv?.status === 'rejeté';
 
     return (
         <>
@@ -95,14 +97,16 @@ function DetailsEtudiants() {
                                 <h5>{t('actions')}</h5>
                                 <div className="btn-group-vertical w-100">
                                     <button
-                                        className={`btn ${selectedStatus === 'validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                        className={`btn ${isCvValidated ? 'btn-secondary' : 'btn-success'} mb-2`}
                                         onClick={() => handleStatusSelect('validé')}
+                                        disabled={isCvValidated}
                                     >
                                         {t('validate')}
                                     </button>
                                     <button
-                                        className={`btn ${selectedStatus === 'rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                        className={`btn ${isCvRejected ? 'btn-secondary' : 'btn-danger'} mb-2`}
                                         onClick={() => handleStatusSelect('rejeté')}
+                                        disabled={isCvRejected}
                                     >
                                         {t('reject')}
                                     </button>

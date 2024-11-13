@@ -22,11 +22,12 @@ public class OffreDeStageDTO {
     private String data;
     private int nbCandidats;
     private String status;
+    private String session;
     private String rejetMessage = "";
     private EmployeurDTO employeur;
     private List<EtudiantDTO> etudiants;
 
-    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status) {
+    public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status, String session) {
         this.id = id;
         this.titre = titre;
         this.localisation = localisation;
@@ -35,7 +36,7 @@ public class OffreDeStageDTO {
         this.data = data;
         this.nbCandidats = nbCandidats;
         this.status = status;
-
+        this.session = session;
     }
 
     public OffreDeStageDTO(OffreDeStage offre) {
@@ -47,6 +48,7 @@ public class OffreDeStageDTO {
         this.data = offre.getData();
         this.nbCandidats = offre.getNbCandidats();
         this.status = offre.getStatus();
+        this.session = offre.getSession();
         this.rejetMessage = offre.getRejetMessage();
         this.employeur = new EmployeurDTO(offre.getEmployeur());
     }

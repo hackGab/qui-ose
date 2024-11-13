@@ -195,7 +195,8 @@ function VisualiserOffres() {
                                             <h5 className="card-title">{offre.titre}</h5>
                                             <p className="card-text">
                                                 <strong>{t('localisation')}</strong> {offre.localisation} <br/>
-                                                <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
+                                                <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}<br/>
+                                                <strong>{t('Session')}:</strong> {offre.session}
                                                 <br/>
                                                 {offre.status === "Validé" && (
                                                     <div onClick={() => handleListeClick(offre)}

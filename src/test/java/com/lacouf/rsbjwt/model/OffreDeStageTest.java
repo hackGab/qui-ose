@@ -17,6 +17,7 @@ public class OffreDeStageTest {
     private static final int NB_CANDIDATS = 3;
 
     private static final String STATUS = "status";
+    private static final String SESSION = "HIV25";
 
 
     private static final Employeur EMPLOYEUR = new Employeur(
@@ -38,7 +39,8 @@ public class OffreDeStageTest {
                 DATE_LIMITE,
                 DATA,
                 NB_CANDIDATS,
-                STATUS
+                STATUS,
+                SESSION
         );
         offre.setEmployeur(EMPLOYEUR);
     }
@@ -73,6 +75,7 @@ public class OffreDeStageTest {
                 ", datePublication='" + DATE_JOUR + '\'' +
                 ", nbCandidats='" + NB_CANDIDATS + '\'' +
                 ", status='" + STATUS + '\'' +
+                ", session='" + SESSION + '\'' +
                 ", rejetMessage=''" +
                 "}";
         assertEquals(expected, offre.toString());

@@ -105,4 +105,14 @@ class PDFControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void Should_ReturnBadRequest_When_GenerateContratPDF_With_NoContrat() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/generatePDF/contrat")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_PDF))
+                .andExpect(status().isBadRequest());
+    }
 }

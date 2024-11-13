@@ -27,6 +27,7 @@ public class OffreDeStage {
     private int nbCandidats;
     private String status;
     private String rejetMessage = "";
+    private String session;
 
     @ManyToOne
     @JoinColumn(name = "EMPLOYEUR_ID")
@@ -35,7 +36,7 @@ public class OffreDeStage {
     @ManyToMany(mappedBy = "offresAppliquees")
     private List<Etudiant> etudiants = new ArrayList<>();
 
-    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status) {
+    public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status, String session) {
         this.titre = titre;
         this.localisation = localisation;
         this.dateLimite = dateLimite;
@@ -43,6 +44,7 @@ public class OffreDeStage {
         this.data = data;
         this.nbCandidats = nbCandidats;
         this.status = status;
+        this.session = session;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class OffreDeStage {
                 ", datePublication='" + datePublication + '\'' +
                 ", nbCandidats='" + nbCandidats + '\'' +
                 ", status='" + status + '\'' +
+                ", session='" + session + '\'' +
                 ", rejetMessage='" + rejetMessage + '\'' +
                 '}';
     }

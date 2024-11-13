@@ -132,6 +132,9 @@ public class OffreDeStageController {
         return ResponseEntity.ok().body(etudiants);
     }
 
-
-
+    @GetMapping("/attentes")
+    public ResponseEntity<Integer> getOffresAttentes() {
+        int nbOffres = offreDeStageService.getNombreOffresEnAttente();
+        return ResponseEntity.ok(nbOffres);
+    }
 }

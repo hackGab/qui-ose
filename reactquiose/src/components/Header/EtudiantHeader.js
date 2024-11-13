@@ -12,23 +12,23 @@ import {FaCross, FaTimes} from "react-icons/fa";
         const [profileMenuOpen, setProfileMenuOpen] = useState(false);
         const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
         const [notifications, setNotifications] = useState([
-            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
+            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
+            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
+            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
+            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
         ]);
         const navigate = useNavigate();
         const location = useLocation();
@@ -117,25 +117,31 @@ import {FaCross, FaTimes} from "react-icons/fa";
 
 
         // Pas encore le constructeur pour
-        // useEffect(() => {
-        //     if (userData) {
-        //         const url = `http://localhost:8081/notifications/${userData.credentials.email}`;
-        //
-        //         fetch(url)
-        //             .then((response) => {
-        //                 if (!response.ok) {
-        //                     throw new Error(`Erreur lors de la requête: ${response.status}`);
-        //                 }
-        //                 return response.json();
-        //             })
-        //             .then((data) => {
-        //                 setNotifications(data);
-        //             })
-        //             .catch((error) => {
-        //                 console.error('Erreur:', error);
-        //             });
-        //     }
-        // }, [userData]);
+        useEffect(() => {
+            if (userData) {
+                const url = `http://localhost:8081/notification/all/${userData.credentials.email}`;
+                console.log(userData.credentials.email)
+                fetch(url,{
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Erreur lors de la requête: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Réponse du serveur:', data);
+                        setNotifications(data);
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                })
+            }
+        }, [userData]);
 
         return (
             <header className="gestionnaire-header">
@@ -185,7 +191,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
                                     notifications.map((notification, index) => (
                                         <div key={index} className="dropdown-link">
                                             <div onClick={() => handleLinkClick(notification.url)}>
-                                                {notification.description} - {notification.tempsDepuisReception} avant
+                                                {notification.message} - {notification.tempsDepuisReception} avant
                                             </div>
                                             <div data-testid="delete-icon" onClick={() => handleDeleteNotification(index)}
                                                   style={{cursor: 'pointer', fontSize: 'large'}}>

@@ -2,8 +2,10 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.CandidatAccepter;
 import com.lacouf.rsbjwt.model.Entrevue;
+import com.lacouf.rsbjwt.model.Notification;
 import com.lacouf.rsbjwt.repository.CandidatAccepterRepository;
 import com.lacouf.rsbjwt.repository.EntrevueRepository;
+import com.lacouf.rsbjwt.repository.NotificationRepository;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +22,13 @@ class CandidatAccepterServiceTest {
     private CandidatAccepterService candidatAccepterService;
     private CandidatAccepterRepository candidatAccepterRepository;
     private EntrevueRepository entrevueRepository;
+    private NotificationRepository notificationRepository;
 
     @BeforeEach
     void setUp() {
         candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
-        candidatAccepterService = new CandidatAccepterService(candidatAccepterRepository, entrevueRepository);
+        candidatAccepterService = new CandidatAccepterService(candidatAccepterRepository, entrevueRepository, notificationRepository);
     }
 
     @Test

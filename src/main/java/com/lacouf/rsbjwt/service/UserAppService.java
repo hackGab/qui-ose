@@ -25,8 +25,9 @@ public class UserAppService {
     private final ProfesseurRepository professeurRepository;
     private final EmployeurRepository employeurRepository;
     private final GestionnaireRepository gestionnaireRepository;
+    private final NotificationRepository notificationRepository;
 
-    public UserAppService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, ProfesseurRepository professeurRepository, EmployeurRepository employeurRepository, GestionnaireRepository gestionnaireRepository) {
+    public UserAppService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, ProfesseurRepository professeurRepository, EmployeurRepository employeurRepository, GestionnaireRepository gestionnaireRepository, NotificationRepository notificationRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userAppRepository = userAppRepository;
@@ -34,6 +35,7 @@ public class UserAppService {
         this.professeurRepository = professeurRepository;
         this.employeurRepository = employeurRepository;
         this.gestionnaireRepository = gestionnaireRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public String authenticateUser(LoginDTO loginDto) {
@@ -154,6 +156,8 @@ public class UserAppService {
         System.out.println("Students found: " + etudiants);
         return etudiants;
     }
+
+
 
 
 }

@@ -9,21 +9,27 @@ import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.model.Etudiant;
 import com.lacouf.rsbjwt.model.EvaluationStageProf;
 import com.lacouf.rsbjwt.repository.ContratRepository;
+import com.lacouf.rsbjwt.repository.NotificationRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
+import com.lacouf.rsbjwt.service.dto.NotificationDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SystemeService {
 
-    private ContratRepository contratRepository;
+    private final ContratRepository contratRepository;
+    private final NotificationRepository notificationRepository;
 
-    public SystemeService(ContratRepository contratRepository) {
+    public SystemeService(ContratRepository contratRepository, NotificationRepository notificationRepository) {
         this.contratRepository = contratRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public byte[] generateContratPDF(ContratDTO contrat) throws Exception {
@@ -377,5 +383,13 @@ public class SystemeService {
 
     public void creerEvaluationStageProf(Optional<EtudiantDTO> etudiantDTO) {
         System.out.println("Création de l'évaluation de stage pour l'étudiant " + etudiantDTO.get().getFirstName());
+    }
+
+
+    //getAllNotifications
+    public List<NotificationDTO> getAllNotificationsByEmail(String email) {
+        return notificationRepository.findByEmail(email).stream()
+                .map(NotificationDTO::new)
+                .collect(Collectors.toList());
     }
 }

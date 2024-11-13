@@ -6,6 +6,8 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -17,10 +19,10 @@ public class EtudiantService {
     private final CVRepository cvRepository;
     private final ContratRepository contratRepository;
     private final OffreDeStageRepository offreDeStageRepository;
-
     private final EntrevueRepository entrevueRepository;
+    private final CandidatAccepterRepository candidatAccepterRepository;
 
-    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository, ContratRepository contratRepository) {
+    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository, ContratRepository contratRepository, CandidatAccepterRepository candidatAccepterRepository) {
         this.userAppRepository = userAppRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
@@ -28,6 +30,7 @@ public class EtudiantService {
         this.offreDeStageRepository = offreDeStageRepository;
         this.entrevueRepository = entrevueRepository;
         this.contratRepository = contratRepository;
+        this.candidatAccepterRepository = candidatAccepterRepository;
     }
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
@@ -293,4 +296,6 @@ public class EtudiantService {
                 .map(EtudiantDTO::new)
                 .toList();
     }
+
+
 }

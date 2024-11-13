@@ -21,8 +21,27 @@ function SoumettreOffre() {
     const [dateLimite, setDateLimite] = useState("");
     const { t } = useTranslation();
 
+    const [season, setSeason] = useState("");
+    const [year, setYear] = useState("");
+
     useEffect(() => {
-    }, [employeurEmail]);
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+        let defaultSeason;
+        let defaultYear = currentYear;
+
+        if (currentMonth >= 9) { // Si on est en automne
+            defaultSeason = "HIV";
+            defaultYear += 1;
+        } else if (currentMonth >= 5) { // Si on est en été
+            defaultSeason = "AUT";
+        } else { // Si on est en hiver ou printemps
+            defaultSeason = "ETE";
+        }
+
+        setSeason(defaultSeason);
+        setYear(String(defaultYear).slice(-2));
+    }, []);
 
     const afficherAjoutOffre = () => {
         setShowModal(true);
@@ -70,6 +89,8 @@ function SoumettreOffre() {
 
     const handleSubmit = () => {
         if (temporaryFile) {
+            const session = `${season}${year}`;
+            console.log("Session:", session);
             const donnesOffre = {
                 titre,
                 localisation,
@@ -80,8 +101,10 @@ function SoumettreOffre() {
                 type: temporaryFile.type,
                 data: temporaryFileData,
                 status: "Attente",
-            };
-            console.log("Données de l'offre:", donnesOffre);
+                session,
+            }
+            ;console.log("Données de l'offre:", donnesOffre);
+
             const urlAjout = `http://localhost:8081/offreDeStage/creerOffreDeStage/${employeurEmail}`;
             let ancienId = file ? file.id : null;
 
@@ -102,24 +125,6 @@ function SoumettreOffre() {
                     setFile(data);
                     setFileData(data.data);
                 })
-                .then(() => {
-                    if (ancienId) {
-                        const urlDestruction = `http://localhost:8080/offre/supprimerOffre/${ancienId}`;
-
-                        fetch(urlDestruction, {
-                            method: "DELETE",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }).catch((error) => {
-                            console.error("Erreur:", error);
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error("Erreur:", error);
-                });
-
             setShowModal(false);
             setTemporaryFile(null);
         }
@@ -210,7 +215,7 @@ function SoumettreOffre() {
                                                 type="text"
                                                 className="form-control"
                                                 id="titre"
-                                                style={{ textAlign: "center" }}
+                                                style={{textAlign: "center"}}
                                                 value={titre}
                                                 onChange={(e) => setTitre(e.target.value)}
                                             />
@@ -222,7 +227,7 @@ function SoumettreOffre() {
                                                 type="text"
                                                 className="form-control"
                                                 id="localisation"
-                                                style={{ textAlign: "center" }}
+                                                style={{textAlign: "center"}}
                                                 value={localisation}
                                                 onChange={(e) => setLocalisation(e.target.value)}
                                             />
@@ -233,11 +238,35 @@ function SoumettreOffre() {
                                             <input
                                                 type="number"
                                                 className="form-control"
-                                                style={{ textAlign: "center" }}
+                                                style={{textAlign: "center"}}
                                                 id="nbCandidats"
                                                 value={nbCandidats}
                                                 onChange={(e) => setNbCandidats(e.target.value)}
                                             />
+                                        </div>
+
+                                        <div className="form-group mt-3">
+                                            <label htmlFor="session"><b>{t('Session')}</b></label>
+                                            <div className="d-flex">
+                                                <select
+                                                    className="form-control mr-2"
+                                                    value={season}
+                                                    onChange={(e) => setSeason(e.target.value)}
+                                                >
+                                                    <option value="AUT">AUT</option>
+                                                    <option value="HIV">HIV</option>
+                                                    <option value="ETE">ETE</option>
+                                                </select>
+                                                <input
+                                                    type="number"
+                                                    className="form-control"
+                                                    value={year}
+                                                    onChange={(e) => setYear(e.target.value.slice(-2))}
+                                                    placeholder="Année (ex: 24)"
+                                                    min="0"
+                                                    max="99"
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className="form-group mt-3">
@@ -246,17 +275,18 @@ function SoumettreOffre() {
                                                 type="date"
                                                 className="form-control"
                                                 id="dateLimite"
-                                                style={{ textAlign: "center" }}
+                                                style={{textAlign: "center"}}
                                                 value={dateLimite}
                                                 onChange={(e) => setDateLimite(e.target.value)}
                                             />
                                         </div>
 
+
                                         {temporaryFile && (
                                             <div className="file-details mt-3">
-                                                <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
-                                                <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
-                                                <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}
+                                                <h6><strong>{t('fileName')}:</strong> {temporaryFile.name}</h6>
+                                                <h6><strong>{t('fileType')}:</strong> {temporaryFile.type}</h6>
+                                                <h6><strong>{t('fileDate')}:</strong> {new Date().toLocaleDateString()}
                                                 </h6>
                                             </div>
                                         )}

@@ -189,15 +189,18 @@ import {FaCross, FaTimes} from "react-icons/fa";
                             <div className="dropdown notification-dropdown">
                                 {notifications.length > 0 ? (
                                     notifications.map((notification, index) => (
-                                        <div key={index} className="dropdown-link">
-                                            <div onClick={() => handleLinkClick(notification.url)}>
-                                                {notification.message} - {notification.tempsDepuisReception} avant
+                                        <>
+                                            <div key={index} className="dropdown-link">
+                                                <div onClick={() => handleLinkClick(notification.url)}>
+                                                    {notification.message} - {notification.tempsDepuisReception} avant
+                                                </div>
+                                                <div data-testid="delete-icon" className="delete-icon"
+                                                     onClick={() => handleDeleteNotification(index)}>
+                                                    <FaTimes/>
+                                                </div>
                                             </div>
-                                            <div data-testid="delete-icon" onClick={() => handleDeleteNotification(index)}
-                                                  style={{cursor: 'pointer', fontSize: 'large'}}>
-                                                <FaTimes/>
-                                            </div>
-                                        </div>
+                                            <hr className="m-1"/>
+                                        </>
                                     ))
                                 ) : (
                                     <div className="dropdown-link">{t('noNotifications')}</div>

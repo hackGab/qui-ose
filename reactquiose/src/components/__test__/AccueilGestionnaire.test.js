@@ -16,11 +16,13 @@ describe("AccueilGestionnaire Notifications", () => {
     });
 
     test("should display notification badge when cvAttentes > 0", async () => {
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                json: () => Promise.resolve(5)
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(3)
             })
-        );
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(7)
+            });
 
         render(
             <BrowserRouter>
@@ -28,15 +30,14 @@ describe("AccueilGestionnaire Notifications", () => {
             </BrowserRouter>
         );
 
-        const notificationBadge = await screen.findByText('5');
-
-        expect(notificationBadge).toBeInTheDocument();
+        const notificationBadgeOffre = await screen.findByText('3');
+        expect(notificationBadgeOffre).toBeInTheDocument();
     });
 
     test("should not display notification badge when cvAttentes = 0", async () => {
         global.fetch = jest.fn(() =>
             Promise.resolve({
-                json: () => Promise.resolve(0) // No notifications
+                json: () => Promise.resolve(0)
             })
         );
 
@@ -46,8 +47,45 @@ describe("AccueilGestionnaire Notifications", () => {
             </BrowserRouter>
         );
 
-        // Check that no notification badge is displayed
         const notificationBadge = screen.queryByText('0');
         expect(notificationBadge).not.toBeInTheDocument();
+    });
+
+    test("should display notification badge for offres de stage when offresAttentes > 0", async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(3)
+            })
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(7)
+            });
+
+        render(
+            <BrowserRouter>
+                <AccueilGestionnaire />
+            </BrowserRouter>
+        );
+
+        const notificationBadgeOffre = await screen.findByText('7');
+        expect(notificationBadgeOffre).toBeInTheDocument();
+    });
+
+    test("should not display notification badge for offres de stage when offresAttentes = 0", async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(3)
+            })
+            .mockResolvedValueOnce({
+                json: () => Promise.resolve(0)
+            });
+
+        render(
+            <BrowserRouter>
+                <AccueilGestionnaire />
+            </BrowserRouter>
+        );
+
+        const notificationBadgeOffre = screen.queryByText('0');
+        expect(notificationBadgeOffre).not.toBeInTheDocument();
     });
 });

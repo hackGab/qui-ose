@@ -519,4 +519,24 @@ class EtudiantServiceTest {
         assertEquals(1, response.size());
         assertEquals(Departement.TECHNIQUES_INFORMATIQUE, response.get(0).getDepartement());
     }
+
+    @Test
+    void shouldReturnNombreCVEnAttente() {
+        // Arrange
+        Etudiant etudiant1 = new Etudiant();
+        Etudiant etudiant2 = new Etudiant();
+        CV cv1 = new CV("cvName1", "cvType1", "cvData1", "Attente");
+        CV cv2 = new CV("cvName2", "cvType2", "cvData2", "Validé");
+        etudiant1.setCv(cv1);
+        etudiant2.setCv(cv2);
+        List<Etudiant> etudiants = List.of(etudiant1, etudiant2);
+
+        when(etudiantRepository.findAll()).thenReturn(etudiants);
+
+        // Act
+        int result = etudiantService.getNombreCVEnAttente();
+
+        // Assert
+        assertEquals(1, result);
+    }
 }

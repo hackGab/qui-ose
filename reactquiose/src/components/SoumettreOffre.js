@@ -31,10 +31,10 @@ function SoumettreOffre() {
         let defaultYear = currentYear;
 
         if (currentMonth >= 9) { // Si on est en automne
-            defaultSeason = "HIV";
+            defaultSeason = "HIVER";
             defaultYear += 1;
         } else if (currentMonth >= 5) { // Si on est en été
-            defaultSeason = "AUT";
+            defaultSeason = "AUTOMNE";
         } else { // Si on est en hiver ou printemps
             defaultSeason = "ETE";
         }
@@ -253,8 +253,8 @@ function SoumettreOffre() {
                                                     value={season}
                                                     onChange={(e) => setSeason(e.target.value)}
                                                 >
-                                                    <option value="AUT">AUT</option>
-                                                    <option value="HIV">HIV</option>
+                                                    <option value="AUTOMNE">AUTOMNE</option>
+                                                    <option value="HIVER">HIVER</option>
                                                     <option value="ETE">ETE</option>
                                                 </select>
                                                 <input

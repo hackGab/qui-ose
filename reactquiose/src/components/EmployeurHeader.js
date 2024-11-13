@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../images/logo.png';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,21 @@ function EmployeurHeader({ userData }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
+    const [userDataState, setUserData] = useState(null);
+
+    useEffect(() => {
+        if (userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+    }, [userData]);
+
+    const getUserLocalStorage = () => {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+            setUserData(JSON.parse(storedUserData));
+            userData = userDataState
+        }
+    };
 
     const handleClickLogo = () => {
         if (userData) {
@@ -32,6 +47,7 @@ function EmployeurHeader({ userData }) {
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
+        getUserLocalStorage();
     };
 
     return (
@@ -82,10 +98,12 @@ function EmployeurHeader({ userData }) {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')}
-                                  className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')}
-                                  className="language-button dropdown-link">{t('Francais')}</Link>
+                            <button onClick={() => changeLanguage('en')}
+                                  className="language-button dropdown-link text-left no-underline">{t('Anglais')}
+                            </button>
+                            <button onClick={() => changeLanguage('fr')}
+                                  className="language-button dropdown-link text-left no-underline">{t('Francais')}
+                            </button>
                         </div>
                     )}
                 </div>

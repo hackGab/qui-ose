@@ -38,12 +38,14 @@ function ProfesseurHeader({userData}) {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                            <button onClick={() => changeLanguage('en')}
+                                    className="language-button dropdown-link text-left no-underline">
                                 {t('Anglais')}
-                            </Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                            </button>
+                            <button onClick={() => changeLanguage('fr')}
+                                    className="language-button dropdown-link text-left no-underline">
                                 {t('Francais')}
-                            </Link>
+                            </button>
                         </div>
                     )}
                 </div>

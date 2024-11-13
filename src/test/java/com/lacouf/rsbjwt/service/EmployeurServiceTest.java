@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class EmployeurServiceTest {
@@ -30,6 +31,7 @@ public class EmployeurServiceTest {
     private UserAppRepository userAppRepository;
     private OffreDeStageRepository offreDeStageRepository;
     private EtudiantRepository etudiantRepository;
+    private EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
 
     private ContratRepository contratRepository;
     private EmployeurService employeurService;
@@ -41,14 +43,15 @@ public class EmployeurServiceTest {
 
     @BeforeEach
     void setUp() {
-        employeurRepository = Mockito.mock(EmployeurRepository.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        entrevueRepository = Mockito.mock(EntrevueRepository.class);
-        userAppRepository = Mockito.mock(UserAppRepository.class);
-        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
-        etudiantRepository = Mockito.mock(EtudiantRepository.class);
-        contratRepository = Mockito.mock(ContratRepository.class);
-        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository);
+        employeurRepository = mock(EmployeurRepository.class);
+        passwordEncoder = mock(PasswordEncoder.class);
+        entrevueRepository = mock(EntrevueRepository.class);
+        userAppRepository = mock(UserAppRepository.class);
+        offreDeStageRepository = mock(OffreDeStageRepository.class);
+        etudiantRepository = mock(EtudiantRepository.class);
+        contratRepository = mock(ContratRepository.class);
+        evaluationStageEmployeurRepository = mock(EvaluationStageEmployeurRepository.class);
+        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository, evaluationStageEmployeurRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");
@@ -434,6 +437,49 @@ public class EmployeurServiceTest {
         assertEquals(1, response.size());
     }
 
+    @Test
+    void creerEvaluationEtudiant_shouldThrowExceptionWhenEmployeurNotFound() {
+        // Arrange
+        String employeurEmail = "invalid@example.com";
+        String etudiantEmail = "etudiant@example.com";
+        EvaluationStageEmployeurDTO evaluationDTO = new EvaluationStageEmployeurDTO();
 
+        when(employeurRepository.findByCredentials_email(employeurEmail)).thenReturn(Optional.empty());
 
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                employeurService.creerEvaluationEtudiant(employeurEmail, etudiantEmail, evaluationDTO));
+
+        assertEquals("java.lang.Exception: Employeur non trouvé", exception.getMessage());
+    }
+
+    @Test
+    void creerEvaluationEtudiant_shouldThrowExceptionWhenEtudiantNotFound() {
+        // Arrange
+        String employeurEmail = "employeur@example.com";
+        String etudiantEmail = "invalid@example.com";
+        EvaluationStageEmployeurDTO evaluationDTO = new EvaluationStageEmployeurDTO();
+        Employeur employeur = new Employeur();
+
+        when(employeurRepository.findByCredentials_email(employeurEmail)).thenReturn(Optional.of(employeur));
+        when(etudiantRepository.findByEmail(etudiantEmail)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                employeurService.creerEvaluationEtudiant(employeurEmail, etudiantEmail, evaluationDTO));
+
+        assertEquals("java.lang.Exception: Etudiant non trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getEntrevuesAccepteesParEmployeur_ShouldReturnEmptyListIfEmployeurNotFound() {
+        String emailEmployeur = "nonexistent@example.com";
+
+        when(employeurRepository.findByCredentials_email(emailEmployeur)).thenReturn(Optional.empty());
+
+        List<EntrevueDTO> result = employeurService.getEntrevuesAccepteesParEmployeur(emailEmployeur);
+
+        assertTrue(result.isEmpty());
+    }
 }
+

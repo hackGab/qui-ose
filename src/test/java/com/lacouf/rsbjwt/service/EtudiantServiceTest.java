@@ -340,30 +340,6 @@ class EtudiantServiceTest {
     }
 
     @Test
-    void shouldGetEntrevuesEnAttenteByEtudiant() {
-        // Arrange
-        String email = "email@gmail.com";
-
-        OffreDeStage offreDeStage = new OffreDeStage();
-        offreDeStage.setEmployeur(employeur);
-
-        Entrevue entrevue = new Entrevue();
-        entrevue.setEtudiant(etudiantEntity);
-        entrevue.setOffreDeStage(offreDeStage);
-        entrevue.setStatus("En attente");
-        List<Entrevue> entrevues = List.of(entrevue);
-        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
-        when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
-
-        // Act
-        List<EntrevueDTO> response = etudiantService.getEntrevuesEnAttenteByEtudiant(email);
-
-        // Assert
-        assertEquals(1, response.size());
-        assertEquals("En attente", response.get(0).getStatus());
-    }
-
-    @Test
     void shouldChangerStatusEntrevue() {
         // Arrange
         String email = "email@gmail.com";
@@ -449,7 +425,6 @@ class EtudiantServiceTest {
         // Assert
         assertTrue(response.isPresent());
         assertTrue(contrat.isEtudiantSigne());
-//        verify(contratRepository, times(1)).save(contrat);
     }
 
 

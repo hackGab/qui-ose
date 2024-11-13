@@ -366,5 +366,8 @@
   "Peut-être": "Peut-être",
   "La_formation_technique_du_stagiaire_était_elle_suffisante_pour_accomplir_le_mandat_de_stage": "La formation technique du stagiaire était-elle suffisante pour accomplir le mandat de stage",
   "Fonction": "Fonction",
-  "creer_evaluation": "Créer une évaluation"
+  "creer_evaluation": "Créer une évaluation",
+  "AucunCV": "Aucun CV",
+  "validé": "validé",
+  "Attente": "En attente"
 }

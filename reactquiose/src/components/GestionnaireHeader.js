@@ -1,16 +1,44 @@
-import React, { useState } from 'react';
+// src/components/GestionnaireHeader.js
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/Header.css'
+import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import i18n from "i18next";
 import "../CSS/BoutonLangue.css";
+import { calculateNextSessions } from '../utils/methodes/dateUtils';
 
 function GestionnaireHeader() {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
+
+    useEffect(() => {
+        let fetchDate = calculateNextSessions();
+
+        const urlFetchOffresWithSession = `http://localhost:8081/offreDeStage/session/${fetchDate}`;
+
+        fetch(urlFetchOffresWithSession, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error('lors de la récupération des données');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
 
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!profileMenuOpen);

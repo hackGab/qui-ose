@@ -116,6 +116,7 @@ public class OffreDeStageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
+
         List<OffreDeStageDTO> offresBySession = offreDeStageService.getOffresBySession(session);
 
         return ResponseEntity.ok().body(offresBySession);

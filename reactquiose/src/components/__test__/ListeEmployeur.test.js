@@ -1,13 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import ListeEmployeurs from "../ListeEmployeurs";
 import { BrowserRouter } from "react-router-dom";
-import '@testing-library/jest-dom/extend-expect';  // Pour les matchers comme .toBeInTheDocument()
-import { useTranslation } from 'react-i18next';
+import '@testing-library/jest-dom/extend-expect';
 
-// Mock de useTranslation pour éviter les erreurs liées à i18n pendant le test
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (key) => key,  // retourne la clé pour simplifier
+        t: (key) => key,
     }),
 }));
 

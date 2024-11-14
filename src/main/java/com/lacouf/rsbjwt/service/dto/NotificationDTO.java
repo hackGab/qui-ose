@@ -17,7 +17,6 @@ public class NotificationDTO {
     private String email;
     private String url;
     private String tempsDepuisReception;
-    private LocalDateTime dateCreation;
 
     public NotificationDTO(Notification notification) {
         this.id = notification.getId();
@@ -25,8 +24,7 @@ public class NotificationDTO {
         this.vu = notification.isVu();
         this.email = notification.getEmail();
         this.url = notification.getUrl();
-        this.tempsDepuisReception = notification.getTempsDepuisReception();
-        this.dateCreation = notification.getDateCreation();
+        this.tempsDepuisReception = notification.getFormattedTimeSinceReception();
     }
 
     @Override
@@ -38,7 +36,6 @@ public class NotificationDTO {
                 ", email='" + email + '\'' +
                 ", url='" + url + '\'' +
                 ", tempsDepuisReception='" + tempsDepuisReception + '\'' +
-                ", dateCreation=" + dateCreation +
                 '}';
     }
 

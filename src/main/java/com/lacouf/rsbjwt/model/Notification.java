@@ -25,6 +25,9 @@ public class Notification {
     private String message;
 
     @Column(nullable = false)
+    private String titreOffre;
+
+    @Column(nullable = false)
     private boolean vu;
 
     @Column(nullable = false)
@@ -39,8 +42,9 @@ public class Notification {
     @Column(nullable = false)
     private LocalDateTime dateCreation;
 
-    public Notification(String message, String email, String url) {
+    public Notification(String message, String titreOffre, String email, String url) {
         this.message = message;
+        this.titreOffre = titreOffre;
         this.vu = false;
         this.email = email;
         this.url = url;
@@ -72,6 +76,7 @@ public class Notification {
         return "Notification{" +
                 "id=" + id +
                 ", message='" + message + '\'' +
+                ", titreOffre='" + titreOffre + '\'' +
                 ", vu=" + vu +
                 ", email='" + email + '\'' +
                 ", url='" + url + '\'' +

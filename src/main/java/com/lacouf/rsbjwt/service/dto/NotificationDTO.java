@@ -13,6 +13,7 @@ import lombok.Setter;
 public class NotificationDTO {
     private Long id;
     private String message;
+    private String titreOffre;
     private boolean vu;
     private String email;
     private String url;
@@ -22,6 +23,7 @@ public class NotificationDTO {
     public NotificationDTO(Notification notification) {
         this.id = notification.getId();
         this.message = notification.getMessage();
+        this.titreOffre = notification.getTitreOffre();
         this.vu = notification.isVu();
         this.email = notification.getEmail();
         this.url = notification.getUrl();
@@ -34,6 +36,7 @@ public class NotificationDTO {
         return "NotificationDTO{" +
                 "id=" + id +
                 ", message='" + message + '\'' +
+                ", titreOffre='" + titreOffre + '\'' +
                 ", vu=" + vu +
                 ", email='" + email + '\'' +
                 ", url='" + url + '\'' +

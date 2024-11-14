@@ -49,10 +49,26 @@ import {FaCross, FaTimes} from "react-icons/fa";
             }
         };
 
-        const handleDeleteNotification = (index) => {
+        const handleDeleteNotification = (index, notifId) => {
             setNotifications((prevNotifications) =>
                 prevNotifications.filter((_, i) => i !== index)
             );
+
+            fetch(`http://localhost:8081/notification/markAsRead/${notifId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la suppression de la notification');
+                    }
+                })
+                .catch(err => {
+                    console.error('Erreur:', err);
+                });
+
         };
 
         const toggleProfileMenu = () => {
@@ -81,14 +97,14 @@ import {FaCross, FaTimes} from "react-icons/fa";
                         return response.json();
                     })
                     .then((data) => {
-                        console.log('Réponse du serveur:', data);
+                        //console.log('Réponse du serveur:', data);
 
                         if (data.cv) {
                             setFile(data.cv);
                             setStagesAppliquees(data.offresAppliquees);
 
-                            console.log('CV:', data.cv);
-                            console.log('Stages appliquées:', data.offresAppliquees);
+                            //console.log('CV:', data.cv);
+                            //console.log('Stages appliquées:', data.offresAppliquees);
                         }
                     })
                     .catch((error) => {
@@ -120,7 +136,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
         useEffect(() => {
             if (userData) {
                 const url = `http://localhost:8081/notification/all/${userData.credentials.email}`;
-                console.log(userData.credentials.email)
+                //console.log(userData.credentials.email)
                 fetch(url,{
                     method: 'GET',
                     headers: {
@@ -195,7 +211,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
                                                     {notification.message} - {notification.tempsDepuisReception} avant
                                                 </div>
                                                 <div data-testid="delete-icon" className="delete-icon"
-                                                     onClick={() => handleDeleteNotification(index)}>
+                                                     onClick={() => handleDeleteNotification(index, notification.id)}>
                                                     <FaTimes/>
                                                 </div>
                                             </div>

@@ -61,14 +61,20 @@ public class Notification {
         Duration duration = Duration.between(dateCreation, LocalDateTime.now());
 
         if (duration.getSeconds() < 60) {
-            return duration.getSeconds() + " secondes";
+            return "il y a " + duration.getSeconds() + " secondes";
         } else if (duration.toMinutes() < 60) {
-            return duration.toMinutes() + " minutes";
+            return "il y a " + duration.toMinutes() + " minutes";
         } else if (duration.toHours() < 24) {
-            return duration.toHours() + " heures";
+            return "il y a " + duration.toHours() + " heures";
         } else {
-            return duration.toDays() + " jours";
+            return "il y a " + duration.toDays() + " jours";
         }
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void updateTempsDepuisReception() {
+        this.tempsDepuisReception = getFormattedTimeSinceReception();
     }
 
     @Override

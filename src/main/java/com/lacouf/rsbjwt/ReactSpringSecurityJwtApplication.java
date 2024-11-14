@@ -18,14 +18,16 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
     private final EmployeurService employeurService;
     private final GestionnaireService gestionnaireService;
     private final UserAppService userService;
+    private final OffreDeStageService OffreDeStageService;
 
-    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService, ProfesseurService professeurService, EmployeurService employeurService, GestionnaireService gestionnaireService, UserAppService userService) {
+    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService, ProfesseurService professeurService, EmployeurService employeurService, GestionnaireService gestionnaireService, UserAppService userService, OffreDeStageService OffreDeStageService) {
         this.passwordEncoder = passwordEncoder;
         this.etudiantService = etudiantService;
         this.professeurService = professeurService;
         this.gestionnaireService = gestionnaireService;
         this.userService = userService;
         this.employeurService = employeurService;
+        this.OffreDeStageService = OffreDeStageService;
     }
 
     public static void main(String[] args) {
@@ -35,7 +37,7 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        gestionnaireService.creerGestionnaire(
+        /*gestionnaireService.creerGestionnaire(
                 new GestionnaireDTO(
                         "Thiraiyan",
                         "Moon",
@@ -43,8 +45,10 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
                         Role.GESTIONNAIRE,
                         new CredentialDTO("niseiyen@gmail.com", "1")
                 )
-        );
+        );*/
 
         userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "1"));
+
+        System.out.println(OffreDeStageService.getAllOffresDeStage());
     }
 }

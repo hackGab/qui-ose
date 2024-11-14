@@ -326,5 +326,6 @@
   "HIVER": "HIVER",
   "ETE": "ETE",
   "AUTOMNE": "AUTOMNE",
-  "PRINTEMPS": "PRINTEMPS"
+  "PRINTEMPS": "PRINTEMPS",
+  "NombreDeCandidats" : "Nombre de candidats"
 }

@@ -316,5 +316,6 @@
   "HIVER": "WINTER",
   "ETE": "SUMMER",
   "AUTOMNE": "FALL",
-  "PRINTEMPS": "SPRING"
+  "PRINTEMPS": "SPRING",
+  "NombreDeCandidats": "Number of Candidates"
 }

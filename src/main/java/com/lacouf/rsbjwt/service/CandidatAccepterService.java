@@ -25,6 +25,12 @@ public class CandidatAccepterService {
         this.entrevueRepository = entrevueRepository;
         this.notificationRepository = notificationRepository;
     }
+
+    public NotificationDTO createNotification(Notification notification) {
+        Notification savedNotification = notificationRepository.save(notification);
+        return new NotificationDTO(savedNotification);
+    }
+
     // Accepter une candidature
     public Optional<CandidatAccepterDTO> accepterCandidature(Long entrevueId) {
         Optional<Entrevue> entrevueOptional = entrevueRepository.findById(entrevueId);
@@ -41,12 +47,6 @@ public class CandidatAccepterService {
         }
 
         return Optional.empty();
-    }
-
-
-    public NotificationDTO createNotification(Notification notification) {
-        Notification savedNotification = notificationRepository.save(notification);
-        return new NotificationDTO(savedNotification);
     }
 
 

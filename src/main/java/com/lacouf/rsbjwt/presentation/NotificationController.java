@@ -22,9 +22,14 @@ public class NotificationController {
     //get all notifications par email
     @GetMapping("/all/{email}")
     public ResponseEntity<List<NotificationDTO>> getAllNotificationsByEmail(@PathVariable String email) {
-        System.out.println("yiyiyiyiyiyiyiyiyiyiyiyiyiiyiyyiyiiyiyiyiyiyiyiyiyiyiyiyiy");
         List<NotificationDTO> notifications = systemeService.getAllNotificationsByEmail(email);
-        System.out.println("Notifications : " + notifications + "dfaffafsdfa");
         return ResponseEntity.ok(notifications);
     }
+
+    @PutMapping("/markAsRead/{id}")
+    public ResponseEntity<Void> markNotificationAsRead(@PathVariable Long id) {
+        systemeService.markNotificationAsRead(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

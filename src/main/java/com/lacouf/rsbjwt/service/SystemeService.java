@@ -4,10 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.lacouf.rsbjwt.model.Contrat;
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.EvaluationStageProf;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.repository.NotificationRepository;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
@@ -386,10 +383,21 @@ public class SystemeService {
     }
 
 
-    //getAllNotifications
     public List<NotificationDTO> getAllNotificationsByEmail(String email) {
         return notificationRepository.findByEmail(email).stream()
                 .map(NotificationDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public void markNotificationAsRead(Long notificationId) {
+        Optional<Notification> notificationOpt = notificationRepository.findById(notificationId);
+        if (notificationOpt.isPresent()) {
+            Notification notification = notificationOpt.get();
+            notification.markAsRead();
+            notificationRepository.save(notification);
+        } else {
+            throw new IllegalArgumentException("Notification not found");
+        }
+    }
+
 }

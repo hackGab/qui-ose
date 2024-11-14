@@ -71,6 +71,26 @@ import {FaCross, FaTimes} from "react-icons/fa";
             i18n.changeLanguage(lng);
         };
 
+
+        function extractTimeAndUnit(tempsDepuisReception) {
+            const regex = /(\d+)\s*(secondes|minutes|heures|jours)/;
+            const match = tempsDepuisReception.match(regex);
+            if (match) {
+                return { time: match[1], unit: match[2] };
+            }
+            return null;
+        }
+
+        function translateTimeAgo(time, unit) {
+            const currentLanguage = i18n.language.split('-')[0].toLowerCase();
+            if (currentLanguage === 'fr') {
+                return `il y a ${time} ${i18n.t(unit, { lng: 'fr' })}`;
+            } else {
+                return `${time} ${i18n.t(unit, { lng: 'en' })} ${i18n.t('ago', { lng: 'en' })}`;
+            }
+        }
+
+
        useEffect(() => {
             if (userData) {
                 const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
@@ -118,30 +138,37 @@ import {FaCross, FaTimes} from "react-icons/fa";
         }, [userData]);
 
 
-        // Pas encore le constructeur pour
         useEffect(() => {
             if (userData) {
-                const url = `http://localhost:8081/notification/allUnread/${userData.credentials.email}`;
-                //console.log(userData.credentials.email)
-                fetch(url,{
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Erreur lors de la requête: ${response.status}`);
+                const fetchNotifications = () => {
+                    console.log('Fetching notifications...')
+                    const url = `http://localhost:8081/notification/allUnread/${userData.credentials.email}`;
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
                         }
-                        return response.json();
                     })
-                    .then(data => {
-                        console.log('Réponse du serveur:', data);
-                        setNotifications(data);
-                    })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur lors de la requête: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Réponse du serveur:', data);
+                            setNotifications(data);
+                        })
+                        .catch(error => {
+                            console.error('Erreur:', error);
+                        });
+                };
+
+                fetchNotifications(); // Fetch notifications initially
+
+                const intervalId = setInterval(fetchNotifications, 60000); // Fetch notifications every 60 seconds
+
+                return () => clearInterval(intervalId); // Clear interval on component unmount
             }
         }, [userData]);
 
@@ -191,20 +218,24 @@ import {FaCross, FaTimes} from "react-icons/fa";
                         {notificationMenuOpen && (
                             <div className="dropdown notification-dropdown">
                                 {notifications.length > 0 ? (
-                                    notifications.map((notification, index) => (
-                                        <>
-                                            <div key={notification.id} className="dropdown-link">
-                                                <div onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
-                                                    {notification.message} - {notification.tempsDepuisReception} avant
-                                                </div>
-                                                <div data-testid="delete-icon" className="delete-icon"
-                                                     onClick={() => handleDeleteNotification(index, notification.id)}>
-                                                    <FaTimes/>
-                                                </div>
-                                            </div>
-                                            <hr className="m-1"/>
-                                        </>
-                                    ))
+                                    notifications.map((notification, index) => {
+                                        const { time, unit } = extractTimeAndUnit(notification.tempsDepuisReception);
+                                        const translatedTime = translateTimeAgo(time, unit);
+                                        return (
+                                            <React.Fragment key={notification.id}>
+                                                <div className="dropdown-link">
+                                                        <div onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
+                                                            {t(notification.message)} {notification.titreOffre} -  {translatedTime}
+                                                        </div>
+                                                        <div data-testid="delete-icon" className="delete-icon"
+                                                             onClick={() => handleDeleteNotification(index, notification.id)}>
+                                                            <FaTimes/>
+                                                        </div>
+                                                    </div>
+                                                    <hr className="m-1"/>
+                                            </React.Fragment>
+                                        );
+                                    })
                                 ) : (
                                     <div className="dropdown-link">{t('noNotifications')}</div>
                                 )}

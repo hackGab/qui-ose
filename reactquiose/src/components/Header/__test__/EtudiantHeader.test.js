@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import EtudiantHeader from '../EtudiantHeader';
 import {MemoryRouter, Route, Routes} from 'react-router-dom';
@@ -11,8 +11,20 @@ describe('EtudiantHeader Component - Notifications', () => {
         }
     };
 
-    it('should render notifications', () => {
-        act(() => {
+    beforeEach(() => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve([
+                    { id: 1, message: 'Notification 1', tempsDepuisReception: '2 heures', url: '/stagesAppliquees' },
+                    { id: 2, message: 'Notification 2', tempsDepuisReception: '3 heures', url: '/mesEntrevues' }
+                ])
+            })
+        );
+    });
+
+    it('should render notifications', async () => {
+        await act(async () => {
             render(
                 <MemoryRouter>
                     <EtudiantHeader userData={userData} />
@@ -21,55 +33,74 @@ describe('EtudiantHeader Component - Notifications', () => {
         });
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
-        const notifications = screen.getAllByText('Vous avez été accepté pour le stage de Programmeur analyste - 2 heures avant');
+        const notifications = screen.getAllByText(/Notification \d/);
         expect(notifications.length).toBeGreaterThan(0);
         notifications.forEach(notification => {
             expect(notification).toBeInTheDocument();
         });
     });
 
-    it('should delete a notification when delete icon is clicked', () => {
-        act(() => {
+    it('should delete a notification when delete icon is clicked', async () => {
+        await act(async () => {
             render(
                 <MemoryRouter>
                     <EtudiantHeader userData={userData} />
                 </MemoryRouter>
             );
         });
-        // Vérifier que les notifications sont affichées
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
-        let notifications = screen.getAllByText('Vous avez été accepté pour le stage de Programmeur analyste - 2 heures avant');
-        expect(notifications.length).toBeGreaterThanOrEqual(5);
+        let notifications = screen.getAllByText(/Notification \d/);
+        expect(notifications.length).toBe(2);
 
-        // Test bouton delete
         const deleteIcon = screen.getAllByTestId('delete-icon')[0];
         expect(deleteIcon).toBeInTheDocument();
         fireEvent.click(deleteIcon);
 
-        // Vérifier que la notification a été supprimée
-        notifications = screen.getAllByText('Vous avez été accepté pour le stage de Programmeur analyste - 2 heures avant');
-        expect(notifications.length).toBeLessThan(5);
+        notifications = screen.queryAllByText(/Notification \d/);
+        expect(notifications.length).toBe(1);
     });
 
-
-    it('should navigate to the notification URL when a notification is clicked', () => {
-        const userData = { credentials: { email: 'test@example.com' } };
-        render(
-            <MemoryRouter initialEntries={['/']}>
-                <Routes>
-                    <Route path="/" element={<EtudiantHeader userData={userData} />} />
-                    <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
-                </Routes>
-            </MemoryRouter>
-        );
+    it('should navigate to the notification URL when a notification is clicked', async () => {
+        await act(async () => {
+            render(
+                <MemoryRouter initialEntries={['/']}>
+                    <Routes>
+                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        });
 
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
 
-        const notification = screen.getAllByText('Vous avez été accepté pour le stage de Programmeur analyste - 2 heures avant')[0];
+        const notification = screen.getByText('Notification 1 - 2 heures avant');
         fireEvent.click(notification);
 
-        expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
+    });
+
+    it('should delete the notification and navigate to the URL when a notification is clicked', async () => {
+        await act(async () => {
+            render(
+                <MemoryRouter initialEntries={['/']}>
+                    <Routes>
+                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        });
+
+        const notificationIcon = screen.getByText('🕭');
+        fireEvent.click(notificationIcon);
+
+        const notification = screen.getByText('Notification 1 - 2 heures avant');
+        fireEvent.click(notification);
+
+        await waitFor(() => expect(screen.queryByText('Notification 1 - 2 heures avant')).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
     });
 });

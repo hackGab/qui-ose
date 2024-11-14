@@ -40,7 +40,7 @@ public class CandidatAccepterService {
             CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
             CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
 
-           createNotification(new Notification("Félicitations, vous avez été accepté pour le post", candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
+           createNotification(new Notification("Félicitations, vous avez été accepté pour le poste de", entrevue.getOffreDeStage().getTitre(), candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
 
             return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(),savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
 
@@ -58,7 +58,7 @@ public class CandidatAccepterService {
             Entrevue entrevue = entrevueOptional.get();
             CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, false);
             CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
-            createNotification(new Notification("Désoler, vous n'ètes pas accepté pour le post", candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
+            createNotification(new Notification("Désoler, vous n'êtes pas accepté pour le poste de", entrevue.getOffreDeStage().getTitre(), candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
 
             return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(), savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
         }

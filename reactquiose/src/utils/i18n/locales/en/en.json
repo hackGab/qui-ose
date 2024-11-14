@@ -310,5 +310,13 @@
   "Entreprise" : "Entreprise",
   "PersonneContact" : "Contact Person",
   "studentListSubtitleForEvaluation": "Click on a student to make an evaluation or generate a PDF version of the evaluation.",
-  "GenererEvaluationPDF": "Genaerate PDF"
+  "GenererEvaluationPDF": "Genaerate PDF",
+  "noNotifications": "No notifications",
+  "secondes": "seconds",
+  "minutes": "minutes",
+  "heures": "hours",
+  "jours": "days",
+  "ago": "ago",
+  "Félicitations, vous avez été accepté pour le poste de": "Congratulations, you have been accepted for the position of",
+  "Désoler, vous n'êtes pas accepté pour le poste de": "Sorry, you are not accepted for the position of"
 }

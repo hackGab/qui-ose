@@ -18,7 +18,7 @@ public class NotificationController {
         this.systemeService = systemeService;
     }
 
-    @GetMapping("/unread/{email}")
+    @GetMapping("/allUnread/{email}")
     public ResponseEntity<List<NotificationDTO>> getAllUnreadNotificationsByEmail(@PathVariable String email) {
         List<NotificationDTO> notifications = systemeService.getAllUnreadNotificationsByEmail(email);
         return ResponseEntity.ok(notifications);

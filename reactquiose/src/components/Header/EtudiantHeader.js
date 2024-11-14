@@ -11,25 +11,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
         const { t } = useTranslation();
         const [profileMenuOpen, setProfileMenuOpen] = useState(false);
         const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
-        const [notifications, setNotifications] = useState([
-            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-            // { description: "Vous avez été rejeté pour le stage de Développeur Web", tempsDepuisReception: "1 jour", url: "/stagesAppliquees" },
-            // { description: "Vous avez une entrevue pour le stage de Programmeur analyste", tempsDepuisReception: "2 jours", url: "/mesEntrevues" },
-            // { description: "Vous avez une entrevue pour le stage de Développeur Web", tempsDepuisReception: "1 semaine", url: "/mesEntrevues"},
-            // { description: "Vous avez été accepté pour le stage de Programmeur analyste", tempsDepuisReception: "2 heures", url: "/stagesAppliquees" },
-        ]);
+        const [notifications, setNotifications] = useState([]);
         const navigate = useNavigate();
         const location = useLocation();
         const [file, setFile] = useState(null);
@@ -49,26 +31,30 @@ import {FaCross, FaTimes} from "react-icons/fa";
             }
         };
 
-        const handleDeleteNotification = (index, notifId) => {
+        async function deplacementVersNotif(url, index, NotifId) {
+            await handleDeleteNotification(index, NotifId)
+            handleLinkClick(url)
+        }
+
+        const handleDeleteNotification = async (index, notifId) => {
             setNotifications((prevNotifications) =>
                 prevNotifications.filter((_, i) => i !== index)
             );
 
-            fetch(`http://localhost:8081/notification/markAsRead/${notifId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la suppression de la notification');
+            try {
+                const response = await fetch(`http://localhost:8081/notification/markAsRead/${notifId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                })
-                .catch(err => {
-                    console.error('Erreur:', err);
                 });
 
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la suppression de la notification');
+                }
+            } catch (err) {
+                console.error('Erreur:', err);
+            }
         };
 
         const toggleProfileMenu = () => {
@@ -135,7 +121,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
         // Pas encore le constructeur pour
         useEffect(() => {
             if (userData) {
-                const url = `http://localhost:8081/notification/all/${userData.credentials.email}`;
+                const url = `http://localhost:8081/notification/allUnread/${userData.credentials.email}`;
                 //console.log(userData.credentials.email)
                 fetch(url,{
                     method: 'GET',
@@ -158,6 +144,7 @@ import {FaCross, FaTimes} from "react-icons/fa";
                 })
             }
         }, [userData]);
+
 
         return (
             <header className="gestionnaire-header">
@@ -206,8 +193,8 @@ import {FaCross, FaTimes} from "react-icons/fa";
                                 {notifications.length > 0 ? (
                                     notifications.map((notification, index) => (
                                         <>
-                                            <div key={index} className="dropdown-link">
-                                                <div onClick={() => handleLinkClick(notification.url)}>
+                                            <div key={notification.id} className="dropdown-link">
+                                                <div onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
                                                     {notification.message} - {notification.tempsDepuisReception} avant
                                                 </div>
                                                 <div data-testid="delete-icon" className="delete-icon"

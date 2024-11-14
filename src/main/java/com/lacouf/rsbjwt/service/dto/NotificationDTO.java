@@ -1,5 +1,7 @@
 package com.lacouf.rsbjwt.service.dto;
+
 import com.lacouf.rsbjwt.model.Notification;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +26,21 @@ public class NotificationDTO {
         this.vu = notification.isVu();
         this.email = notification.getEmail();
         this.url = notification.getUrl();
-        this.tempsDepuisReception = notification.getFormattedTimeSinceReception();
+        this.tempsDepuisReception = calculateTempsDepuisReception(notification.getDateCreation());
+    }
+
+    private String calculateTempsDepuisReception(LocalDateTime dateCreation) {
+        Duration duration = Duration.between(dateCreation, LocalDateTime.now());
+
+        if (duration.getSeconds() < 60) {
+            return "il y a " + duration.getSeconds() + " secondes";
+        } else if (duration.toMinutes() < 60) {
+            return "il y a " + duration.toMinutes() + " minutes";
+        } else if (duration.toHours() < 24) {
+            return "il y a " + duration.toHours() + " heures";
+        } else {
+            return "il y a " + duration.toDays() + " jours";
+        }
     }
 
     @Override
@@ -38,5 +54,4 @@ public class NotificationDTO {
                 ", tempsDepuisReception='" + tempsDepuisReception + '\'' +
                 '}';
     }
-
 }

@@ -48,7 +48,5 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
         );*/
 
         userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "1"));
-
-        System.out.println(OffreDeStageService.getAllOffresDeStage());
     }
 }

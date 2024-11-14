@@ -21,6 +21,8 @@ public interface OffreDeStageRepository extends JpaRepository<OffreDeStage, Long
                 "END))")
         List<OffreDeStage> findBySessionAfter(@Param("annee") String annee, @Param("typeSession") String typeSession);
 
+        List<OffreDeStage> findBySession(String session);
+
         List<OffreDeStage> findByEmployeur(Employeur employeur);
 
 }

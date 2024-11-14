@@ -120,6 +120,17 @@ public class OffreDeStageService {
         return toutLesOffres;
     }
 
+    public List<OffreDeStageDTO> getOffresBySession(String session) {
+        List<OffreDeStageDTO> offres = offreDeStageRepository.findBySession(session)
+                .stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+
+        System.out.println("offres = " + offres.size());
+
+        return offres;
+    }
+
 
     public Optional<List<EtudiantDTO>> getEtudiantsByOffre(Long offreId) {
 

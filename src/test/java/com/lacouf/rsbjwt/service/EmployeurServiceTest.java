@@ -31,6 +31,7 @@ public class EmployeurServiceTest {
     private UserAppRepository userAppRepository;
     private OffreDeStageRepository offreDeStageRepository;
     private EtudiantRepository etudiantRepository;
+    private EmployeurController employeurController;
     private EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
 
     private ContratRepository contratRepository;
@@ -38,6 +39,9 @@ public class EmployeurServiceTest {
 
     private EmployeurDTO newEmployeur;
     private Employeur employeurEntity;
+    private Etudiant etudiantEntity;
+    private EvaluationStageEmployeur evaluationStageEmployeur;
+    private EvaluationStageEmployeurDTO evaluationStageEmployeurDTO;
     private PasswordEncoder passwordEncoder;
 
 
@@ -51,12 +55,15 @@ public class EmployeurServiceTest {
         etudiantRepository = mock(EtudiantRepository.class);
         contratRepository = mock(ContratRepository.class);
         evaluationStageEmployeurRepository = mock(EvaluationStageEmployeurRepository.class);
+        employeurController = new EmployeurController(employeurService);
         employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository, evaluationStageEmployeurRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");
-
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
+        etudiantEntity = new Etudiant("John", "Doe", "email2gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        evaluationStageEmployeur = new EvaluationStageEmployeur();
+        evaluationStageEmployeurDTO = new EvaluationStageEmployeurDTO();
     }
 
     @Test
@@ -229,7 +236,7 @@ public class EmployeurServiceTest {
     void shouldGetEntrevueById() {
         // Arrange
         Long entrevueId = 1L;
-        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", Departement.TECHNIQUES_INFORMATIQUE);
+        Etudiant etudiant = new Etudiant("Lol", "Lala", "email", "12334", "", Departement.TECHNIQUES_INFORMATIQUE);
         Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", "En attente", etudiant, new OffreDeStage());
 
         OffreDeStage offreDeStage = new OffreDeStage();
@@ -243,7 +250,6 @@ public class EmployeurServiceTest {
 
         entrevue.setEtudiant(etudiant);
         entrevue.setOffreDeStage(offreDeStage);
-
 
 
         entrevue.setId(entrevueId);
@@ -314,8 +320,6 @@ public class EmployeurServiceTest {
         // Assert
         Mockito.verify(passwordEncoder).encode(newEmployeur.getCredentials().getPassword());
     }
-
-
 
 
     @Test
@@ -480,6 +484,25 @@ public class EmployeurServiceTest {
         List<EntrevueDTO> result = employeurService.getEntrevuesAccepteesParEmployeur(emailEmployeur);
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldCreatEvaluation() {
+        // Arrange
+        when(evaluationStageEmployeurRepository.save(any(EvaluationStageEmployeur.class)))
+                .thenReturn(evaluationStageEmployeur);
+
+        when(employeurRepository.findByCredentials_email(employeurEntity.getEmail()))
+                .thenReturn(Optional.of(employeurEntity));
+
+        when(etudiantRepository.findByEmail(etudiantEntity.getEmail()))
+                .thenReturn(Optional.of(etudiantEntity));
+
+        // Act
+        Optional<EvaluationStageEmployeurDTO> response = employeurService.creerEvaluationEtudiant(employeurEntity.getEmail(),etudiantEntity.getEmail(), evaluationStageEmployeurDTO);
+
+        // Assert
+        assertTrue(response.isPresent());
     }
 }
 

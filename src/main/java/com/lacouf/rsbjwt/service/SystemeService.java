@@ -523,5 +523,4 @@ public class SystemeService {
         table.addCell(evaluation != null && evaluation.equalsIgnoreCase("PLUTOT_EN_DESACCORD") ? "X" : "");
         table.addCell(evaluation != null && evaluation.equalsIgnoreCase("TOTAL_EN_DESACCORD") ? "X" : "");
     }
-
 }

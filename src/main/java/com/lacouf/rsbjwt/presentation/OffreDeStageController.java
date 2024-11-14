@@ -122,6 +122,17 @@ public class OffreDeStageController {
         return ResponseEntity.ok().body(offresBySession);
     }
 
+    @GetMapping("/annee/{annee}")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresByAnnee(@PathVariable String annee) {
+        if (annee == null || annee.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<OffreDeStageDTO> offresByAnnee = offreDeStageService.getOffresByAnnee(annee);
+
+        return ResponseEntity.ok().body(offresByAnnee);
+    }
+
     @GetMapping("/offresValidees")
     public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees() {
         List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouvees();

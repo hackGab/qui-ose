@@ -20,6 +20,7 @@ function SoumettreOffre() {
     const [nbCandidats, setNbCandidats] = useState(0);
     const [dateLimite, setDateLimite] = useState("");
     const { t } = useTranslation();
+    const [limite,setLimite] = useState(0);
 
     const [season, setSeason] = useState("");
     const [year, setYear] = useState("");
@@ -27,6 +28,7 @@ function SoumettreOffre() {
     useEffect(() => {
         const currentMonth = new Date().getMonth() + 1;
         const currentYear = new Date().getFullYear();
+        setLimite(currentYear)
         let defaultSeason;
         let defaultYear = currentYear;
 
@@ -128,6 +130,25 @@ function SoumettreOffre() {
             setShowModal(false);
             setTemporaryFile(null);
         }
+    };
+
+    const getMinYearForSession = (season) => {
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1;
+
+        let minYear = currentYear;
+
+        if (season === "AUTOMNE" || season === "HIVER") {
+
+            minYear = currentYear + 1;
+        } else if (season === "ETE") {
+
+            if (currentMonth >= 5) {
+                minYear = currentYear + 1;
+            }
+        }
+
+        return String(minYear).slice(-2);
     };
 
 
@@ -263,7 +284,7 @@ function SoumettreOffre() {
                                                     value={year}
                                                     onChange={(e) => setYear(e.target.value.slice(-2))}
                                                     placeholder="Année (ex: 24)"
-                                                    min="0"
+                                                    min={getMinYearForSession(season)}
                                                     max="99"
                                                 />
                                             </div>

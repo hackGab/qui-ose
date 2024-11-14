@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React, {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 import EmployeurHeader from "./EmployeurHeader";
+
 function UpdateOffre() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -15,13 +16,36 @@ function UpdateOffre() {
     const [dateLimite, setDateLimite] = useState(offre?.dateLimite || "");
     const [pdfFile, setPdfFile] = useState(null);
     const [dragActive, setDragActive] = useState(false);
-    const { t } = useTranslation();
+    const [season, setSeason] = useState("");  // State for season
+    const [year, setYear] = useState("");      // State for year
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (!offre) {
-            navigate("/visualiser-offres", { state: { employeurEmail } });
+            navigate("/visualiser-offres", {state: {employeurEmail}});
         }
+        console.log(offre);
+
+        verifierDate(offre.session);
+
+
     }, [offre, employeurEmail, navigate]);
+
+    const verifierDate = (date) => {
+        const annee = [];
+        const saison = [];
+        for (let i = 0; i < date.length; i++) {
+            if (!isNaN(date[i])) {
+                annee.push(date[i]);
+            } else {
+                saison.push(date[i]);
+            }
+        }
+
+        setYear(annee.join(''));
+        setSeason(saison.join(''));
+
+    }
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -35,6 +59,7 @@ function UpdateOffre() {
         formData.append("status", status);
         formData.append("employeur", offre.employeur);
         formData.append("datePublication", offre.datePublication);
+        formData.append("session", `${season} ${year}`);
 
         if (pdfFile) {
             const reader = new FileReader();
@@ -50,13 +75,6 @@ function UpdateOffre() {
     };
 
     const sendUpdateRequest = async (formData) => {
-        console.log(formData.get("titre"));
-        console.log(formData.get("localisation"));
-        console.log(formData.get("nbCandidats"));
-        console.log(formData.get("status"));
-        console.log(formData.get("dateLimite"));
-        console.log(formData);
-
         const data = {
             id: offre.id,
             titre: formData.get("titre"),
@@ -67,6 +85,7 @@ function UpdateOffre() {
             employeur: offre.employeur,
             datePublication: formData.get("datePublication"),
             data: formData.get("data"),
+            session: formData.get("session"),
         };
 
         if (data.data === null) {
@@ -83,7 +102,7 @@ function UpdateOffre() {
             });
 
             if (response.ok) {
-                navigate("/visualiser-offres", { state: { employeurEmail } });
+                navigate("/visualiser-offres", {state: {employeurEmail}});
             } else {
                 console.error("Erreur lors de la mise à jour de l'offre");
             }
@@ -114,7 +133,7 @@ function UpdateOffre() {
 
     return (
         <>
-            <EmployeurHeader userData={userData} />
+            <EmployeurHeader userData={userData}/>
             <div className="container-fluid p-4">
                 <div className="container mt-5">
                     <h2>{t('MiseAJourOffre')}</h2>
@@ -158,6 +177,29 @@ function UpdateOffre() {
                                 onChange={(e) => setDateLimite(e.target.value)}
                                 required
                             />
+                        </div>
+                        <div className="form-group">
+                            <label>{t('Session')}</label>
+                            <div className="d-flex">
+                                <select
+                                    className="form-control mr-2"
+                                    value={season}
+                                    onChange={(e) => setSeason(e.target.value)}
+                                >
+                                    <option value="AUTOMNE">AUTOMNE</option>
+                                    <option value="HIVER">HIVER</option>
+                                    <option value="ETE">ETE</option>
+                                </select>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    value={year}
+                                    onChange={(e) => setYear(e.target.value.slice(-2))}
+                                    placeholder="Année (ex: 24)"
+                                    min="0"
+                                    max="99"
+                                />
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>{t('FichierPDFO')}</label>

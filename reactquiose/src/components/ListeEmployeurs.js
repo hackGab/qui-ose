@@ -1,16 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
-import { FaEnvelope, FaPhone } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
+import {Link} from 'react-router-dom';
+import {FaEnvelope, FaPhone} from 'react-icons/fa';
+import {useTranslation} from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeEtudiants.css';
 
 function ListeEmployeurs() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [employeurs, setEmployeurs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);
+    const [selectedSession, setSelectedSession] = useState(""); // État pour la session active
+
+    const calculateNextSessions = () => {
+        const currentDates = new Date();
+        const currentMonths = currentDates.getMonth();
+        const currentYears = currentDates.getFullYear() % 100; // Récupère les deux derniers chiffres de l'année
+        let nextSessions;
+
+        if (currentMonths >= 8) {
+            nextSessions = `HIVER${currentYears + 1}`;
+        } else if (currentMonths >= 4) {
+            nextSessions = `AUTOMNE${currentYears}`;
+        } else {
+            nextSessions = `ETE ${currentYears}`;
+        }
+        console.log(nextSessions);
+        return nextSessions;
+    };
+
+
+    useEffect(() => {
+        setSelectedSession(calculateNextSessions());
+    }, []);
 
     useEffect(() => {
         fetch('http://localhost:8081/offreDeStage/all', {
@@ -37,6 +61,12 @@ function ListeEmployeurs() {
             });
     }, []);
 
+    const handleSessionChange = (event) => {
+        setSelectedSession(event.target.value);
+    };
+
+    const employeursFiltres = employeurs.filter(employeur => employeur.session === selectedSession);
+
 
     if (loading) {
         return <div className="text-center mt-5">
@@ -53,19 +83,32 @@ function ListeEmployeurs() {
     return (
         <>
             <GestionnaireHeader/>
+            <label htmlFor="session" >{t('FilterBySession')}</label>
+            <select
+                id="session"
+                style={{fontSize: '1.25em', padding: '0.5em 1em', borderRadius: '4px', margin: '1em'}}
+                value={selectedSession}
+                onChange={handleSessionChange}
+            >
+                {Array.from(new Set(employeurs.map(offre => offre.session))).map((session, index) => (
+                    <option key={index} value={session}>{session}</option>
+                ))}
+
+
+            </select>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('employerListTitle')}</h1>
 
-                    {employeurs.length === 0 ? (
+                    {employeursFiltres.length === 0 ? (
                         <p className="text-center mt-5">{t('AucunEmployeurTrouve')}</p>
                     ) : (
                         <p className="text-center mb-4">{t('employerListSubtitle')}</p>
                     )}
 
                     <div className="row">
-                        {employeurs.map((offreDeStage) => {
-                            const status = offreDeStage ? offreDeStage.status : null; // Vérification si l'offre existe
+                        {employeursFiltres.map((offreDeStage) => {
+                            const status = offreDeStage ? offreDeStage.status : null;
                             return (
                                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
                                     <Link

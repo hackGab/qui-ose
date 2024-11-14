@@ -33,9 +33,13 @@ public class EmployeurService {
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
-
         try {
-            String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
+            CredentialDTO credentials = employeurDTO.getCredentials();
+            if (credentials == null) {
+                return Optional.empty();
+            }
+            String encodedPassword = encodePassword(credentials.getPassword());
+
             Employeur employeur = new Employeur(
                     employeurDTO.getFirstName(),
                     employeurDTO.getLastName(),
@@ -49,6 +53,10 @@ public class EmployeurService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     public Optional<EmployeurDTO> getEmployeurById(Long id) {
@@ -136,7 +144,6 @@ public class EmployeurService {
 
         Employeur employeur = getEmployeurFromContrat(contrat);
 
-        // Validation du mot de passe crypté
         if (passwordEncoder.matches(password, employeur.getPassword())) {
             System.out.println("Mot de passe correct : " + employeur.getPassword());
             contrat.signerContratEmployeur();

@@ -73,7 +73,7 @@ public class OffreDeStageController {
         if ("Offre de stage supprimée".equals(responseMessage)) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle deletion error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

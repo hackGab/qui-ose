@@ -66,14 +66,12 @@ public class PDFController {
         System.out.println("Received EvaluationStageEmployeurDTO: " + evaluationStageEmployeur);
 
         try {
-            // Generate PDF bytes
             byte[] pdfBytes = systemeService.generateEvaluationEmployeurPDF(evaluationStageEmployeur);
             if (pdfBytes == null || pdfBytes.length == 0) {
                 System.err.println("PDF generation failed or returned an empty file.");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            // Prepare response headers for file download
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=Evaluation_Stage_Employeur.pdf");
 

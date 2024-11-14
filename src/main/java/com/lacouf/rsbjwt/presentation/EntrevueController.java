@@ -79,20 +79,6 @@ public class EntrevueController {
         return ResponseEntity.ok(entrevues);
     }
 
-//    @PutMapping("/accepter/{entrevueId}")
-//    public ResponseEntity<EntrevueDTO> accepterCandidature(@PathVariable Long entrevueId) {
-//        Optional<EntrevueDTO> updatedEntrevue = employeurService.accepterCandidature(entrevueId);
-//        return updatedEntrevue.map(ResponseEntity::ok)
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
-//    @PutMapping("/refuser/{entrevueId}")
-//    public ResponseEntity<EntrevueDTO> refuserCandidature(@PathVariable Long entrevueId) {
-//        Optional<EntrevueDTO> updatedEntrevue = employeurService.refuserCandidature(entrevueId);
-//        return updatedEntrevue.map(ResponseEntity::ok)
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
     @GetMapping("/acceptees/etudiant/{email}")
     public ResponseEntity<List<EntrevueDTO>> getEntrevuesAccepteesByEtudiant(@PathVariable String email) {
         try {

@@ -215,7 +215,7 @@ function VisualiserOffres() {
         <>
             <EmployeurHeader userData={userData} />
             <div className="container-fluid p-4">
-                <h1 className="text-center my-1 text-capitalize" style={{ color: "#01579b" }}>
+                <h1 className="text-center my-1 " style={{ color: "#01579b",fontSize: "50px" }}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}
                 </h1>
 
@@ -223,27 +223,35 @@ function VisualiserOffres() {
                 {offres.length === 0 ? (
                        <div style={{display:'none'}}>{t('AucuneOffreTrouve')}</div>
                 ) : (
-                    <div className="session-filter mb-4 text-center" style={{ fontSize: '1.25em' }}>
-                        <label htmlFor="sessionSelect" style={{ marginRight: '8px' }}>
+                    <div className="session-filter mb-4 text-center" style={{fontSize: '1.25em'}}>
+                        <label htmlFor="sessionSelect" style={{marginRight: '8px'}}>
                             {t('FilterBySession')}:
                         </label>
                         <select
                             id="sessionSelect"
-                            style={{ fontSize: '1.25em', padding: '0.5em 1em', borderRadius: '4px' }}
+                            style={{fontSize: '0.75em', padding: '0.25em ', borderRadius: '4px'}}
                             value={selectedSession}
                             onChange={handleSessionChange}
                         >
-                            {Array.from(new Set(offres.map((offre) => offre.session))).map((session, index) => (
-                                <option key={index} value={session}>
-                                    {session}
-                                </option>
-                            ))}
+                            {Array.from(new Set(offres.map((offre) => offre.session))).map((session, index) => {
+                                const sessionText = session.slice(0, -2); // Extraire la partie texte, ex : HIVER
+                                const sessionYear = session.slice(-2); // Extraire l'année, ex : 25
+
+                                // Traduire la partie texte de la session
+                                const translatedSession = t(sessionText);
+
+                                return (
+                                    <option key={index} value={session}>
+                                        {translatedSession} {sessionYear}
+                                    </option>
+                                );
+                            })}
                         </select>
                     </div>
                 )}
 
                 <div className="container mt-5">
-                    <h1 className="text-center mt-5">{t('VosOffres')}</h1>
+                    <h1 className="text-center mt-5" style={{fontSize:"45px"}}>{t('VosOffres')}</h1>
 
                     {filteredOffres.length === 0 ? (
                         <div className="alert alert-info mt-3">{t('AccuneOffreTrouve')}</div>

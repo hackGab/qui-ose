@@ -85,16 +85,24 @@ function ListeEmployeurs() {
             <GestionnaireHeader/>
             <label htmlFor="session" >{t('FilterBySession')}</label>
             <select
-                id="session"
-                style={{fontSize: '1.25em', padding: '0.5em 1em', borderRadius: '4px', margin: '1em'}}
+                id="sessionSelect"
+                style={{ fontSize: '1.25em', padding: '0.5em 1em', borderRadius: '4px' }}
                 value={selectedSession}
-                onChange={handleSessionChange}
+                onChange={(e) => setSelectedSession(e.target.value)}
             >
-                {Array.from(new Set(employeurs.map(offre => offre.session))).map((session, index) => (
-                    <option key={index} value={session}>{session}</option>
-                ))}
+                {Array.from(new Set(employeurs.map(offre => offre.session))).map((session, index) => {
+                    const sessionText = session.slice(0, -2); // Extraire la partie texte, ex : HIVER
+                    const sessionYear = session.slice(-2); // Extraire l'année, ex : 25
 
+                    // Traduire la partie texte en utilisant i18n
+                    const translatedSession = t(sessionText);
 
+                    return (
+                        <option key={index} value={session}>
+                            {translatedSession} {sessionYear}
+                        </option>
+                    );
+                })}
             </select>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">

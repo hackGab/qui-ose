@@ -321,5 +321,10 @@
   "PersonneContact" : "Employeur à contacter",
   "studentListSubtitleForEvaluation": "Cliquer sur un étudiant pour faire l'évaluation ou générer le PDF de l'évaluation",
   "GenererEvaluationPDF": "Générer le PDF",
-  "Session": "Session"
+  "Session": "Session",
+  "FilterBySession": "Filtrer par session",
+  "HIVER": "HIVER",
+  "ETE": "ETE",
+  "AUTOMNE": "AUTOMNE",
+  "PRINTEMPS": "PRINTEMPS"
 }

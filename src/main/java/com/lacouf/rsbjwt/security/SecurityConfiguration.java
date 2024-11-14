@@ -106,7 +106,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/professeur/etudiants/departement/{departement}").permitAll()
                         .requestMatchers(GET, "/professeur/evaluations/{professeurEmail}").permitAll()
                         .requestMatchers(PUT, "/professeur/evaluerStage").permitAll()
-                        .requestMatchers(GET, "/notification/all/{email}").permitAll()
+                        .requestMatchers(GET, "/notification//unread/{email}").permitAll()
                         .requestMatchers(PUT, "/notification/markAsRead/{id}").permitAll()
                         .requestMatchers(POST, "/generatePDF/evaluationProf").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")

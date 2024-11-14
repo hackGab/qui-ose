@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NotificationDTO {
+    private Long id;
     private String message;
     private boolean vu;
     private String email;
@@ -19,6 +20,7 @@ public class NotificationDTO {
     private LocalDateTime dateCreation;
 
     public NotificationDTO(Notification notification) {
+        this.id = notification.getId();
         this.message = notification.getMessage();
         this.vu = notification.isVu();
         this.email = notification.getEmail();
@@ -30,6 +32,7 @@ public class NotificationDTO {
     @Override
     public String toString() {
         return "NotificationDTO{" +
+                "id=" + id +
                 ", message='" + message + '\'' +
                 ", vu=" + vu +
                 ", email='" + email + '\'' +

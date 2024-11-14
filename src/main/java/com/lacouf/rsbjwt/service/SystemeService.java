@@ -383,8 +383,9 @@ public class SystemeService {
     }
 
 
-    public List<NotificationDTO> getAllNotificationsByEmail(String email) {
+    public List<NotificationDTO> getAllUnreadNotificationsByEmail(String email) {
         return notificationRepository.findByEmail(email).stream()
+                .filter(notification -> !notification.isVu())
                 .map(NotificationDTO::new)
                 .collect(Collectors.toList());
     }
@@ -399,5 +400,6 @@ public class SystemeService {
             throw new IllegalArgumentException("Notification not found");
         }
     }
+
 
 }

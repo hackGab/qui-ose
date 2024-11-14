@@ -71,21 +71,20 @@ function EmployeurHeader({ userData }) {
 
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
-                    <div
-                        className="profile-button"
-                        onClick={toggleProfileMenu}
-                    >
+                    <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
-                        <div className="profile-dropdown">
+                        <div className="dropdown profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')}
-                                  className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')}
-                                  className="language-button dropdown-link">{t('Francais')}</Link>
+                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                                {t('Anglais')}
+                            </Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                                {t('Francais')}
+                            </Link>
                         </div>
                     )}
                 </div>

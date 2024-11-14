@@ -41,7 +41,7 @@
 .entrevue-list {
     list-style-type: none;
     padding-left: 0;
-    height: auto;
+    height: 17rem;
     margin: auto;
     overflow-y: auto;
     padding-inline: 1em;

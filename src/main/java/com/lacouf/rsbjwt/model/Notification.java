@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Getter
@@ -38,6 +39,9 @@ public class Notification {
     @Column(nullable = false)
     private LocalDateTime dateCreation;
 
+    @Column(nullable = false)
+    private String tempsDepuisReception;
+
     public Notification(String message, String titreOffre, String email, String url) {
         this.message = message;
         this.titreOffre = titreOffre;
@@ -45,6 +49,22 @@ public class Notification {
         this.email = email;
         this.url = url;
         this.dateCreation = LocalDateTime.now();
+        this.tempsDepuisReception = calculateTempsDepuisReception(this.dateCreation);
+    }
+
+
+    private String calculateTempsDepuisReception(LocalDateTime dateCreation) {
+        Duration duration = Duration.between(dateCreation, LocalDateTime.now());
+
+        if (duration.getSeconds() < 60) {
+            return "il y a " + duration.getSeconds() + " secondes";
+        } else if (duration.toMinutes() < 60) {
+            return "il y a " + duration.toMinutes() + " minutes";
+        } else if (duration.toHours() < 24) {
+            return "il y a " + duration.toHours() + " heures";
+        } else {
+            return "il y a " + duration.toDays() + " jours";
+        }
     }
 
     public void markAsRead() {

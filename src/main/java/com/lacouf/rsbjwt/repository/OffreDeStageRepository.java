@@ -23,6 +23,10 @@ public interface OffreDeStageRepository extends JpaRepository<OffreDeStage, Long
 
         List<OffreDeStage> findBySession(String session);
 
+        @Query("SELECT o FROM OffreDeStage o WHERE " +
+                "(CAST(SUBSTRING(o.session, LENGTH(o.session) - 1, 2) AS integer) = CAST(:annee AS integer))")
+        List<OffreDeStage> findByYear(@Param("annee") String annee);
+
         List<OffreDeStage> findByEmployeur(Employeur employeur);
 
 }

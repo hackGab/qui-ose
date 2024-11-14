@@ -126,11 +126,17 @@ public class OffreDeStageService {
                 .map(OffreDeStageDTO::new)
                 .collect(Collectors.toList());
 
-        System.out.println("offres = " + offres.size());
-
         return offres;
     }
 
+    public List<OffreDeStageDTO> getOffresByAnnee(String annee) {
+        List<OffreDeStageDTO> offres = offreDeStageRepository.findByYear(annee)
+                .stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+
+        return offres;
+    }
 
     public Optional<List<EtudiantDTO>> getEtudiantsByOffre(Long offreId) {
 

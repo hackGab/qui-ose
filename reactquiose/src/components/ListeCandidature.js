@@ -86,7 +86,7 @@ function ListeCandidature() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8081/candidatures/all')
+        fetch('http://localhost:8081/candidatures/session{}')
             .then(response => response.json())
             .then(data => {
                 setCandidatures(data);
@@ -263,6 +263,16 @@ function ListeCandidature() {
         return contrat.etudiantSigne && contrat.employeurSigne && contrat.gestionnaireSigne;
     };
 
+    const verifificationFiltre = (data) => {
+        console.log(data);
+            fetchBySession(data.session);
+    };
+
+    const fetchBySession = (session) => {
+
+
+    };
+
     if (loading) {
         return <div className="text-center mt-5">
             <div className="spinner-border" role="status"></div>
@@ -275,7 +285,7 @@ function ListeCandidature() {
 
     return (
         <>
-            <GestionnaireHeader style={{ marginBottom: '50px' }} />
+            <GestionnaireHeader onSendData={verifificationFiltre} style={{ marginBottom: '50px' }} />
             <div className="container-fluid p-4 page-liste-candidature">
                 <div className="container text-center">
                     <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>

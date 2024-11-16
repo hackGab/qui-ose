@@ -42,6 +42,8 @@ function ListeEtudiants() {
             : '';
     };
 
+    const va = (data) => {};
+
     if (loading) {
         return <div className="text-center mt-5">
             <div className="spinner-border" role="status"></div>
@@ -56,7 +58,7 @@ function ListeEtudiants() {
 
     return (
         <>
-            <GestionnaireHeader/>
+            <GestionnaireHeader onSendData={va}/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('studentListTitle')}</h1>

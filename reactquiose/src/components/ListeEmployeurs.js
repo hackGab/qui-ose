@@ -5,6 +5,7 @@ import {FaEnvelope, FaPhone} from 'react-icons/fa';
 import {useTranslation} from 'react-i18next';
 import GestionnaireHeader from "./GestionnaireHeader";
 import '../CSS/ListeEtudiants.css';
+import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function ListeEmployeurs() {
     const {t} = useTranslation();
@@ -31,43 +32,38 @@ function ListeEmployeurs() {
     //     return nextSessions;
     // };
 
-   const verifificationFiltre = (data) => {
-       console.log(data);
-        if (data.filterByYear) {
-            fetchByYear(data.year);
-        }
-        else {
-            fetchBySession(data.session);
-        }
+    const verifificationFiltre = (data) => {
+        console.log(data);
+        fetchBySession(data.session);
     }
 
-    const fetchByYear = (year) => {
-        const url = `http://localhost:8081/offreDeStage/annee/${year}`;
-        console.log(url);
-
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error('lors de la récupération des données');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setOffres(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                setError(error.message);
-                setLoading(false);
-            });
-    };
+    // const fetchByYear = (year) => {
+    //     const url = `http://localhost:8081/offreDeStage/annee/${year}`;
+    //     console.log(url);
+    //
+    //     fetch(url, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     })
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 console.log(response);
+    //                 throw new Error('lors de la récupération des données');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             console.log(data);
+    //             setOffres(data);
+    //             setLoading(false);
+    //         })
+    //         .catch(error => {
+    //             setError(error.message);
+    //             setLoading(false);
+    //         });
+    // };
 
     const fetchBySession = (session) => {
         const url = `http://localhost:8081/offreDeStage/session/${session}`;
@@ -97,15 +93,9 @@ function ListeEmployeurs() {
     };
 
 
-
-
     useEffect(() => {
-        setSelectedSession("");
-    }, []);
-
-    useEffect(() => {
-
-        fetch('http://localhost:8081/offreDeStage/all', {
+        let session = getLocalStorageSession();
+        fetch(`http://localhost:8081/offreDeStage/session/${session}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

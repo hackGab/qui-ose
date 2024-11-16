@@ -108,6 +108,8 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/generatePDF/evaluationProf").permitAll()
                         .requestMatchers(GET, "/offreDeStage/session/{session}").permitAll()
                         .requestMatchers(GET, "/offreDeStage/annee/{annee}").permitAll()
+                        .requestMatchers(GET, "/candidatures/session/{session}").permitAll()
+                        .requestMatchers(GET, "/contrat/session/{session}").permitAll()
                         .requestMatchers("/gestionnaire/**").hasAuthority("GESTIONNAIRE")
                         .requestMatchers("/employeur/**").hasAuthority("EMPLOYEUR")
                         .anyRequest().denyAll()

@@ -40,5 +40,9 @@ public interface ContratRepository extends JpaRepository<Contrat, Long> {
             "WHERE etudiant = :etudiant AND c.gestionnaireSigne = true")
     Optional<Contrat> findByCandidature_EtudiantAndGestionnaireSigneTrue(@Param("etudiant") Etudiant etudiant);
 
-
+    @Query("SELECT c FROM Contrat c " +
+            "JOIN c.candidature candidature " +
+            "JOIN candidature.entrevue.offreDeStage offreDeStage " +
+            "WHERE offreDeStage.session = :session")
+    List<Contrat> findBySession(@Param("session") String session);
 }

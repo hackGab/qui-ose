@@ -7,6 +7,7 @@ import com.lacouf.rsbjwt.repository.EntrevueRepository;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,16 @@ public class CandidatAccepterService {
 
     public Iterable<CandidatAccepterDTO> getAllCandidatures() {
         return candidatAccepterRepository.findAll().stream()
+                .map(candidatAccepter -> new CandidatAccepterDTO(
+                        candidatAccepter.getId(),
+                        candidatAccepter.getEntrevue().getId(),
+                        candidatAccepter.isAccepte()
+                ))
+                .toList();
+    }
+
+    public List<CandidatAccepterDTO> getCandidaturesBySession(String session) {
+        return candidatAccepterRepository.findByEntrevueSession(session).stream()
                 .map(candidatAccepter -> new CandidatAccepterDTO(
                         candidatAccepter.getId(),
                         candidatAccepter.getEntrevue().getId(),

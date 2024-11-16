@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -187,4 +188,9 @@ public class GestionnaireService {
         return Optional.empty();
     }
 
+    public List<ContratDTO> getContratsBySession(String session) {
+        return contratRepository.findBySession(session).stream()
+                .map(ContratDTO::new)
+                .toList();
+    }
 }

@@ -112,6 +112,13 @@ public class  ContratController {
         return ResponseEntity.ok().body(contrats);
     }
 
+    @GetMapping("/session/{session}")
+    public ResponseEntity<List<ContratDTO>> getContratsBySession(@PathVariable String session) {
+        List<ContratDTO> contrats = gestionnaireService.getContratsBySession(session);
+
+        return ResponseEntity.ok().body(contrats);
+    }
+
     @GetMapping("/en-attente-signature/{etudiantEmail}")
     public ResponseEntity<List<ContratDTO>> getContratsEnAttenteDeSignature(@PathVariable String etudiantEmail) {
         List<ContratDTO> contrats = etudiantService.getContratsEnAttenteDeSignature(etudiantEmail);

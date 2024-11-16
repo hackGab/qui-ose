@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -55,5 +56,10 @@ public class CandidatAccepterController {
     @GetMapping("/all")
     public ResponseEntity<Iterable<CandidatAccepterDTO>> getAllCandidatures() {
         return ResponseEntity.ok().body(candidatAccepterService.getAllCandidatures());
+    }
+
+    @GetMapping("/session/{session}")
+    public ResponseEntity<List<CandidatAccepterDTO>> getCandidaturesBySession(@PathVariable String session) {
+        return ResponseEntity.ok().body(candidatAccepterService.getCandidaturesBySession(session));
     }
 }

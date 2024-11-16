@@ -29,9 +29,7 @@ function AccueilGestionnaire() {
 
     return (
         <>
-            <div style={{display: 'none'}}>
-                <GestionnaireHeader/>
-            </div>
+          
             <div className="container accueil-gestionnaire">
                 <h2 className="text-center my-2 text-capitalize" style={{color: "#01579b"}}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!

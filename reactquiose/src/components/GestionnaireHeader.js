@@ -7,7 +7,7 @@ import i18n from "i18next";
 import "../CSS/BoutonLangue.css";
 import {calculateNextSessions} from '../utils/methodes/dateUtils';
 
-function GestionnaireHeader() {
+function GestionnaireHeader({onSendData}) {
     const {t} = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const location = useLocation();
@@ -30,6 +30,8 @@ function GestionnaireHeader() {
         return savedFilterByYear === 'true'; // Convertir en booléen
     });
 
+
+
     // Stocker les offres récupérées
     const [offres, setOffres] = useState([]);
 
@@ -38,6 +40,15 @@ function GestionnaireHeader() {
     const [availableYears, setAvailableYears] = useState([]);
 
     useEffect(() => {
+        console.log(year);
+        console.log(session);
+        console.log(filterByYear);
+        onSendData({
+            year: year,
+            session: session,
+            filterByYear: filterByYear
+        });
+
         // Hard-coder les sessions de 2024 à 2026
         const hardCodedSessions = [
             {id: 'HIVER24', label: 'HIVER 24'},
@@ -58,46 +69,34 @@ function GestionnaireHeader() {
         setAvailableYears(hardCodedYears);
     }, []); // Cela ne sera exécuté qu'une fois lors du montage initial
 
-    useEffect(() => {
-        // Déterminer l'URL de la requête en fonction du filtre
-        let urlFetch = '';
-        if (filterByYear) {
-            // Filtrage par année
-            urlFetch = `http://localhost:8081/offreDeStage/annee/${year}`;
-        } else {
-            // Filtrage par session
-            urlFetch = `http://localhost:8081/offreDeStage/session/${session}`;
-        }
-
-        console.log(urlFetch);
-
-
-        // Effectuer la requête fetch
-        fetch(urlFetch, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error('Erreur lors de la récupération des données');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setOffres(data); // Enregistrer les données dans l'état
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, [year, session, filterByYear]); // Requête mise à jour quand l'année, la session ou le mode de filtrage changent
-
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!profileMenuOpen);
     };
+
+    const sendData = (type,data) => {
+        if (type === "session") {
+            onSendData({
+                year: year,
+                session: data,
+                filterByYear: filterByYear
+            });
+        }
+        else if (type === "year") {
+            onSendData({
+                year: data,
+                session: session,
+                filterByYear: filterByYear
+            });
+        }
+        else if (type === "filterByYear") {
+            onSendData({
+                year: year,
+                session: session,
+                filterByYear: data
+            });
+        }
+    }
+
 
     const handleLinkClick = (path) => {
         setActiveLink(path);
@@ -111,19 +110,25 @@ function GestionnaireHeader() {
         setFilterByYear((prevFilterByYear) => {
             const newFilterByYear = !prevFilterByYear;
             localStorage.setItem('filterByYear', newFilterByYear); // Enregistrer dans localStorage
+            console.log(newFilterByYear);
+            sendData("filterByYear", newFilterByYear);
             return newFilterByYear;
         });
+
     };
 
     // Mettre à jour session et année dans localStorage lorsqu'ils changent
     const handleSessionChange = (newSession) => {
         setSession(newSession);
         localStorage.setItem('session', newSession); // Sauvegarder dans localStorage
+        sendData("session", newSession);
     };
 
     const handleYearChange = (newYear) => {
         setYear(newYear);
+        console.log(newYear);
         localStorage.setItem('year', newYear); // Sauvegarder dans localStorage
+        sendData("year", newYear);
     };
 
     return (
@@ -167,17 +172,16 @@ function GestionnaireHeader() {
                 </div>
                 <div className="filter-options">
                     <label>Filtre :</label>
-                    {filterByYear ? (
-                        // Affichage uniquement par année
-                        <div className="year-dropdown">
-                            <select value={year} onChange={(e) => handleYearChange(e.target.value)}>
-                                {availableYears.map(yearOption => (
-                                    <option key={yearOption} value={yearOption}>{yearOption}</option>
-                                ))}
-                            </select>
-                        </div>
-                    ) : (
-                        // Affichage par session et année
+                    {/*{filterByYear ? (*/}
+                    {/*    // Affichage uniquement par année*/}
+                    {/*    <div className="year-dropdown">*/}
+                    {/*        <select value={year} onChange={(e) => handleYearChange(e.target.value)}>*/}
+                    {/*            {availableYears.map(yearOption => (*/}
+                    {/*                <option key={yearOption} value={yearOption}>{yearOption}</option>*/}
+                    {/*            ))}*/}
+                    {/*        </select>*/}
+                    {/*    </div>*/}
+                    {/*) : (*/}
                         <div className="session-dropdown">
                             <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
                                 {availableSessions.map(sessionOption => (
@@ -186,10 +190,10 @@ function GestionnaireHeader() {
                                 ))}
                             </select>
                         </div>
-                    )}
-                    <button className="filter-toggle-button profile-button" onClick={toggleFilterMode}>
-                        Filtrer par {filterByYear ? 'session' : 'année'}
-                    </button>
+
+                    {/*<button className="filter-toggle-button profile-button" onClick={toggleFilterMode} >*/}
+                    {/*    Filtrer par {filterByYear ? 'session' : 'année'}*/}
+                    {/*</button>*/}
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>

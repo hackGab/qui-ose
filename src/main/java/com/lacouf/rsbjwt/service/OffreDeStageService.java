@@ -9,6 +9,7 @@ import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,9 +94,48 @@ public class OffreDeStageService {
     }
 
     public Iterable<OffreDeStageDTO> getAllOffresDeStage() {
-        return offreDeStageRepository.findAll().stream()
+        LocalDate date = LocalDate.now();
+        String annee = String.valueOf(date.getYear());
+        String anneeSuivante = String.valueOf(date.getYear() + 1);
+        String prochaineSession;
+
+        if (date.getMonthValue() >= 8) {
+            prochaineSession = "HIVER" + anneeSuivante.substring(anneeSuivante.length() - 2);
+        } else if (date.getMonthValue() >= 4) {
+            prochaineSession = "AUTOMNE" + annee.substring(annee.length() - 2);
+        } else {
+            prochaineSession = "ETE" + annee.substring(annee.length() - 2);
+        }
+
+        String anneeSession = prochaineSession.substring(prochaineSession.length() - 2);
+        String typeSession = prochaineSession.substring(0, prochaineSession.length() - 2);
+        System.out.println(typeSession + " " + anneeSession);
+
+        List<OffreDeStageDTO> toutLesOffres = offreDeStageRepository
+                .findBySessionAfter(anneeSession, typeSession)
+                .stream()
                 .map(OffreDeStageDTO::new)
                 .toList();
+
+        return toutLesOffres;
+    }
+
+    public List<OffreDeStageDTO> getOffresBySession(String session) {
+        List<OffreDeStageDTO> offres = offreDeStageRepository.findBySession(session)
+                .stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+
+        return offres;
+    }
+
+    public List<OffreDeStageDTO> getOffresByAnnee(String annee) {
+        List<OffreDeStageDTO> offres = offreDeStageRepository.findByYear(annee)
+                .stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+
+        return offres;
     }
 
     public Optional<List<EtudiantDTO>> getEtudiantsByOffre(Long offreId) {

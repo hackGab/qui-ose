@@ -18,14 +18,18 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
     private final EmployeurService employeurService;
     private final GestionnaireService gestionnaireService;
     private final UserAppService userService;
+    private final OffreDeStageService OffreDeStageService;
+    private final OffreDeStageService offreDeStageService;
 
-    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService, ProfesseurService professeurService, EmployeurService employeurService, GestionnaireService gestionnaireService, UserAppService userService) {
+    public ReactSpringSecurityJwtApplication(PasswordEncoder passwordEncoder, EtudiantService etudiantService, ProfesseurService professeurService, EmployeurService employeurService, GestionnaireService gestionnaireService, UserAppService userService, OffreDeStageService OffreDeStageService, OffreDeStageService offreDeStageService) {
         this.passwordEncoder = passwordEncoder;
         this.etudiantService = etudiantService;
         this.professeurService = professeurService;
         this.gestionnaireService = gestionnaireService;
         this.userService = userService;
         this.employeurService = employeurService;
+        this.OffreDeStageService = OffreDeStageService;
+        this.offreDeStageService = offreDeStageService;
     }
 
     public static void main(String[] args) {

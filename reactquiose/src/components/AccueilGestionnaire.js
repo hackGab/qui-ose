@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import etudiantImage from '../images/Etudiant.png';
 import professeurImage from '../images/Professeur.png';
 import employeurImage from '../images/Employeur.png';
+import GestionnaireHeader from "./GestionnaireHeader";
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();
@@ -27,37 +28,40 @@ function AccueilGestionnaire() {
     };
 
     return (
-        <div className="container accueil-gestionnaire">
-            <h2 className="text-center my-2 text-capitalize" style={{ color: "#01579b" }}>
-                {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!
-            </h2>
+        <>
+          
+            <div className="container accueil-gestionnaire">
+                <h2 className="text-center my-2 text-capitalize" style={{color: "#01579b"}}>
+                    {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!
+                </h2>
 
-            <h1>{t("Dashboard")}</h1>
-            <div className="row justify-content-center">
-                {sections.map((section, index) => (
-                    <div className="col-lg-4 col-md-6 mb-4 d-flex flex-column align-items-center" key={index}>
-                        <h2 className="section-title-outside">{section.title}</h2>
-                        <Link to={section.link} className="section">
-                            <h2 className="section-title-inside">{section.title}</h2>
-                            {section.notifications > 0 && (
-                                <div className="notification-badge">{section.notifications}</div>
-                            )}
-                            <img
-                                className={`section-image section-image-${section.title.toLowerCase()}`}
-                                src={section.image}
-                                alt={section.title}
-                            />
-                        </Link>
-                    </div>
-                ))}
-            </div>
+                <h1>{t("Dashboard")}</h1>
+                <div className="row justify-content-center">
+                    {sections.map((section, index) => (
+                        <div className="col-lg-4 col-md-6 mb-4 d-flex flex-column align-items-center" key={index}>
+                            <h2 className="section-title-outside">{section.title}</h2>
+                            <Link to={section.link} className="section">
+                                <h2 className="section-title-inside">{section.title}</h2>
+                                {section.notifications > 0 && (
+                                    <div className="notification-badge">{section.notifications}</div>
+                                )}
+                                <img
+                                    className={`section-image section-image-${section.title.toLowerCase()}`}
+                                    src={section.image}
+                                    alt={section.title}
+                                />
+                            </Link>
+                        </div>
+                    ))}
+                </div>
 
-            <div className="candidature-button-container mt-5">
-                <button className="candidature-button" onClick={handleNavigateCandidatures}>
-                    {t("Voir les Candidatures")}
-                </button>
+                <div className="candidature-button-container mt-5">
+                    <button className="candidature-button" onClick={handleNavigateCandidatures}>
+                        {t("Voir les Candidatures")}
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

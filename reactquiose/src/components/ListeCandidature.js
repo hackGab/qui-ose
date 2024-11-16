@@ -265,10 +265,40 @@ function ListeCandidature() {
 
     const verifificationFiltre = (data) => {
         console.log(data);
-            fetchBySession(data.session);
+        fetchBySession(data.session);
     };
 
     const fetchBySession = (session) => {
+        fetch(`http://localhost:8081/candidatures/session/${session}`)
+            .then(response => response.json())
+            .then(data => {
+                setCandidatures(data);
+                const fetchPromises = data.map(candidat =>
+                    fetch(`http://localhost:8081/entrevues/${candidat.entrevueId}`)
+                        .then(response => response.json())
+                        .then(entrevueDetails => ({ ...candidat, entrevueDetails }))
+                        .catch(() => ({ ...candidat, entrevueDetails: null }))
+                );
+                return Promise.all(fetchPromises);
+            })
+            .then(candidatsWithEntrevues => {
+                setCandidatures(candidatsWithEntrevues);
+                setLoading(false);
+            })
+            .then(() => {
+                fetch(`http://localhost:8081/contrat/session/{session}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        setContrats(data);
+                    })
+                    .catch(err => {
+                        setError(err.message);
+                    });
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
 
 
     };

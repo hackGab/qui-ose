@@ -52,6 +52,10 @@ function DetailsEtudiants() {
         }
     };
 
+    const verificationSession = (data) => {
+
+    }
+
     if (!student) {
         return <div>{t('studentNotFound')}</div>;
     }
@@ -60,7 +64,7 @@ function DetailsEtudiants() {
 
     return (
         <>
-            <GestionnaireHeader/>
+            <GestionnaireHeader onSendData={verificationSession}/>
              <div className="details-container">
 
                 <h1 className="mb-4 detail-title">{t('studentDetailsTitle')}</h1>

@@ -78,7 +78,7 @@ function ListeProfesseurs() {
         prof.lastName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const verification = () => {};
+    const verificationSession = () => {};
 
 
     if (loading) {
@@ -95,7 +95,7 @@ function ListeProfesseurs() {
 
     return (
         <>
-            <GestionnaireHeader onSendData={verification}/>
+            <GestionnaireHeader onSendData={verificationSession}/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('profListTitle')}</h1>

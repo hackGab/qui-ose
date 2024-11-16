@@ -186,9 +186,9 @@ function UpdateOffre() {
                                     value={season}
                                     onChange={(e) => setSeason(e.target.value)}
                                 >
-                                    <option value="AUTOMNE">AUTOMNE</option>
-                                    <option value="HIVER">HIVER</option>
-                                    <option value="ETE">ETE</option>
+                                    <option value="AUTOMNE">{t('AUTOMNE')}</option>
+                                    <option value="HIVER">{t('HIVER')}</option>
+                                    <option value="ETE">{t('ETE')}</option>
                                 </select>
                                 <input
                                     type="number"

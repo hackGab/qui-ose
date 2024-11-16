@@ -86,7 +86,8 @@ function ListeCandidature() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8081/candidatures/session{}')
+        let session = localStorage.getItem('session');
+        fetch(`http://localhost:8081/candidatures/session/${session}`)
             .then(response => response.json())
             .then(data => {
                 setCandidatures(data);
@@ -103,7 +104,7 @@ function ListeCandidature() {
                 setLoading(false);
             })
             .then(() => {
-                fetch('http://localhost:8081/contrat/all')
+                fetch(`http://localhost:8081/contrat/session/${session}`)
                     .then(response => response.json())
                     .then(data => {
                         setContrats(data);
@@ -173,7 +174,7 @@ function ListeCandidature() {
         e.preventDefault();
         console.log("Mot de passe saisi :", password);
         console.log("uuid du candidat sélectionné :", selectedContrat.uuid);
-        console.log("Email de l'utilisateur connecté :", userData.credentials.email);
+        // console.log("Email de l'utilisateur connecté :", userData.credentials.email);
         handleSignContract(selectedContrat.uuid, userData.credentials.email);
         handleClosePasswordModal();
     };
@@ -286,7 +287,7 @@ function ListeCandidature() {
                 setLoading(false);
             })
             .then(() => {
-                fetch(`http://localhost:8081/contrat/session/{session}`)
+                fetch(`http://localhost:8081/contrat/session/${session}`)
                     .then(response => response.json())
                     .then(data => {
                         setContrats(data);

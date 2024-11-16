@@ -32,7 +32,7 @@ function ListeEmployeurs() {
     //     return nextSessions;
     // };
 
-    const verifificationFiltre = (data) => {
+    const verifificationSession = (data) => {
         console.log(data);
         fetchBySession(data.session);
     }
@@ -140,7 +140,7 @@ function ListeEmployeurs() {
 
     return (
         <>
-            <GestionnaireHeader onSendData={verifificationFiltre}/>
+            <GestionnaireHeader onSendData={verifificationSession}/>
             {/*<label htmlFor="session" >{t('FilterBySession')}</label>*/}
             {/*<select*/}
             {/*    id="sessionSelect"*/}

@@ -46,6 +46,10 @@ function DetailsEmployeurs() {
         }
     };
 
+    const verifificationSession = (data) => {
+
+    };
+
     const handleConfirm = () => {
         if (selectedStatus) {
             updateOffreStatus(selectedStatus);
@@ -59,7 +63,7 @@ function DetailsEmployeurs() {
 
     return (
         <>
-            <GestionnaireHeader/>
+            <GestionnaireHeader onSendData={verifificationSession}/>
             <div className="details-container">
 
                 <h1 className="mb-4 detail-title">{t('employerDetailsTitle')}</h1>

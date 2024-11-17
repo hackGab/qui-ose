@@ -96,4 +96,55 @@ describe("ListeEtudiants", () => {
         const statusSpan = await screen.findByText("en attent");
         expect(statusSpan).toBeInTheDocument();
     });
+
+    test("devrait gérer une erreur de fetch correctement", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.reject(new Error("Erreur lors de la récupération des données"))
+        );
+
+        render(<MockListeEtudiants />);
+
+        const errorMessage = await screen.findByText((content, element) =>
+            content.includes('Erreur') && content.includes('Erreur lors de la récupération des données')
+        );
+
+        expect(errorMessage).toBeInTheDocument();
+        expect(global.fetch).toHaveBeenCalled();
+    });
+
+
+
+    test("affiche un indicateur de chargement pendant que les données sont récupérées", async () => {
+        const mockEtudiants = [
+            {
+                id: 1,
+                firstName: "Jean",
+                lastName: "Dupont",
+                credentials: { email: "jean.dupont@example.com" },
+                phoneNumber: "123-456-7890",
+                departement: "INFORMATIQUE",
+                cv: { status: "valide" }
+            },
+        ];
+
+        global.fetch = jest.fn(() =>
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        ok: true,
+                        json: () => Promise.resolve(mockEtudiants),
+                    });
+                }, 500);
+            })
+        );
+
+        render(<MockListeEtudiants />);
+
+        const loadingMessage = screen.getByText(/chargement/i);
+        expect(loadingMessage).toBeInTheDocument();
+
+        const statusValide = await screen.findByText("valide");
+        expect(statusValide).toBeInTheDocument();
+    });
+
 });

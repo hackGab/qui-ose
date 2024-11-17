@@ -39,6 +39,9 @@ public class UserControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
+    private OffreDeStageService offreDeStageService;
+
+    @MockBean
     private EmployeurService employeurService;
 
     @MockBean

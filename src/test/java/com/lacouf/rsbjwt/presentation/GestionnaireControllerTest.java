@@ -34,6 +34,12 @@ class GestionnaireControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
+    private CandidatAccepterService candidatAccepterService;
+
+    @MockBean
+    private OffreDeStageService offreDeStageService;
+
+    @MockBean
     private EmployeurService employeurService;
 
     @MockBean

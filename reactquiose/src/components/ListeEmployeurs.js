@@ -66,6 +66,7 @@ function ListeEmployeurs() {
     // };
 
     const fetchBySession = (session) => {
+
         const url = `http://localhost:8081/offreDeStage/session/${session}`;
 
         fetch(url, {
@@ -110,7 +111,7 @@ function ListeEmployeurs() {
             })
             .then(data => {
                 console.log(data);
-                setEmployeurs(data);
+                setOffres(data);
                 setLoading(false);
             })
             .catch(error => {

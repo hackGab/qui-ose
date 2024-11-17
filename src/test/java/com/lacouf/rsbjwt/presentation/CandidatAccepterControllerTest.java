@@ -39,6 +39,9 @@ public class CandidatAccepterControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
+    private OffreDeStageService offreDeStageService;
+
+    @MockBean
     private PasswordEncoder passwordEncoder;
 
     @MockBean

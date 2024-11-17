@@ -56,6 +56,9 @@ class ContratControllerTest {
     private EtudiantService etudiantService;
 
     @MockBean
+    private OffreDeStageService offreDeStageService;
+
+    @MockBean
     private ProfesseurService professeurService;
 
     @MockBean

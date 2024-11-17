@@ -48,7 +48,7 @@ function AccueilEtudiant() {
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');
-                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`;
+                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`; //ici
                             fetch(internshipsUrl)
                                 .then((response) => {
                                     if (!response.ok) {
@@ -188,9 +188,13 @@ function AccueilEtudiant() {
         document.getElementById("fileInput").click();
     };
 
+    const verificationSession = (session) => {
+        console.log(session);
+    };
+
     return (
         <>
-            <EtudiantHeader userData={userData}/>
+            <EtudiantHeader userData={userData} onSendData={verificationSession}/>
             <div className="container-fluid p-4">
 
                 <h2 className="text-center my-4 text-capitalize" style={{ color: "#01579b" }}>{t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}!</h2>

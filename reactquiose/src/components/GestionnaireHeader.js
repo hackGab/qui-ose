@@ -6,6 +6,7 @@ import logo from '../images/logo.png';
 import i18n from "i18next";
 import "../CSS/BoutonLangue.css";
 import {calculateNextSessions} from '../utils/methodes/dateUtils';
+import {hardCodedSessions} from "../utils/methodes/hardCodedSessions";
 
 function GestionnaireHeader({onSendData}) {
     const {t} = useTranslation();
@@ -31,10 +32,6 @@ function GestionnaireHeader({onSendData}) {
     });
 
 
-
-    // Stocker les offres récupérées
-    const [offres, setOffres] = useState([]);
-
     // State des sessions et années disponibles (hardcodées)
     const [availableSessions, setAvailableSessions] = useState([]);
     const [availableYears, setAvailableYears] = useState([]);
@@ -49,18 +46,6 @@ function GestionnaireHeader({onSendData}) {
             filterByYear: filterByYear
         });
 
-        // Hard-coder les sessions de 2024 à 2026
-        const hardCodedSessions = [
-            {id: 'HIVER24', label: 'HIVER 24'},
-            {id: 'ETE24', label: 'ETE 24'},
-            {id: 'AUTOMNE24', label: 'AUT 24'},
-            {id: 'HIVER25', label: 'HIVER 25'},
-            {id: 'ETE25', label: 'ETE 25'},
-            {id: 'AUTOMNE25', label: 'AUT 25'},
-            {id: 'HIVER26', label: 'HIVER 26'},
-            {id: 'ETE26', label: 'ETE 26'},
-            {id: 'AUTOMNE26', label: 'AUT 26'}
-        ];
 
         const hardCodedYears = ['24', '25', '26'];
 

@@ -37,6 +37,9 @@ public class CVControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
+    private OffreDeStageService offreDeStageService;
+
+    @MockBean
     private ProfesseurService professeurService;
 
     @MockBean

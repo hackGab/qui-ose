@@ -28,6 +28,8 @@ public class EmployeurControllerTest {
     @MockBean
     private EmployeurService employeurService;
 
+    @MockBean OffreDeStageService offreDeStageService;
+
     @MockBean
     private EtudiantService etudiantService;
 

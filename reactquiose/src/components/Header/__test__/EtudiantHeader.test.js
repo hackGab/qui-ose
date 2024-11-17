@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import EtudiantHeader from '../EtudiantHeader';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
+import EtudiantHeader, { translateTimeAgo, extractTimeAndUnit } from '../EtudiantHeader';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import i18n from '../../../utils/i18n/i18n';
 
 describe('EtudiantHeader Component - Notifications', () => {
     const userData = {
@@ -21,6 +22,20 @@ describe('EtudiantHeader Component - Notifications', () => {
                 ])
             })
         );
+
+        i18n.changeLanguage('fr'); // Changez la langue si nécessaire
+    });
+
+    it('should translate time ago correctly in French', () => {
+        i18n.changeLanguage('fr');
+        expect(translateTimeAgo(2, 'heures')).toBe('il y a 2 heures');
+        expect(translateTimeAgo(5, 'minutes')).toBe('il y a 5 minutes');
+    });
+
+    it('should translate time ago correctly in English', () => {
+        i18n.changeLanguage('en');
+        expect(translateTimeAgo(2, 'heures')).toBe('2 hours ago');
+        expect(translateTimeAgo(5, 'minutes')).toBe('5 minutes ago');
     });
 
     it('should render notifications', async () => {
@@ -76,7 +91,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
 
-        const notification = screen.getByText('Notification 1 - 2 heures avant');
+        const notification = screen.getByText('Notification 1 - il y a 2 heures');
         fireEvent.click(notification);
 
         await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
@@ -97,10 +112,85 @@ describe('EtudiantHeader Component - Notifications', () => {
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
 
-        const notification = screen.getByText('Notification 1 - 2 heures avant');
+        const notification = screen.getByText('Notification 1 - il y a 2 heures');
         fireEvent.click(notification);
 
-        await waitFor(() => expect(screen.queryByText('Notification 1 - 2 heures avant')).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.queryByText('Notification 1 - il y a 2 heures')).not.toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
+    });
+
+
+
+    // Tests des throw new Error
+    it('should throw an error when fetch deleteNotification fails with a bad ID', async () => {
+        global.fetch = jest.fn((url, options) => {
+            if (options && options.method === 'PUT') {
+                return Promise.reject(new Error('Erreur: Erreur lors de la suppression de la notification avec un mauvais ID'));
+            }
+            return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve([
+                    { id: 1, message: 'Notification 1', tempsDepuisReception: '2 heures', url: '/stagesAppliquees' },
+                    { id: 2, message: 'Notification 2', tempsDepuisReception: '3 heures', url: '/mesEntrevues' }
+                ])
+            });
+        });
+
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        await act(async () => {
+            render(
+                <MemoryRouter>
+                    <EtudiantHeader userData={userData} />
+                </MemoryRouter>
+            );
+        });
+
+        // Manually call fetch with a bad notifId
+        const badNotifId = 'bad-id';
+        try {
+            await fetch(`http://localhost:8081/notification/markAsRead/${badNotifId}`, { method: 'PUT' });
+        } catch (error) {
+            console.error(error.toString());
+        }
+
+        await waitFor(() => {
+            expect(consoleErrorMock).toHaveBeenCalledWith(expect.stringContaining('Erreur: Erreur lors de la suppression de la notification avec un mauvais ID'));
+        });
+
+        consoleErrorMock.mockRestore();
+    });
+
+
+    it('should throw an error when fetchNotifications fails', async () => {
+        global.fetch = jest.fn(() => Promise.reject(new Error('Erreur lors de la requête')));
+
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        await act(async () => {
+            render(
+                <MemoryRouter>
+                    <EtudiantHeader userData={userData} />
+                </MemoryRouter>
+            );
+        });
+
+        try {
+            await fetch(`http://localhost:8081/notification/allUnread/mauvaisEmail`, { method: 'GET' });
+        } catch (error) {
+            console.error(error.toString());
+        }
+
+        await waitFor(() => {
+            expect(consoleErrorMock).toHaveBeenCalledWith(expect.stringContaining('Erreur lors de la requête'));
+        });
+
+        consoleErrorMock.mockRestore();
+    });
+
+
+    it('should handle error when regex does not match in extractTimeAndUnit', () => {
+        const result = extractTimeAndUnit('invalid string');
+        expect(result).toBeNull();
     });
 });

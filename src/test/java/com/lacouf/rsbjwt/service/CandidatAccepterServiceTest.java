@@ -1,8 +1,6 @@
 package com.lacouf.rsbjwt.service;
 
-import com.lacouf.rsbjwt.model.CandidatAccepter;
-import com.lacouf.rsbjwt.model.Entrevue;
-import com.lacouf.rsbjwt.model.Notification;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.CandidatAccepterRepository;
 import com.lacouf.rsbjwt.repository.EntrevueRepository;
 import com.lacouf.rsbjwt.repository.NotificationRepository;
@@ -10,6 +8,7 @@ import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import com.lacouf.rsbjwt.model.Departement;
 
 import java.util.Optional;
 
@@ -24,11 +23,17 @@ class CandidatAccepterServiceTest {
     private EntrevueRepository entrevueRepository;
     private NotificationRepository notificationRepository;
 
+    private Etudiant etudiant;
+
+
     @BeforeEach
     void setUp() {
         candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
+        notificationRepository = Mockito.mock(NotificationRepository.class);
         candidatAccepterService = new CandidatAccepterService(candidatAccepterRepository, entrevueRepository, notificationRepository);
+        etudiant = new Etudiant("John", "Doe", "john.doe@example.com", "password123", "1234567890", Departement.TECHNIQUES_INFORMATIQUE);
+
     }
 
     @Test
@@ -36,10 +41,16 @@ class CandidatAccepterServiceTest {
         // Arrange
         Entrevue entrevue = new Entrevue();
         entrevue.setId(1L);
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setTitre("Offre1");
+        entrevue.setOffreDeStage(offreDeStage);
+        entrevue.setEtudiant(etudiant);
         CandidatAccepter savedCandidat = new CandidatAccepter(entrevue, true);
+        Notification notification = new Notification("Félicitations, vous avez été accepté pour le post", "Offre1", "test@example.com", "/stagesAppliquees");
 
         Mockito.when(entrevueRepository.findById(anyLong())).thenReturn(Optional.of(entrevue));
         Mockito.when(candidatAccepterRepository.save(any(CandidatAccepter.class))).thenReturn(savedCandidat);
+        Mockito.when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
 
         // Act
         Optional<CandidatAccepterDTO> result = candidatAccepterService.accepterCandidature(1L);
@@ -48,6 +59,8 @@ class CandidatAccepterServiceTest {
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().getEntrevueId());
         assertTrue(result.get().isAccepte());
+        Mockito.verify(notificationRepository, Mockito.times(1)).save(any(Notification.class));
+
     }
 
     @Test
@@ -67,10 +80,16 @@ class CandidatAccepterServiceTest {
         // Arrange
         Entrevue entrevue = new Entrevue();
         entrevue.setId(1L);
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setTitre("Offre1");
+        entrevue.setOffreDeStage(offreDeStage);
+        entrevue.setEtudiant(etudiant);
         CandidatAccepter savedCandidat = new CandidatAccepter(entrevue, false);
+        Notification notification = new Notification("Votre candidature a été refusée", "Offre1", "test@example.com", "/stagesAppliquees");
 
         Mockito.when(entrevueRepository.findById(anyLong())).thenReturn(Optional.of(entrevue));
         Mockito.when(candidatAccepterRepository.save(any(CandidatAccepter.class))).thenReturn(savedCandidat);
+        Mockito.when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
 
         // Act
         Optional<CandidatAccepterDTO> result = candidatAccepterService.refuserCandidature(1L);
@@ -79,6 +98,7 @@ class CandidatAccepterServiceTest {
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().getEntrevueId());
         assertFalse(result.get().isAccepte());
+        Mockito.verify(notificationRepository, Mockito.times(1)).save(any(Notification.class));
     }
 
     @Test

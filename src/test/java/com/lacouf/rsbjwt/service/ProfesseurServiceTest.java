@@ -50,6 +50,7 @@ public class ProfesseurServiceTest {
     private Professeur professeurEntity;
     private Etudiant etudiantEntity;
     private PasswordEncoder passwordEncoder;
+    private CandidatAccepterRepository candidatAccepterRepository;
 
     @BeforeEach
     void setUp() {
@@ -57,8 +58,9 @@ public class ProfesseurServiceTest {
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         evaluationStageProfRepository = Mockito.mock(EvaluationStageProfRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
         professeurService = new ProfesseurService(professeurRepository, etudiantRepository, passwordEncoder, evaluationStageProfRepository);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository, candidatAccepterRepository);
         professeurController = new ProfesseurController(professeurService, etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");

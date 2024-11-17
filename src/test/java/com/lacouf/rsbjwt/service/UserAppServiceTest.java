@@ -32,6 +32,7 @@ class UserAppServiceTest {
     private EmployeurRepository employeurRepository;
     private GestionnaireRepository gestionnaireRepository;
     private LoginDTO loginDto;
+    private NotificationRepository notificationRepository;
 
     @BeforeEach
     void setUp() {
@@ -42,9 +43,8 @@ class UserAppServiceTest {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
         employeurRepository = Mockito.mock(EmployeurRepository.class);
         gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
-
-        userAppService = new UserAppService(authenticationManager, jwtTokenProvider, userAppRepository,
-                etudiantRepository, professeurRepository, employeurRepository, gestionnaireRepository);
+        notificationRepository = Mockito.mock(NotificationRepository.class);
+        userAppService = new UserAppService(authenticationManager, jwtTokenProvider, userAppRepository, etudiantRepository, professeurRepository, employeurRepository, gestionnaireRepository, notificationRepository);
 
         loginDto = new LoginDTO("user@example.com", "password");
     }

@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.ContratRepository;
+import com.lacouf.rsbjwt.repository.NotificationRepository;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import com.lacouf.rsbjwt.service.dto.ContratDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,11 +21,13 @@ class SystemeServiceTest {
     private ContratRepository contratRepository;
 
     private SystemeService systemeService;
+    private NotificationRepository notificationRepository;
 
     @BeforeEach
     void setUp() {
         contratRepository = Mockito.mock(ContratRepository.class);
-        systemeService = new SystemeService(contratRepository);
+        notificationRepository = Mockito.mock(NotificationRepository.class);
+        systemeService = new SystemeService(contratRepository, notificationRepository);
     }
 
     @Test

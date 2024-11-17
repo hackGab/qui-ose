@@ -42,6 +42,7 @@ class EtudiantServiceTest {
     private Employeur employeur;
 
     private ContratRepository contratRepository;
+    private CandidatAccepterRepository candidatAccepterRepository;
     @BeforeEach
     void setUp() {
         userAppRepository = Mockito.mock(UserAppRepository.class);
@@ -51,7 +52,8 @@ class EtudiantServiceTest {
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         contratRepository = Mockito.mock(ContratRepository.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
+        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository, candidatAccepterRepository );
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");

@@ -14,7 +14,7 @@ function AccueilGestionnaire() {
     const navigate = useNavigate();
     const userData = location.state?.userData;
     console.log("AccueilGestionnaire userData: ", userData);
-    const [cvAttentes, setCvAttentes] = useState(0); // Initialisé à 0 au lieu d'une liste vide
+    const [cvAttentes, setCvAttentes] = useState(0);
 
     const sections = [
         { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
@@ -34,7 +34,7 @@ function AccueilGestionnaire() {
         try {
             const response = await fetch('http://localhost:8081/cv/attentes');
             const data = await response.json();
-            setCvAttentes(data);  // Met à jour l'état avec les données récupérées (entier attendu)
+            setCvAttentes(data);
         } catch (error) {
             console.error('Erreur lors de la récupération des CV en attente:', error);
         }

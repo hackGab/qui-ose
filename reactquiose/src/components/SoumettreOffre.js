@@ -167,9 +167,14 @@ function SoumettreOffre() {
         document.getElementById("fileInput").click();
     };
 
+    const verificationSession = (data) => {
+        console.log("session ", data);
+
+    }
+
     return (
         <>
-            <EmployeurHeader userData={userData}/>
+            <EmployeurHeader userData={userData} onSendData={verificationSession}/>
             <div className="container-fluid p-4">
 
                 <div className="text-center my-4">

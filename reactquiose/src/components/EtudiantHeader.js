@@ -5,7 +5,7 @@ import '../CSS/Header.css'
 import logo from '../images/logo.png';
 import "../CSS/BoutonLangue.css";
 import i18n from "i18next";
-import {hardCodedSessions} from "../utils/methodes/hardCodedSessions";
+import {hardCodedSessions} from "../utils/variables/hardCodedSessions";
 import {calculateNextSessions} from "../utils/methodes/dateUtils";
 
 function EtudiantHeader({userData,onSendData}) {
@@ -21,7 +21,7 @@ function EtudiantHeader({userData,onSendData}) {
     const nextSession = calculateNextSessions();
     const initialSession = nextSession.slice(0, -2);
     const [session, setSession] = useState(() => {
-        return localStorage.getItem('session') || initialSession; // Si la session est enregistrée, on la récupère
+        return localStorage.getItem('session') || initialSession;
     });
 
     const handleClickLogo = () => {
@@ -150,16 +150,6 @@ function EtudiantHeader({userData,onSendData}) {
 
                     <div className="filter-options">
                         <label>Filtre :</label>
-                        {/*{filterByYear ? (*/}
-                        {/*    // Affichage uniquement par année*/}
-                        {/*    <div className="year-dropdown">*/}
-                        {/*        <select value={year} onChange={(e) => handleYearChange(e.target.value)}>*/}
-                        {/*            {availableYears.map(yearOption => (*/}
-                        {/*                <option key={yearOption} value={yearOption}>{yearOption}</option>*/}
-                        {/*            ))}*/}
-                        {/*        </select>*/}
-                        {/*    </div>*/}
-                        {/*) : (*/}
                         <div className="session-dropdown">
                             <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
                                 {availableSessions.map(sessionOption => (
@@ -168,10 +158,6 @@ function EtudiantHeader({userData,onSendData}) {
                                 ))}
                             </select>
                         </div>
-
-                        {/*<button className="filter-toggle-button profile-button" onClick={toggleFilterMode} >*/}
-                        {/*    Filtrer par {filterByYear ? 'session' : 'année'}*/}
-                        {/*</button>*/}
                     </div>
                 </div>
 

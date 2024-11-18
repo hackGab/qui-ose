@@ -15,55 +15,11 @@ function ListeEmployeurs() {
     const [error, setError] = useState(null);
     const [selectedSession, setSelectedSession] = useState(""); // État pour la session active
 
-    // const calculateNextSessions = () => {
-    //     const currentDates = new Date();
-    //     const currentMonths = currentDates.getMonth();
-    //     const currentYears = currentDates.getFullYear() % 100; // Récupère les deux derniers chiffres de l'année
-    //     let nextSessions;
-    //
-    //     if (currentMonths >= 8) {
-    //         nextSessions = `HIVER${currentYears + 1}`;
-    //     } else if (currentMonths >= 4) {
-    //         nextSessions = `AUTOMNE${currentYears}`;
-    //     } else {
-    //         nextSessions = `ETE ${currentYears}`;
-    //     }
-    //     console.log(nextSessions);
-    //     return nextSessions;
-    // };
-
     const verifificationSession = (data) => {
         console.log(data);
         fetchBySession(data.session);
     }
 
-    // const fetchByYear = (year) => {
-    //     const url = `http://localhost:8081/offreDeStage/annee/${year}`;
-    //     console.log(url);
-    //
-    //     fetch(url, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         }
-    //     })
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 console.log(response);
-    //                 throw new Error('lors de la récupération des données');
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             console.log(data);
-    //             setOffres(data);
-    //             setLoading(false);
-    //         })
-    //         .catch(error => {
-    //             setError(error.message);
-    //             setLoading(false);
-    //         });
-    // };
 
     const fetchBySession = (session) => {
 

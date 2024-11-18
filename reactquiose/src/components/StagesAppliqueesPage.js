@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Modal, Button } from "react-bootstrap";
-import { Tooltip } from 'react-tooltip';
+import React, {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {Modal, Button} from "react-bootstrap";
+import {Tooltip} from 'react-tooltip';
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import "../CSS/ListeDeStage.css";
 import EtudiantHeader from "./EtudiantHeader";
+import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function StagesAppliquees() {
     const location = useLocation();
     const user = location.state?.userData;
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [showModal, setShowModal] = useState(false);
     const [stagesAppliquees, setStagesAppliquees] = useState([]);
     const [selectedInternship, setSelectedInternship] = useState(null);
     const [stagesWithImages, setStagesWithImages] = useState([]);
+    const [session, setSession] = useState(getLocalStorageSession());
 
     useEffect(() => {
+
         if (user) {
             const url = `http://localhost:8081/etudiant/credentials/${user.credentials.email}`;
 
@@ -41,13 +44,13 @@ function StagesAppliquees() {
                                 try {
                                     const response = await axios.get(`https://api.unsplash.com/search/photos?query=${stage.localisation}&client_id=${apiKey}`);
                                     if (response.data.results.length > 0) {
-                                        return { ...stage, imageUrl: response.data.results[0].urls.regular };
+                                        return {...stage, imageUrl: response.data.results[0].urls.regular};
                                     } else {
-                                        return { ...stage, imageUrl: '' };
+                                        return {...stage, imageUrl: ''};
                                     }
                                 } catch (error) {
                                     console.error('Erreur lors de la récupération de l’image :', error);
-                                    return { ...stage, imageUrl: '' };
+                                    return {...stage, imageUrl: ''};
                                 }
                             }));
                             setStagesWithImages(updatedStages);
@@ -113,53 +116,71 @@ function StagesAppliquees() {
         </>
     );
 
+    const verificationSession = (session) => {
+        console.log(session);
+        setSession(session)
+    }
+
     return (
         <>
-            <EtudiantHeader userData={user}/>
+            <EtudiantHeader userData={user} onSendData={verificationSession}/>
             <div className="container-fluid p-4">
                 <div className="m-auto text-center my-4">
                     <h3>{t('stagesAppliquées')}</h3>
-                    <small className="text-muted" style={{ fontSize: "1rem" }}><i>*{t('VoirStage')}</i></small>
+                    <small className="text-muted" style={{fontSize: "1rem"}}><i>*{t('VoirStage')}</i></small>
                 </div>
 
                 <div className="row p-2 m-3">
                     {stagesWithImages.length > 0 ? (
-                        stagesWithImages.map((stage, index) => (
-                            <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">
-                                <div className="card my-3 h-100 internship-card" onClick={() => openModal(stage)}>
-                                    <div className="internship-image"
-                                         style={{backgroundImage: `url(${stage.imageUrl})`}}>
+                        stagesWithImages
+                            .filter(stage => stage.session === session.session)
+                            .length > 0 ? (
+                            stagesWithImages
+                                .filter(stage => stage.session === session.session)
+                                .map((stage, index) => (
+                                    <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">
+                                        <div className="card my-3 h-100 internship-card"
+                                             onClick={() => openModal(stage)}>
+                                            <div className="internship-image"
+                                                 style={{backgroundImage: `url(${stage.imageUrl})`}}>
+                                            </div>
+                                            <div
+                                                className="card-body d-flex flex-column justify-content-center align-items-center"
+                                                style={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                                    flex: 1,
+                                                    zIndex: 1
+                                                }}>
+                                                <h5 className="card-title text-center">{stage.titre}</h5>
+                                                <h6 className="card-subtitle mb-2 text-muted text-center">{stage.localisation}</h6>
+
+                                                <p className="card-text text-center">
+                                                    <strong>{t('DateLimite')}</strong> {stage.dateLimite}
+                                                </p>
+
+                                                <p className="card-text text-center">
+                                                    <strong>{t('DateDePublication')}</strong> {stage.datePublication}
+                                                </p>
+
+                                                <p className="card-text text-center">
+                                                    <strong>{t('NombreDeCandidats')}</strong> {stage.nbCandidats}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="card-body d-flex flex-column justify-content-center align-items-center"
-                                         style={{
-                                             backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                                             flex: 1,
-                                             zIndex: 1
-                                         }}>
-                                        <h5 className="card-title text-center">{stage.titre}</h5>
-                                        <h6 className="card-subtitle mb-2 text-muted text-center">{stage.localisation}</h6>
-
-                                        <p className="card-text text-center">
-                                            <strong>{t('DateLimite')}</strong> {stage.dateLimite}
-                                        </p>
-
-                                        <p className="card-text text-center">
-                                            <strong>{t('DateDePublication')}</strong> {stage.datePublication}
-                                        </p>
-
-                                        <p className="card-text text-center">
-                                            <strong>{t('NombreDeCandidats')}</strong> {stage.nbCandidats}
-                                        </p>
-                                    </div>
-                                </div>
+                                ))
+                        ) : (
+                            <div className="d-flex justify-content-center align-items-center w-100">
+                                <p className="text-muted">{t('AucuneOffreAfficher')}</p>
                             </div>
-                        ))
+                        )
                     ) : (
-                        <div className="d-flex justify-content-center align-items-center">
-                            <p>{t('AucuneOffreAfficher')}</p>
+                        <div className="d-flex justify-content-center align-items-center w-100">
+                            <p className="text-muted">{t('AucuneOffreAfficher')}</p>
                         </div>
                     )}
                 </div>
+
 
                 <Modal show={showModal} onHide={handleCloseModal} centered>
                     <Modal.Header closeButton>
@@ -175,7 +196,8 @@ function StagesAppliquees() {
                                         iframeFullscreen.requestFullscreen();
                                     }
                                 }}>{t('OuvrirEnPleinEcran')}</Button>
-                                <Button className="m-2 bg-danger" onClick={() => retirerApplication(selectedInternship)}>
+                                <Button className="m-2 bg-danger"
+                                        onClick={() => retirerApplication(selectedInternship)}>
                                     Retirer application
                                 </Button>
                             </>

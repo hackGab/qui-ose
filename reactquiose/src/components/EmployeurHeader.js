@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../images/logo.png';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../CSS/Header.css'
 import i18n from "i18next";
 import "../CSS/BoutonLangue.css";
+import {calculateNextSessions} from "../utils/methodes/dateUtils";
+import {hardCodedSessions} from "../utils/variables/hardCodedSessions";
 
-function EmployeurHeader({ userData }) {
+function EmployeurHeader({ userData, onSendData}) {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
+    const [availableSessions, setAvailableSessions] = useState([]);
+    const nextSession = calculateNextSessions();
+    const initialSession = nextSession.slice(0, -2);
+    const [session, setSession] = useState(() => {
+        return localStorage.getItem('session') || initialSession;
+    });
+
+    const sendData = (key, value) => {
+        onSendData({
+            [key]: value
+        });
+    };
+
+    useEffect(() => {
+        onSendData({ session: session });
+        setAvailableSessions(hardCodedSessions);
+    }, []);
+
+    const handleSessionChange = (newSession) => {
+        setSession(newSession);
+        localStorage.setItem('session', newSession);
+        sendData("session", newSession);
+    };
+
+
 
     const handleClickLogo = () => {
         if (userData) {
@@ -64,9 +91,21 @@ function EmployeurHeader({ userData }) {
                     <span
                         className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
                         onClick={() => handleLinkClick('/signerContrat')}
-                        >
+                    >
                         {t('SignerContrat')}
                     </span>
+
+                    <div className="filter-options">
+                        <label>Filtre :</label>
+                        <div className="session-dropdown">
+                            <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
+                                {availableSessions.map(sessionOption => (
+                                    <option key={sessionOption.id}
+                                            value={sessionOption.id}>{sessionOption.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="profile-menu">

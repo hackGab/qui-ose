@@ -187,9 +187,14 @@ function EtudiantPostulants() {
         }
     };
 
+    const verificationSession = (data) => {
+        console.log("session ", data);
+
+    }
+
     return (
         <>
-            <EmployeurHeader userData={ user } />
+            <EmployeurHeader userData={ user } onSendData={verificationSession}/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5 text-center">
 

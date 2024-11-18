@@ -5,6 +5,7 @@ import EmployeurHeader from "./EmployeurHeader";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {useTranslation} from "react-i18next";
+import {calculateNextSessions} from "../utils/methodes/dateUtils";
 
 function VisualiserOffres() {
     const location = useLocation();
@@ -20,25 +21,25 @@ function VisualiserOffres() {
     const [selectedSession, setSelectedSession] = useState(""); // État pour la session active
     const {t} = useTranslation();
 
-    const calculateNextSession = () => {
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth();
-        const currentYear = currentDate.getFullYear() % 100; // Récupère les deux derniers chiffres de l'année
-        let nextSession;
-
-        if (currentMonth >= 8) { // Si nous sommes en septembre ou plus tard, la prochaine session est HIV de l'année suivante
-            nextSession = `HIVER${currentYear + 1}`;
-        } else if (currentMonth >= 4) { // Si nous sommes en mai ou plus, la prochaine session est AUT de l'année en cours
-            nextSession = `AUTOMNE${currentYear}`;
-        } else { // Sinon, la prochaine session est ETE de l'année en cours
-            nextSession = `ETE ${currentYear}`;
-        }
-        console.log(nextSession);
-        return nextSession;
-    };
+    // const calculateNextSession = () => {
+    //     const currentDate = new Date();
+    //     const currentMonth = currentDate.getMonth();
+    //     const currentYear = currentDate.getFullYear() % 100; // Récupère les deux derniers chiffres de l'année
+    //     let nextSession;
+    //
+    //     if (currentMonth >= 8) { // Si nous sommes en septembre ou plus tard, la prochaine session est HIV de l'année suivante
+    //         nextSession = `HIVER${currentYear + 1}`;
+    //     } else if (currentMonth >= 4) { // Si nous sommes en mai ou plus, la prochaine session est AUT de l'année en cours
+    //         nextSession = `AUTOMNE${currentYear}`;
+    //     } else { // Sinon, la prochaine session est ETE de l'année en cours
+    //         nextSession = `ETE ${currentYear}`;
+    //     }
+    //     console.log(nextSession);
+    //     return nextSession;
+    // };
 
     useEffect(() => {
-        setSelectedSession(calculateNextSession());
+        setSelectedSession(calculateNextSessions());
     }, []);
 
     useEffect(() => {
@@ -210,10 +211,14 @@ function VisualiserOffres() {
     if (error) {
         return <div>{t('Erreur')} {error}</div>;
     }
+    const verificationSession = (data) => {
+        console.log("session ", data);
+
+    }
 
     return (
         <>
-            <EmployeurHeader userData={userData} />
+            <EmployeurHeader userData={userData} onSendData={verificationSession}/>
             <div className="container-fluid p-4">
                 <h1 className="text-center my-1 " style={{ color: "#01579b",fontSize: "50px" }}>
                     {t('Bienvenue')}, {userData ? userData.firstName + " " + userData.lastName : ""}
@@ -224,29 +229,29 @@ function VisualiserOffres() {
                        <div style={{display:'none'}}>{t('AucuneOffreTrouve')}</div>
                 ) : (
                     <div className="session-filter mb-4 text-center" style={{fontSize: '1.25em'}}>
-                        <label htmlFor="sessionSelect" style={{marginRight: '8px'}}>
-                            {t('FilterBySession')}:
-                        </label>
-                        <select
-                            id="sessionSelect"
-                            style={{fontSize: '0.75em', padding: '0.25em ', borderRadius: '4px'}}
-                            value={selectedSession}
-                            onChange={handleSessionChange}
-                        >
-                            {Array.from(new Set(offres.map((offre) => offre.session))).map((session, index) => {
-                                const sessionText = session.slice(0, -2); // Extraire la partie texte, ex : HIVER
-                                const sessionYear = session.slice(-2); // Extraire l'année, ex : 25
+                        {/*<label htmlFor="sessionSelect" style={{marginRight: '8px'}}>*/}
+                        {/*    {t('FilterBySession')}:*/}
+                        {/*</label>*/}
+                        {/*<select*/}
+                        {/*    id="sessionSelect"*/}
+                        {/*    style={{fontSize: '0.75em', padding: '0.25em ', borderRadius: '4px'}}*/}
+                        {/*    value={selectedSession}*/}
+                        {/*    onChange={handleSessionChange}*/}
+                        {/*>*/}
+                        {/*    {Array.from(new Set(offres.map((offre) => offre.session))).map((session, index) => {*/}
+                        {/*        const sessionText = session.slice(0, -2); // Extraire la partie texte, ex : HIVER*/}
+                        {/*        const sessionYear = session.slice(-2); // Extraire l'année, ex : 25*/}
 
-                                // Traduire la partie texte de la session
-                                const translatedSession = t(sessionText);
+                        {/*        // Traduire la partie texte de la session*/}
+                        {/*        const translatedSession = t(sessionText);*/}
 
-                                return (
-                                    <option key={index} value={session}>
-                                        {translatedSession} {sessionYear}
-                                    </option>
-                                );
-                            })}
-                        </select>
+                        {/*        return (*/}
+                        {/*            <option key={index} value={session}>*/}
+                        {/*                {translatedSession} {sessionYear}*/}
+                        {/*            </option>*/}
+                        {/*        );*/}
+                        {/*    })}*/}
+                        {/*</select>*/}
                     </div>
                 )}
 

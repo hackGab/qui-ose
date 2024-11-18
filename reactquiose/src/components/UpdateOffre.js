@@ -131,9 +131,14 @@ function UpdateOffre() {
         }
     };
 
+    const verificationSession = (data) => {
+        console.log("session ", data);
+
+    }
+
     return (
         <>
-            <EmployeurHeader userData={userData}/>
+            <EmployeurHeader userData={userData} onSendData={verificationSession}/>
             <div className="container-fluid p-4">
                 <div className="container mt-5">
                     <h2>{t('MiseAJourOffre')}</h2>

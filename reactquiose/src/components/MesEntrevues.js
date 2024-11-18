@@ -6,6 +6,7 @@ import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
 import i18n from "i18next";
+import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function MesEntrevues() {
     const { t } = useTranslation();
@@ -14,10 +15,13 @@ function MesEntrevues() {
     const [entrevues, setEntrevues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [session, setSession] = useState(getLocalStorageSession())
 
     useEffect(() => {
         const email = userData?.credentials.email;
         if (email) {
+            // fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`) ici
+
             fetch(`http://localhost:8081/entrevues/etudiant/${email}`)
                 .then(response => {
                     if (!response.ok) {
@@ -78,10 +82,14 @@ function MesEntrevues() {
         return <div>Erreur: {error}</div>;
     }
 
+    const verificationSession = (session) => {
+        console.log(session);
+    }
+
 
     return (
         <>
-            <EtudiantHeader userData={userData} />
+            <EtudiantHeader userData={userData} onSendData={verificationSession} />
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-4">
                     <h1 className="mb-0 text-center" style={{ fontSize: "4em" }}>{t('entrevueListTitle')}</h1>

@@ -6,7 +6,7 @@ import logo from '../images/logo.png';
 import i18n from "i18next";
 import "../CSS/BoutonLangue.css";
 import {calculateNextSessions} from '../utils/methodes/dateUtils';
-import {hardCodedSessions} from "../utils/methodes/hardCodedSessions";
+import {hardCodedSessions} from "../utils/variables/hardCodedSessions";
 
 function GestionnaireHeader({onSendData}) {
     const {t} = useTranslation();
@@ -14,74 +14,35 @@ function GestionnaireHeader({onSendData}) {
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
 
-    // Obtenir la prochaine session et année
     const nextSession = calculateNextSessions();
-    const initialSession = nextSession.slice(0, -2); // Extrait la partie session, ex : "HIVER" de "HIVER25"
-    const initialYear = nextSession.slice(-2); // Extrait la partie année, ex : "25" de "HIVER25"
+    const initialSession = nextSession.slice(0, -2);
 
-    // Initialisation des states pour la session et l'année avec récupération depuis localStorage
     const [session, setSession] = useState(() => {
-        return localStorage.getItem('session') || initialSession; // Si la session est enregistrée, on la récupère
-    });
-    const [year, setYear] = useState(() => {
-        return localStorage.getItem('year') || initialYear; // Si l'année est enregistrée, on la récupère
-    });
-    const [filterByYear, setFilterByYear] = useState(() => {
-        const savedFilterByYear = localStorage.getItem('filterByYear');
-        return savedFilterByYear === 'true'; // Convertir en booléen
+        return localStorage.getItem('session') || initialSession;
     });
 
-
-    // State des sessions et années disponibles (hardcodées)
     const [availableSessions, setAvailableSessions] = useState([]);
-    const [availableYears, setAvailableYears] = useState([]);
 
     useEffect(() => {
-        console.log(year);
         console.log(session);
-        console.log(filterByYear);
         onSendData({
-            year: year,
             session: session,
-            filterByYear: filterByYear
         });
 
-
-        const hardCodedYears = ['24', '25', '26'];
-
-        // Mise à jour des états avec les sessions et années hardcodées
         setAvailableSessions(hardCodedSessions);
-        setAvailableYears(hardCodedYears);
-    }, []); // Cela ne sera exécuté qu'une fois lors du montage initial
+    }, []);
 
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!profileMenuOpen);
     };
 
-    const sendData = (type,data) => {
+    const sendData = (type, data) => {
         if (type === "session") {
             onSendData({
-                year: year,
                 session: data,
-                filterByYear: filterByYear
-            });
-        }
-        else if (type === "year") {
-            onSendData({
-                year: data,
-                session: session,
-                filterByYear: filterByYear
-            });
-        }
-        else if (type === "filterByYear") {
-            onSendData({
-                year: year,
-                session: session,
-                filterByYear: data
             });
         }
     }
-
 
     const handleLinkClick = (path) => {
         setActiveLink(path);
@@ -91,29 +52,10 @@ function GestionnaireHeader({onSendData}) {
         i18n.changeLanguage(lng);
     };
 
-    const toggleFilterMode = () => {
-        setFilterByYear((prevFilterByYear) => {
-            const newFilterByYear = !prevFilterByYear;
-            localStorage.setItem('filterByYear', newFilterByYear); // Enregistrer dans localStorage
-            console.log(newFilterByYear);
-            sendData("filterByYear", newFilterByYear);
-            return newFilterByYear;
-        });
-
-    };
-
-    // Mettre à jour session et année dans localStorage lorsqu'ils changent
     const handleSessionChange = (newSession) => {
         setSession(newSession);
-        localStorage.setItem('session', newSession); // Sauvegarder dans localStorage
+        localStorage.setItem('session', newSession);
         sendData("session", newSession);
-    };
-
-    const handleYearChange = (newYear) => {
-        setYear(newYear);
-        console.log(newYear);
-        localStorage.setItem('year', newYear); // Sauvegarder dans localStorage
-        sendData("year", newYear);
     };
 
     return (
@@ -157,28 +99,14 @@ function GestionnaireHeader({onSendData}) {
                 </div>
                 <div className="filter-options">
                     <label>Filtre :</label>
-                    {/*{filterByYear ? (*/}
-                    {/*    // Affichage uniquement par année*/}
-                    {/*    <div className="year-dropdown">*/}
-                    {/*        <select value={year} onChange={(e) => handleYearChange(e.target.value)}>*/}
-                    {/*            {availableYears.map(yearOption => (*/}
-                    {/*                <option key={yearOption} value={yearOption}>{yearOption}</option>*/}
-                    {/*            ))}*/}
-                    {/*        </select>*/}
-                    {/*    </div>*/}
-                    {/*) : (*/}
-                        <div className="session-dropdown">
-                            <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
-                                {availableSessions.map(sessionOption => (
-                                    <option key={sessionOption.id}
-                                            value={sessionOption.id}>{sessionOption.label}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                    {/*<button className="filter-toggle-button profile-button" onClick={toggleFilterMode} >*/}
-                    {/*    Filtrer par {filterByYear ? 'session' : 'année'}*/}
-                    {/*</button>*/}
+                    <div className="session-dropdown">
+                        <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
+                            {availableSessions.map(sessionOption => (
+                                <option key={sessionOption.id}
+                                        value={sessionOption.id}>{sessionOption.label}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>

@@ -220,13 +220,18 @@ function MesEntrevueAccepte() {
         return new Date(dateString).toLocaleDateString(i18n.language, options);
     }
 
+    const verificationSession = (data) => {
+        console.log("session ", data);
+
+    }
+
 
     const groupedInterviews = groupInterviewsByOffer(entrevues);
 
 
     return (
         <>
-            <EmployeurHeader userData={userData}/>
+            <EmployeurHeader userData={userData} onSendData={verificationSession}/>
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
                     <h1 className="text-center mt-5 page-title">{t('vosEntrevues')}</h1>

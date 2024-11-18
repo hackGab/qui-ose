@@ -7,6 +7,7 @@ import EmployeurHeader from "./EmployeurHeader";
 import EtudiantHeader from "./EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
 import "../CSS/SignerContrat.css";
+import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function SignerContrat() {
     const location = useLocation();
@@ -21,6 +22,7 @@ function SignerContrat() {
     const [contrats, setContrats] = useState([]);
     const [selectedContrat, setSelectedContrat] = useState(null);
     const [error, setError] = useState(null);
+    const [session, setSession] = useState(getLocalStorageSession())
 
     // Toggle password visibility
     const togglePasswordVisibility = () => {
@@ -32,6 +34,7 @@ function SignerContrat() {
         const fetchContrats = async () => {
             try {
                 let response;
+                // response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}/session/${session}`); ici
                 response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}`);
 
                 if (!response.ok) throw new Error(`Erreur: ${response.status}`);
@@ -109,6 +112,10 @@ function SignerContrat() {
         return false;
     };
 
+    const verificationSession = (data) => {
+        console.log(data);
+    }
+
 
     const updateContratSignStatus = () => {
         setSelectedContrat(prevContrat => {
@@ -121,9 +128,10 @@ function SignerContrat() {
         });
     };
 
+
     return (
         <>
-            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} /> : <EtudiantHeader userData={userData} />}
+            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} onSendData={verificationSession} /> : <EtudiantHeader userData={userData} onSendData={verificationSession} />}
 
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">

@@ -34,7 +34,7 @@ function SignerContrat() {
         const fetchContrats = async () => {
             try {
                 let response;
-                // response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}/session/${session}`); ici mon esti 
+                // response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}/session/${session}`); ici mon esti
                 response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}`);
 
                 if (!response.ok) throw new Error(`Erreur: ${response.status}`);

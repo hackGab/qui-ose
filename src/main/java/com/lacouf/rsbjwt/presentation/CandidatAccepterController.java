@@ -53,4 +53,6 @@ public class CandidatAccepterController {
     public ResponseEntity<Iterable<CandidatAccepterDTO>> getAllCandidatures() {
         return ResponseEntity.ok().body(candidatAccepterService.getAllCandidatures());
     }
+
+
 }

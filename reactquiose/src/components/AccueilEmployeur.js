@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../CSS/AccueilEmployeur.css';
-import EmployeurHeader from "./EmployeurHeader";
+import EmployeurHeader from "./Header/EmployeurHeader";
 import { useTranslation } from "react-i18next";
 
 function AccueilEmployeur() {

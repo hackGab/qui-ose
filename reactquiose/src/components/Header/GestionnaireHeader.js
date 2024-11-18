@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/Header.css'
-import logo from '../images/logo.png';
+import '../../CSS/Header.css'
+import logo from '../../images/logo.png';
 import i18n from "i18next";
-import "../CSS/BoutonLangue.css";
+import "../../CSS/BoutonLangue.css";
 
 function GestionnaireHeader() {
     const { t } = useTranslation();
@@ -65,19 +65,20 @@ function GestionnaireHeader() {
                 </div>
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
-                    <div
-                        className="profile-button"
-                        onClick={toggleProfileMenu}
-                    >
+                    <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
-                        <div className="profile-dropdown">
+                        <div className="dropdown profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">{t('Francais')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                                {t('Anglais')}
+                            </Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                                {t('Francais')}
+                            </Link>
                         </div>
                     )}
                 </div>

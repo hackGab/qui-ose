@@ -30,6 +30,7 @@ public class EmployeurServiceTest {
     private UserAppRepository userAppRepository;
     private OffreDeStageRepository offreDeStageRepository;
     private EtudiantRepository etudiantRepository;
+    private EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
 
     private ContratRepository contratRepository;
     private EmployeurService employeurService;
@@ -48,7 +49,8 @@ public class EmployeurServiceTest {
         offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         contratRepository = Mockito.mock(ContratRepository.class);
-        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository);
+        evaluationStageEmployeurRepository = Mockito.mock(EvaluationStageEmployeurRepository.class);
+        employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository, evaluationStageEmployeurRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");

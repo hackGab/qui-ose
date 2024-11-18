@@ -5,7 +5,7 @@ import { Tooltip } from 'react-tooltip';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import "../CSS/ListeDeStage.css";
-import EtudiantHeader from "./EtudiantHeader";
+import EtudiantHeader from "./Header/EtudiantHeader";
 
 function StagesAppliquees() {
     const location = useLocation();

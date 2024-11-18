@@ -6,6 +6,8 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,8 +22,9 @@ public class EtudiantService {
     private final OffreDeStageRepository offreDeStageRepository;
 
     private final EntrevueRepository entrevueRepository;
+    private final CandidatAccepterRepository candidatAccepterRepository;
 
-    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository, ContratRepository contratRepository) {
+    public EtudiantService(UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, PasswordEncoder passwordEncoder, CVRepository cvRepository, OffreDeStageRepository offreDeStageRepository, EntrevueRepository entrevueRepository, ContratRepository contratRepository, CandidatAccepterRepository candidatAccepterRepository) {
         this.userAppRepository = userAppRepository;
         this.etudiantRepository = etudiantRepository;
         this.passwordEncoder = passwordEncoder;
@@ -29,6 +32,7 @@ public class EtudiantService {
         this.offreDeStageRepository = offreDeStageRepository;
         this.entrevueRepository = entrevueRepository;
         this.contratRepository = contratRepository;
+        this.candidatAccepterRepository = candidatAccepterRepository;
     }
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
@@ -60,6 +64,7 @@ public class EtudiantService {
             return Optional.empty();
         }
     }
+
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)
@@ -287,33 +292,10 @@ public class EtudiantService {
                 .toList();
     }
 
+
     public List<EtudiantDTO> getEtudiantsAvecContratByDepartement(Departement departement) {
         return etudiantRepository.findEtudiantsAvecContratByDepartement(departement).stream()
                 .map(EtudiantDTO::new)
                 .toList();
-    }
-
-    public int getNombreCVEnAttente() {
-        // Step 1: Retrieve all students
-        List<Etudiant> etudiants = etudiantRepository.findAll();
-        System.out.println("Etudiants: " + etudiants);
-
-// Step 2: Map each student to their CV
-        List<CV> cvs = etudiants.stream()
-                .map(Etudiant::getCv)
-                .toList();
-        System.out.println("CVs: " + cvs);
-
-// Step 3: Filter CVs with status "Attente"
-        List<CV> cvsEnAttente = cvs.stream()
-                .filter(cv -> cv != null && "Attente".equals(cv.getStatus()))
-                .toList();
-        System.out.println("CVs en attente: " + cvsEnAttente);
-
-// Step 4: Count the filtered CVs
-        int nbCV = cvsEnAttente.size();
-        System.out.println("Nombre de CV en attente: " + nbCV);
-
-        return nbCV;
     }
 }

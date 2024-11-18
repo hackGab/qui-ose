@@ -7,13 +7,12 @@ import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.ContratRepository;
 import com.lacouf.rsbjwt.repository.NotificationRepository;
-import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
-import com.lacouf.rsbjwt.service.dto.ContratDTO;
-import com.lacouf.rsbjwt.service.dto.NotificationDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;

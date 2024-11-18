@@ -132,9 +132,9 @@ public class OffreDeStageController {
         return ResponseEntity.ok().body(offresByAnnee);
     }
 
-    @GetMapping("/offresValidees")
-    public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees() {
-        List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouvees();
+    @GetMapping("/offresValidees/session/{session}")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresValidees(@PathVariable String session) {
+        List<OffreDeStageDTO> offresValidees = etudiantService.getOffresApprouveesParSession(session);
 
         System.out.println("offresValidees = " + offresValidees.toString());
 

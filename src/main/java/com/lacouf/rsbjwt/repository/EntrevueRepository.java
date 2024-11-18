@@ -25,6 +25,9 @@ public interface EntrevueRepository extends JpaRepository<Entrevue, Long> {
 
     List<Entrevue> findByOffreDeStageAndStatus(OffreDeStage offreDeStage, String status);
 
+    @Query("SELECT e FROM Entrevue e WHERE e.etudiant.credentials.email = :email AND e.offreDeStage.session = :session")
+    List<Entrevue> findByEtudiantEmailAndSession(@Param("email") String email, @Param("session") String session);
+
 
 }
 

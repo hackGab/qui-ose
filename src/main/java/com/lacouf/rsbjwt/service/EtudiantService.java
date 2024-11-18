@@ -110,8 +110,8 @@ public class EtudiantService {
                 .toList();
     }
 
-    public List<OffreDeStageDTO> getOffresApprouvees() {
-        return offreDeStageRepository.findAll().stream()
+    public List<OffreDeStageDTO> getOffresApprouveesParSession(String session) {
+        return offreDeStageRepository.findBySession(session).stream()
                 .filter(offreDeStage -> offreDeStage.getStatus().equals("Validé"))
                 .map(OffreDeStageDTO::new)
                 .toList();
@@ -224,13 +224,13 @@ public class EtudiantService {
         }
     }
 
-    public List<ContratDTO> getContratsByEtudiant(String email) {
+    public List<EntrevueDTO> getEntrevuesByEtudiantAndSession(String email, String session) {
         Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
         if (etudiantOptional.isPresent()) {
             Etudiant etudiant = etudiantOptional.get();
             Long etudiantId = etudiant.getId();
-            return contratRepository.findContratsByEtudiantEmail(etudiant).stream()
-                    .map(ContratDTO::new)
+            return entrevueRepository.findByEtudiantEmailAndSession(etudiant.getCredentials().getEmail(), session).stream()
+                    .map(EntrevueDTO::new)
                     .toList();
         } else {
             return List.of();

@@ -49,9 +49,8 @@ function AccueilEtudiant() {
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');
-                            // const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session}`; //ici mon esi
+                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session}`;
 
-                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`; //ici
                             fetch(internshipsUrl)
                                 .then((response) => {
                                     if (!response.ok) {

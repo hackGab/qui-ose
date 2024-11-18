@@ -20,9 +20,7 @@ function MesEntrevues() {
     useEffect(() => {
         const email = userData?.credentials.email;
         if (email) {
-            // fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`) ici
-
-            fetch(`http://localhost:8081/entrevues/etudiant/${email}`)
+            fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la récupération des entrevues');

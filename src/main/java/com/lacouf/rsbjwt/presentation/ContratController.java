@@ -49,17 +49,16 @@ public class  ContratController {
     }
 
 
-    @GetMapping("/getContrats-employeur/{employeurEmail}")
-    public ResponseEntity<Iterable<ContratDTO>> getContratEmployeur(@PathVariable String employeurEmail) {
-        ArrayList<ContratDTO> contrats = new ArrayList<>(employeurService.getContratEmployeur(employeurEmail));
-
+    @GetMapping("/getContrats-employeur/{employeurEmail}/session/{session}")
+    public ResponseEntity<List<ContratDTO>> getContratEmployeur(@PathVariable String employeurEmail, @PathVariable String session) {
+        List<ContratDTO> contrats = new ArrayList<>(employeurService.getContratEmployeur(employeurEmail, session));
 
         return ResponseEntity.ok().body(contrats);
     }
 
-    @GetMapping("/getContrats-etudiant/{etudiantEmail}")
-    public ResponseEntity<Iterable<ContratDTO>> getContratEtudiant(@PathVariable String etudiantEmail) {
-        ArrayList<ContratDTO> contrats = new ArrayList<>(etudiantService.getContratsByEtudiant(etudiantEmail));
+    @GetMapping("/getContrats-etudiant/{etudiantEmail}/session/{session}")
+    public ResponseEntity<List<ContratDTO>> getContratEtudiant(@PathVariable String etudiantEmail, @PathVariable String session) {
+        List<ContratDTO> contrats = new ArrayList<>(etudiantService.getContratsByEtudiantAndSession(etudiantEmail, session));
 
         return ResponseEntity.ok().body(contrats);
     }

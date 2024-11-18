@@ -82,15 +82,12 @@ public class OffreDeStageService {
                 });
     }
 
-    public Optional<List<OffreDeStageDTO>> getOffresEmployeur(Employeur employeur) {
-        if (employeur.getEmail() == null || employeur.getEmail().isEmpty() || employeur.getEmail().isBlank()) {
-            throw  new IllegalArgumentException("Employeur email is required");
-        }
-        List<OffreDeStage> offres = offreDeStageRepository.findByEmployeur(employeur);
+    public List<OffreDeStageDTO> getOffresEmployeurSession(Employeur employeur, String session) {
+        List<OffreDeStage> offres = offreDeStageRepository.findByEmployeurAndSession(employeur, session);
         List<OffreDeStageDTO> offresDTO = offres.stream()
                 .map(OffreDeStageDTO::new)
                 .collect(Collectors.toList());
-        return offresDTO.isEmpty() ? Optional.empty() : Optional.of(offresDTO);
+        return offresDTO;
     }
 
     public Iterable<OffreDeStageDTO> getAllOffresDeStage() {

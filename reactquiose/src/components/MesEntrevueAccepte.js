@@ -35,8 +35,7 @@ function MesEntrevueAccepte() {
 
             try {
                 console.log("employeurEmail", employeurEmail) // TODO mon useEffect ce fait 2 fois
-                //const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`);  ici mon esti
-                const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}`);
+                const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`);
                 const entrevuesAccepteData = await responseEntrevuesAccepte.json();
 
                 console.log("t", t)

@@ -44,18 +44,17 @@ public class OffreDeStageController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
-    @GetMapping("/offresEmployeur/{email}")
-    public ResponseEntity<List<OffreDeStageDTO>> getOffresEmployeur(@PathVariable String email) {
-        if (email == null || email.isEmpty()) {
+    @GetMapping("/offresEmployeur/{email}/session/{session}")
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresEmployeur(@PathVariable String email, @PathVariable String session) {
+        if (email == null || email.isEmpty() || session == null || session.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
         if (employeurOpt.isPresent()) {
-            Optional<List<OffreDeStageDTO>> offreDeStageDTOList = offreDeStageService.getOffresEmployeur(employeurOpt.get());
+            List<OffreDeStageDTO> offreDeStageDTOList = offreDeStageService.getOffresEmployeurSession(employeurOpt.get(), session);
 
-            return offreDeStageDTOList.map(offreDeStageList -> ResponseEntity.ok().body(offreDeStageList))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            return ResponseEntity.ok().body(offreDeStageDTOList);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

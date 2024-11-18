@@ -237,6 +237,17 @@ public class EtudiantService {
         }
     }
 
+    public List<ContratDTO> getContratsByEtudiantAndSession(String email, String session) {
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(email);
+        if (etudiantOptional.isPresent()) {
+            Etudiant etudiant = etudiantOptional.get();
+            return contratRepository.findContratsByEtudiantEmailAndSession(etudiant, session).stream()
+                    .map(ContratDTO::new)
+                    .toList();
+        } else {
+            return List.of();
+        }
+    }
 
     public Optional<ContratDTO> signerContratParEtudiant(String uuid, String password) {
         Contrat contrat = contratRepository.findByUUID(uuid)

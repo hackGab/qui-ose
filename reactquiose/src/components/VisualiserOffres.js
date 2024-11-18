@@ -25,8 +25,7 @@ function VisualiserOffres() {
     const fetchOffres = async (session) => {
         console.log("session ", session);
         try {
-            // const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}/session/${session}`);  ici mon esti
-            const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}`);
+            const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}/session/${session}`);
             if (response.status === 404) {
                 setOffres([]);
                 setIsLoading(false);

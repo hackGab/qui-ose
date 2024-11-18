@@ -106,9 +106,9 @@ public class EntrevueController {
         }
     }
 
-    @GetMapping("/acceptees/employeur/{email}")
-    public ResponseEntity<List<EntrevueDTO>> getEntrevuesAccepteesParEmployeur(@PathVariable String email) {
-        List<EntrevueDTO> entrevues = employeurService.getEntrevuesAccepteesParEmployeur(email);
+    @GetMapping("/acceptees/employeur/{email}/session/{session}")
+    public ResponseEntity<List<EntrevueDTO>> getEntrevuesAccepteesParEmployeur(@PathVariable String email, @PathVariable String session) {
+        List<EntrevueDTO> entrevues = employeurService.getEntrevuesAccepteesParEmployeur(email, session);
 
         if (entrevues.isEmpty()) {
             return ResponseEntity.noContent().build();

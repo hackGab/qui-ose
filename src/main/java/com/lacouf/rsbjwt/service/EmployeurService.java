@@ -133,13 +133,13 @@ public class EmployeurService {
 
 
 
-    public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur) {
+    public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur, String session) {
         Optional<Employeur> employeurOpt = employeurRepository.findByCredentials_email(emailEmployeur);
 
         if (employeurOpt.isPresent()) {
             Employeur employeur = employeurOpt.get();
 
-            List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeur(employeur);
+            List<OffreDeStage> offresDeStage = offreDeStageRepository.findByEmployeurAndSession(employeur, session);
 
             List<Entrevue> entrevuesAcceptees = offresDeStage.stream()
                     .flatMap(offre -> entrevueRepository.findByOffreDeStageAndStatus(offre, "accepter").stream())
@@ -180,9 +180,9 @@ public class EmployeurService {
                 .orElseThrow(() -> new RuntimeException("Employeur non trouvé pour le contrat donné"));
     }
 
-    public List<ContratDTO> getContratEmployeur(String employeurEmail) {
+    public List<ContratDTO> getContratEmployeur(String employeurEmail, String session) {
         return employeurRepository.findByCredentials_email(employeurEmail)
-                .map(employeur -> contratRepository.findContratsByEmployeur(employeur).stream()
+                .map(employeur -> contratRepository.findByEmployeurAndSession(employeur, session).stream()
                         .map(ContratDTO::new)
                         .toList())
                 .orElse(Collections.emptyList());

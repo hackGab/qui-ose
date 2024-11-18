@@ -6,6 +6,7 @@ import com.lacouf.rsbjwt.service.dto.EvaluationStageEmployeurDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,18 +63,26 @@ public class PDFController {
 
     @PostMapping("/evaluationEmployeur")
     public ResponseEntity<byte[]> generateEvaluationEmployeurPDF(@RequestBody EvaluationStageEmployeurDTO evaluationStageEmployeur) {
-        System.out.println("EvaluationStageEmployeurDTO: " + evaluationStageEmployeur);
+        System.out.println("Received EvaluationStageEmployeurDTO: " + evaluationStageEmployeur);
 
         try {
+            // Generate PDF bytes
             byte[] pdfBytes = systemeService.generateEvaluationEmployeurPDF(evaluationStageEmployeur);
+            if (pdfBytes == null || pdfBytes.length == 0) {
+                System.err.println("PDF generation failed or returned an empty file.");
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            // Prepare response headers for file download
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=Evaluation_Stage_Employeur.pdf");
 
             return ResponseEntity.ok()
                     .headers(headers)
-                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                    .contentType(MediaType.APPLICATION_PDF)
                     .body(pdfBytes);
         } catch (IllegalArgumentException e) {
+            System.err.println("Evaluation not found: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();

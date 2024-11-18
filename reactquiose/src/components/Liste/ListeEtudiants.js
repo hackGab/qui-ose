@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import GestionnaireHeader from "./GestionnaireHeader";
-import '../CSS/ListeEtudiants.css';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
+import '../../CSS/ListeEtudiants.css';
 
 function ListeEtudiants() {
     const { t } = useTranslation();

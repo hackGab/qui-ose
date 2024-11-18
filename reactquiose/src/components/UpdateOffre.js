@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import EmployeurHeader from "./EmployeurHeader";
+import EmployeurHeader from "./Header/EmployeurHeader";
 function UpdateOffre() {
     const navigate = useNavigate();
     const location = useLocation();

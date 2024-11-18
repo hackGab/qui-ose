@@ -25,7 +25,25 @@
 .logo {
     display: flex;
     align-items: center;
+    transition: transform 0.3s ease;
 }
+
+.logo:hover {
+    animation: logo-pulse 0.5s ease-in-out;
+}
+
+@keyframes logo-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 
 .header-logo {
     width: 40px;
@@ -45,10 +63,10 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.logo-link:hover .logo-text {
-    transform: scale(1.1);
+.logo-text:hover {
     color: #01579b;
 }
+
 
 .nav-links {
     display: flex;
@@ -107,10 +125,71 @@
     color: #0288d1;
     cursor: pointer;
     transition: color 0.3s ease;
+    position: inherit;
 }
 
 .notification-icon:hover {
     color: #01579b;
+    animation: bell-pulse 0.5s ease-in-out;
+}
+
+@keyframes bell-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+.notification-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    align-content: center;
+    font-size: 0.6rem;
+    position: absolute;
+    bottom: 2rem;
+    left: 1.3rem;
+    height: 1.3rem;
+    width: 1.3rem;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-dropdown {
+    width: 25rem;
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
+.delete-icon {
+    font-size: large;
+    color: #0288d1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.delete-icon:hover {
+    color: #01579b;
+    transition: color 0.3s ease;
+    animation: bell-pulse 0.5s ease-in-out;
 }
 
 .profile-button {
@@ -137,22 +216,15 @@
 }
 
 .profile-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    z-index: 1;
     width: 150px;
-    display: flex;
-    flex-direction: column;
 }
 
 .dropdown-link {
     padding: 10px;
+    display: flex;
+    gap: 1rem;
     text-decoration: none;
+    place-items: center;
     color: #0288d1;
     transition: background-color 0.3s ease;
     border-radius: 5px;

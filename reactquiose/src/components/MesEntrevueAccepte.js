@@ -2,21 +2,13 @@ import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { format } from 'date-fns';
 import { useTranslation } from "react-i18next";
-import EmployeurHeader from "./EmployeurHeader";
+import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
 import {FaCalendarAlt} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";
 import i18n from "i18next";
 import {FaLocationPinLock} from "react-icons/fa6";
 import Modal from "react-bootstrap/Modal";
-
-const EvaluationConformiteOptions = [
-    { label: "Totalement en accord", value: "TOTAL_EN_ACCORD" },
-    { label: "Plutôt en accord", value: "PLUTOT_EN_ACCORD" },
-    { label: "Plutôt en désaccord", value: "PLUTOT_EN_DESACCORD" },
-    { label: "Totalement en désaccord", value: "TOTAL_EN_DESACCORD" },
-    { label: "Impossible de se prononcer", value: "IMPOSSIBLE_SE_PRONONCER" }
-];
 
 function MesEntrevueAccepte() {
     const today = format(new Date(), 'dd/MM/yyyy');
@@ -37,6 +29,14 @@ function MesEntrevueAccepte() {
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
     const [evaluations, setEvaluations] = useState([]);
     const { t } = useTranslation();
+
+    const EvaluationConformiteOptions = [
+        {label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD"},
+        {label: t("PlutotEnAccord"), value: "PLUTOT_EN_ACCORD"},
+        {label: t("PlutotEnDesaccord"), value: "PLUTOT_EN_DESACCORD"},
+        {label: t("TotalementEnDesaccord"), value: "TOTAL_EN_DESACCORD"},
+        {label: t("ImpossibleDeSePrononcer"), value: "IMPOSSIBLE_SE_PRONONCER"}
+    ];
 
     const [evaluation, setEvaluation] = useState({
         employeur: userData,
@@ -442,22 +442,25 @@ function MesEntrevueAccepte() {
 
     const genererPdf = async (entrevue) => {
         const evaluationChoisit = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
-        console.log("evaluationChoisit", evaluationChoisit)
-        console.log("evaluationChoisit", evaluationChoisit.etudiant)
-        console.log("evaluationChoisit", evaluationChoisit.employeur)
-        await fetch(`http://localhost:8081/generatePDF/evaluationEmployeur`, {
+        await fetch('http://localhost:8081/generatePDF/evaluationEmployeur', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(evaluationChoisit),
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Erreur lors de la génération du PDF');
-            }
-        }).catch(error => {
-            console.error('Erreur réseau:', error);
         })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Evaluation_Stage_Employeur.pdf');
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            })
+            .catch(error => console.error('Error downloading PDF:', error));
+
     };
 
     if (isLoading) {
@@ -534,7 +537,7 @@ function MesEntrevueAccepte() {
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
                                                         {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={() => genererPdf(entrevue)}>Générer un PDF de l'evaluation</button>
+                                                            <button className="btn btn-success" onClick={() => genererPdf(entrevue)}>{t('GenererEvaluationEmployeurPDF')}</button>
                                                         ) : (
                                                             <strong>{t('EvaluationPossible')}</strong>
                                                         )}
@@ -706,7 +709,7 @@ function MesEntrevueAccepte() {
                                         ...evaluation,
                                         commentairesProductivite: e.target.value
                                     })}
-                                    placeholder={t('AjoutezCommentaires')}
+                                    placeholder={t('AjoutezVosCommentairesIci')}
                                     required
                                 />
                             </div>
@@ -719,7 +722,7 @@ function MesEntrevueAccepte() {
                             <table className="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>{t('criteres')}</th>
+                                    <th>{t('Criteres')}</th>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <th key={option.value} className="text-center">{option.label}</th>
                                     ))}
@@ -817,7 +820,7 @@ function MesEntrevueAccepte() {
                                     ...evaluation,
                                     commentairesQualiteTravail: e.target.value
                                 })}
-                                placeholder={t('ajoutez_vos_commentaires_ici')}
+                                placeholder={t('AjoutezVosCommentairesIci')}
                                 required
                             />
                             </div>
@@ -831,7 +834,7 @@ function MesEntrevueAccepte() {
                             <table className="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>{t('Critères')}</th>
+                                    <th>{t('Criteres')}</th>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <th key={option.value} className="text-center">{option.label}</th>
                                     ))}
@@ -939,7 +942,7 @@ function MesEntrevueAccepte() {
 
                             {/* Commentaires Section */}
                             <h5 className="section-title">
-                                {t('Commentaires')}
+                                {t('commentaires')}
                             </h5>
                             <div className="mb-3">
                                 <textarea
@@ -950,29 +953,29 @@ function MesEntrevueAccepte() {
                                         ...evaluation,
                                         commentairesRelationsInterpersonnelles: e.target.value
                                     })}
-                                    placeholder={t('Ajoutez_vos_commentaires_ici')}
+                                    placeholder={t('AjoutezVosCommentairesIci')}
                                     rows="4"
                                 ></textarea>
                             </div>
 
 
                             <h5 className="section-title">
-                                HABILETÉS PERSONNELLES
+                                {t('HABILETÉS_PERSONNELLES')}
                             </h5>
-                            <p>Capacité de faire preuve d’attitudes ou de comportements matures et responsables</p>
+                            <p>{t('Criteres')}</p>
                             <table className="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>Critères</th>
+                                    <th>{t('Criteres')}</th>
                                     {EvaluationConformiteOptions.map((option) => (
-                                        <th key={option.value} className="text-center">{option.label}</th>
+                                        <th key={option.value} className="text-center">{t(option.label)}</th>
                                     ))}
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {/* Critère: Démontrer de l’intérêt */}
                                 <tr>
-                                    <td>a) Démontrer de l’intérêt et de la motivation au travail</td>
+                                    <td>{t('a_Démontrer_de_l_intérêt_et_de_la_motivation_au_travail')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -988,7 +991,7 @@ function MesEntrevueAccepte() {
                                 </tr>
                                 {/* Critère: Exprimer clairement ses idées */}
                                 <tr>
-                                    <td>b) Exprimer clairement ses idées</td>
+                                    <td>{t('b_Exprimer_clairement_ses_idées')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -1004,7 +1007,7 @@ function MesEntrevueAccepte() {
                                 </tr>
                                 {/* Critère: Faire preuve d'initiative */}
                                 <tr>
-                                    <td>c) Faire preuve d’initiative</td>
+                                    <td>{t('c_Faire_preuve_d_initiative')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -1020,7 +1023,7 @@ function MesEntrevueAccepte() {
                                 </tr>
                                 {/* Critère: Travailler de façon sécuritaire */}
                                 <tr>
-                                    <td>d) Travailler de façon sécuritaire</td>
+                                    <td>{t('d_Travailler_de_façon_sécuritaire')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -1036,7 +1039,7 @@ function MesEntrevueAccepte() {
                                 </tr>
                                 {/* Critère: Bon sens des responsabilités */}
                                 <tr>
-                                    <td>e) Démontrer un bon sens des responsabilités ne requérant qu’un minimum de supervision</td>
+                                    <td>{t('e_Démontrer_un_bon_sens_des_responsabilités')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -1052,7 +1055,7 @@ function MesEntrevueAccepte() {
                                 </tr>
                                 {/* Critère: Ponctualité et assiduité */}
                                 <tr>
-                                    <td>f) Être ponctuel et assidu à son travail</td>
+                                    <td>{t('f_Être_ponctuel_et_assidu_à_son_travail')}</td>
                                     {EvaluationConformiteOptions.map((option) => (
                                         <td key={option.value} className="text-center">
                                             <input
@@ -1071,26 +1074,26 @@ function MesEntrevueAccepte() {
 
                             {/* Commentaires Section */}
                             <h5 className="section-title">
-                                Commentaires
+                                {t('Commentaires')}
                             </h5>
                             <div className="mb-3">
-                        <textarea
-                            className="form-control"
-                            name="habiletePersonnelles"
-                            value={evaluation.habiletePersonnelles}
-                            onChange={(e) => setEvaluation({
-                                ...evaluation,
-                                habiletePersonnelles: e.target.value
-                            })}
-                            rows="4"
-                            placeholder="Entrez vos commentaires ici"
-                        ></textarea>
+                                <textarea
+                                    className="form-control"
+                                    name="habiletePersonnelles"
+                                    value={evaluation.habiletePersonnelles}
+                                    onChange={(e) => setEvaluation({
+                                        ...evaluation,
+                                        habiletePersonnelles: e.target.value
+                                    })}
+                                    rows="4"
+                                    placeholder={t('AjoutezVosCommentairesIci')}
+                                ></textarea>
                             </div>
 
                             <form>
                                 {/* Section Appréciation globale */}
-                                <h5>APPRÉCIATION GLOBALE DU STAGIAIRE</h5>
-                                <p>Les habiletés démontrées dépassent de beaucoup les attentes</p>
+                                <h5>{t('APPRÉCIATION_GLOBALE_DU_STAGIAIRE')}</h5>
+                                <p>{t('Les_habiletés_démontrées_dépassent_de_beaucoup_les_attentes')}</p>
                                 <div className="form-group">
                                     <label>
                                         <input
@@ -1101,7 +1104,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.appreciationGlobale === "DEPASSE_BEAUCOUP"}
                                             onChange={(e) => handleChange(e, "appreciationGlobale")}
                                         />
-                                        Les habiletés démontrées dépassent de beaucoup les attentes
+                                        {t('Les_habiletés_démontrées_dépassent_de_beaucoup_les_attentes')}
                                     </label>
                                     <br/>
                                     <label>
@@ -1113,7 +1116,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.appreciationGlobale === "DEPASSE"}
                                             onChange={(e) => handleChange(e, "appreciationGlobale")}
                                         />
-                                        Les habiletés démontrées dépassent les attentes
+                                        {t('Les_habiletés_démontrées_dépassent_les_attentes')}
                                     </label>
                                     <br/>
                                     <label>
@@ -1125,7 +1128,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.appreciationGlobale === "REPOND_PLEINEMENT"}
                                             onChange={(e) => handleChange(e, "appreciationGlobale")}
                                         />
-                                        Les habiletés démontrées répondent pleinement aux attentes
+                                        {t('Les_habiletés_démontrées_répondent_pleinement_aux_attentes')}
                                     </label>
                                     <br/>
                                     <label>
@@ -1137,7 +1140,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.appreciationGlobale === "REPOND_PARTIELLEMENT"}
                                             onChange={(e) => handleChange(e, "appreciationGlobale")}
                                         />
-                                        Les habiletés démontrées répondent partiellement aux attentes
+                                        {t('Les_habiletés_démontrées_répondent_partiellement_aux_attentes')}
                                     </label>
                                     <br/>
                                     <label>
@@ -1149,11 +1152,11 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.appreciationGlobale === "NE_REPOND_PAS"}
                                             onChange={(e) => handleChange(e, "appreciationGlobale")}
                                         />
-                                        Les habiletés démontrées ne répondent pas aux attentes
+                                        {t('Les_habiletés_démontrées_ne_répondent_pas_aux_attentes')}
                                     </label>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="appreciationComment">PRÉCISEZ VOTRE APPRÉCIATION:</label>
+                                    <label htmlFor="appreciationComment">{t('PRÉCISEZ_VOTRE_APPRÉCIATION')}:</label>
                                     <textarea
                                         id="commentairesAppreciation"
                                         className="form-control"
@@ -1162,13 +1165,13 @@ function MesEntrevueAccepte() {
                                             ...evaluation,
                                             commentairesAppreciation: e.target.value
                                         })} rows="4"
-                                        placeholder="Entrez vos commentaires ici"
+                                        placeholder={t('AjoutezVosCommentairesIci')}
                                     ></textarea>
                                 </div>
 
                                 {/* Discussion et nombre d'heures d'encadrement */}
                                 <div className="form-group">
-                                    <label>Cette évaluation a été discutée avec le stagiaire :</label>
+                                    <label>{t('Cette_évaluation_a_été_discutée_avec_le_stagiaire')} :</label>
                                     <div>
                                         <label>
                                             <input
@@ -1179,7 +1182,7 @@ function MesEntrevueAccepte() {
                                                 checked={evaluation.evaluationDiscuteeAvecStagiaire === "true"}
                                                 onChange={(e) => handleChange(e, "evaluationDiscuteeAvecStagiaire")}
                                             />
-                                            Oui
+                                            {t('Oui')}
                                         </label>
                                         <label>
                                             <input
@@ -1190,13 +1193,12 @@ function MesEntrevueAccepte() {
                                                 checked={evaluation.evaluationDiscuteeAvecStagiaire === "false"}
                                                 onChange={(e) => handleChange(e, "evaluationDiscuteeAvecStagiaire")}
                                             />
-                                            Non
+                                            {t('Non')}
                                         </label>
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>Veuillez indiquer le nombre d’heures réel par semaine d’encadrement accordé
-                                        au stagiaire :</label>
+                                    <label>{t('Veuillez_indiquer_le_nombre_d_heures_réel_par_semaine_d_encadrement_accordé_au_stagiaire')} :</label>
                                     <input
                                         type="number"
                                         name="heuresEncadrementParSemaine"
@@ -1208,7 +1210,7 @@ function MesEntrevueAccepte() {
                                 </div>
 
                                 {/* Section pour l'entreprise */}
-                                <h5>L’ENTREPRISE AIMERAIT ACCUEILLIR CET ÉLÈVE POUR SON PROCHAIN STAGE :</h5>
+                                <h5>{t('L_ENTREPRISE_AIMERAIT_ACCUEILLIR_CET_ÉLÈVE_POUR_SON_PROCHAIN_STAGE')} :</h5>
                                 <div className="form-group">
                                     <label>
                                         <input
@@ -1219,7 +1221,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.entrepriseSouhaiteProchainStage === "OUI"}
                                             onChange={(e) => handleChange(e, "entrepriseSouhaiteProchainStage")}
                                         />
-                                        Oui
+                                        {t('Oui')}
                                     </label>
                                     <label>
                                         <input
@@ -1230,7 +1232,7 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.entrepriseSouhaiteProchainStage === "NON"}
                                             onChange={(e) => handleChange(e, "entrepriseSouhaiteProchainStage")}
                                         />
-                                        Non
+                                        {t('Non')}
                                     </label>
                                     <label>
                                         <input
@@ -1241,13 +1243,12 @@ function MesEntrevueAccepte() {
                                             checked={evaluation.entrepriseSouhaiteProchainStage === "PEUT_ETRE"}
                                             onChange={(e) => handleChange(e, "entrepriseSouhaiteProchainStage")}
                                         />
-                                        Peut-être
+                                        {t('Peut-être')}
                                     </label>
                                 </div>
 
                                 <div className="form-group">
-                                    <label>La formation technique du stagiaire était-elle suffisante pour accomplir le
-                                        mandat de stage?</label>
+                                    <label>{t('La_formation_technique_du_stagiaire_était_elle_suffisante_pour_accomplir_le_mandat_de_stage')}?</label>
                                     <div>
                                         <input
                                             type="text"
@@ -1263,11 +1264,11 @@ function MesEntrevueAccepte() {
 
                                 {/* Signature */}
                                 <div className="form-group">
-                                    <label>Nom</label>
+                                    <label>{t('Nom')}</label>
                                     <p>{userData.firstName} {userData.lastName}</p>
                                 </div>
                                 <div className="form-group">
-                                    <label>Fonction</label>
+                                    <label>{t('Fonction')}</label>
                                     <input
                                         type="text"
                                         name="fonction"
@@ -1277,7 +1278,7 @@ function MesEntrevueAccepte() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Date : {today}</label>
+                                    <label>{t('Date')} : {today}</label>
                                 </div>
                             </form>
 
@@ -1285,9 +1286,9 @@ function MesEntrevueAccepte() {
                         <Modal.Footer>
                             <button type="button" className="btn btn-success"
                                     onClick={() => creerEvaluationEtudiant(userData.credentials.email, selectedEntrevue.etudiantDTO.email, evaluation)}>
-                                Créer Évaluation
+                                {t('creer_evaluation')}
                             </button>
-                            <button type="button" className="btn btn-danger" onClick={closeDetailsModal}>Fermer</button>
+                            <button type="button" className="btn btn-danger" onClick={closeDetailsModal}>{t('close')}</button>
                         </Modal.Footer>
 
                     </form>

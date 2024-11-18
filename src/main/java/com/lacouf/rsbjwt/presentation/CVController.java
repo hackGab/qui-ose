@@ -46,7 +46,7 @@ public class CVController {
     }
 
     @GetMapping("/attentes")
-    public ResponseEntity<Integer> getCVAttentes() {
+    public ResponseEntity<Integer> getNombreCVEnAttente() {
         int nbCV = etudiantService.getNombreCVEnAttente();
         return ResponseEntity.ok(nbCV);
     }

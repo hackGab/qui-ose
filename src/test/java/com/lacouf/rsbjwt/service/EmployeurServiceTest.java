@@ -43,14 +43,14 @@ public class EmployeurServiceTest {
 
     @BeforeEach
     void setUp() {
-        employeurRepository = mock(EmployeurRepository.class);
-        passwordEncoder = mock(PasswordEncoder.class);
-        entrevueRepository = mock(EntrevueRepository.class);
-        userAppRepository = mock(UserAppRepository.class);
-        offreDeStageRepository = mock(OffreDeStageRepository.class);
-        etudiantRepository = mock(EtudiantRepository.class);
-        contratRepository = mock(ContratRepository.class);
-        evaluationStageEmployeurRepository = mock(EvaluationStageEmployeurRepository.class);
+        employeurRepository = Mockito.mock(EmployeurRepository.class);
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        entrevueRepository = Mockito.mock(EntrevueRepository.class);
+        userAppRepository = Mockito.mock(UserAppRepository.class);
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
+        contratRepository = Mockito.mock(ContratRepository.class);
+        evaluationStageEmployeurRepository = Mockito.mock(EvaluationStageEmployeurRepository.class);
         employeurService = new EmployeurService(employeurRepository, passwordEncoder, entrevueRepository, userAppRepository, offreDeStageRepository, etudiantRepository, contratRepository, evaluationStageEmployeurRepository);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -482,4 +482,3 @@ public class EmployeurServiceTest {
         assertTrue(result.isEmpty());
     }
 }
-

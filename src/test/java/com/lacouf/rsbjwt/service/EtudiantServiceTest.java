@@ -42,6 +42,7 @@ class EtudiantServiceTest {
     private Employeur employeur;
 
     private ContratRepository contratRepository;
+    private CandidatAccepterRepository candidatAccepterRepository;
     @BeforeEach
     void setUp() {
         userAppRepository = Mockito.mock(UserAppRepository.class);
@@ -51,7 +52,8 @@ class EtudiantServiceTest {
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         contratRepository = Mockito.mock(ContratRepository.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
+        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository, candidatAccepterRepository );
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -337,6 +339,30 @@ class EtudiantServiceTest {
 
         // Assert
         assertEquals(1, response.size());
+    }
+
+    @Test
+    void shouldGetEntrevuesEnAttenteByEtudiant() {
+        // Arrange
+        String email = "email@gmail.com";
+
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setEmployeur(employeur);
+
+        Entrevue entrevue = new Entrevue();
+        entrevue.setEtudiant(etudiantEntity);
+        entrevue.setOffreDeStage(offreDeStage);
+        entrevue.setStatus("Attente");
+        List<Entrevue> entrevues = List.of(entrevue);
+        when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
+        when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
+
+        // Act
+        List<EntrevueDTO> response = etudiantService.getEntrevuesEnAttenteByEtudiant(email);
+
+        // Assert
+        assertEquals(1, response.size());
+        assertEquals("Attente", response.getFirst().getStatus());
     }
 
     @Test

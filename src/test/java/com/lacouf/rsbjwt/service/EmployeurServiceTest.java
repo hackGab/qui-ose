@@ -60,6 +60,7 @@ public class EmployeurServiceTest {
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
         newEmployeur = new EmployeurDTO("John", "Doe", "123456789", Role.EMPLOYEUR, credentials, "Entreprise");
+
         employeurEntity = new Employeur("John", "Doe", "email@gmail.com", "password", "123456789", "Entreprise");
         etudiantEntity = new Etudiant("John", "Doe", "email2gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
         evaluationStageEmployeur = new EvaluationStageEmployeur();
@@ -236,7 +237,7 @@ public class EmployeurServiceTest {
     void shouldGetEntrevueById() {
         // Arrange
         Long entrevueId = 1L;
-        Etudiant etudiant = new Etudiant("Lol", "Lala", "email", "12334", "", Departement.TECHNIQUES_INFORMATIQUE);
+        Etudiant etudiant = new Etudiant("Lol","Lala", "email","12334","", Departement.TECHNIQUES_INFORMATIQUE);
         Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", "En attente", etudiant, new OffreDeStage());
 
         OffreDeStage offreDeStage = new OffreDeStage();
@@ -250,6 +251,7 @@ public class EmployeurServiceTest {
 
         entrevue.setEtudiant(etudiant);
         entrevue.setOffreDeStage(offreDeStage);
+
 
 
         entrevue.setId(entrevueId);
@@ -320,6 +322,8 @@ public class EmployeurServiceTest {
         // Assert
         Mockito.verify(passwordEncoder).encode(newEmployeur.getCredentials().getPassword());
     }
+
+
 
 
     @Test
@@ -505,4 +509,3 @@ public class EmployeurServiceTest {
         assertTrue(response.isPresent());
     }
 }
-

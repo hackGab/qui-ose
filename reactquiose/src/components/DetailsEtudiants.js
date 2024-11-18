@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import GestionnaireHeader from "./GestionnaireHeader";
+import GestionnaireHeader from "./Header/GestionnaireHeader";
 import '../CSS/DetailsEtudiants.css';
 
 function DetailsEtudiants() {

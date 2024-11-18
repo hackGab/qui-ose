@@ -4,29 +4,27 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.lacouf.rsbjwt.model.Contrat;
-import com.lacouf.rsbjwt.model.Employeur;
-import com.lacouf.rsbjwt.model.Etudiant;
-import com.lacouf.rsbjwt.model.EvaluationStageProf;
+import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.ContratRepository;
-import com.lacouf.rsbjwt.service.dto.ContratDTO;
-import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
-import com.lacouf.rsbjwt.service.dto.EvaluationStageEmployeurDTO;
-import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
-import org.apache.catalina.valves.rewrite.InternalRewriteMap;
+import com.lacouf.rsbjwt.repository.NotificationRepository;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.security.UnresolvedPermission;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SystemeService {
 
-    private ContratRepository contratRepository;
+    private final ContratRepository contratRepository;
+    private final NotificationRepository notificationRepository;
 
-    public SystemeService(ContratRepository contratRepository) {
+    public SystemeService(ContratRepository contratRepository, NotificationRepository notificationRepository) {
         this.contratRepository = contratRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public byte[] generateContratPDF(ContratDTO contrat) throws Exception {
@@ -522,5 +520,28 @@ public class SystemeService {
         table.addCell(evaluation != null && evaluation.equalsIgnoreCase("PLUTOT_EN_ACCORD") ? "X" : "");
         table.addCell(evaluation != null && evaluation.equalsIgnoreCase("PLUTOT_EN_DESACCORD") ? "X" : "");
         table.addCell(evaluation != null && evaluation.equalsIgnoreCase("TOTAL_EN_DESACCORD") ? "X" : "");
+    }
+    
+    public void creerEvaluationStageProf(Optional<EtudiantDTO> etudiantDTO) {
+        System.out.println("Création de l'évaluation de stage pour l'étudiant " + etudiantDTO.get().getFirstName());
+    }
+
+
+    public List<NotificationDTO> getAllUnreadNotificationsByEmail(String email) {
+        return notificationRepository.findByEmail(email).stream()
+                .filter(notification -> !notification.isVu())
+                .map(NotificationDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public void markNotificationAsRead(Long notificationId) {
+        Optional<Notification> notificationOpt = notificationRepository.findById(notificationId);
+        if (notificationOpt.isPresent()) {
+            Notification notification = notificationOpt.get();
+            notification.markAsRead();
+            notificationRepository.save(notification);
+        } else {
+            throw new IllegalArgumentException("Notification not found");
+        }
     }
 }

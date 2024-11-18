@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { format } from 'date-fns';
 import { useTranslation } from "react-i18next";
-import EmployeurHeader from "./EmployeurHeader";
+import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
 import {FaCalendarAlt} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";

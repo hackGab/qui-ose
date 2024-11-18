@@ -6,6 +6,10 @@ beforeEach(() => {
     localStorage.clear();
 });
 
+
+
+
+
 describe('GestionnaireHeader', () => {
     it('devrait changer la session correctement', () => {
 

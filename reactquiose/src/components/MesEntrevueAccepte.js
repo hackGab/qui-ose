@@ -8,6 +8,7 @@ import {FaCalendarAlt, FaCheck, FaTimes} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";
 import i18n from "i18next";
 import {FaLocationPinLock} from "react-icons/fa6";
+import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function MesEntrevueAccepte() {
     const location = useLocation();
@@ -20,6 +21,7 @@ function MesEntrevueAccepte() {
     const [showModal, setShowModal] = useState(false);
     const [currentAction, setCurrentAction] = useState(null);
     const [currentEntrevue, setCurrentEntrevue] = useState(null);
+    const [session, setSession] = useState(getLocalStorageSession);
     const { t } = useTranslation();
 
 
@@ -33,6 +35,7 @@ function MesEntrevueAccepte() {
 
             try {
                 console.log("employeurEmail", employeurEmail) // TODO mon useEffect ce fait 2 fois
+                //const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`);  ici mon esti
                 const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}`);
                 const entrevuesAccepteData = await responseEntrevuesAccepte.json();
 
@@ -222,7 +225,7 @@ function MesEntrevueAccepte() {
 
     const verificationSession = (data) => {
         console.log("session ", data);
-
+        setSession(data.session);
     }
 
 

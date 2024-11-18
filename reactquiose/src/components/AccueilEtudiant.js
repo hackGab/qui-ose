@@ -18,11 +18,10 @@ function AccueilEtudiant() {
     const [rejectionMessage, setRejectionMessage] = useState("");
     const {t} = useTranslation();
     const [internships, setInternships] = useState([]);
-    const [session, setSession] = useState(null)
+    const [session, setSession] = useState(getLocalStorageSession() || "");
 
     useEffect(() => {
         console.log('userData:', userData);
-        let session = getLocalStorageSession();
         if (userData) {
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
@@ -50,7 +49,7 @@ function AccueilEtudiant() {
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');
-                            // const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session}`; //ici
+                            // const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session}`; //ici mon esi
 
                             const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees`; //ici
                             fetch(internshipsUrl)

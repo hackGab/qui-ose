@@ -21,8 +21,9 @@ public class GestionnaireService {
     private final EntrevueRepository entrevueRepository;
     private final ProfesseurRepository professeurRepository;
     private final EvaluationStageProfRepository evaluationStageProfRepository;
+    private final NotificationRepository notificationRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository, EvaluationStageProfRepository evaluationStageProfRepository) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository, EvaluationStageProfRepository evaluationStageProfRepository, NotificationRepository notificationRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
@@ -32,6 +33,7 @@ public class GestionnaireService {
         this.entrevueRepository = entrevueRepository;
         this.professeurRepository = professeurRepository;
         this.evaluationStageProfRepository = evaluationStageProfRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -91,6 +93,11 @@ public class GestionnaireService {
         return Optional.empty();
     }
 
+    public NotificationDTO createNotification(Notification notification) {
+        Notification savedNotification = notificationRepository.save(notification);
+        return new NotificationDTO(savedNotification);
+    }
+
     public Optional<ContratDTO> creerContrat(ContratDTO contratDTO) {
         try {
             CandidatAccepter candidat = contratDTO.getCandidature().toEntity();
@@ -122,6 +129,9 @@ public class GestionnaireService {
             contrat.genererUUID();
 
             Contrat saveContrat = contratRepository.save(contrat);
+            createNotification(new Notification("Nouveau Contrat, veuiller le signer ", entrevueDTO.get().getOffreDeStage().getTitre() , candidat.getEmailEtudiant() , "/signerContrat"));
+            createNotification(new Notification("Nouveau Contrat, veuiller le signer ", entrevueDTO.get().getOffreDeStage().getTitre() , entrevueDTO.get().getOffreDeStage().getEmployeur().getEmail() , "/signerContrat"));
+
 
             return Optional.of(new ContratDTO(saveContrat));
         } catch (Exception e) {

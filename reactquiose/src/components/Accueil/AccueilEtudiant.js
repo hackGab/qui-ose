@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import EtudiantHeader from "./Header/EtudiantHeader";
-import "../CSS/AccueilEtudiant.css";
+import EtudiantHeader from "../Header/EtudiantHeader";
+import "../../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
-import ListeDeStage from "./ListeDeStage";
+import ListeDeStage from "../Liste/ListeDeStage";
 
 function AccueilEtudiant() {
     const location = useLocation();

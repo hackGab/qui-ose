@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import GestionnaireHeader from './Header/GestionnaireHeader';
-import '../CSS/ListeCandidature.css';
+import GestionnaireHeader from '../Header/GestionnaireHeader';
+import '../../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Icon} from "react-icons-kit";
 import {eye, eyeOff} from "react-icons-kit/feather";
-import TableauContrat from "./TableauContrat";
+import TableauContrat from "../TableauContrat";
 import {If, Then} from "react-if";
 
 function ListeCandidature() {

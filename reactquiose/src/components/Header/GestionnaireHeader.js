@@ -64,7 +64,6 @@ function GestionnaireHeader() {
                     </Link>
                 </div>
                 <div className="profile-menu">
-
                     <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
@@ -73,12 +72,12 @@ function GestionnaireHeader() {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
-                                {t('Anglais')}
-                            </Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
-                                {t('Francais')}
-                            </Link>
+                            <button onClick={() => changeLanguage('en')}
+                                    className="language-button dropdown-link text-left">{t('Anglais')}
+                            </button>
+                            <button onClick={() => changeLanguage('fr')}
+                                    className="language-button dropdown-link text-left">{t('Francais')}
+                            </button>
                         </div>
                     )}
                 </div>

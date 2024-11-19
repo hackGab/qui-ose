@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useLocation, useParams} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/DetailsEtudiants.css';
-import GestionnaireHeader from "./Header/GestionnaireHeader";
+import '../../CSS/DetailsEtudiants.css';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
 import React, {useState} from "react";
 
 function DetailsEmployeurs() {

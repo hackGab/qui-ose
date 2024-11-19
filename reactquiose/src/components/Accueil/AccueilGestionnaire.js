@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../CSS/AccueilGestionnaire.css';
+import '../../CSS/AccueilGestionnaire.css';
 import { useTranslation } from 'react-i18next';
 
-import etudiantImage from '../images/Etudiant.png';
-import professeurImage from '../images/Professeur.png';
-import employeurImage from '../images/Employeur.png';
+import etudiantImage from '../../images/Etudiant.png';
+import professeurImage from '../../images/Professeur.png';
+import employeurImage from '../../images/Employeur.png';
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();

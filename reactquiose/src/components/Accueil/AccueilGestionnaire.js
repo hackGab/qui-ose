@@ -14,7 +14,9 @@ function AccueilGestionnaire() {
     const navigate = useNavigate();
     const userData = location.state?.userData;
     console.log("AccueilGestionnaire userData: ", userData);
+
     const [cvAttentes, setCvAttentes] = useState(0);
+    const [contratsAGenerer, setContratsAGenerer] = useState(0);
 
     const sections = [
         { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
@@ -28,6 +30,7 @@ function AccueilGestionnaire() {
 
     useEffect(() => {
         fetchCvAttentes();
+        fetchContratsAGenerer();
     }, []);
 
     const fetchCvAttentes = async () => {
@@ -37,6 +40,24 @@ function AccueilGestionnaire() {
             setCvAttentes(data);
         } catch (error) {
             console.error('Erreur lors de la récupération des CV en attente:', error);
+        }
+    };
+
+    const fetchContratsAGenerer = async () => {
+        try {
+            const candidaturesResponse = await fetch('http://localhost:8081/candidatures/all');
+            const candidatures = await candidaturesResponse.json();
+
+            const contratsResponse = await fetch('http://localhost:8081/contrat/all');
+            const contrats = await contratsResponse.json();
+
+            const candidatsSansContrat = candidatures.filter(
+                candidat => !contrats.some(contrat => contrat.candidature.id === candidat.id)
+            );
+
+            setContratsAGenerer(candidatsSansContrat.length);
+        } catch (error) {
+            console.error('Erreur lors de la vérification des contrats à générer:', error);
         }
     };
 
@@ -66,9 +87,14 @@ function AccueilGestionnaire() {
                 ))}
             </div>
 
-            <div className="candidature-button-container mt-5">
-                <button className="candidature-button" onClick={handleNavigateCandidatures}>
+            <div className="candidature-button-container mt-5 position-relative">
+                <button className="candidature-button position-relative" onClick={handleNavigateCandidatures}>
                     {t("Voir les Candidatures")}
+                    {contratsAGenerer > 0 && (
+                        <div className="notification-badge-candidature position-absolute">
+                            {contratsAGenerer}
+                        </div>
+                    )}
                 </button>
             </div>
         </div>

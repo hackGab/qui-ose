@@ -91,6 +91,49 @@ function MesEntrevueAccepte() {
         dateSignature: today
     });
 
+    const fetchSession = async (session) => {
+        console.log("Session:", session);
+        try {
+            console.log("EmployeurEmail:", employeurEmail); // TODO: Vérifier pourquoi useEffect s'exécute deux fois
+
+            const responseEntrevuesAccepte = await fetch(
+                `http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`
+            );
+            console.log("ResponseEntrevuesAccepte:", responseEntrevuesAccepte);
+
+            if (!responseEntrevuesAccepte.ok) {
+                if (responseEntrevuesAccepte.status === 404 || responseEntrevuesAccepte.status === 204) {
+                    console.warn("Aucune entrevue trouvée pour cette session.");
+                    setEntrevues([]);
+                    return;
+                } else {
+                    throw new Error(
+                        `Erreur du serveur: ${responseEntrevuesAccepte.statusText}`
+                    );
+                }
+            }
+            else{
+                setEntrevues([]);
+            }
+
+            const entrevuesAccepteData = await responseEntrevuesAccepte.json();
+            console.log("EntrevuesAccepteData:", entrevuesAccepteData.status === 204);
+            if (entrevuesAccepteData.status === 204) {
+                console.warn("Réponse vide reçue du serveur.");
+                setEntrevues([]);
+                return;
+            }
+
+            console.log("Données des entrevues acceptées:", entrevuesAccepteData);
+            setEntrevues(entrevuesAccepteData);
+
+        } catch (error) {
+            console.error("Erreur lors de la récupération des entrevues:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         const fetchOffresEntrevues = async () => {
             if (!employeurEmail) {
@@ -98,32 +141,13 @@ function MesEntrevueAccepte() {
                 setIsLoading(false);
                 return;
             }
-
-            try {
-                console.log("employeurEmail", employeurEmail) // TODO mon useEffect ce fait 2 fois
-                const responseEntrevuesAccepte = await fetch(`http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`);
-                const entrevuesAccepteData = await responseEntrevuesAccepte.json();
-
-                console.log("t", t)
-
-                if (responseEntrevuesAccepte.status === 404) {
-                    setEntrevues([]);
-                    return;
-                }
-
-                console.log("entrevuesAccepteData", entrevuesAccepteData)
-                setEntrevues(entrevuesAccepteData);
-
-            } catch (error) {
-                console.error('Erreur lors de la récupération des entrevues:', error);
-            } finally {
-                setIsLoading(false);
-            }
+            await fetchSession(session);
         };
 
-
         fetchOffresEntrevues();
-    }, [employeurEmail]);
+    }, [employeurEmail, session]); // Inclure `session` si elle peut changer dynamiquement
+
+
 
 
     useEffect(() => {
@@ -495,6 +519,7 @@ function MesEntrevueAccepte() {
     const verificationSession = (data) => {
         console.log("session ", data);
         setSession(data.session);
+        fetchSession(data.session);
     }
 
 

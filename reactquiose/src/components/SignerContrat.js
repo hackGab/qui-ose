@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { eyeOff, eye } from 'react-icons-kit/feather';
-import { Icon } from "react-icons-kit";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {eyeOff, eye} from 'react-icons-kit/feather';
+import {Icon} from "react-icons-kit";
 import EmployeurHeader from "./Header/EmployeurHeader";
 import EtudiantHeader from "./Header/EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
@@ -12,7 +12,7 @@ import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 function SignerContrat() {
     const location = useLocation();
     const userData = location.state?.userData;
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
 
     // State
     const [type, setType] = useState('password');
@@ -30,23 +30,22 @@ function SignerContrat() {
         setType(type === 'password' ? 'text' : 'password');
     };
 
+    const fetchSession = async (session) => {
+        try {
+            const response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}/session/${session}`);
+            if (!response.ok) throw new Error(`Erreur: ${response.status}`);
+
+            const data = await response.json();
+            console.log("serverur" + data);
+            setContrats(data);
+        } catch (error) {
+            messageErreur(t('ErreurRecuperationContrat'));
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
-        const fetchContrats = async () => {
-            try {
-                let response;
-                response = await fetch(`http://localhost:8081/contrat/getContrats-${userData.role.toLowerCase()}/${userData.credentials.email}/session/${session}`);
-                if (!response.ok) throw new Error(`Erreur: ${response.status}`);
-
-                const data = await response.json();
-                console.log(data);
-                setContrats(data);
-            } catch (error) {
-                messageErreur(t('ErreurRecuperationContrat'));
-                console.error(error);
-            }
-        };
-
-        fetchContrats();
+        fetchSession(session)
     }, [userData.credentials.email, userData.role, t]);
 
     const signerContrat = async (event) => {
@@ -59,8 +58,8 @@ function SignerContrat() {
         try {
             const response = await fetch(`http://localhost:8081/contrat/signer-${userData.role.toLowerCase()}/${selectedContrat.uuid}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: mdp }),
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: mdp}),
             });
 
             const data = await response.json();
@@ -95,7 +94,7 @@ function SignerContrat() {
     };
 
     const messageErreur = (erreur) => {
-        setTimeout( () => {
+        setTimeout(() => {
             setError(erreur);
             setTimeout(() => setError(null), 5000);
         }, 200);
@@ -112,15 +111,17 @@ function SignerContrat() {
 
     const verificationSession = (data) => {
         console.log(data);
+        setSession(data.session);
+        fetchSession(data.session)
     }
 
 
     const updateContratSignStatus = () => {
         setSelectedContrat(prevContrat => {
             if (userData.role === 'EMPLOYEUR') {
-                return { ...prevContrat, employeurSigne: true };
+                return {...prevContrat, employeurSigne: true};
             } else if (userData.role === 'ETUDIANT') {
-                return { ...prevContrat, etudiantSigne: true };
+                return {...prevContrat, etudiantSigne: true};
             }
             return prevContrat;
         });
@@ -129,7 +130,8 @@ function SignerContrat() {
 
     return (
         <>
-            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} onSendData={verificationSession} /> : <EtudiantHeader userData={userData} onSendData={verificationSession} />}
+            {userData?.role === 'EMPLOYEUR' ? <EmployeurHeader userData={userData} onSendData={verificationSession}/> :
+                <EtudiantHeader userData={userData} onSendData={verificationSession}/>}
 
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
@@ -146,13 +148,15 @@ function SignerContrat() {
 
                             <div className="text-center mt-3">
                                 {selectedContrat.employeurSigne && userData.role === 'EMPLOYEUR' || selectedContrat.etudiantSigne && userData.role === 'ETUDIANT' ? (
-                                    <button onClick={() => setSelectedContrat(null)} className="btn btn-secondary mt-3 w-75">
+                                    <button onClick={() => setSelectedContrat(null)}
+                                            className="btn btn-secondary mt-3 w-75">
                                         {t('Retour')}
                                     </button>
                                 ) : (
                                     <>
                                         {error && <div className='alert alert-danger text-center'>{error}</div>}
-                                        <legend className="text-center text-danger mt-2"><i>{t('ChampsObligatoires')}</i></legend>
+                                        <legend className="text-center text-danger mt-2">
+                                            <i>{t('ChampsObligatoires')}</i></legend>
                                         <div className="row">
                                             <form className="mt-3 m-auto col-md-6 col-10" onSubmit={signerContrat}>
                                                 <div className="form-group">
@@ -168,8 +172,9 @@ function SignerContrat() {
                                                             value={mdp}
                                                             onChange={(e) => setMdp(e.target.value)}
                                                         />
-                                                        <span onClick={togglePasswordVisibility} className="icon-toggle align-content-center ps-1">
-                                                            <Icon icon={icon} size={30} />
+                                                        <span onClick={togglePasswordVisibility}
+                                                              className="icon-toggle align-content-center ps-1">
+                                                            <Icon icon={icon} size={30}/>
                                                         </span>
                                                     </div>
                                                 </div>

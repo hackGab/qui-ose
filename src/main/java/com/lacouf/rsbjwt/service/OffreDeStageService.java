@@ -36,7 +36,8 @@ public class OffreDeStageService {
                         offreDeStageDTO.getDateLimite(),
                         offreDeStageDTO.getData(),
                         offreDeStageDTO.getNbCandidats(),
-                        offreDeStageDTO.getStatus()
+                        offreDeStageDTO.getStatus(),
+                        offreDeStageDTO.getSession()
                 );
                 offreDeStage.setEmployeur(employeur);
                 OffreDeStage savedOffre = offreDeStageRepository.save(offreDeStage);

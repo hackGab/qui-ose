@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import AccueilGestionnaire from "../AccueilGestionnaire";
 import { BrowserRouter } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
@@ -75,4 +75,83 @@ describe("AccueilGestionnaire Notifications", () => {
 
         expect(global.fetch).toHaveBeenCalled();
     });
+
+    test("should not display notification when contratsAGenerer is not set", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                json: () => Promise.resolve(5)
+            })
+        );
+
+        render(<MockAccueilGestionnaire />);
+
+        const notifContrat = screen.queryByTestId('notif-contrat');
+        await waitFor(() => expect(notifContrat).not.toBeInTheDocument());
+    });
+
+
+    test("should display notification badge when contratsAGenerer > 0", async () => {
+        global.fetch = jest.fn((url) => {
+            if (url.includes('candidatures/all')) {
+                return Promise.resolve({
+                    json: () => Promise.resolve([{ id: 1 }, { id: 2 }])
+                });
+            }
+            if (url.includes('contrat/all')) {
+                return Promise.resolve({
+                    json: () => Promise.resolve([{ candidature: { id: 1 } }])
+                });
+            }
+            return Promise.reject(new Error("Unknown URL"));
+        });
+
+        await act(async () => {
+            render(<MockAccueilGestionnaire />);
+        });
+
+        await waitFor(() => {
+            const notifContrat = screen.getByTestId('notif-contrat');
+            expect(notifContrat).toBeInTheDocument();
+            expect(notifContrat).toHaveTextContent('1');
+        });
+    });
+
+
+    test("should handle errors gracefully", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.reject(new Error("Network Error"))
+        );
+
+        await act(async () => {
+            render(<MockAccueilGestionnaire />);
+        });
+
+        expect(global.fetch).toHaveBeenCalled();
+    });
+
+    test("should filter candidatsSansContrat correctly", async () => {
+        global.fetch = jest.fn((url) => {
+            if (url.includes('candidatures/all')) {
+                return Promise.resolve({
+                    json: () => Promise.resolve([{ id: 1 }, { id: 2 }])
+                });
+            }
+            if (url.includes('contrat/all')) {
+                return Promise.resolve({
+                    json: () => Promise.resolve([{ candidature: { id: 1 } }])
+                });
+            }
+            return Promise.reject(new Error("Unknown URL"));
+        });
+
+        await act(async () => {
+            render(<MockAccueilGestionnaire />);
+        });
+
+        await waitFor(() => {
+            const candidatsSansContrat = screen.getByTestId('notif-contrat');
+            expect(candidatsSansContrat).toHaveTextContent('1');
+        });
+    });
+
 });

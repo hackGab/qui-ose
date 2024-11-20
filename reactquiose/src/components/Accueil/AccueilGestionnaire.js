@@ -16,6 +16,7 @@ function AccueilGestionnaire() {
     console.log("AccueilGestionnaire userData: ", userData);
     const [cvAttentes, setCvAttentes] = useState(0);
     const [offresAttentes, setOffresAttentes] = useState(0);
+    const [contratsAGenerer, setContratsAGenerer] = useState(0);
 
     const sections = [
         { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
@@ -101,7 +102,7 @@ function AccueilGestionnaire() {
                 <button className="candidature-button position-relative" onClick={handleNavigateCandidatures}>
                     {t("Voir les Candidatures")}
                     {contratsAGenerer > 0 && (
-                        <div className="notification-badge-candidature position-absolute">
+                        <div className="notification-badge-candidature position-absolute" data-testid="notif-contrat" >
                             {contratsAGenerer}
                         </div>
                     )}

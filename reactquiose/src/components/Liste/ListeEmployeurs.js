@@ -5,7 +5,7 @@ import { FaEnvelope, FaPhone } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import GestionnaireHeader from "../Header/GestionnaireHeader";
 import '../../CSS/ListeEtudiants.css';
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 
 function ListeEmployeurs() {
     const { t } = useTranslation();

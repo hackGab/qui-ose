@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import '../../CSS/Header.css'
 import i18n from "i18next";
 import "../../CSS/BoutonLangue.css";
+import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
+import {calculateNextSessions} from "../../utils/methodes/dateUtils";
 
 function EmployeurHeader({ userData, onSendData}) {
     const { t } = useTranslation();
@@ -33,7 +35,7 @@ function EmployeurHeader({ userData, onSendData}) {
         }
         onSendData({ session: session });
         setAvailableSessions(hardCodedSessions);
-    }, [userData]]);
+    }, [userData]);
 
  const getUserLocalStorage = () => {
         const storedUserData = localStorage.getItem('userData');

@@ -30,6 +30,7 @@ function MesEntrevueAccepte() {
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
     const [evaluations, setEvaluations] = useState([]);
     const { t } = useTranslation();
+    const [session, setSession] = useState(getLocalStorageSession());
 
     const EvaluationConformiteOptions = [
         {label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD"},

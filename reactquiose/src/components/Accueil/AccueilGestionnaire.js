@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import etudiantImage from '../../images/Etudiant.png';
 import professeurImage from '../../images/Professeur.png';
 import employeurImage from '../../images/Employeur.png';
-import GestionnaireHeader from "./GestionnaireHeader";
+import GestionnaireHeader from "../Header/GestionnaireHeader";
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();

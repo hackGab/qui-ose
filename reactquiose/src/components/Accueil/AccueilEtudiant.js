@@ -4,6 +4,8 @@ import EtudiantHeader from "../Header/EtudiantHeader";
 import "../../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
 import ListeDeStage from "../Liste/ListeDeStage";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
+
 
 function AccueilEtudiant() {
     const location = useLocation();
@@ -17,6 +19,7 @@ function AccueilEtudiant() {
     const [rejectionMessage, setRejectionMessage] = useState("");
     const {t} = useTranslation();
     const [internships, setInternships] = useState([]);
+    const [session, setSession] = useState(getLocalStorageSession());
 
     useEffect(() => {
         console.log('userData:', userData);

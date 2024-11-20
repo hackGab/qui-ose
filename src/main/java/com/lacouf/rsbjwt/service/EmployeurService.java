@@ -40,8 +40,6 @@ public class EmployeurService {
             }
             String encodedPassword = encodePassword(credentials.getPassword());
 
-        try {
-            String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
             Employeur employeur = new Employeur(
                     employeurDTO.getFirstName(),
                     employeurDTO.getLastName(),
@@ -160,6 +158,83 @@ public class EmployeurService {
         }
     }
 
+    public Optional<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(String employeurEmail, String etudiantEmail, EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+        try {
+            Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
+                    .orElseThrow(() -> new Exception("Employeur non trouvé"));
+
+            Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
+                    .orElseThrow(() -> new Exception("Etudiant non trouvé"));
+
+            Optional<EvaluationStageEmployeur> evaluationExistante = evaluationStageEmployeurRepository
+                    .findByEmployeurAndEtudiant(employeurEntity, etudiantEntity);
+
+            evaluationExistante.ifPresent(evaluationStageEmployeurRepository::delete);
+
+            EvaluationStageEmployeur evaluationStageEmployeurEntity = new EvaluationStageEmployeur(
+                    employeurEntity,
+                    etudiantEntity,
+                    evaluationStageEmployeur.getNomEleve(),
+                    evaluationStageEmployeur.getProgrammeEtude(),
+                    evaluationStageEmployeur.getNomEntreprise(),
+                    evaluationStageEmployeur.getNomSuperviseur(),
+                    evaluationStageEmployeur.getFonction(),
+                    evaluationStageEmployeur.getTelephone(),
+                    evaluationStageEmployeur.getPlanifOrganiserTravail(),
+                    evaluationStageEmployeur.getComprendreDirectives(),
+                    evaluationStageEmployeur.getMaintenirRythmeTravail(),
+                    evaluationStageEmployeur.getEtablirPriorites(),
+                    evaluationStageEmployeur.getRespecterEcheanciers(),
+                    evaluationStageEmployeur.getCommentairesProductivite(),
+                    evaluationStageEmployeur.getRespecterMandats(),
+                    evaluationStageEmployeur.getAttentionAuxDetails(),
+                    evaluationStageEmployeur.getVerifierTravail(),
+                    evaluationStageEmployeur.getPerfectionnement(),
+                    evaluationStageEmployeur.getAnalyseProblemes(),
+                    evaluationStageEmployeur.getCommentairesQualiteTravail(),
+                    evaluationStageEmployeur.getEtablirContacts(),
+                    evaluationStageEmployeur.getContribuerTravailEquipe(),
+                    evaluationStageEmployeur.getAdapterCultureEntreprise(),
+                    evaluationStageEmployeur.getAccepterCritiques(),
+                    evaluationStageEmployeur.getRespectueux(),
+                    evaluationStageEmployeur.getEcouteActive(),
+                    evaluationStageEmployeur.getCommentairesRelationsInterpersonnelles(),
+                    evaluationStageEmployeur.getInteretMotivationTravail(),
+                    evaluationStageEmployeur.getExprimerIdees(),
+                    evaluationStageEmployeur.getInitiative(),
+                    evaluationStageEmployeur.getTravailSecuritaire(),
+                    evaluationStageEmployeur.getSensResponsabilite(),
+                    evaluationStageEmployeur.getPonctualiteAssiduite(),
+                    evaluationStageEmployeur.getHabiletePersonnelles(),
+                    evaluationStageEmployeur.getAppreciationGlobale(),
+                    evaluationStageEmployeur.getCommentairesAppreciation(),
+                    evaluationStageEmployeur.isEvaluationDiscuteeAvecStagiaire(),
+                    evaluationStageEmployeur.getHeuresEncadrementParSemaine(),
+                    evaluationStageEmployeur.getEntrepriseSouhaiteProchainStage(),
+                    evaluationStageEmployeur.getCommentairesFormationTechnique(),
+                    evaluationStageEmployeur.getSignatureEmployeur(),
+                    evaluationStageEmployeur.getDateSignature()
+            );
+
+            evaluationStageEmployeurRepository.save(evaluationStageEmployeurEntity);
+            return Optional.of(new EvaluationStageEmployeurDTO(evaluationStageEmployeurEntity));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<EvaluationStageEmployeurDTO> getEvaluationEtudiant(String employeurEmail, String etudiantEmail) {
+        Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
+                .orElseThrow(() -> new RuntimeException("Employeur non trouvé"));
+
+        Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+
+        return evaluationStageEmployeurRepository.findByEmployeurAndEtudiant(employeurEntity, etudiantEntity)
+                .map(EvaluationStageEmployeurDTO::new);
+    }
+
 
 
     private Employeur getEmployeurFromContrat(Contrat contrat) {
@@ -176,5 +251,11 @@ public class EmployeurService {
                         .map(ContratDTO::new)
                         .toList())
                 .orElse(Collections.emptyList());
+    }
+
+    public List<EvaluationStageEmployeurDTO> getAllEvaluations() {
+        return evaluationStageEmployeurRepository.findAll().stream()
+                .map(EvaluationStageEmployeurDTO::new)
+                .toList();
     }
 }

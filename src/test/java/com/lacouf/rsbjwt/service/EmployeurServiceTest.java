@@ -507,10 +507,11 @@ public class EmployeurServiceTest {
     @Test
     void getEntrevuesAccepteesParEmployeur_ShouldReturnEmptyListIfEmployeurNotFound() {
         String emailEmployeur = "nonexistent@example.com";
+        String session = "HIVER25";
 
         when(employeurRepository.findByCredentials_email(emailEmployeur)).thenReturn(Optional.empty());
 
-        List<EntrevueDTO> result = employeurService.getEntrevuesAccepteesParEmployeur(emailEmployeur);
+        List<EntrevueDTO> result = employeurService.getEntrevuesAccepteesParEmployeur(emailEmployeur,session);
 
         assertTrue(result.isEmpty());
     }
@@ -535,4 +536,4 @@ public class EmployeurServiceTest {
     }
 }
 
-}
+

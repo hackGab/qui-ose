@@ -176,6 +176,8 @@ class CandidatAccepterServiceTest {
     @Test
     void shouldReturnCandidaturesBySession() {
         // Arrange
+        String session = "HIVER25";
+
         Entrevue entrevue = new Entrevue();
         entrevue.setId(1L);
         CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
@@ -188,10 +190,10 @@ class CandidatAccepterServiceTest {
         entrevue2.setId(3L);
         CandidatAccepter candidatAccepter2 = new CandidatAccepter(entrevue2, true);
 
-        Mockito.when(candidatAccepterRepository.findAll()).thenReturn(List.of(candidatAccepter, candidatAccepter1, candidatAccepter2));
+        Mockito.when(candidatAccepterRepository.findByEntrevueSession(session)).thenReturn(List.of(candidatAccepter, candidatAccepter1, candidatAccepter2));
 
         // Act
-        Iterable<CandidatAccepterDTO> result = candidatAccepterService.getCandidaturesBySession("HIVER25");
+        Iterable<CandidatAccepterDTO> result = candidatAccepterService.getCandidaturesBySession(session);
 
         // Assert
         assertEquals(3, result.spliterator().getExactSizeIfKnown());

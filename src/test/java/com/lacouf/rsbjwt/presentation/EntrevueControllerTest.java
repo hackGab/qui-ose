@@ -103,11 +103,11 @@ public class EntrevueControllerTest {
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     public void shouldGetEntrevuesByEtudiant() throws Exception {
         List<EntrevueDTO> entrevues = List.of(new EntrevueDTO(), new EntrevueDTO());
-        Mockito.when(etudiantService.getEntrevuesByEtudiant(anyString()))
+        Mockito.when(etudiantService.getEntrevuesByEtudiantAndSession(anyString(), anyString()))
                 .thenReturn(entrevues);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/entrevues/etudiant/test@example.com")
+                        .get("/entrevues/etudiant/test@example.com/session/HIVER25")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -210,11 +210,11 @@ public class EntrevueControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldGetEntrevuesAccepteesParEmployeur() throws Exception {
         List<EntrevueDTO> entrevues = List.of(new EntrevueDTO());
-        Mockito.when(employeurService.getEntrevuesAccepteesParEmployeur(anyString()))
+        Mockito.when(employeurService.getEntrevuesAccepteesParEmployeur(anyString(), anyString()))
                 .thenReturn(entrevues);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/entrevues/acceptees/employeur/test@example.com")
+                        .get("/entrevues/acceptees/employeur/test@example.com/session/HIVER25")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())

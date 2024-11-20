@@ -255,17 +255,18 @@ class EtudiantServiceTest {
     @Test
     void shouldGetOffresApprouvees() {
         // Arrange
+        String session = "HIVER25";
         OffreDeStage offreDeStage = new OffreDeStage();
         offreDeStage.setStatus("Validé");
         offreDeStage.setEmployeur(employeur);
         List<OffreDeStage> offres = List.of(offreDeStage);
 
 
-        when(offreDeStageRepository.findAll()).thenReturn(offres);
+        when(offreDeStageRepository.findBySession(session)).thenReturn(offres);
 
 
         // Act
-        List<OffreDeStageDTO> response = etudiantService.getOffresApprouvees();
+        List<OffreDeStageDTO> response = etudiantService.getOffresApprouveesParSession(session);
 
         // Assert
         assertEquals(1, response.size());
@@ -506,12 +507,13 @@ class EtudiantServiceTest {
     @Test
     void shouldReturnEmptyListWhenNoApprovedOffres() {
         // Arrange
+        String session = "HIVER25";
         OffreDeStage offreDeStage = new OffreDeStage();
         offreDeStage.setStatus("Non validé");
         when(offreDeStageRepository.findAll()).thenReturn(List.of(offreDeStage));
 
         // Act
-        List<OffreDeStageDTO> response = etudiantService.getOffresApprouvees();
+        List<OffreDeStageDTO> response = etudiantService.getOffresApprouveesParSession(session);
 
         // Assert
         assertTrue(response.isEmpty());

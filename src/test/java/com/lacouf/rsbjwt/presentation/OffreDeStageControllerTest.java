@@ -153,12 +153,12 @@ public class OffreDeStageControllerTest {
         when(employeurService.findByCredentials_Email(any(String.class)))
                 .thenReturn(Optional.of(new Employeur()));
 
-        when(offreDeStageService.getOffresEmployeur(any(Employeur.class)))
-                .thenReturn(Optional.of(List.of(offreDeStageDTO, offreDeStageDTO2)));
+        when(offreDeStageService.getOffresEmployeurSession(any(Employeur.class), anyString()))
+                .thenReturn(List.of(offreDeStageDTO, offreDeStageDTO2));
 
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/offreDeStage/offresEmployeur/a@b.vom")
+                        .get("/offreDeStage/offresEmployeur/a@b.vom/session/HIV25")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -245,11 +245,11 @@ public class OffreDeStageControllerTest {
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     void getOffresValidees() throws Exception {
 
-        when(etudiantService.getOffresApprouvees())
+        when(etudiantService.getOffresApprouveesParSession(anyString()))
                 .thenReturn(List.of(new OffreDeStageDTO()));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/offreDeStage/offresValidees")
+                        .get("/offreDeStage/offresValidees/session/HIVER25")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -286,5 +286,20 @@ public class OffreDeStageControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    public void test_getOffresBySession() throws Exception {
+        String session = "HIVER25";
 
+        OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
+
+        when(offreDeStageService.getOffresBySession(session))
+                .thenReturn(List.of(offreDeStageDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/offreDeStage/session/" + session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

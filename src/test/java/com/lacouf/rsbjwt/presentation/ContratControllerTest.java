@@ -131,12 +131,13 @@ class ContratControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     void getContratEmployeur() throws Exception {
         String employeurEmail = "employeur@example.com";
+        String session = "HIVER25";
         ContratDTO contratDTO = createContratDTO();
 
-        when(employeurService.getContratEmployeur(employeurEmail)).thenReturn(List.of(contratDTO));
+        when(employeurService.getContratEmployeur(employeurEmail, session)).thenReturn(List.of(contratDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/contrat/getContrats-employeur/{employeurEmail}", employeurEmail)
+                        .get("/contrat/getContrats-employeur/{employeurEmail}/session/{session}", employeurEmail, session)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(List.of(contratDTO))));
@@ -146,12 +147,13 @@ class ContratControllerTest {
     @WithMockUser(username = "user", roles = {"ETUDIANT"})
     void getContratEtudiant() throws Exception {
         String etudiantEmail = "etudiant@example.com";
+        String session = "HIVER25";
         ContratDTO contratDTO = createContratDTO();
 
-        when(etudiantService.getContratsByEtudiant(etudiantEmail)).thenReturn(List.of(contratDTO));
+        when(etudiantService.getContratsByEtudiantAndSession(etudiantEmail, session)).thenReturn(List.of(contratDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/contrat/getContrats-etudiant/{etudiantEmail}", etudiantEmail)
+                        .get("/contrat/getContrats-etudiant/{etudiantEmail}/session/{session}", etudiantEmail, session)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(List.of(contratDTO))));
@@ -327,5 +329,20 @@ class ContratControllerTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    public void getContratsBySession() throws Exception {
+        String session = "HIVER25";
+        ContratDTO contratDTO = createContratDTO();
+
+        when(gestionnaireService.getContratsBySession(session)).thenReturn(List.of(contratDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/contrat/session/{session}", session)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(List.of(contratDTO))));
     }
 }

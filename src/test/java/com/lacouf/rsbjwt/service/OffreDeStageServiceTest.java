@@ -144,6 +144,8 @@ public class OffreDeStageServiceTest {
 
         List<OffreDeStage> offresList = List.of(offreDeStage);
 
+        String session = "HIVER25";
+
 
         Employeur employeurEntity = new Employeur();
         employeurEntity.setId(1L);
@@ -151,39 +153,21 @@ public class OffreDeStageServiceTest {
         employeurEntity.setLastName("Doe");
         employeurEntity.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
 
-        when(offreDeStageRepository.findByEmployeur(employeurEntity)).thenReturn(offresList);
+        when(offreDeStageRepository.findByEmployeurAndSession(employeurEntity, session)).thenReturn(offresList);
 
         // Act
-        Optional<List<OffreDeStageDTO>> response = offreDeStageService.getOffresEmployeur(employeurEntity);
+        List<OffreDeStageDTO> response = offreDeStageService.getOffresEmployeurSession(employeurEntity, session);
 
         // Assert
-        assertTrue(response.isPresent());
-        assertEquals(1, response.get().size());
+        assertEquals(1, response.size());
 
-        OffreDeStageDTO returnedOffre = response.get().getFirst();
+        OffreDeStageDTO returnedOffre = response.getFirst();
         assertEquals(offreDeStage.getTitre(), returnedOffre.getTitre());
         assertEquals(offreDeStage.getLocalisation(), returnedOffre.getLocalisation());
         assertEquals(offreDeStage.getDateLimite(), returnedOffre.getDateLimite());
         assertEquals(offreDeStage.getData(), returnedOffre.getData());
         assertEquals(offreDeStage.getNbCandidats(), returnedOffre.getNbCandidats());
         assertEquals(offreDeStage.getStatus(), returnedOffre.getStatus());
-    }
-
-    @Test
-    void getOffresEmployeur_ShouldThrowException_WhenEmployeurEmailIsNull() {
-        // Arrange
-        Employeur employeurEntity = new Employeur();
-        employeurEntity.setId(1L);
-        employeurEntity.setFirstName("John");
-        employeurEntity.setLastName("Doe");
-        employeurEntity.setPhoneNumber("1234567890");
-        employeurEntity.setEntreprise("Tech Company");
-
-        Credentials credentials = new Credentials("", "password", Role.EMPLOYEUR);
-        employeurEntity.setCredentials(credentials);
-
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> offreDeStageService.getOffresEmployeur(employeurEntity));
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -147,5 +148,31 @@ class CandidatAccepterServiceTest {
         assertTrue(result.iterator().hasNext());
         assertEquals(1L, result.iterator().next().getEntrevueId());
 
+    }
+
+    @Test
+    void shouldReturnCandidaturesBySession() {
+        // Arrange
+        Entrevue entrevue = new Entrevue();
+        entrevue.setId(1L);
+        CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
+
+        Entrevue entrevue1 = new Entrevue();
+        entrevue1.setId(2L);
+        CandidatAccepter candidatAccepter1 = new CandidatAccepter(entrevue1, false);
+
+        Entrevue entrevue2 = new Entrevue();
+        entrevue2.setId(3L);
+        CandidatAccepter candidatAccepter2 = new CandidatAccepter(entrevue2, true);
+
+        Mockito.when(candidatAccepterRepository.findAll()).thenReturn(List.of(candidatAccepter, candidatAccepter1, candidatAccepter2));
+
+        // Act
+        Iterable<CandidatAccepterDTO> result = candidatAccepterService.getCandidaturesBySession("HIVER25");
+
+        // Assert
+        assertEquals(3, result.spliterator().getExactSizeIfKnown());
+        assertTrue(result.iterator().hasNext());
+        assertEquals(1L, result.iterator().next().getEntrevueId());
     }
 }

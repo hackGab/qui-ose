@@ -123,26 +123,6 @@ public class EmployeurService {
                 .toList();
     }
 
-//    public Optional<EntrevueDTO> accepterCandidature(Long entrevueId) {
-//        return entrevueRepository.findById(entrevueId)
-//                .map(entrevue -> {
-//                    entrevue.accepterEntrevue();
-//                    entrevueRepository.save(entrevue);
-//                    return new EntrevueDTO(entrevue);
-//                });
-//    }
-//
-//    public Optional<EntrevueDTO> refuserCandidature(Long entrevueId) {
-//        return entrevueRepository.findById(entrevueId)
-//                .map(entrevue -> {
-//                    entrevue.refuserEntrevue();
-//                    entrevueRepository.save(entrevue);
-//                    return new EntrevueDTO(entrevue);
-//                });
-//    }
-
-
-
     public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur, String session) {
         Optional<Employeur> employeurOpt = employeurRepository.findByCredentials_email(emailEmployeur);
 

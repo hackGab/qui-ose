@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -124,5 +125,20 @@ public class CandidatAccepterControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
+    public void shouldGetAllCandidaturesFromSession() throws Exception {
+        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
+        Mockito.when(candidatAccepterService.getCandidaturesBySession("HIVER25"))
+                .thenReturn(List.of(candidatAccepterDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/candidatures/session/HIVER25")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(List.of(candidatAccepterDTO))));
     }
 }

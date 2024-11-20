@@ -104,32 +104,15 @@ public class OffreDeStageController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Iterable<OffreDeStageDTO>> getAllOffresDeStage() {
-        return ResponseEntity.ok(offreDeStageService.getAllOffresDeStage());
-    }
-
     @GetMapping("/session/{session}")
     public ResponseEntity<List<OffreDeStageDTO>> getOffresBySession(@PathVariable String session) {
         if (session == null || session.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-
         List<OffreDeStageDTO> offresBySession = offreDeStageService.getOffresBySession(session);
 
         return ResponseEntity.ok().body(offresBySession);
-    }
-
-    @GetMapping("/annee/{annee}")
-    public ResponseEntity<List<OffreDeStageDTO>> getOffresByAnnee(@PathVariable String annee) {
-        if (annee == null || annee.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        List<OffreDeStageDTO> offresByAnnee = offreDeStageService.getOffresByAnnee(annee);
-
-        return ResponseEntity.ok().body(offresByAnnee);
     }
 
     @GetMapping("/offresValidees/session/{session}")

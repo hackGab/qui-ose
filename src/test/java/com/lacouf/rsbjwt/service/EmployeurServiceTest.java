@@ -418,6 +418,7 @@ public class EmployeurServiceTest {
     void shouldReturnContratsForEmployeur() {
         // Arrange
         String emailEmployeur = "email@gmail.com";
+        String session = "HIVER25";
         Employeur employeur = new Employeur("John", "Doe", emailEmployeur, "password", "123456789", "Entreprise");
 
         OffreDeStage offreDeStage = new OffreDeStage();
@@ -435,10 +436,35 @@ public class EmployeurServiceTest {
         List<Contrat> contrats = List.of(contrat);
 
         when(employeurRepository.findByCredentials_email(emailEmployeur)).thenReturn(Optional.of(employeur));
-        when(contratRepository.findContratsByEmployeur(employeur)).thenReturn(contrats);
+        when(contratRepository.findByEmployeurAndSession(employeur, session)).thenReturn(contrats);
 
         // Act
-        List<ContratDTO> response = employeurService.getContratEmployeur(emailEmployeur);
+        List<ContratDTO> response = employeurService.getContratEmployeur(emailEmployeur, session);
+
+        // Assert
+        assertEquals(1, response.size());
+    }
+
+    @Test
+    void shouldReturnEntrevuesByOffreDeStage() {
+        // Arrange
+        OffreDeStage offreDeStage = new OffreDeStage();
+        offreDeStage.setId(1L);
+        offreDeStage.setTitre("Stage en développement");
+        offreDeStage.setLocalisation("Paris");
+        offreDeStage.setDateLimite(LocalDate.now().plusDays(30));
+        offreDeStage.setData("Description du stage");
+        offreDeStage.setNbCandidats(10);
+        offreDeStage.setStatus("Ouvert");
+        offreDeStage.setEmployeur(employeurEntity);
+
+        Entrevue entrevue = new Entrevue(LocalDateTime.now(), "Lachine", "En attente", etudiantEntity, offreDeStage);
+        entrevue.setId(1L);
+
+        when(entrevueRepository.findByOffreDeStageId(1L)).thenReturn(List.of(entrevue));
+
+        // Act
+        List<EntrevueDTO> response = employeurService.getEntrevuesByOffre(1L);
 
         // Assert
         assertEquals(1, response.size());
@@ -507,4 +533,6 @@ public class EmployeurServiceTest {
         // Assert
         assertTrue(response.isPresent());
     }
+}
+
 }

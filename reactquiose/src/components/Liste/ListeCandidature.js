@@ -319,7 +319,7 @@ function ListeCandidature() {
             <GestionnaireHeader onSendData={verifificationFiltre} style={{ marginBottom: '50px' }} />
             <div className="container-fluid p-4 page-liste-candidature">
                 <div className="container text-center">
-                    <h1 className="mb-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
+                    <h1 className="mb-4 display-4">{t('ListeCandidaturesEtDetailsEntrevue')}</h1>
 
                     <If condition={candidatures.length === 0}>
                         <Then>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
-import ProfesseurHeader from "./ProfesseurHeader";
+import ProfesseurHeader from "../Header/ProfesseurHeader";
 import {useTranslation} from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -173,7 +173,6 @@ function AccueilProfesseur() {
             console.error("Erreur lors de la génération du PDF :", error);
         }
     };
-
 
     return (
         <>

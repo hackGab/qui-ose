@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/MesEntrevues.css';
-import EtudiantHeader from "./EtudiantHeader";
+import EtudiantHeader from "./Header/EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
 import i18n from "i18next";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";

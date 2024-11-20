@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
-import {useTranslation} from "react-i18next";
-import EmployeurHeader from "./EmployeurHeader";
-
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import EmployeurHeader from "./Header/EmployeurHeader";
 function UpdateOffre() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -75,6 +74,13 @@ function UpdateOffre() {
     };
 
     const sendUpdateRequest = async (formData) => {
+        console.log(formData.get("titre"));
+        console.log(formData.get("localisation"));
+        console.log(formData.get("nbCandidats"));
+        console.log(formData.get("status"));
+        console.log(formData.get("dateLimite"));
+        console.log(formData);
+
         const data = {
             id: offre.id,
             titre: formData.get("titre"),
@@ -102,7 +108,7 @@ function UpdateOffre() {
             });
 
             if (response.ok) {
-                navigate("/visualiser-offres", {state: {employeurEmail}});
+                navigate("/visualiser-offres", { state: { employeurEmail } });
             } else {
                 console.error("Erreur lors de la mise à jour de l'offre");
             }

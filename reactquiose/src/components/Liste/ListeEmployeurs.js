@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link} from 'react-router-dom';
-import {FaEnvelope, FaPhone} from 'react-icons/fa';
-import {useTranslation} from 'react-i18next';
-import GestionnaireHeader from "./GestionnaireHeader";
-import '../CSS/ListeEtudiants.css';
+import { Link } from 'react-router-dom';
+import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
+import '../../CSS/ListeEtudiants.css';
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function ListeEmployeurs() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [employeurs, setEmployeurs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [offres, setOffres] = useState([]);
@@ -97,28 +97,7 @@ function ListeEmployeurs() {
 
     return (
         <>
-            <GestionnaireHeader onSendData={verifificationSession}/>
-            {/*<label htmlFor="session" >{t('FilterBySession')}</label>*/}
-            {/*<select*/}
-            {/*    id="sessionSelect"*/}
-            {/*    style={{ fontSize: '1.25em', padding: '0.5em 1em', borderRadius: '4px' }}*/}
-            {/*    value={selectedSession}*/}
-            {/*    onChange={(e) => setSelectedSession(e.target.value)}*/}
-            {/*>*/}
-            {/*    {Array.from(new Set(employeurs.map(offre => offre.session))).map((session, index) => {*/}
-            {/*        const sessionText = session.slice(0, -2); // Extraire la partie texte, ex : HIVER*/}
-            {/*        const sessionYear = session.slice(-2); // Extraire l'année, ex : 25*/}
-
-            {/*        // Traduire la partie texte en utilisant i18n*/}
-            {/*        const translatedSession = t(sessionText);*/}
-
-            {/*        return (*/}
-            {/*            <option key={index} value={session}>*/}
-            {/*                {translatedSession} {sessionYear}*/}
-            {/*            </option>*/}
-            {/*        );*/}
-            {/*    })}*/}
-            {/*</select>*/}
+            <GestionnaireHeader/>
             <div className="container-fluid p-4">
                 <div className="container flex-grow-1 pt-5 mt-5">
                     <h1 className="mb-4 text-center">{t('employerListTitle')}</h1>
@@ -141,6 +120,11 @@ function ListeEmployeurs() {
 
                                         <div
                                             className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                            {status && (
+                                                <span className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                    {t(status)}
+                                                </span>
+                                            )}
                                             <div className="card-body">
                                                 <h5 className="card-title">{offreDeStage.employeur.entreprise + " - " + offreDeStage.titre}</h5>
                                                 <p className="card-text">

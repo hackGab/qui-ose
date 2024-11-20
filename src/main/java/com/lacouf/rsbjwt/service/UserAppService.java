@@ -25,8 +25,9 @@ public class UserAppService {
     private final ProfesseurRepository professeurRepository;
     private final EmployeurRepository employeurRepository;
     private final GestionnaireRepository gestionnaireRepository;
+    private final NotificationRepository notificationRepository;
 
-    public UserAppService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, ProfesseurRepository professeurRepository, EmployeurRepository employeurRepository, GestionnaireRepository gestionnaireRepository) {
+    public UserAppService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserAppRepository userAppRepository, EtudiantRepository etudiantRepository, ProfesseurRepository professeurRepository, EmployeurRepository employeurRepository, GestionnaireRepository gestionnaireRepository, NotificationRepository notificationRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userAppRepository = userAppRepository;
@@ -34,6 +35,7 @@ public class UserAppService {
         this.professeurRepository = professeurRepository;
         this.employeurRepository = employeurRepository;
         this.gestionnaireRepository = gestionnaireRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public String authenticateUser(LoginDTO loginDto) {
@@ -124,27 +126,22 @@ public class UserAppService {
                 });
     }
 
-
-
-
     public List<String> getAllDepartementDisplayNames() {
         List<String> departementDisplayNames = Arrays.stream(Departement.values())
                 .map(Departement::getDisplayName)
                 .toList();
-        System.out.println("Départements disponibles : " + departementDisplayNames); // Debug print
+        System.out.println("Départements disponibles : " + departementDisplayNames);
         return departementDisplayNames;
     }
 
     public List<String> getAllDepartements() {
         List<String> departementValues = Arrays.stream(Departement.values())
-                .map(Departement::name) // Get the enum value (e.g., TECHNIQUES_INFORMATIQUE)
+                .map(Departement::name)
                 .toList();
 
-        System.out.println("Départements disponibles : " + departementValues); // Debug print
+        System.out.println("Départements disponibles : " + departementValues);
         return departementValues;
     }
-
-
 
     public List<EtudiantDTO> getEtudiantsByDepartement(String departement) {
         System.out.println("Fetching students for department: " + departement);
@@ -154,6 +151,8 @@ public class UserAppService {
         System.out.println("Students found: " + etudiants);
         return etudiants;
     }
+
+
 
 
 }

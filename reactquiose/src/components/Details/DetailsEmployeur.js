@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useLocation, useParams} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/DetailsEtudiants.css';
-import GestionnaireHeader from "./GestionnaireHeader";
+import '../../CSS/DetailsEtudiants.css';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
 import React, {useState} from "react";
 
 function DetailsEmployeurs() {
@@ -61,6 +61,9 @@ function DetailsEmployeurs() {
         return <div>{t('offreNotFound')}</div>;
     }
 
+    const isOffreValidated = offre.status === 'Validé';
+    const isOffreRejected = offre.status === 'Rejeté';
+
     return (
         <>
             <GestionnaireHeader onSendData={verifificationSession}/>
@@ -97,14 +100,16 @@ function DetailsEmployeurs() {
                             <h5>{t('actions')}</h5>
                             <div className="btn-group-vertical w-100">
                                 <button
-                                    className={`btn ${selectedStatus === 'Validé' ? 'btn-success' : 'btn-gray'} mb-2`}
+                                    className={`btn ${selectedStatus === 'Validé' ? 'btn-secondary' : 'btn-success'} mb-2`}
                                     onClick={() => handleStatusSelect('Validé')}
+                                    disabled={isOffreValidated}
                                 >
                                     {t('validate')}
                                 </button>
                                 <button
-                                    className={`btn ${selectedStatus === 'Rejeté' ? 'btn-danger' : 'btn-gray'} mb-2`}
+                                    className={`btn ${selectedStatus === 'Rejeté' ? 'btn-secondary' : 'btn-danger'} mb-2`}
                                     onClick={() => handleStatusSelect('Rejeté')}
+                                    disabled={isOffreRejected}
                                 >
                                     {t('reject')}
                                 </button>

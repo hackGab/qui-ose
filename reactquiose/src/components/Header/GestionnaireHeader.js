@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useLocation} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
-import '../CSS/Header.css';
-import logo from '../images/logo.png';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import '../../CSS/Header.css'
+import logo from '../../images/logo.png';
 import i18n from "i18next";
-import "../CSS/BoutonLangue.css";
-import {calculateNextSessions} from '../utils/methodes/dateUtils';
-import {hardCodedSessions} from "../utils/variables/hardCodedSessions";
+import "../../CSS/BoutonLangue.css";
 
 function GestionnaireHeader({onSendData}) {
     const {t} = useTranslation();
@@ -62,7 +60,7 @@ function GestionnaireHeader({onSendData}) {
         <header className="gestionnaire-header">
             <nav className="navbar">
                 <div className="logo">
-                    <img src={logo} alt="Logo" className="header-logo"/>
+                    <img src={logo} alt="Logo" className="header-logo" />
                     <Link to="/accueilGestionnaire" className="logo-link">
                         <div className="logo-text">Qui-Ose</div>
                     </Link>
@@ -109,22 +107,20 @@ function GestionnaireHeader({onSendData}) {
                     </div>
                 </div>
                 <div className="profile-menu">
-                    <div className="notification-icon">🕭</div>
-                    <div
-                        className="profile-button"
-                        onClick={toggleProfileMenu}
-                    >
+                    <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
-                        <div className="profile-dropdown">
+                        <div className="dropdown profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')}
-                                  className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')}
-                                  className="language-button dropdown-link">{t('Français')}</Link>
+                            <button onClick={() => changeLanguage('en')}
+                                    className="language-button dropdown-link text-left">{t('Anglais')}
+                            </button>
+                            <button onClick={() => changeLanguage('fr')}
+                                    className="language-button dropdown-link text-left">{t('Francais')}
+                            </button>
                         </div>
                     )}
                 </div>

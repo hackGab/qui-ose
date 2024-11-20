@@ -1,4 +1,4 @@
-import logo from "../images/logo.png";
+import logo from "../../images/logo.png";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useState} from "react";
 import {changeLanguage} from "i18next";
@@ -27,23 +27,22 @@ function ProfesseurHeader({userData}) {
 
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
-                    <div
-                        className="profile-button"
-                        onClick={toggleProfileMenu}
-                    >
+                    <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
-                        <div className="profile-dropdown">
+                        <div className="dropdown profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                            <button onClick={() => changeLanguage('en')}
+                                    className="language-button dropdown-link text-left no-underline">
                                 {t('Anglais')}
-                            </Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                            </button>
+                            <button onClick={() => changeLanguage('fr')}
+                                    className="language-button dropdown-link text-left no-underline">
                                 {t('Francais')}
-                            </Link>
+                            </button>
                         </div>
                     )}
                 </div>

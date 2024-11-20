@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Modal, Button } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
 import axios from "axios";
-import "../CSS/ListeDeStage.css";
+import "../../CSS/ListeDeStage.css";
 
 
 function ListeDeStage({ internships = [], userData }) {

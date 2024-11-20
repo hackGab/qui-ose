@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import logo from '../images/logo.png';
+import React, {useEffect, useState } from 'react';
+import logo from '../../images/logo.png';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../CSS/Header.css'
+import '../../CSS/Header.css'
 import i18n from "i18next";
-import "../CSS/BoutonLangue.css";
-import {calculateNextSessions} from "../utils/methodes/dateUtils";
-import {hardCodedSessions} from "../utils/variables/hardCodedSessions";
+import "../../CSS/BoutonLangue.css";
 
 function EmployeurHeader({ userData, onSendData}) {
     const { t } = useTranslation();
@@ -21,6 +19,8 @@ function EmployeurHeader({ userData, onSendData}) {
         return localStorage.getItem('session') || initialSession;
     });
 
+    const [userDataState, setUserData] = useState(null);
+
     const sendData = (key, value) => {
         onSendData({
             [key]: value
@@ -28,17 +28,26 @@ function EmployeurHeader({ userData, onSendData}) {
     };
 
     useEffect(() => {
+	if (userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
         onSendData({ session: session });
         setAvailableSessions(hardCodedSessions);
-    }, []);
+    }, [userData]]);
+
+ const getUserLocalStorage = () => {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+            setUserData(JSON.parse(storedUserData));
+            userData = userDataState
+        }
+    };
 
     const handleSessionChange = (newSession) => {
         setSession(newSession);
         localStorage.setItem('session', newSession);
         sendData("session", newSession);
     };
-
-
 
     const handleClickLogo = () => {
         if (userData) {
@@ -59,6 +68,7 @@ function EmployeurHeader({ userData, onSendData}) {
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
+        getUserLocalStorage();
     };
 
     return (
@@ -91,7 +101,7 @@ function EmployeurHeader({ userData, onSendData}) {
                     <span
                         className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
                         onClick={() => handleLinkClick('/signerContrat')}
-                    >
+                        >
                         {t('SignerContrat')}
                     </span>
 
@@ -110,21 +120,20 @@ function EmployeurHeader({ userData, onSendData}) {
 
                 <div className="profile-menu">
                     <div className="notification-icon">🕭</div>
-                    <div
-                        className="profile-button"
-                        onClick={toggleProfileMenu}
-                    >
+                    <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼
                     </div>
                     {profileMenuOpen && (
-                        <div className="profile-dropdown">
+                        <div className="dropdown profile-dropdown">
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/logout">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')}
-                                  className="language-button dropdown-link">{t('Anglais')}</Link>
-                            <Link onClick={() => changeLanguage('fr')}
-                                  className="language-button dropdown-link">{t('Francais')}</Link>
+                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
+                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                                {t('Anglais')}
+                            </Link>
+                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                                {t('Francais')}
+                            </Link>
                         </div>
                     )}
                 </div>

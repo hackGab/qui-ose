@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation,useNavigate, Link } from "react-router-dom";
 import "../CSS/VisualiserOffres.css";
-import EmployeurHeader from "./EmployeurHeader";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {useTranslation} from "react-i18next";
+import EmployeurHeader from "./Header/EmployeurHeader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 import {calculateNextSessions} from "../utils/methodes/dateUtils";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+
+
 
 function VisualiserOffres() {
     const location = useLocation();
@@ -79,8 +82,7 @@ function VisualiserOffres() {
 
     const getNbCandidats = (offre) => {
         return nbCandidats[offres.findIndex(item => item.id === offre.id)];
-    };
-
+    }
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -107,7 +109,6 @@ function VisualiserOffres() {
             `<iframe src="${data}" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
         );
     };
-
 
     const deleteOffre = async (id) => {
         const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette offre ?");

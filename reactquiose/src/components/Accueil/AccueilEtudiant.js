@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import EtudiantHeader from "./EtudiantHeader";
-import "../CSS/AccueilEtudiant.css";
+import EtudiantHeader from "../Header/EtudiantHeader";
+import "../../CSS/AccueilEtudiant.css";
 import {useTranslation} from "react-i18next";
-import ListeDeStage from "./ListeDeStage";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import ListeDeStage from "../Liste/ListeDeStage";
 
 function AccueilEtudiant() {
     const location = useLocation();
@@ -18,7 +17,6 @@ function AccueilEtudiant() {
     const [rejectionMessage, setRejectionMessage] = useState("");
     const {t} = useTranslation();
     const [internships, setInternships] = useState([]);
-    const [session, setSession] = useState(getLocalStorageSession() || "");
 
     useEffect(() => {
         console.log('userData:', userData);
@@ -46,6 +44,7 @@ function AccueilEtudiant() {
                             setRejectionMessage("");
                         }
 
+                        // Vérifiez si le statut est valide
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');

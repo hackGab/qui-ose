@@ -1,17 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {Modal, Button} from "react-bootstrap";
-import {Tooltip} from 'react-tooltip';
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Modal, Button } from "react-bootstrap";
+import { Tooltip } from 'react-tooltip';
 import axios from "axios";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "../CSS/ListeDeStage.css";
-import EtudiantHeader from "./EtudiantHeader";
+import EtudiantHeader from "./Header/EtudiantHeader";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
-
 function StagesAppliquees() {
     const location = useLocation();
     const user = location.state?.userData;
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [showModal, setShowModal] = useState(false);
     const [stagesAppliquees, setStagesAppliquees] = useState([]);
     const [selectedInternship, setSelectedInternship] = useState(null);
@@ -19,7 +18,6 @@ function StagesAppliquees() {
     const [session, setSession] = useState(getLocalStorageSession());
 
     useEffect(() => {
-
         if (user) {
             const url = `http://localhost:8081/etudiant/credentials/${user.credentials.email}`;
 
@@ -44,13 +42,13 @@ function StagesAppliquees() {
                                 try {
                                     const response = await axios.get(`https://api.unsplash.com/search/photos?query=${stage.localisation}&client_id=${apiKey}`);
                                     if (response.data.results.length > 0) {
-                                        return {...stage, imageUrl: response.data.results[0].urls.regular};
+                                        return { ...stage, imageUrl: response.data.results[0].urls.regular };
                                     } else {
-                                        return {...stage, imageUrl: ''};
+                                        return { ...stage, imageUrl: '' };
                                     }
                                 } catch (error) {
                                     console.error('Erreur lors de la récupération de l’image :', error);
-                                    return {...stage, imageUrl: ''};
+                                    return { ...stage, imageUrl: '' };
                                 }
                             }));
                             setStagesWithImages(updatedStages);
@@ -180,7 +178,6 @@ function StagesAppliquees() {
                         </div>
                     )}
                 </div>
-
 
                 <Modal show={showModal} onHide={handleCloseModal} centered>
                     <Modal.Header closeButton>

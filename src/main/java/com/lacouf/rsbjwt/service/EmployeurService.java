@@ -2,9 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
-import com.lacouf.rsbjwt.service.dto.ContratDTO;
-import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
-import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +15,13 @@ public class EmployeurService {
     private final EntrevueRepository entrevueRepository;
     private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
+    private final EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
 
     private final ContratRepository contratRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository, UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository, EvaluationStageEmployeurRepository evaluationStageEmployeurRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
@@ -30,9 +29,16 @@ public class EmployeurService {
         this.offreDeStageRepository = offreDeStageRepository;
         this.etudiantRepository = etudiantRepository;
         this.contratRepository = contratRepository;
+        this.evaluationStageEmployeurRepository = evaluationStageEmployeurRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
+        try {
+            CredentialDTO credentials = employeurDTO.getCredentials();
+            if (credentials == null) {
+                return Optional.empty();
+            }
+            String encodedPassword = encodePassword(credentials.getPassword());
 
         try {
             String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
@@ -49,6 +55,10 @@ public class EmployeurService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     public Optional<EmployeurDTO> getEmployeurById(Long id) {

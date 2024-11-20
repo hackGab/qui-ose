@@ -16,13 +16,6 @@ import java.util.Optional;
 
 @Repository
 public interface ContratRepository extends JpaRepository<Contrat, Long> {
-    @Query("SELECT c FROM Contrat c " +
-            "JOIN c.candidature candidature " +
-            "JOIN candidature.entrevue entrevue " +
-            "JOIN entrevue.offreDeStage offreDeStage " +
-            "JOIN offreDeStage.employeur employeur " +
-            "WHERE employeur = :employeur")
-    List<Contrat> findContratsByEmployeur(@Param("employeur") Employeur employeur);
 
     @Query("SELECT c FROM Contrat c " +
             "JOIN c.candidature candidature " +

@@ -8,6 +8,7 @@ import i18n from "i18next";
 import {FaCross, FaTimes} from "react-icons/fa";
 import {calculateNextSessions} from "../../utils/methodes/dateUtils";
 import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
+import {Button} from "react-bootstrap";
 
 
 function translateTimeAgo(time, unit) {
@@ -291,12 +292,12 @@ function EtudiantHeader({ userData ,onSendData}) {
                             <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
                             <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
+                            <button onClick={() => changeLanguage('en')} className="language-button dropdown-link">
                                 {t('Anglais')}
-                            </Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
+                            </button>
+                            <button onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
                                 {t('Francais')}
-                            </Link>
+                            </button>
                         </div>
                     )}
                 </div>

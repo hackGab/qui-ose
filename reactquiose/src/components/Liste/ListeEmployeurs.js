@@ -65,7 +65,7 @@ function ListeEmployeurs() {
 
                     <div className="row">
                         {employeurs.map((offreDeStage) => {
-                            const status = offreDeStage ? offreDeStage.status : null; // Vérification si l'offre existe
+                            const status = offreDeStage ? offreDeStage.status : null;
                             return (
                                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
                                     <Link

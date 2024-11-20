@@ -126,27 +126,22 @@ public class UserAppService {
                 });
     }
 
-
-
-
     public List<String> getAllDepartementDisplayNames() {
         List<String> departementDisplayNames = Arrays.stream(Departement.values())
                 .map(Departement::getDisplayName)
                 .toList();
-        System.out.println("Départements disponibles : " + departementDisplayNames); // Debug print
+        System.out.println("Départements disponibles : " + departementDisplayNames);
         return departementDisplayNames;
     }
 
     public List<String> getAllDepartements() {
         List<String> departementValues = Arrays.stream(Departement.values())
-                .map(Departement::name) // Get the enum value (e.g., TECHNIQUES_INFORMATIQUE)
+                .map(Departement::name)
                 .toList();
 
-        System.out.println("Départements disponibles : " + departementValues); // Debug print
+        System.out.println("Départements disponibles : " + departementValues);
         return departementValues;
     }
-
-
 
     public List<EtudiantDTO> getEtudiantsByDepartement(String departement) {
         System.out.println("Fetching students for department: " + departement);

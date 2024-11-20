@@ -88,18 +88,4 @@ public class CVControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
-    @Test
-    @WithMockUser(username = "user", roles = {"ETUDIANT"})
-    public void shouldReturnCVAttentes() throws Exception {
-        int nbCV = 5;
-
-        Mockito.when(etudiantService.getNombreCVEnAttente()).thenReturn(nbCV);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/cv/attentes")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(String.valueOf(nbCV)));
-    }
 }

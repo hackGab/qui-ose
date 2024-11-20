@@ -33,7 +33,7 @@ describe("AccueilGestionnaire Notifications", () => {
         global.fetch.mockClear();
     });
 
-    test("should display notification badge when cvAttentes > 0", async () => {
+    test("should display notification badge when cvAttentes and offreDeStageAttent > 0", async () => {
         global.fetch = jest.fn(() =>
             Promise.resolve({
                 json: () => Promise.resolve(5)
@@ -42,9 +42,13 @@ describe("AccueilGestionnaire Notifications", () => {
 
         render(<MockAccueilGestionnaire />);
 
-        const notificationBadge = await screen.findByText('5');
+        const notificationBadges = await screen.findAllByText('5');
+        expect(notificationBadges.length).toBeGreaterThan(0);
+
+        const notificationBadge = notificationBadges[0];
         expect(notificationBadge).toBeInTheDocument();
     });
+
 
     test("should not display notification badge when cvAttentes = 0", async () => {
         global.fetch = jest.fn(() =>
@@ -55,6 +59,7 @@ describe("AccueilGestionnaire Notifications", () => {
 
         render(<MockAccueilGestionnaire />);
 
+        // Check that no notification badge is displayed
         const notificationBadge = screen.queryByText('0');
         expect(notificationBadge).not.toBeInTheDocument();
     });

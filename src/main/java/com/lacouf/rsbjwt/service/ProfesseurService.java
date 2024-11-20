@@ -4,6 +4,7 @@ import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.EtudiantRepository;
 import com.lacouf.rsbjwt.repository.EvaluationStageProfRepository;
 import com.lacouf.rsbjwt.repository.ProfesseurRepository;
+import com.lacouf.rsbjwt.service.dto.CredentialDTO;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.EvaluationStageProfDTO;
 import com.lacouf.rsbjwt.service.dto.ProfesseurDTO;
@@ -32,7 +33,8 @@ public class ProfesseurService {
 
     public Optional<ProfesseurDTO> creerProfesseur(ProfesseurDTO professeurDTO) {
         try {
-            String encodedPassword = passwordEncoder.encode(professeurDTO.getCredentials().getPassword());
+            CredentialDTO credentialDTO = professeurDTO.getCredentials();
+            String encodedPassword = encodePassword(credentialDTO.getPassword());
             Professeur professeur = new Professeur(
                     professeurDTO.getFirstName(),
                     professeurDTO.getLastName(),
@@ -46,6 +48,10 @@ public class ProfesseurService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     public Optional<ProfesseurDTO> getProfesseurById(Long id) {
@@ -112,7 +118,9 @@ public class ProfesseurService {
 
     public List<EtudiantDTO> getEtudiants(String professeurEmail) {
         List<EtudiantDTO> etudiantsRecu = new ArrayList<>();
-        Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail).map(Professeur::getEtudiants).map(etudiants -> etudiants.stream()
+        Optional<List<String>> listeEmailsEtudiants = professeurRepository.findByEmail(professeurEmail)
+                .map(Professeur::getEtudiants)
+                .map(etudiants -> etudiants.stream()
                 .map(Etudiant::getEmail)
                         .collect(Collectors.toList()));
 
@@ -213,8 +221,6 @@ public class ProfesseurService {
         evaluationStageProf.setSignatureEnseignant(evaluationStageProfDTO.getSignatureEnseignant());
         evaluationStageProf.setDateSignature(evaluationStageProfDTO.getDateSignature());
         return evaluationStageProf;
-
-
     }
 
     public List<EvaluationStageProfDTO> getEvaluationsStageProf(String professeurEmail) {

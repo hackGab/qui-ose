@@ -37,16 +37,13 @@ public class EtudiantService {
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
         try {
-            String encodedPassword = passwordEncoder.encode(etudiantDTO.getCredentials().getPassword());
-
-            Departement departementEnum = null;
-            if (etudiantDTO.getDepartement() != null) {
-                // Match the department using the enum name directly
-                departementEnum = Arrays.stream(Departement.values())
-                        .filter(dept -> dept.name().equalsIgnoreCase(etudiantDTO.getDepartement().name()))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + etudiantDTO.getDepartement()));
+            CredentialDTO credentials = etudiantDTO.getCredentials();
+            if (credentials == null) {
+                return Optional.empty();
             }
+            String encodedPassword = encodePassword(credentials.getPassword());
+
+            Departement departementEnum = getDepartementEnum(etudiantDTO.getDepartement());
 
             Etudiant etudiant = new Etudiant(
                     etudiantDTO.getFirstName(),
@@ -63,6 +60,21 @@ public class EtudiantService {
             System.out.println("Erreur lors de la création de l'étudiant : " + e.getMessage());
             return Optional.empty();
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    private Departement getDepartementEnum(Departement departement) {
+        if (departement == null) {
+            return null;
+        }
+
+        return Arrays.stream(Departement.values())
+                .filter(dept -> dept.name().equalsIgnoreCase(departement.name()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + departement));
     }
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {

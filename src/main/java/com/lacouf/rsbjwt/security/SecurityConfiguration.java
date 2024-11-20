@@ -98,6 +98,7 @@ public class SecurityConfiguration {
                         .requestMatchers(PUT, "/gestionnaire/validerOuRejeterCV/**").permitAll()
                         .requestMatchers(PUT, "/gestionnaire/validerOuRejeterOffre/**").permitAll()
                         .requestMatchers(GET, "/offreDeStage/{offreId}/etudiants").permitAll()
+                        .requestMatchers(GET, "/offreDeStage/attentes").permitAll()
                         .requestMatchers(GET, "/entrevues/offre/{offreId}").permitAll()
                         .requestMatchers(GET, "/entrevues/etudiant/{email}").permitAll()
                         .requestMatchers(GET, "/entrevues/enAttente/etudiant/{email}").permitAll()

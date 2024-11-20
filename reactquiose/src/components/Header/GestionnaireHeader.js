@@ -97,17 +97,20 @@ function GestionnaireHeader({onSendData}) {
                         {t('candidatures')}
                     </Link>
                 </div>
-                <div className="filter-options">
-                    <label>Filtre :</label>
-                    <div className="session-dropdown">
-                        <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
-                            {availableSessions.map(sessionOption => (
-                                <option key={sessionOption.id}
-                                        value={sessionOption.id}>{sessionOption.label}</option>
-                            ))}
-                        </select>
+                {/* Afficher le filtrage uniquement si on n'est pas sur /listeProfesseurs ou /listeEtudiants */}
+                {location.pathname !== '/listeProfesseurs' && location.pathname !== '/listeEtudiants' && (
+                    <div className="filter-options">
+                        <label>Filtre :</label>
+                        <div className="session-dropdown">
+                            <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
+                                {availableSessions.map(sessionOption => (
+                                    <option key={sessionOption.id}
+                                            value={sessionOption.id}>{sessionOption.label}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="profile-menu">
                     <div className="profile-button" onClick={toggleProfileMenu}>
                         {t('profile')} ▼

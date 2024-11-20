@@ -51,22 +51,13 @@ function AccueilEtudiant() {
                         console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
                             console.log('Récupération des stages...');
-                            const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session}`;
 
-                            fetch(internshipsUrl)
-                                .then((response) => {
-                                    if (!response.ok) {
-                                        throw new Error(`Erreur lors de la requête: ${response.status}`);
-                                    }
-                                    return response.json();
-                                })
-                                .then((internshipsData) => {
-                                    console.log('Stages récupérés:', internshipsData);
-                                    setInternships(internshipsData);
-                                })
-                                .catch((error) => {
-                                    console.error('Erreur lors de la récupération des stages:', error);
-                                });
+                            const data = {
+                                session: session
+                            }
+
+                            fetchSession(data);
+
                         } else {
                             console.log('Le CV n\'est pas valide, aucune récupération de stages.');
                         }
@@ -195,7 +186,27 @@ function AccueilEtudiant() {
     const verificationSession = (session) => {
         console.log(session);
         setSession(session);
+        fetchSession(session);
     };
+
+    const fetchSession = (session) => {
+        const internshipsUrl = `http://localhost:8081/offreDeStage/offresValidees/session/${session.session}`;
+
+        fetch(internshipsUrl)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la requête: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Stages récupérés:', data);
+                setInternships(data);
+            })
+            .catch((error) => {
+                console.error('Erreur lors de la récupération des stages:', error);
+            });
+    }
 
     return (
         <>

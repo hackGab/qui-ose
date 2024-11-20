@@ -20,22 +20,7 @@ function MesEntrevues() {
     useEffect(() => {
         const email = userData?.credentials.email;
         if (email) {
-            fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération des entrevues');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Réponse du serveur:', data);
-                    setEntrevues(data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    setError(err.message);
-                    setLoading(false);
-                });
+            fetchSession(session)
         }
     }, [userData]);
 
@@ -82,6 +67,31 @@ function MesEntrevues() {
 
     const verificationSession = (session) => {
         console.log(session);
+        setSession(session.session)
+        fetchSession(session.session)
+    }
+
+    const fetchSession = (session) => {
+        console.log('Session:', session);
+        const email = userData?.credentials.email;
+        if (email) {
+            fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la récupération des entrevues');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Réponse du serveur:', data);
+                    setEntrevues(data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    setError(err.message);
+                    setLoading(false);
+                });
+        }
     }
 
 

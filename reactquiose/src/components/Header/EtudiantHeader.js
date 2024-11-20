@@ -6,6 +6,8 @@ import logo from '../../images/logo.png';
 import "../../CSS/BoutonLangue.css";
 import i18n from "i18next";
 import {FaCross, FaTimes} from "react-icons/fa";
+import {calculateNextSessions} from "../../utils/methodes/dateUtils";
+import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
 
 
 function translateTimeAgo(time, unit) {
@@ -28,7 +30,7 @@ function extractTimeAndUnit(tempsDepuisReception) {
     return null;
 }
 
-function EtudiantHeader({ userData }) {
+function EtudiantHeader({ userData ,onSendData}) {
     const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
@@ -39,6 +41,24 @@ function EtudiantHeader({ userData }) {
     const [stagesAppliquees, setStagesAppliquees] = useState([]);
     const [activeLink, setActiveLink] = useState(location.pathname);
     const [nbEntrevuesEnAttente, setNbEntrevuesEnAttente] = useState(0);
+    const [availableSessions, setAvailableSessions] = useState([]);
+    const nextSession = calculateNextSessions();
+    const initialSession = nextSession.slice(0, -2);
+    const [session, setSession] = useState(() => {
+        return localStorage.getItem('session') || initialSession;
+    });
+
+    const handleSessionChange = (newSession) => {
+        setSession(newSession);
+        localStorage.setItem('session', newSession);
+        sendData("session", newSession);
+    };
+
+    const sendData = (key, value) => {
+        onSendData({
+            [key]: value
+        });
+    };
 
     const handleClickLogo = () => {
         if (userData) {
@@ -93,7 +113,12 @@ function EtudiantHeader({ userData }) {
         i18n.changeLanguage(lng);
     };
 
-
+    useEffect(() => {
+        onSendData({
+            session: session
+        });
+        setAvailableSessions(hardCodedSessions);
+    }, []);
 
    useEffect(() => {
         if (userData) {
@@ -180,7 +205,7 @@ function EtudiantHeader({ userData }) {
     return (
         <header className="gestionnaire-header">
             <nav className="navbar">
-                <div className="logo" onClick={handleClickLogo} style={{ cursor: 'pointer' }}>
+                <div className="logo" onClick={handleClickLogo} style={{cursor: 'pointer'}}>
                     <img src={logo} alt="Logo" className="header-logo"/>
                     <div className="logo-text">Qui-Ose</div>
                 </div>
@@ -214,6 +239,17 @@ function EtudiantHeader({ userData }) {
                         {t('SignerContrat')}
                     </span>
                 </div>
+                <div className="filter-options">
+                    <label>Filtre :</label>
+                    <div className="session-dropdown">
+                        <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
+                            {availableSessions.map(sessionOption => (
+                                <option key={sessionOption.id}
+                                        value={sessionOption.id}>{sessionOption.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
                 <div className="profile-menu">
                     <div className="notification-icon" onClick={toggleNotificationMenu}>
@@ -223,20 +259,21 @@ function EtudiantHeader({ userData }) {
                         <div className="dropdown notification-dropdown">
                             {notifications.length > 0 ? (
                                 notifications.map((notification, index) => {
-                                    const { time, unit } = extractTimeAndUnit(notification.tempsDepuisReception);
+                                    const {time, unit} = extractTimeAndUnit(notification.tempsDepuisReception);
                                     const translatedTime = translateTimeAgo(time, unit);
                                     return (
                                         <React.Fragment key={notification.id}>
                                             <div className="dropdown-link">
-                                                    <div onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
-                                                        {t(notification.message)} {notification.titreOffre} - {translatedTime}
-                                                    </div>
-                                                    <div data-testid="delete-icon" className="delete-icon"
-                                                         onClick={() => handleDeleteNotification(index, notification.id)}>
-                                                        <FaTimes/>
-                                                    </div>
+                                                <div
+                                                    onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
+                                                    {t(notification.message)} {notification.titreOffre} - {translatedTime}
                                                 </div>
-                                                <hr className="m-1"/>
+                                                <div data-testid="delete-icon" className="delete-icon"
+                                                     onClick={() => handleDeleteNotification(index, notification.id)}>
+                                                    <FaTimes/>
+                                                </div>
+                                            </div>
+                                            <hr className="m-1"/>
                                         </React.Fragment>
                                     );
                                 })
@@ -268,5 +305,5 @@ function EtudiantHeader({ userData }) {
     );
 }
 
-export { translateTimeAgo, extractTimeAndUnit };
+export {translateTimeAgo, extractTimeAndUnit};
 export default EtudiantHeader;

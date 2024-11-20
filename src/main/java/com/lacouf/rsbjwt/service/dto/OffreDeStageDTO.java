@@ -26,6 +26,7 @@ public class OffreDeStageDTO {
     private String rejetMessage = "";
     private EmployeurDTO employeur;
     private List<EtudiantDTO> etudiants;
+    private String session;
 
     public OffreDeStageDTO(Long id, String titre, String localisation, LocalDate dateLimite, LocalDate datePublication, String data, int nbCandidats, String status, String session) {
         this.id = id;

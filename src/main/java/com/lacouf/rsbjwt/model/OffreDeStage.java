@@ -27,7 +27,7 @@ public class OffreDeStage {
     private int nbCandidats;
     private String status;
     private String rejetMessage = "";
-    private String session;
+
 
     @ManyToOne
     @JoinColumn(name = "EMPLOYEUR_ID")
@@ -35,6 +35,8 @@ public class OffreDeStage {
 
     @ManyToMany(mappedBy = "offresAppliquees")
     private List<Etudiant> etudiants = new ArrayList<>();
+
+    private String session;
 
     public OffreDeStage(String titre, String localisation, LocalDate dateLimite, String data, int nbCandidats, String status, String session) {
         this.titre = titre;
@@ -58,7 +60,6 @@ public class OffreDeStage {
                 ", datePublication='" + datePublication + '\'' +
                 ", nbCandidats='" + nbCandidats + '\'' +
                 ", status='" + status + '\'' +
-                ", session='" + session + '\'' +
                 ", rejetMessage='" + rejetMessage + '\'' +
                 '}';
     }

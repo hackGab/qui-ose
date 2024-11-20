@@ -39,16 +39,16 @@ public class ReactSpringSecurityJwtApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        gestionnaireService.creerGestionnaire(
-//                new GestionnaireDTO(
-//                        "Thiraiyan",
-//                        "Moon",
-//                        "123-456-7890",
-//                        Role.GESTIONNAIRE,
-//                        new CredentialDTO("niseiyen@gmail.com", "nini123")
-//                )
-//        );
-//
-//        userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "nini123"));
+        gestionnaireService.creerGestionnaire(
+                new GestionnaireDTO(
+                        "Thiraiyan",
+                        "Moon",
+                        "123-456-7890",
+                        Role.GESTIONNAIRE,
+                        new CredentialDTO("niseiyen@gmail.com", "nini123")
+                )
+        );
+
+        userService.authenticateUser(new LoginDTO("niseiyen@gmail.com", "nini123"));
     }
 }

@@ -376,8 +376,12 @@
   "Félicitations, vous avez été accepté pour le poste de": "Félicitations, vous avez été accepté pour le poste de",
   "Désoler, vous n'êtes pas accepté pour le poste de": "Désoler, vous n'êtes pas accepté pour le poste de",
   "AucunCV": "Aucun CV",
+<<<<<<< HEAD
   "Rejeté": "Rejeté",
   "validé": "Validé",
+=======
+  "validé": "validé",
   "Validé": "Validé",
+>>>>>>> main
   "Attente": "En attente"
 }

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import GestionnaireHeader from "./Header/GestionnaireHeader";
-import '../CSS/DetailsProf.css';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
+import '../../CSS/DetailsProf.css';
 
 function DetailsProfesseur() {
     const { t } = useTranslation();

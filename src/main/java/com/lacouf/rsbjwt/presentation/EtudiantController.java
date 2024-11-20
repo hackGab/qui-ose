@@ -33,7 +33,6 @@ public class EtudiantController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
         } catch (IllegalArgumentException e) {
-            // En cas de département invalide
             System.out.println("Erreur : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {

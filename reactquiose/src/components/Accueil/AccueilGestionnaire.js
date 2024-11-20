@@ -14,14 +14,13 @@ function AccueilGestionnaire() {
     const navigate = useNavigate();
     const userData = location.state?.userData;
     console.log("AccueilGestionnaire userData: ", userData);
-
     const [cvAttentes, setCvAttentes] = useState(0);
-    const [contratsAGenerer, setContratsAGenerer] = useState(0);
+    const [offresAttentes, setOffresAttentes] = useState(0);
 
     const sections = [
         { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
         { title: t("prof"), notifications: 0, image: professeurImage, link: "/listeProfesseurs" },
-        { title: t("employeur"), notifications: 0, image: employeurImage, link: "/listeEmployeurs" },
+        { title: t("employeur"), notifications: offresAttentes, image: employeurImage, link: "/listeEmployeurs" },
     ];
 
     const handleNavigateCandidatures = () => {
@@ -30,7 +29,8 @@ function AccueilGestionnaire() {
 
     useEffect(() => {
         fetchCvAttentes();
-        fetchContratsAGenerer();
+        fetchOffresAttentes();
+	fetchContratsAGenerer();
     }, []);
 
     const fetchCvAttentes = async () => {
@@ -40,6 +40,16 @@ function AccueilGestionnaire() {
             setCvAttentes(data);
         } catch (error) {
             console.error('Erreur lors de la récupération des CV en attente:', error);
+        }
+    };
+
+    const fetchOffresAttentes = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/offreDeStage/attentes');
+            const data = await response.json();
+            setOffresAttentes(data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des offres de stage en attente:', error);
         }
     };
 

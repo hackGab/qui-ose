@@ -1,8 +1,9 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import ListeEmployeurs from '../ListeEmployeurs';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from "@testing-library/react";
+import ListeEmployeurs from "../ListeEmployeurs";
+import { BrowserRouter } from "react-router-dom";
+import '@testing-library/jest-dom/extend-expect';  
+import { useTranslation } from 'react-i18next';
+
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -38,7 +39,6 @@ describe('ListeEmployeurs', () => {
 
         render(<MockListeEmployeurs />);
 
-        // Use a regular expression to match the error message
         const errorMessage = await screen.findByText(/Erreur: Network Error/i);
         expect(errorMessage).toBeInTheDocument();
     });

@@ -73,7 +73,7 @@ public class OffreDeStageController {
         if ("Offre de stage supprimée".equals(responseMessage)) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle deletion error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -132,6 +132,9 @@ public class OffreDeStageController {
         return ResponseEntity.ok().body(etudiants);
     }
 
-
-
+    @GetMapping("/attentes")
+    public ResponseEntity<Integer> getOffresAttentes() {
+        int nbOffres = offreDeStageService.getNombreOffresEnAttente();
+        return ResponseEntity.ok(nbOffres);
+    }
 }

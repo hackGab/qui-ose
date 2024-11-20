@@ -8,10 +8,10 @@ import AccueilProfesseur from "./components/Accueil/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
 import VisualiserOffres from "./components/VisualiserOffres";
 import ListeEtudiants from './components/Liste/ListeEtudiants';
-import DetailsEtudiants from './components/DetailsEtudiants';
+import DetailsEtudiants from './components/Details/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
 import ListeEmployeurs from "./components/Liste/ListeEmployeurs";
-import DetailsEmployeurs from "./components/DetailsEmployeur";
+import DetailsEmployeurs from "./components/Details/DetailsEmployeur";
 import ListeDeStage from "./components/Liste/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
@@ -20,7 +20,7 @@ import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 import ListeCandidature from "./components/Liste/ListeCandidature";
 import SignerContrat from "./components/SignerContrat";
 import ListeProfesseurs from "./components/Liste/ListeProfesseurs";
-import DetailsProfesseur from "./components/DetailsProfesseur";
+import DetailsProfesseur from "./components/Details/DetailsProfesseur";
 
 function App() {
 

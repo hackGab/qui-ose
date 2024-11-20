@@ -108,5 +108,13 @@ public class OffreDeStageService {
 
         return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
     }
+
+    public int getNombreOffresEnAttente() {
+        List<OffreDeStage> offres = offreDeStageRepository.findAll();
+        List<OffreDeStage> offresEnAttente = offres.stream()
+                .filter(offre -> offre.getStatus().equals("Attente"))
+                .toList();
+        return offresEnAttente.size();
+    }
 }
 

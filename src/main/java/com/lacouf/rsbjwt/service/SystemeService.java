@@ -11,6 +11,7 @@ import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.security.UnresolvedPermission;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

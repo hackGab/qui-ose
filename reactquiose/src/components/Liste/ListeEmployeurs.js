@@ -13,10 +13,11 @@ function ListeEmployeurs() {
     const [loading, setLoading] = useState(true);
     const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);
-    const [selectedSession, setSelectedSession] = useState(""); // État pour la session active
+    const [selectedSession, setSelectedSession] = useState(getLocalStorageSession); // État pour la session active
 
     const verifificationSession = (data) => {
-        console.log(data);
+        console.log(data.session + "data");
+        setSelectedSession(data.session);
         fetchBySession(data.session);
     }
 
@@ -51,8 +52,9 @@ function ListeEmployeurs() {
 
 
     useEffect(() => {
-        let session = getLocalStorageSession();
-        fetch(`http://localhost:8081/offreDeStage/session/${session}`, {
+        setSelectedSession(getLocalStorageSession());
+        console.log(setSelectedSession() + "session");
+        fetch(`http://localhost:8081/offreDeStage/session/${selectedSession}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,11 +78,6 @@ function ListeEmployeurs() {
             });
     }, []);
 
-    const handleSessionChange = (event) => {
-        setSelectedSession(event.target.value);
-    };
-
-    const employeursFiltres = employeurs.filter(employeur => employeur.session === selectedSession);
 
 
     if (loading) {

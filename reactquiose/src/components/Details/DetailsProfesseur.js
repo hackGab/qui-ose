@@ -168,9 +168,12 @@ function DetailsProfesseur() {
         etudiant.professeur && etudiant.professeur.email === professeur.email
     );
 
+    const sendDataVideHeader = () => {console.log();
+    }
+
     return (
         <>
-            <GestionnaireHeader />
+            <GestionnaireHeader onSendData={sendDataVideHeader} />
             <div className="details-container">
                 <h1 className="mb-4 detail-title">{t('profDetailsTitle')}</h1>
                 <div className="row">

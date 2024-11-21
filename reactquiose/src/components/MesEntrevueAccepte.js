@@ -433,6 +433,8 @@ function MesEntrevueAccepte() {
                 body: JSON.stringify(evaluationStageEmployeur),
             });
 
+            evaluations.push(evaluationStageEmployeur);
+
             if (!response.ok) {
                 throw new Error('Erreur lors de la création de l\'évaluation');
             }
@@ -597,7 +599,8 @@ function MesEntrevueAccepte() {
                                                             </button>
                                                         ) : (
                                                             <strong
-                                                                className="evaluation-possible-text">{t('EvaluationDisponible')}</strong>
+                                                                className="evaluation-possible-text">{t('EvaluationDisponible')}
+                                                            </strong>
                                                         )}
                                                     </div>
                                                 )}

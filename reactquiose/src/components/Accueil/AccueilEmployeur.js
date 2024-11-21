@@ -28,8 +28,7 @@ function AccueilEmployeur() {
         }
     };
 
-    const verificationSession = (data) => {
-        console.log("session ", data);
+    const verificationSession = async (data) => {
 
     }
 

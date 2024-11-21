@@ -1155,7 +1155,6 @@ function MesEntrevueAccepte() {
                             <form>
                                 {/* Section Appréciation globale */}
                                 <h5>{t('APPRÉCIATION_GLOBALE_DU_STAGIAIRE')}</h5>
-                                <p>{t('Les_habiletés_démontrées_dépassent_de_beaucoup_les_attentes')}</p>
                                 <div className="form-group">
                                     <label>
                                         <input

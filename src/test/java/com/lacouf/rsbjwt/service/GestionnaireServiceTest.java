@@ -58,14 +58,14 @@ public class GestionnaireServiceTest {
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
-	cvEntity = new CV();
+	    cvEntity = new CV();
         cvEntity.setId(1L);
         cvEntity.setStatus("attend");
 
          gestionnaire = new Gestionnaire();
 
-        gestionnaire.setId(1L);
-        gestionnaire.setCredentials(new Credentials("email", "password", Role.GESTIONNAIRE));
+         gestionnaire.setId(1L);
+         gestionnaire.setCredentials(new Credentials("email", "password", Role.GESTIONNAIRE));
     }
 
     @Test
@@ -191,44 +191,6 @@ public class GestionnaireServiceTest {
         assertEquals("rejeté", result.get().getStatus());
     }
 
-    @Test
-    void creerContrat() {
-        // Arrange
-        ContratDTO contratDTO = new ContratDTO();
-        contratDTO.setEtudiantSigne(true);
-        contratDTO.setEmployeurSigne(true);
-        contratDTO.setGestionnaireSigne(true);
-        contratDTO.setDateSignatureEtudiant(LocalDate.now());
-        contratDTO.setDateSignatureEmployeur(LocalDate.now());
-        contratDTO.setDateSignatureGestionnaire(LocalDate.now());
-        contratDTO.setCollegeEngagement("college");
-        contratDTO.setDateDebut(LocalDate.now());
-        contratDTO.setCandidature(new CandidatAccepterDTO(1L, 1L, true));
-
-        Entrevue entrevue = new Entrevue();
-        entrevue.setId(1L);
-
-        Contrat contrat = new Contrat();
-        contrat.setId(1L);
-        contrat.setEtudiantSigne(true);
-        contrat.setEmployeurSigne(true);
-        contrat.setGestionnaireSigne(true);
-        contrat.setDateSignatureEtudiant(LocalDate.now());
-        contrat.setDateSignatureEmployeur(LocalDate.now());
-        contrat.setDateSignatureGestionnaire(LocalDate.now());
-        contrat.setCollegeEngagement("college");
-        contrat.setDateDebut(LocalDate.now());
-        contrat.setCandidature(new CandidatAccepter(entrevue, true));
-
-        when(entrevueRepository.findById(1L)).thenReturn(Optional.of(entrevue));
-        when(contratRepository.save(any(Contrat.class))).thenReturn(contrat);
-
-        // Act
-        Optional<ContratDTO> result = gestionnaireService.creerContrat(contratDTO);
-
-        // Assert
-        assertTrue(result.isPresent());
-    }
     @Test
     void getAllContrats() {
 

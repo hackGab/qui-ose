@@ -6,6 +6,7 @@
   "employeur": "Employeur",
   "prenom": "Prenom *",
   "nom": "Nom *",
+  "Nom": "Nom",
   "nomEntreprise": "Nom de l'entreprise*",
   "nomEntreprisePlaceholder": "Inscrivez le nom de votre entreprise",
   "Departement": "Département *",

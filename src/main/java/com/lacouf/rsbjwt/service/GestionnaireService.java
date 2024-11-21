@@ -191,7 +191,6 @@ public class GestionnaireService {
         return Optional.empty();
     }
 
-    @Transactional
     public Optional<EtudiantDTO> deassignerProfesseur(String email) {
         Optional<Etudiant> etudiantOpt = etudiantRepository.findByEmail(email);
 

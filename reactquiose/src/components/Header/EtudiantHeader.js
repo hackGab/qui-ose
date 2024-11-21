@@ -1,40 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../../CSS/Header.css'
+import '../../CSS/Header.css';
 import logo from '../../images/logo.png';
 import "../../CSS/BoutonLangue.css";
-import i18n from "i18next";
-import {FaCross, FaTimes} from "react-icons/fa";
+import ProfileMenu from './ProfileMenu';
 import {calculateNextSessions} from "../../utils/methodes/dateUtils";
 import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
-import {Button} from "react-bootstrap";
 
-
-function translateTimeAgo(time, unit) {
-    const currentLanguage = i18n.language ? i18n.language.split('-')[0].toLowerCase() : 'fr';
-    const translatedUnit = i18n.t(unit, { lng: currentLanguage });
-    const ago = i18n.t('ago', { lng: currentLanguage });
-    if (currentLanguage === 'fr') {
-        return `${ago} ${time} ${translatedUnit}`;
-    } else {
-        return `${time} ${translatedUnit} ${ago}`;
-    }
-}
-
-function extractTimeAndUnit(tempsDepuisReception) {
-    const regex = /(\d+)\s*(secondes|minutes|heures|jours)/;
-    const match = tempsDepuisReception.match(regex);
-    if (match) {
-        return { time: match[1], unit: match[2] };
-    }
-    return null;
-}
 
 function EtudiantHeader({ userData ,onSendData}) {
     const { t } = useTranslation();
-    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-    const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
@@ -74,10 +50,6 @@ function EtudiantHeader({ userData ,onSendData}) {
         }
     };
 
-    async function deplacementVersNotif(url, index, NotifId) {
-        await handleDeleteNotification(index, NotifId)
-        handleLinkClick(url)
-    }
 
     const handleDeleteNotification = async (index, notifId) => {
         setNotifications((prevNotifications) =>
@@ -98,20 +70,6 @@ function EtudiantHeader({ userData ,onSendData}) {
         } catch (err) {
             console.error('Erreur:', err);
         }
-    };
-
-    const toggleProfileMenu = () => {
-        setProfileMenuOpen(!profileMenuOpen);
-        setNotificationMenuOpen(false);
-    };
-
-    function toggleNotificationMenu() {
-        setNotificationMenuOpen(!notificationMenuOpen);
-        setProfileMenuOpen(false)
-    }
-
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
     };
 
     useEffect(() => {
@@ -214,14 +172,14 @@ function EtudiantHeader({ userData ,onSendData}) {
                 <div className="nav-links">
                     <span
                         className={`nav-link ${activeLink === '/accueilEtudiant' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/accueilEtudiant')}
+                        onClick={() => handleLinkClick('/accueilEtudiant', setActiveLink, navigate, userData)}
                     >
                         {t('accueil')}
                     </span>
                     {file && file.status === "validé" && (
                         <span
                             className={`nav-link ${activeLink === '/stagesAppliquees' ? 'active' : ''}`}
-                            onClick={() => handleLinkClick('/stagesAppliquees')}
+                            onClick={() => handleLinkClick('/stagesAppliquees', setActiveLink, navigate, userData)}
                         >
                             {t('stagesAppliquées')} ({stagesAppliquees.length})
                         </span>
@@ -229,13 +187,13 @@ function EtudiantHeader({ userData ,onSendData}) {
 
                     <span
                         className={`nav-link ${activeLink === '/mesEntrevues' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/mesEntrevues')}
+                        onClick={() => handleLinkClick('/mesEntrevues', setActiveLink, navigate, userData)}
                     >
                         {t('mesEntrevues')} ({nbEntrevuesEnAttente || 0})
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/signerContrat')}
+                        onClick={() => handleLinkClick('/signerContrat', setActiveLink, navigate, userData)}
                     >
                         {t('SignerContrat')}
                     </span>
@@ -252,59 +210,10 @@ function EtudiantHeader({ userData ,onSendData}) {
                     </div>
                 </div>
 
-                <div className="profile-menu">
-                    <div className="notification-icon" onClick={toggleNotificationMenu}>
-                        🕭 <span className="notification-count">{notifications.length}</span>
-                    </div>
-                    {notificationMenuOpen && (
-                        <div className="dropdown notification-dropdown">
-                            {notifications.length > 0 ? (
-                                notifications.map((notification, index) => {
-                                    const {time, unit} = extractTimeAndUnit(notification.tempsDepuisReception);
-                                    const translatedTime = translateTimeAgo(time, unit);
-                                    return (
-                                        <React.Fragment key={notification.id}>
-                                            <div className="dropdown-link">
-                                                <div
-                                                    onClick={() => deplacementVersNotif(notification.url, index, notification.id)}>
-                                                    {t(notification.message)} {notification.titreOffre} - {translatedTime}
-                                                </div>
-                                                <div data-testid="delete-icon" className="delete-icon"
-                                                     onClick={() => handleDeleteNotification(index, notification.id)}>
-                                                    <FaTimes/>
-                                                </div>
-                                            </div>
-                                            <hr className="m-1"/>
-                                        </React.Fragment>
-                                    );
-                                })
-                            ) : (
-                                <div className="dropdown-link">{t('noNotifications')}</div>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="profile-button" onClick={toggleProfileMenu}>
-                        {t('profile')} ▼
-                    </div>
-                    {profileMenuOpen && (
-                        <div className="dropdown profile-dropdown">
-                            <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
-                            <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <button onClick={() => changeLanguage('en')} className="language-button dropdown-link">
-                                {t('Anglais')}
-                            </button>
-                            <button onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
-                                {t('Francais')}
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <ProfileMenu userData={userData} setActiveLink={setActiveLink}/>
             </nav>
         </header>
     );
 }
 
-export {translateTimeAgo, extractTimeAndUnit};
 export default EtudiantHeader;

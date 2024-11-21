@@ -163,25 +163,33 @@ function MesEntrevueAccepte() {
     useEffect(() => {
         const fetchEvaluations = async () => {
             try {
-                const response = await fetch("http://localhost:8081/employeur/evaluationEmployeur/all");
-                if (response.ok) {
-                    const data = await response.json();
-                    setEvaluations(data);
-                    console.log("Evaluations:", evaluations)
-                } else {
-                    console.error("Erreur lors de la récupération des évaluations:", response.statusText);
+                const response = await fetch("http://localhost:8081/employeur/evaluationEmployeur/all", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (!response.ok) {
+                    console.error("Erreur HTTP:", response.status, response.statusText);
+                    return;
                 }
+
+                const data = await response.json();
+                setEvaluations(data);
+                console.log(data)
             } catch (error) {
-                console.error("Erreur lors de la récupération des évaluations:", error);
+                console.error("Erreur réseau:", error);
             }
         };
+
         fetchEvaluations();
     }, []);
 
     const handleCandidatureAcceptee = (entrevueAcceptee) => {
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
-                entrevue.etudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
+                entrevue.etudiantgetEvaluationEtudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
                     ? { ...entrevue, status: 'accepter' }
                     : entrevue
             )
@@ -431,7 +439,6 @@ function MesEntrevueAccepte() {
 
             if(response.status === 201) {
                 const data = await response.json();
-                console.log(data);
                 setEvaluationCree(true);
                 closeDetailsModal()
             }
@@ -449,6 +456,8 @@ function MesEntrevueAccepte() {
                     'Content-Type': 'application/json',
                 }
             });
+
+            console.log("response", response)
 
             if (!response.ok) {
                 if (response.status === 404) {
@@ -574,13 +583,23 @@ function MesEntrevueAccepte() {
 
                                                 {entrevue.etudiantDTO.professeur && (
                                                     <div className="evaluation-possible">
-                                                        {evaluations.some(evaluation => evaluation.etudiant.id === entrevue.etudiantDTO.id) ? (
-                                                            <button className="btn btn-success" onClick={() => genererPdf(entrevue)}>{t('GenererEvaluationEmployeurPDF')}</button>
+                                                        {evaluations.some(
+                                                            evaluation =>
+                                                                evaluation.etudiant &&
+                                                                evaluation.etudiant.email === entrevue.etudiantDTO.email
+                                                        ) ? (
+                                                            <button
+                                                                className="btn btn-success"
+                                                                onClick={() => genererPdf(entrevue)}
+                                                            >
+                                                                {t('GenererEvaluationEmployeurPDF')}
+                                                            </button>
                                                         ) : (
-                                                            <strong>{t('EvaluationPossible')}</strong>
+                                                            <strong className="evaluation-possible-text">{t('EvaluationDisponible')}</strong>
                                                         )}
                                                     </div>
                                                 )}
+
 
                                                 {showButtonsIfDateBeforeToday(entrevue) && (
                                                     <>

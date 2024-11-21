@@ -36,9 +36,8 @@ public class GestionnaireServiceTest {
     private OffreDeStageRepository offreDeStageRepository;
     private ContratRepository contratRepository;
     private EntrevueRepository entrevueRepository;
-
     private ProfesseurRepository professeurRepository;
-
+    private NotificationRepository notificationRepository;
     private EvaluationStageProfRepository evaluationStageProfRepository;
     private Gestionnaire gestionnaire;
 
@@ -54,7 +53,8 @@ public class GestionnaireServiceTest {
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
         etudiantRepository = Mockito.mock(EtudiantRepository.class);
         evaluationStageProfRepository = Mockito.mock(EvaluationStageProfRepository.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository, professeurRepository, evaluationStageProfRepository);
+        notificationRepository = Mockito.mock(NotificationRepository.class);
+        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository, professeurRepository, evaluationStageProfRepository, notificationRepository);
         gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
         gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 

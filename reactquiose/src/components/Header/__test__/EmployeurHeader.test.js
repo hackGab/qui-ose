@@ -5,11 +5,12 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import i18n from '../../../utils/i18n/i18n';
 import {extractTimeAndUnit, translateTimeAgo} from "../../../utils/notificationUtils";
 import EtudiantHeader from "../EtudiantHeader";
+import EmployeurHeader from "../EmployeurHeader";
 
-describe('EtudiantHeader Component - Notifications', () => {
+describe('EmployeurHeader Component - Notifications', () => {
     const userData = {
         credentials: {
-            email: 'test@example.com'
+            email: 'testEmployeur@example.com'
         }
     };
 
@@ -18,9 +19,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve([
-                    { id: 1, message: 'Notification 1', tempsDepuisReception: '2 heures', url: '/stagesAppliquees' },
-                    { id: 2, message: 'Notification 2', tempsDepuisReception: '3 heures', url: '/mesEntrevues' },
-                    { id: 3, message: 'Notification 3', tempsDepuisReception: '10 heures', url: '/SignerContrat' }
+                    { id: 1, message: 'Notification 1', tempsDepuisReception: '5 heures', url: '/SignerContrat' },
                 ])
             })
         );
@@ -28,23 +27,23 @@ describe('EtudiantHeader Component - Notifications', () => {
         i18n.changeLanguage('fr'); // Changez la langue si nécessaire
     });
 
-    it('should translate time ago correctly in French', () => {
+    it('Devrait afficher en français le temps depuis la notification', () => {
         i18n.changeLanguage('fr');
-        expect(translateTimeAgo(2, 'heures')).toBe('il y a 2 heures');
         expect(translateTimeAgo(5, 'minutes')).toBe('il y a 5 minutes');
+        expect(translateTimeAgo(10, 'heures')).toBe('il y a 10 heures');
     });
 
-    it('should translate time ago correctly in English', () => {
+    it('Devrait afficher en anglais le temps depuis la notification', () => {
         i18n.changeLanguage('en');
-        expect(translateTimeAgo(2, 'heures')).toBe('2 hours ago');
         expect(translateTimeAgo(5, 'minutes')).toBe('5 minutes ago');
+        expect(translateTimeAgo(10, 'heures')).toBe('10 hours ago');
     });
 
-    it('should render notifications', async () => {
+    it('Devrait afficher les notifications', async () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EmployeurHeader userData={userData} />
                 </MemoryRouter>
             );
         });
@@ -57,97 +56,33 @@ describe('EtudiantHeader Component - Notifications', () => {
         });
     });
 
-    it('should delete a notification when delete icon is clicked', async () => {
+    it('Devrait effacer notification quand on clique', async () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EmployeurHeader userData={userData} />
                 </MemoryRouter>
             );
         });
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
         let notifications = screen.getAllByText(/Notification \d/);
-        expect(notifications.length).toBe(3);
+        expect(notifications.length).toBe(1);
 
         const deleteIcon = screen.getAllByTestId('delete-icon')[0];
         expect(deleteIcon).toBeInTheDocument();
         fireEvent.click(deleteIcon);
 
         notifications = screen.queryAllByText(/Notification \d/);
-        expect(notifications.length).toBe(2);
+        expect(notifications.length).toBe(0);
     });
 
-    it('should navigate to the notification URL when a notification is clicked', async () => {
+    it('Devrait naviguer vers l\'URL de la notification lorsqu\'une notification est cliquée', async () => {
         await act(async () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
-                        <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
-                    </Routes>
-                </MemoryRouter>
-            );
-        });
-
-        const notificationIcon = screen.getByText('🕭');
-        fireEvent.click(notificationIcon);
-
-        const notification = screen.getByText('Notification 1 - il y a 2 heures');
-        fireEvent.click(notification);
-
-        await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
-    });
-
-    it('should delete the notification and navigate to the URL when a notification is clicked', async () => {
-        await act(async () => {
-            render(
-                <MemoryRouter initialEntries={['/']}>
-                    <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
-                        <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
-                    </Routes>
-                </MemoryRouter>
-            );
-        });
-
-        const notificationIcon = screen.getByText('🕭');
-        fireEvent.click(notificationIcon);
-
-        const notification = screen.getByText('Notification 1 - il y a 2 heures');
-        fireEvent.click(notification);
-
-        await waitFor(() => expect(screen.queryByText('Notification 1 - il y a 2 heures')).not.toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Stages Appliquées Page')).toBeInTheDocument());
-    });
-
-    it('Devrait Naviguer vers l\URL si on clique sur notification de Contrat', async () => {
-        await act(async () => {
-            render(
-                <MemoryRouter initialEntries={['/']}>
-                    <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
-                        <Route path="/SignerContrat" element={<div>Signature de Contrat Page</div>} />
-                    </Routes>
-                </MemoryRouter>
-            );
-        });
-
-        const notificationIcon = screen.getByText('🕭');
-        fireEvent.click(notificationIcon);
-
-        const notification = screen.getByText('Notification 3 - il y a 10 heures');
-        fireEvent.click(notification);
-
-        await waitFor(() => expect(screen.getByText('Signature de Contrat Page')).toBeInTheDocument());
-    });
-
-    it('Devrait effacer notification de contrat lorsqu\'on clique sur un contrat', async () => {
-        await act(async () => {
-            render(
-                <MemoryRouter initialEntries={['/']}>
-                    <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/" element={<EmployeurHeader userData={userData} />} />
                         <Route path="/SignerContrat" element={<div>Signature de contrat Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -157,15 +92,37 @@ describe('EtudiantHeader Component - Notifications', () => {
         const notificationIcon = screen.getByText('🕭');
         fireEvent.click(notificationIcon);
 
-        const notification = screen.getByText('Notification 3 - il y a 10 heures');
+        const notification = screen.getByText('Notification 1 - il y a 5 heures');
         fireEvent.click(notification);
 
-        await waitFor(() => expect(screen.queryByText('Notification 3 - il y a 10 heures')).not.toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('Signature de contrat Page')).toBeInTheDocument());
     });
 
+    it('Devrait effacer la notification et naviguer vers l\'URL lorsqu\'une notification est cliquée', async () => {
+        await act(async () => {
+            render(
+                <MemoryRouter initialEntries={['/']}>
+                    <Routes>
+                        <Route path="/" element={<EmployeurHeader userData={userData} />} />
+                        <Route path="/SignerContrat" element={<div>Signature de contrat Page</div>} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        });
+
+        const notificationIcon = screen.getByText('🕭');
+        fireEvent.click(notificationIcon);
+
+        const notification = screen.getByText('Notification 1 - il y a 5 heures');
+        fireEvent.click(notification);
+
+        await waitFor(() => expect(screen.queryByText('Notification 1 - il y a 5 heures')).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Signature de contrat Page')).toBeInTheDocument());
+    });
+
+
     // Tests des throw new Error
-    it('should throw an error when fetch deleteNotification fails with a bad ID', async () => {
+    it('Devrait lancer une erreur lorsqu\'une notification est cliquée avec un mauvais ID', async () => {
         global.fetch = jest.fn((url, options) => {
             if (options && options.method === 'PUT') {
                 return Promise.reject(new Error('Erreur: Erreur lors de la suppression de la notification avec un mauvais ID'));
@@ -173,8 +130,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             return Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve([
-                    { id: 1, message: 'Notification 1', tempsDepuisReception: '2 heures', url: '/stagesAppliquees' },
-                    { id: 2, message: 'Notification 2', tempsDepuisReception: '3 heures', url: '/mesEntrevues' }
+                    { id: 1, message: 'Notification 1', tempsDepuisReception: '2 heures', url: '/SignerContrat' },
                 ])
             });
         });
@@ -184,7 +140,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EmployeurHeader userData={userData} />
                 </MemoryRouter>
             );
         });
@@ -204,8 +160,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         consoleErrorMock.mockRestore();
     });
 
-
-    it('should throw an error when fetchNotifications fails', async () => {
+    it('Devrait retourner erreur quand le fetchNotifications échoue', async () => {
         global.fetch = jest.fn(() => Promise.reject(new Error('Erreur lors de la requête')));
 
         const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -213,7 +168,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EmployeurHeader userData={userData} />
                 </MemoryRouter>
             );
         });
@@ -231,8 +186,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         consoleErrorMock.mockRestore();
     });
 
-
-    it('should handle error when regex does not match in extractTimeAndUnit', () => {
+    it('Devrait gérer erreur quand le regex ne correspond pas dans extractTimeAndUnit', () => {
         const result = extractTimeAndUnit('invalid string');
         expect(result).toBeNull();
     });

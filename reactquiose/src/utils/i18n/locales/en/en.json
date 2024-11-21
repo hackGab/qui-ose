@@ -377,5 +377,6 @@
   "Rejeté": "Rejected",
   "validé": "validated",
   "Validé": "validated",
-  "Attente": "pending"
+  "Attente": "pending",
+  "EvaluationDisponible": "Evaluation Available"
 }

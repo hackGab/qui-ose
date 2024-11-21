@@ -386,5 +386,6 @@
   "ETE": "ETE",
   "AUTOMNE": "AUTOMNE",
   "PRINTEMPS": "PRINTEMPS",
-  "NombreDeCandidats" : "Nombre de candidats"
+  "NombreDeCandidats" : "Nombre de candidats",
+  "EvaluationDisponible": "Évaluation disponible"
 }

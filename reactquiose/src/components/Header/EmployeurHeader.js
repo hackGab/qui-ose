@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import '../../CSS/Header.css'
 import i18n from "i18next";
 import "../../CSS/BoutonLangue.css";
+import ProfileMenu from './ProfileMenu';
+import { handleLinkClick } from "../../utils/headerUtils";
 import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
 import {calculateNextSessions} from "../../utils/methodes/dateUtils";
 
@@ -37,7 +39,7 @@ function EmployeurHeader({ userData, onSendData}) {
         setAvailableSessions(hardCodedSessions);
     }, [userData]);
 
- const getUserLocalStorage = () => {
+   const getUserLocalStorage = () => {
         const storedUserData = localStorage.getItem('userData');
         if (storedUserData) {
             setUserData(JSON.parse(storedUserData));
@@ -84,26 +86,26 @@ function EmployeurHeader({ userData, onSendData}) {
                 <div className="nav-links">
                     <span
                         className={`nav-link ${activeLink === '/accueilEmployeur' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/accueilEmployeur')}
+                        onClick={() => handleLinkClick('/accueilEmployeur', setActiveLink, navigate, userData)}
                     >
                         {t('VisualiserOffres')}
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/soumettre-offre' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/soumettre-offre')}
+                        onClick={() => handleLinkClick('/soumettre-offre', setActiveLink, navigate, userData)}
                     >
                         {t('SoummetreUnOffre')}
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/visualiser-entrevue-accepter' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/visualiser-entrevue-accepter')}
+                        onClick={() => handleLinkClick('/visualiser-entrevue-accepter', setActiveLink, navigate, userData)}
                     >
                         {t('EntrevueAcceptee')}
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/signerContrat')}
-                        >
+                        onClick={() => handleLinkClick('/signerContrat', setActiveLink, navigate, userData)}
+                    >
                         {t('SignerContrat')}
                     </span>
 
@@ -120,25 +122,7 @@ function EmployeurHeader({ userData, onSendData}) {
                     </div>
                 </div>
 
-                <div className="profile-menu">
-                    <div className="notification-icon">🕭</div>
-                    <div className="profile-button" onClick={toggleProfileMenu}>
-                        {t('profile')} ▼
-                    </div>
-                    {profileMenuOpen && (
-                        <div className="dropdown profile-dropdown">
-                            <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
-                            <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
-                            <Link className="dropdown-link" to="/login">{t('logout')}</Link>
-                            <Link onClick={() => changeLanguage('en')} className="language-button dropdown-link">
-                                {t('Anglais')}
-                            </Link>
-                            <Link onClick={() => changeLanguage('fr')} className="language-button dropdown-link">
-                                {t('Francais')}
-                            </Link>
-                        </div>
-                    )}
-                </div>
+                <ProfileMenu userData={userData} setActiveLink={setActiveLink} />
             </nav>
         </header>
     );

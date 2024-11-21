@@ -14,6 +14,8 @@ function ListeEmployeurs() {
     const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);
     const [selectedSession, setSelectedSession] = useState(getLocalStorageSession); // État pour la session active
+    const [visibleStatus, setVisibleStatus] = useState({ 'En attente': true });
+    const [searchTerm, setSearchTerm] = useState('');
 
     const verifificationSession = (data) => {
         console.log(data.session + "data");
@@ -79,6 +81,48 @@ function ListeEmployeurs() {
     }, []);
 
 
+    const toggleVisibility = (status) => {
+        setVisibleStatus(prevState => ({
+            ...prevState,
+            [status]: !prevState[status]
+        }));
+    };
+
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const filteredOffres = offres.filter(offre =>
+        offre.employeur.entreprise.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        offre.titre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const groupedOffres = filteredOffres.reduce((acc, offre) => {
+        const status = offre.status || 'sans-cv';
+        if (!acc[status]) {
+            acc[status] = [];
+        }
+        acc[status].push(offre);
+        return acc;
+    }, {});
+
+    const sortedStatuses = Object.keys(groupedOffres).sort((a, b) => {
+        if (a === 'En attente') return -1;
+        if (b === 'En attente') return 1;
+        return a.localeCompare(b);
+    });
+
+    useEffect(() => {
+        if (filteredOffres.length > 0) {
+            const firstStatus = filteredOffres[0].status || 'sans-cv';
+            setVisibleStatus(prevState => ({
+                ...prevState,
+                [firstStatus]: true
+            }));
+            console.log(visibleStatus)
+        }
+    }, [searchTerm]);
+
 
     if (loading) {
         return <div className="text-center mt-5">
@@ -105,40 +149,47 @@ function ListeEmployeurs() {
                         <p className="text-center mb-4">{t('employerListSubtitle')}</p>
                     )}
 
-                    <div className="row">
-                        {offres.map((offreDeStage) => {
-                            const status = offreDeStage ? offreDeStage.status : null;
-                            return (
-                                <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
-                                    <Link
-                                        to={`/detailsEmployeur/${offreDeStage.employeur.email}/${offreDeStage.id}`}
-                                        className="text-decoration-none"
-                                        state={{offre: offreDeStage}}>
+                    <input
+                        type="text"
+                        className="form-control mb-4"
+                        placeholder={t('searchEmployeur')}
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
+                    {sortedStatuses.map(status => (
+                        <details key={status} open={visibleStatus[status]}>
+                            <summary className="cursor-pointer">
+                                {t(status)} ({groupedOffres[status].length})
+                            </summary>
+                            <div className="row">
+                                {groupedOffres[status].map(offreDeStage => (
+                                    <div className="col-12 col-md-6 col-lg-4 mb-4" key={offreDeStage.id}>
+                                        <Link
+                                            to={`/detailsEmployeur/${offreDeStage.employeur.email}/${offreDeStage.id}`}
+                                            className="text-decoration-none"
+                                            state={{ offre: offreDeStage }}>
 
-                                        <div
-                                            className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
-                                            {status && (
+                                            <div className={`card shadow w-100 ${status.toLowerCase()}`}>
                                                 <span className="position-absolute bottom-0 end-0 badge bg-secondary m-2 custom-badge">
                                                     {t(status)}
                                                 </span>
-                                            )}
-                                            <div className="card-body">
-                                                <h5 className="card-title">{offreDeStage.employeur.entreprise + " - " + offreDeStage.titre}</h5>
-                                                <p className="card-text">
-                                                    <FaEnvelope/> {offreDeStage.employeur.credentials?.email}
-                                                    <br/>
-                                                    <FaPhone/> {offreDeStage.employeur.phoneNumber}
-                                                    <br/>
-                                                    <span
-                                                        className="badge bg-primary">{offreDeStage.localisation}</span>
-                                                </p>
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{offreDeStage.employeur.entreprise + " - " + offreDeStage.titre}</h5>
+                                                    <p className="card-text">
+                                                        <FaEnvelope /> {offreDeStage.employeur.credentials?.email}
+                                                        <br />
+                                                        <FaPhone /> {offreDeStage.employeur.phoneNumber}
+                                                        <br />
+                                                        <span className="badge bg-primary">{offreDeStage.localisation}</span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
+                    ))}
                 </div>
             </div>
         </>

@@ -123,3 +123,36 @@ p {
         padding: 0.5rem 1rem;
     }
 }
+
+
+/* Add this CSS to your 'ListeEtudiants.css' or a new CSS file */
+details {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+summary {
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px 5px 0 0;
+}
+
+summary:hover {
+    background-color: #0056b3;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #ddd;
+    border-radius: 5px 5px 0 0;
+}
+
+details > .row {
+    padding: 1rem;
+}

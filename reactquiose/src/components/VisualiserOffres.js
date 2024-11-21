@@ -177,7 +177,7 @@ function VisualiserOffres() {
                     <h1 className="text-center mt-5" style={{fontSize:"45px"}}>{t('VosOffres')}</h1>
 
                     {offres.length === 0 ? (
-                        <div className="alert alert-info mt-3">{t('AccuneOffreTrouve')}</div>
+                        <div className="alert alert-info mt-3" style={{ fontSize: "large"}}>{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3">
                             {offres.map((offre, index) => (

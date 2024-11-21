@@ -197,16 +197,17 @@ function EtudiantHeader({ userData ,onSendData}) {
                     >
                         {t('SignerContrat')}
                     </span>
-                </div>
-                <div className="filter-options">
-                    <label>Filtre :</label>
-                    <div className="session-dropdown">
-                        <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
-                            {availableSessions.map(sessionOption => (
-                                <option key={sessionOption.id}
-                                        value={sessionOption.id}>{sessionOption.label}</option>
-                            ))}
-                        </select>
+
+                    <div className="filter-options">
+                        <label>Filtre :</label>
+                        <div className="session-dropdown">
+                            <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
+                                {availableSessions.map(sessionOption => (
+                                    <option key={sessionOption.id}
+                                            value={sessionOption.id}>{sessionOption.label}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
 

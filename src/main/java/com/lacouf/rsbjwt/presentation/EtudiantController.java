@@ -33,7 +33,6 @@ public class EtudiantController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
         } catch (IllegalArgumentException e) {
-            // En cas de département invalide
             System.out.println("Erreur : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
@@ -79,7 +78,6 @@ public class EtudiantController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-
     @GetMapping("/{etudiantEmail}/offres")
     public ResponseEntity<Iterable<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
         return ResponseEntity.ok(etudiantService.getOffresDeStage(etudiantEmail));
@@ -97,8 +95,7 @@ public class EtudiantController {
 
         return etudiantDTO.map(etudiant -> ResponseEntity.ok().body(etudiant))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
+    } 
 
     @GetMapping("/departement/{departement}")
     public ResponseEntity<Iterable<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {

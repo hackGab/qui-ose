@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import GestionnaireHeader from "./Header/GestionnaireHeader";
-import '../CSS/ListeEtudiants.css';
+import GestionnaireHeader from "../Header/GestionnaireHeader";
+import '../../CSS/ListeEtudiants.css';
 
 function ListeEtudiants() {
     const { t } = useTranslation();
@@ -75,9 +75,14 @@ function ListeEtudiants() {
                                     <Link
                                         to={`/detailsEtudiant/${etudiant.email}`}
                                         className="text-decoration-none"
-                                        state={{ student: etudiant }}
+                                        state={{student: etudiant}}
                                     >
-                                        <div className={`card shadow w-100 ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                        <div
+                                            className={`card shadow w-100 position-relative ${status ? status.toLowerCase() : 'sans-cv'}`}>
+                                             <span
+                                                 className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                {status ? t(status) : t('AucunCV')}
+                                            </span>
                                             <div className="card-body">
                                                 <h5 className="card-title text-capitalize">{`${etudiant.firstName} ${etudiant.lastName}`}</h5>
                                                 <p className="card-text">
@@ -91,6 +96,7 @@ function ListeEtudiants() {
                                         </div>
                                     </Link>
                                 </div>
+
                             );
                         })}
                     </div>

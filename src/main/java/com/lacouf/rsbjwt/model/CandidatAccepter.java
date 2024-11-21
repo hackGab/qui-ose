@@ -23,7 +23,6 @@ public class CandidatAccepter {
     @Column(nullable = false)
     private boolean accepte;
 
-
     public CandidatAccepter(Entrevue entrevue, boolean accepte) {
         this.entrevue = entrevue;
         this.accepte = accepte;

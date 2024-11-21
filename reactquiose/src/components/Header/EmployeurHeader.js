@@ -1,22 +1,55 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate} from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import '../../CSS/Header.css';
+import React, {useEffect, useState } from 'react';
 import logo from '../../images/logo.png';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import '../../CSS/Header.css'
+import i18n from "i18next";
 import "../../CSS/BoutonLangue.css";
 import ProfileMenu from './ProfileMenu';
 import { handleLinkClick } from "../../utils/headerUtils";
 
 function EmployeurHeader({ userData }) {
     const { t } = useTranslation();
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
+    const [userDataState, setUserData] = useState(null);
+
+    useEffect(() => {
+        if (userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+    }, [userData]);
+
+    const getUserLocalStorage = () => {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+            setUserData(JSON.parse(storedUserData));
+            userData = userDataState
+        }
+    };
 
     const handleClickLogo = () => {
         if (userData) {
             navigate("/accueilEmployeur", { state: { userData: userData } });
         }
+    };
+
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
+        if (userData) {
+            navigate(path, { state: { userData: userData } });
+        }
+    };
+
+    const toggleProfileMenu = () => {
+        setProfileMenuOpen(!profileMenuOpen);
+    }
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+        getUserLocalStorage();
     };
 
     return (

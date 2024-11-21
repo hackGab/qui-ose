@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import '../CSS/AccueilEmployeur.css';
-import EmployeurHeader from "./Header/EmployeurHeader";
+import '../../CSS/AccueilEmployeur.css';
+import EmployeurHeader from "../Header/EmployeurHeader";
 import { useTranslation } from "react-i18next";
 
 function AccueilEmployeur() {
@@ -9,8 +9,8 @@ function AccueilEmployeur() {
     const location = useLocation();
     const [userData, setUserData] = useState(location.state?.userData || null);
     const { t } = useTranslation();
+
     const handleClickSubmit = () => {
-        console.log("Soumettre une offre d'emploi");
         if (userData?.credentials?.email) {
             navigate("/soumettre-offre", { state: {  userData: userData } });
         }

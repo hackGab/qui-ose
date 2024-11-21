@@ -2,9 +2,7 @@ package com.lacouf.rsbjwt.service;
 
 import com.lacouf.rsbjwt.model.*;
 import com.lacouf.rsbjwt.repository.*;
-import com.lacouf.rsbjwt.service.dto.ContratDTO;
-import com.lacouf.rsbjwt.service.dto.EmployeurDTO;
-import com.lacouf.rsbjwt.service.dto.EntrevueDTO;
+import com.lacouf.rsbjwt.service.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +15,13 @@ public class EmployeurService {
     private final EntrevueRepository entrevueRepository;
     private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
+    private final EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
 
     private final ContratRepository contratRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository,UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository, UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository, EvaluationStageEmployeurRepository evaluationStageEmployeurRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
@@ -30,12 +29,17 @@ public class EmployeurService {
         this.offreDeStageRepository = offreDeStageRepository;
         this.etudiantRepository = etudiantRepository;
         this.contratRepository = contratRepository;
+        this.evaluationStageEmployeurRepository = evaluationStageEmployeurRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
-
         try {
-            String encodedPassword = passwordEncoder.encode(employeurDTO.getCredentials().getPassword());
+            CredentialDTO credentials = employeurDTO.getCredentials();
+            if (credentials == null) {
+                return Optional.empty();
+            }
+            String encodedPassword = encodePassword(credentials.getPassword());
+
             Employeur employeur = new Employeur(
                     employeurDTO.getFirstName(),
                     employeurDTO.getLastName(),
@@ -51,11 +55,14 @@ public class EmployeurService {
         }
     }
 
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
     public Optional<EmployeurDTO> getEmployeurById(Long id) {
         return employeurRepository.findById(id)
                 .map(EmployeurDTO::new);
     }
-
 
     public Optional<Employeur> findByCredentials_Email(String email) {
         return employeurRepository.findByCredentials_email(email);
@@ -113,26 +120,6 @@ public class EmployeurService {
                 .toList();
     }
 
-//    public Optional<EntrevueDTO> accepterCandidature(Long entrevueId) {
-//        return entrevueRepository.findById(entrevueId)
-//                .map(entrevue -> {
-//                    entrevue.accepterEntrevue();
-//                    entrevueRepository.save(entrevue);
-//                    return new EntrevueDTO(entrevue);
-//                });
-//    }
-//
-//    public Optional<EntrevueDTO> refuserCandidature(Long entrevueId) {
-//        return entrevueRepository.findById(entrevueId)
-//                .map(entrevue -> {
-//                    entrevue.refuserEntrevue();
-//                    entrevueRepository.save(entrevue);
-//                    return new EntrevueDTO(entrevue);
-//                });
-//    }
-
-
-
     public List<EntrevueDTO> getEntrevuesAccepteesParEmployeur(String emailEmployeur) {
         Optional<Employeur> employeurOpt = employeurRepository.findByCredentials_email(emailEmployeur);
 
@@ -151,15 +138,12 @@ public class EmployeurService {
         return Collections.emptyList();
     }
 
-
-
     public Optional<ContratDTO> signerContratEmployeur(String uuid, String password) {
         Contrat contrat = contratRepository.findByUUID(uuid)
                 .orElseThrow(() -> new RuntimeException("Contrat non trouvé"));
 
         Employeur employeur = getEmployeurFromContrat(contrat);
 
-        // Validation du mot de passe crypté
         if (passwordEncoder.matches(password, employeur.getPassword())) {
             System.out.println("Mot de passe correct : " + employeur.getPassword());
             contrat.signerContratEmployeur();
@@ -169,8 +153,6 @@ public class EmployeurService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
-
-
 
     private Employeur getEmployeurFromContrat(Contrat contrat) {
         return Optional.ofNullable(contrat.getCandidature())
@@ -186,5 +168,88 @@ public class EmployeurService {
                         .map(ContratDTO::new)
                         .toList())
                 .orElse(Collections.emptyList());
+    }
+
+    public Optional<EvaluationStageEmployeurDTO> creerEvaluationEtudiant(String employeurEmail, String etudiantEmail, EvaluationStageEmployeurDTO evaluationStageEmployeur) {
+        try {
+            Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
+                    .orElseThrow(() -> new Exception("Employeur non trouvé"));
+
+            Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
+                    .orElseThrow(() -> new Exception("Etudiant non trouvé"));
+
+            Optional<EvaluationStageEmployeur> evaluationExistante = evaluationStageEmployeurRepository
+                    .findByEmployeurAndEtudiant(employeurEntity, etudiantEntity);
+
+            evaluationExistante.ifPresent(evaluationStageEmployeurRepository::delete);
+
+            EvaluationStageEmployeur evaluationStageEmployeurEntity = new EvaluationStageEmployeur(
+                    employeurEntity,
+                    etudiantEntity,
+                    evaluationStageEmployeur.getNomEleve(),
+                    evaluationStageEmployeur.getProgrammeEtude(),
+                    evaluationStageEmployeur.getNomEntreprise(),
+                    evaluationStageEmployeur.getNomSuperviseur(),
+                    evaluationStageEmployeur.getFonction(),
+                    evaluationStageEmployeur.getTelephone(),
+                    evaluationStageEmployeur.getPlanifOrganiserTravail(),
+                    evaluationStageEmployeur.getComprendreDirectives(),
+                    evaluationStageEmployeur.getMaintenirRythmeTravail(),
+                    evaluationStageEmployeur.getEtablirPriorites(),
+                    evaluationStageEmployeur.getRespecterEcheanciers(),
+                    evaluationStageEmployeur.getCommentairesProductivite(),
+                    evaluationStageEmployeur.getRespecterMandats(),
+                    evaluationStageEmployeur.getAttentionAuxDetails(),
+                    evaluationStageEmployeur.getVerifierTravail(),
+                    evaluationStageEmployeur.getPerfectionnement(),
+                    evaluationStageEmployeur.getAnalyseProblemes(),
+                    evaluationStageEmployeur.getCommentairesQualiteTravail(),
+                    evaluationStageEmployeur.getEtablirContacts(),
+                    evaluationStageEmployeur.getContribuerTravailEquipe(),
+                    evaluationStageEmployeur.getAdapterCultureEntreprise(),
+                    evaluationStageEmployeur.getAccepterCritiques(),
+                    evaluationStageEmployeur.getRespectueux(),
+                    evaluationStageEmployeur.getEcouteActive(),
+                    evaluationStageEmployeur.getCommentairesRelationsInterpersonnelles(),
+                    evaluationStageEmployeur.getInteretMotivationTravail(),
+                    evaluationStageEmployeur.getExprimerIdees(),
+                    evaluationStageEmployeur.getInitiative(),
+                    evaluationStageEmployeur.getTravailSecuritaire(),
+                    evaluationStageEmployeur.getSensResponsabilite(),
+                    evaluationStageEmployeur.getPonctualiteAssiduite(),
+                    evaluationStageEmployeur.getHabiletePersonnelles(),
+                    evaluationStageEmployeur.getAppreciationGlobale(),
+                    evaluationStageEmployeur.getCommentairesAppreciation(),
+                    evaluationStageEmployeur.isEvaluationDiscuteeAvecStagiaire(),
+                    evaluationStageEmployeur.getHeuresEncadrementParSemaine(),
+                    evaluationStageEmployeur.getEntrepriseSouhaiteProchainStage(),
+                    evaluationStageEmployeur.getCommentairesFormationTechnique(),
+                    evaluationStageEmployeur.getSignatureEmployeur(),
+                    evaluationStageEmployeur.getDateSignature()
+            );
+
+            evaluationStageEmployeurRepository.save(evaluationStageEmployeurEntity);
+            return Optional.of(new EvaluationStageEmployeurDTO(evaluationStageEmployeurEntity));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<EvaluationStageEmployeurDTO> getEvaluationEtudiant(String employeurEmail, String etudiantEmail) {
+        Employeur employeurEntity = employeurRepository.findByCredentials_email(employeurEmail)
+                .orElseThrow(() -> new RuntimeException("Employeur non trouvé"));
+
+        Etudiant etudiantEntity = etudiantRepository.findByEmail(etudiantEmail)
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+
+        return evaluationStageEmployeurRepository.findByEmployeurAndEtudiant(employeurEntity, etudiantEntity)
+                .map(EvaluationStageEmployeurDTO::new);
+    }
+
+    public List<EvaluationStageEmployeurDTO> getAllEvaluations() {
+        return evaluationStageEmployeurRepository.findAll().stream()
+                .map(EvaluationStageEmployeurDTO::new)
+                .toList();
     }
 }

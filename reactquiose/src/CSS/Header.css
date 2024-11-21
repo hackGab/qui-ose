@@ -236,6 +236,14 @@
     color: #01579b;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
 @media (max-width: 1024px) {
     .navbar {
         justify-content: space-evenly;

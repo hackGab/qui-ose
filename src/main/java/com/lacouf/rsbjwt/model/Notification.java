@@ -53,7 +53,7 @@ public class Notification {
     }
 
 
-    private String calculateTempsDepuisReception(LocalDateTime dateCreation) {
+    public String calculateTempsDepuisReception(LocalDateTime dateCreation) {
         Duration duration = Duration.between(dateCreation, LocalDateTime.now());
 
         if (duration.getSeconds() < 60) {

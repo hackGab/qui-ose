@@ -42,6 +42,7 @@ class EtudiantServiceTest {
     private Employeur employeur;
 
     private ContratRepository contratRepository;
+    private CandidatAccepterRepository candidatAccepterRepository;
     @BeforeEach
     void setUp() {
         userAppRepository = Mockito.mock(UserAppRepository.class);
@@ -51,7 +52,8 @@ class EtudiantServiceTest {
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         contratRepository = Mockito.mock(ContratRepository.class);
-        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository);
+        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
+        etudiantService = new EtudiantService(userAppRepository, etudiantRepository, passwordEncoder, cvRepository, offreDeStageRepository, entrevueRepository, contratRepository, candidatAccepterRepository );
         etudiantController = new EtudiantController(etudiantService);
 
         CredentialDTO credentials = new CredentialDTO("email@gmail.com", "password");
@@ -350,7 +352,7 @@ class EtudiantServiceTest {
         Entrevue entrevue = new Entrevue();
         entrevue.setEtudiant(etudiantEntity);
         entrevue.setOffreDeStage(offreDeStage);
-        entrevue.setStatus("En attente");
+        entrevue.setStatus("Attente");
         List<Entrevue> entrevues = List.of(entrevue);
         when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
@@ -360,7 +362,7 @@ class EtudiantServiceTest {
 
         // Assert
         assertEquals(1, response.size());
-        assertEquals("En attente", response.get(0).getStatus());
+        assertEquals("Attente", response.getFirst().getStatus());
     }
 
     @Test
@@ -449,7 +451,6 @@ class EtudiantServiceTest {
         // Assert
         assertTrue(response.isPresent());
         assertTrue(contrat.isEtudiantSigne());
-//        verify(contratRepository, times(1)).save(contrat);
     }
 
 
@@ -543,5 +544,25 @@ class EtudiantServiceTest {
 
         assertEquals(1, response.size());
         assertEquals(Departement.TECHNIQUES_INFORMATIQUE, response.get(0).getDepartement());
+    }
+
+    @Test
+    void shouldReturnNombreCVEnAttente() {
+        // Arrange
+        Etudiant etudiant1 = new Etudiant();
+        Etudiant etudiant2 = new Etudiant();
+        CV cv1 = new CV("cvName1", "cvType1", "cvData1", "Attente");
+        CV cv2 = new CV("cvName2", "cvType2", "cvData2", "Validé");
+        etudiant1.setCv(cv1);
+        etudiant2.setCv(cv2);
+        List<Etudiant> etudiants = List.of(etudiant1, etudiant2);
+
+        when(etudiantRepository.findAll()).thenReturn(etudiants);
+
+        // Act
+        int result = etudiantService.getNombreCVEnAttente();
+
+        // Assert
+        assertEquals(1, result);
     }
 }

@@ -43,12 +43,10 @@ public class CandidatAccepterService {
            createNotification(new Notification("Félicitations, vous avez été accepté pour le poste de", entrevue.getOffreDeStage().getTitre(), candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
 
             return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(),savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
-
         }
 
         return Optional.empty();
     }
-
 
     // Refuser une candidature
     public Optional<CandidatAccepterDTO> refuserCandidature(Long entrevueId) {

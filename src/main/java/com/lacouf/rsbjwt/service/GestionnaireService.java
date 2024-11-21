@@ -38,7 +38,12 @@ public class GestionnaireService {
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
         try {
-            String encodedPassword = passwordEncoder.encode(gestionnaireDTO.getCredentials().getPassword());
+            CredentialDTO credentialDTO = gestionnaireDTO.getCredentials();
+            if (credentialDTO == null) {
+                return Optional.empty();
+            }
+            String encodedPassword = encodePassword(credentialDTO.getPassword());
+
             Gestionnaire gestionnaire = new Gestionnaire(
                     gestionnaireDTO.getFirstName(),
                     gestionnaireDTO.getLastName(),
@@ -51,6 +56,10 @@ public class GestionnaireService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     public Optional<CVDTO> validerOuRejeterCV(Long cvId, String status, String rejectionReason) {

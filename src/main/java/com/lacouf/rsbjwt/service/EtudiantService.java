@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EtudiantService {
@@ -19,6 +20,7 @@ public class EtudiantService {
     private final CVRepository cvRepository;
     private final ContratRepository contratRepository;
     private final OffreDeStageRepository offreDeStageRepository;
+
     private final EntrevueRepository entrevueRepository;
     private final CandidatAccepterRepository candidatAccepterRepository;
 
@@ -35,16 +37,13 @@ public class EtudiantService {
 
     public Optional<EtudiantDTO> creerEtudiant(EtudiantDTO etudiantDTO) {
         try {
-            String encodedPassword = passwordEncoder.encode(etudiantDTO.getCredentials().getPassword());
-
-            Departement departementEnum = null;
-            if (etudiantDTO.getDepartement() != null) {
-                // Match the department using the enum name directly
-                departementEnum = Arrays.stream(Departement.values())
-                        .filter(dept -> dept.name().equalsIgnoreCase(etudiantDTO.getDepartement().name()))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + etudiantDTO.getDepartement()));
+            CredentialDTO credentials = etudiantDTO.getCredentials();
+            if (credentials == null) {
+                return Optional.empty();
             }
+            String encodedPassword = encodePassword(credentials.getPassword());
+
+            Departement departementEnum = getDepartementEnum(etudiantDTO.getDepartement());
 
             Etudiant etudiant = new Etudiant(
                     etudiantDTO.getFirstName(),
@@ -63,6 +62,20 @@ public class EtudiantService {
         }
     }
 
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    private Departement getDepartementEnum(Departement departement) {
+        if (departement == null) {
+            return null;
+        }
+
+        return Arrays.stream(Departement.values())
+                .filter(dept -> dept.name().equalsIgnoreCase(departement.name()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Département invalide : " + departement));
+    }
 
     public Optional<EtudiantDTO> getEtudiantById(Long id) {
         return etudiantRepository.findById(id)
@@ -188,7 +201,7 @@ public class EtudiantService {
             Etudiant etudiant = etudiantOptional.get();
             Long etudiantId = etudiant.getId();
             return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                    .filter(entrevue -> entrevue.getStatus().equals("En attente"))
+                    .filter(entrevue -> entrevue.getStatus().equals("Attente"))
                     .map(EntrevueDTO::new)
                     .toList();
         } else {
@@ -290,12 +303,21 @@ public class EtudiantService {
                 .toList();
     }
 
-
     public List<EtudiantDTO> getEtudiantsAvecContratByDepartement(Departement departement) {
         return etudiantRepository.findEtudiantsAvecContratByDepartement(departement).stream()
                 .map(EtudiantDTO::new)
                 .toList();
     }
 
-
+    public int getNombreCVEnAttente() {
+        List<Etudiant> etudiants = etudiantRepository.findAll();
+        List<CV> cvs = etudiants.stream()
+                .map(Etudiant::getCv)
+                .toList();
+        List<CV> cvsEnAttente = cvs.stream()
+                .filter(cv -> cv != null && "Attente".equals(cv.getStatus()))
+                .toList();
+        int nbCV = cvsEnAttente.size();
+        return nbCV;
+    }
 }

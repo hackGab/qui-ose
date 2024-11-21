@@ -2,25 +2,25 @@ import React from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import Formulaire from "./components/Formulaire";
 import './App.css';
-import AccueilEtudiant from "./components/AccueilEtudiant";
-import AccueilGestionnaire from "./components/AccueilGestionnaire";
-import AccueilProfesseur from "./components/AccueilProfesseur";
+import AccueilEtudiant from "./components/Accueil/AccueilEtudiant";
+import AccueilGestionnaire from "./components/Accueil/AccueilGestionnaire";
+import AccueilProfesseur from "./components/Accueil/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
 import VisualiserOffres from "./components/VisualiserOffres";
-import ListeEtudiants from './components/ListeEtudiants';
-import DetailsEtudiants from './components/DetailsEtudiants';
+import ListeEtudiants from './components/Liste/ListeEtudiants';
+import DetailsEtudiants from './components/Details/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
-import ListeEmployeurs from "./components/ListeEmployeurs";
-import DetailsEmployeurs from "./components/DetailsEmployeur";
-import ListeDeStage from  "./components/ListeDeStage";
+import ListeEmployeurs from "./components/Liste/ListeEmployeurs";
+import DetailsEmployeurs from "./components/Details/DetailsEmployeur";
+import ListeDeStage from "./components/Liste/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
 import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
-import ListeCandidature from "./components/ListeCandidature";
+import ListeCandidature from "./components/Liste/ListeCandidature";
 import SignerContrat from "./components/SignerContrat";
-import ListeProfesseurs from "./components/ListeProfesseurs";
-import DetailsProfesseur from "./components/DetailsProfesseur";
+import ListeProfesseurs from "./components/Liste/ListeProfesseurs";
+import DetailsProfesseur from "./components/Details/DetailsProfesseur";
 
 function App() {
 

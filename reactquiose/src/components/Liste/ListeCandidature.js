@@ -273,6 +273,7 @@ function ListeCandidature() {
         fetch(`http://localhost:8081/candidatures/session/${session}`)
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 setCandidatures(data);
                 const fetchPromises = data.map(candidat =>
                     fetch(`http://localhost:8081/entrevues/${candidat.entrevueId}`)
@@ -283,6 +284,7 @@ function ListeCandidature() {
                 return Promise.all(fetchPromises);
             })
             .then(candidatsWithEntrevues => {
+                console.log(candidatsWithEntrevues);
                 setCandidatures(candidatsWithEntrevues);
                 setLoading(false);
             })
@@ -290,6 +292,7 @@ function ListeCandidature() {
                 fetch(`http://localhost:8081/contrat/session/${session}`)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         setContrats(data);
                     })
                     .catch(err => {

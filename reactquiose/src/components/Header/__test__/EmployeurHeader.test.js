@@ -43,7 +43,7 @@ describe('EmployeurHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EmployeurHeader userData={userData} />
+                    <EmployeurHeader userData={userData} onSendData={jest.fn()} />
                 </MemoryRouter>
             );
         });
@@ -60,7 +60,7 @@ describe('EmployeurHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EmployeurHeader userData={userData} />
+                    <EmployeurHeader userData={userData} onSendData={jest.fn()} />
                 </MemoryRouter>
             );
         });
@@ -82,7 +82,7 @@ describe('EmployeurHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EmployeurHeader userData={userData} />} />
+                        <Route path="/" element={<EmployeurHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/SignerContrat" element={<div>Signature de contrat Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -103,7 +103,7 @@ describe('EmployeurHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EmployeurHeader userData={userData} />} />
+                        <Route path="/" element={<EmployeurHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/SignerContrat" element={<div>Signature de contrat Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -140,7 +140,7 @@ describe('EmployeurHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EmployeurHeader userData={userData} />
+                    <EmployeurHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });
@@ -168,7 +168,7 @@ describe('EmployeurHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EmployeurHeader userData={userData} />
+                    <EmployeurHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });

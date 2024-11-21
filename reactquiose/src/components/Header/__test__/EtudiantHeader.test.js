@@ -44,7 +44,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EtudiantHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });
@@ -61,7 +61,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EtudiantHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });
@@ -83,7 +83,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/" element={<EtudiantHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -104,7 +104,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/" element={<EtudiantHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/stagesAppliquees" element={<div>Stages Appliquées Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -126,7 +126,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/" element={<EtudiantHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/SignerContrat" element={<div>Signature de Contrat Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -147,7 +147,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             render(
                 <MemoryRouter initialEntries={['/']}>
                     <Routes>
-                        <Route path="/" element={<EtudiantHeader userData={userData} />} />
+                        <Route path="/" element={<EtudiantHeader userData={userData} onSendData={jest.fn()}/>} />
                         <Route path="/SignerContrat" element={<div>Signature de contrat Page</div>} />
                     </Routes>
                 </MemoryRouter>
@@ -184,7 +184,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EtudiantHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });
@@ -213,7 +213,7 @@ describe('EtudiantHeader Component - Notifications', () => {
         await act(async () => {
             render(
                 <MemoryRouter>
-                    <EtudiantHeader userData={userData} />
+                    <EtudiantHeader userData={userData} onSendData={jest.fn()}/>
                 </MemoryRouter>
             );
         });

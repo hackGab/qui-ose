@@ -94,7 +94,7 @@ function MesEntrevueAccepte() {
     const fetchSession = async (session) => {
         console.log("Session:", session);
         try {
-            console.log("EmployeurEmail:", employeurEmail); // TODO: Vérifier pourquoi useEffect s'exécute deux fois
+            console.log("EmployeurEmail:", employeurEmail);
 
             const responseEntrevuesAccepte = await fetch(
                 `http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`

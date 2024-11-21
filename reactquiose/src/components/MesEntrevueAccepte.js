@@ -551,32 +551,33 @@ function MesEntrevueAccepte() {
                             {Object.values(groupedInterviews).map(({offer, entrevues}) => (
                                 <div key={offer.id} className="col-md-12 offre-card">
                                     <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
+                                    <hr/>
                                     <ul className="entrevue-list">
                                         {entrevues.map((entrevue) => (
                                             <li
                                                 key={entrevue.id}
                                                 className="entrevue-item text-capitalize"
                                                 onClick={() => handleInterviewClick(entrevue)
-                                            }
+                                                }
                                             >
                                                 <div style={{
                                                     minWidth: "15em",
                                                     marginRight: "3em",
                                                 }}>
-                                                    <span style={{ fontSize: "1rem" }}>
+                                                    <span style={{fontSize: "1rem"}}>
                                                         <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
                                                     </span>
                                                     <br/>
 
                                                     <span className="entrevue-details">
-                                                        <FaCalendarAlt /> &nbsp;
+                                                        <FaCalendarAlt/> &nbsp;
                                                         {formatDate(entrevue.dateHeure)}
                                                     </span>
                                                     <br/>
 
 
                                                     <span className="entrevue-details">
-                                                        <FaLocationPinLock /> &nbsp;
+                                                        <FaLocationPinLock/> &nbsp;
                                                         {entrevue.location}
                                                     </span>
                                                 </div>
@@ -595,7 +596,8 @@ function MesEntrevueAccepte() {
                                                                 {t('GenererEvaluationEmployeurPDF')}
                                                             </button>
                                                         ) : (
-                                                            <strong className="evaluation-possible-text">{t('EvaluationDisponible')}</strong>
+                                                            <strong
+                                                                className="evaluation-possible-text">{t('EvaluationDisponible')}</strong>
                                                         )}
                                                     </div>
                                                 )}
@@ -613,7 +615,7 @@ function MesEntrevueAccepte() {
                                                                         <button
                                                                             className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
                                                                             onClick={() => handleAccept(entrevue)}
-                                                                            style={{ margin: "0", fontSize: "1.2rem" }}
+                                                                            style={{margin: "0", fontSize: "1.2rem"}}
                                                                         >
                                                                             {t('Embaucher')}
                                                                         </button>
@@ -622,7 +624,7 @@ function MesEntrevueAccepte() {
                                                                         <button
                                                                             className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
                                                                             onClick={() => handleRefuse(entrevue)}
-                                                                            style={{ margin: "0", fontSize: "1.2rem" }}
+                                                                            style={{margin: "0", fontSize: "1.2rem"}}
                                                                         >
                                                                             {t('Refuser')}
                                                                         </button>

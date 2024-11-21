@@ -3,6 +3,7 @@ package com.lacouf.rsbjwt.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.CVDTO;
+import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GestionnaireController.class)
 class GestionnaireControllerTest {
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mockMvc;
@@ -134,5 +139,59 @@ class GestionnaireControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void deassignerProfesseur_ShouldReturnEtudiantDTO() throws Exception {
+        EtudiantDTO etudiantDTO = new EtudiantDTO();
+        when(gestionnaireService.deassignerProfesseur(anyString())).thenReturn(Optional.of(etudiantDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/gestionnaire/etudiants/deassignerProfesseur/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(etudiantDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void deassignerProfesseur_ShouldReturnNotFound() throws Exception {
+        when(gestionnaireService.deassignerProfesseur(anyString())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/gestionnaire/etudiants/deassignerProfesseur/test@example.com")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void assignerProfesseur_ShouldReturnEtudiantDTO() throws Exception {
+        EtudiantDTO etudiantDTO = new EtudiantDTO();
+        when(gestionnaireService.assignerProfesseur(anyLong(), anyLong())).thenReturn(Optional.of(etudiantDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/gestionnaire/assignerProfesseur/1/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(etudiantDTO)));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"GESTIONNAIRE"})
+    void assignerProfesseur_ShouldReturnNotFound() throws Exception {
+        when(gestionnaireService.assignerProfesseur(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/gestionnaire/assignerProfesseur/1/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

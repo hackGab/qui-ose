@@ -22,11 +22,17 @@ function VisualiserOffres() {
     const [selectedOffre, setSelectedOffre] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [nbCandidats, setNbCandidats] = useState({});
-    const [session, setSession] = useState(getLocalStorageSession());// État pour la session active
+    const [session, setSession] = useState(getLocalStorageSession());
     const {t} = useTranslation();
 
     const fetchOffres = async (session) => {
         console.log("session ", session);
+
+        if (session === "") {
+            session = calculateNextSessions().slice(0, -2);
+            localStorage.setItem('session', session)
+        }
+
         try {
             const response = await fetch(`http://localhost:8081/offreDeStage/offresEmployeur/${employeurEmail}/session/${session}`);
             if (response.status === 404) {

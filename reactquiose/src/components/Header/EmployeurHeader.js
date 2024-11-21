@@ -20,7 +20,15 @@ function EmployeurHeader({ userData, onSendData}) {
     const nextSession = calculateNextSessions();
     const initialSession = nextSession.slice(0, -2);
     const [session, setSession] = useState(() => {
-        return localStorage.getItem('session') || initialSession;
+        const storedSession = localStorage.getItem('session');
+        if (storedSession) {
+            return storedSession;
+        }
+        if (initialSession) {
+            localStorage.setItem('session', initialSession); // Stocker initialSession si elle est absente
+            return initialSession;
+        }
+        return '';
     });
 
     const [userDataState, setUserData] = useState(null);

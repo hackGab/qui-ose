@@ -101,7 +101,7 @@ function GestionnaireHeader({onSendData}) {
                     {/* Afficher le filtrage uniquement si on n'est pas sur /listeProfesseurs ou /listeEtudiants */}
                     {location.pathname !== '/listeProfesseurs' && location.pathname !== '/listeEtudiants' && (
                         <div className="filter-options" data-testid="filtreSession">
-                            <label>Filtre :</label>
+                            <label>{t('filtrerParSession')}</label>
                             <div className="session-dropdown">
                                 <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
                                     {availableSessions.map(sessionOption => (

@@ -387,5 +387,6 @@
   "AUTOMNE": "AUTOMNE",
   "PRINTEMPS": "PRINTEMPS",
   "NombreDeCandidats" : "Nombre de candidats",
-  "EvaluationDisponible": "Évaluation disponible"
+  "EvaluationDisponible": "Évaluation disponible",
+  "filtrerParSession": "Filtrer par session"
 }

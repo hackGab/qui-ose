@@ -110,7 +110,7 @@ function EmployeurHeader({ userData, onSendData}) {
                     </span>
 
                     <div className="filter-options">
-                        <label>Filtre :</label>
+                        <label>{t('filtrerParSession')}</label>
                         <div className="session-dropdown">
                             <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
                                 {availableSessions.map(sessionOption => (

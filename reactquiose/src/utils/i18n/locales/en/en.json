@@ -378,5 +378,6 @@
   "validé": "validated",
   "Validé": "validated",
   "Attente": "pending",
-  "EvaluationDisponible": "Evaluation Available"
+  "EvaluationDisponible": "Evaluation Available",
+  "filtrerParSession": "Filter by session"
 }

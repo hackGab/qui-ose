@@ -56,9 +56,6 @@ class ContratControllerTest {
     private EtudiantService etudiantService;
 
     @MockBean
-    private OffreDeStageService offreDeStageService;
-
-    @MockBean
     private ProfesseurService professeurService;
 
     @MockBean
@@ -66,9 +63,6 @@ class ContratControllerTest {
 
     @MockBean
     private UserAppService userService;
-
-    @MockBean
-    private CandidatAccepterService candidatAccepterService;
 
     private ContratDTO createContratDTO() {
         ContratDTO contratDTO = new ContratDTO();

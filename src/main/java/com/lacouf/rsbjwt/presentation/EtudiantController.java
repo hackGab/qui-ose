@@ -66,7 +66,7 @@ public class EtudiantController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<EtudiantDTO>> getAllEtudiants() {
+    public ResponseEntity<List<EtudiantDTO>> getAllEtudiants() {
         return ResponseEntity.ok(etudiantService.getAllEtudiants());
     }
 
@@ -79,7 +79,7 @@ public class EtudiantController {
     }
 
     @GetMapping("/{etudiantEmail}/offres")
-    public ResponseEntity<Iterable<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
+    public ResponseEntity<List<OffreDeStageDTO>> getOffresDeStage(@PathVariable String etudiantEmail) {
         return ResponseEntity.ok(etudiantService.getOffresDeStage(etudiantEmail));
     }
 
@@ -98,7 +98,7 @@ public class EtudiantController {
     } 
 
     @GetMapping("/departement/{departement}")
-    public ResponseEntity<Iterable<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
+    public ResponseEntity<List<EtudiantDTO>> getEtudiantsByDepartement(@PathVariable String departement) {
         return ResponseEntity.ok(etudiantService.getEtudiantsByDepartement(departement));
     }
 

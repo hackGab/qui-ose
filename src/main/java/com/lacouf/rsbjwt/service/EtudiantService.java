@@ -120,7 +120,7 @@ public class EtudiantService {
         return Optional.of(new EtudiantDTO(etudiant));
     }
 
-    public Iterable<EtudiantDTO> getAllEtudiants() {
+    public List<EtudiantDTO> getAllEtudiants() {
         return etudiantRepository.findAll().stream()
                 .map(EtudiantDTO::new)
                 .toList();
@@ -152,7 +152,7 @@ public class EtudiantService {
         return Optional.empty();
     }
 
-    public Iterable<OffreDeStageDTO> getOffresDeStage(String etudiantEmail) {
+    public List<OffreDeStageDTO> getOffresDeStage(String etudiantEmail) {
         Optional<Etudiant> etudiantOptional = etudiantRepository.findByEmail(etudiantEmail);
         if (etudiantOptional.isPresent()) {
             Etudiant etudiant = etudiantOptional.get();
@@ -301,7 +301,7 @@ public class EtudiantService {
     }
 
 
-    public Iterable<EtudiantDTO> getEtudiantsByDepartement(String departement) {
+    public List<EtudiantDTO> getEtudiantsByDepartement(String departement) {
         System.out.println("Département : " + departement);
 
         Departement departementEnum = Arrays.stream(Departement.values())

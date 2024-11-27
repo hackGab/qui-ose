@@ -40,22 +40,16 @@ public class CandidatAccepterControllerTest {
     private GestionnaireService gestionnaireService;
 
     @MockBean
-    private OffreDeStageService offreDeStageService;
-
-    @MockBean
     private PasswordEncoder passwordEncoder;
 
     @MockBean
     private UserAppService userService;
 
-    @MockBean
-    private CandidatAccepterService candidatAccepterService;
-
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldAcceptCandidature() throws Exception {
         CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
-        Mockito.when(candidatAccepterService.accepterCandidature(anyLong()))
+        Mockito.when(employeurService.accepterCandidature(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -71,7 +65,7 @@ public class CandidatAccepterControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldRefuseCandidature() throws Exception {
         CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
-        Mockito.when(candidatAccepterService.refuserCandidature(anyLong()))
+        Mockito.when(employeurService.refuserCandidature(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -88,7 +82,7 @@ public class CandidatAccepterControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldReturnNotFoundWhenCandidatureNotFound() throws Exception {
-        Mockito.when(candidatAccepterService.accepterCandidature(anyLong()))
+        Mockito.when(employeurService.accepterCandidature(anyLong()))
                 .thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -103,7 +97,7 @@ public class CandidatAccepterControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldGetCandidatureDecision() throws Exception {
         CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
-        Mockito.when(candidatAccepterService.getCandidatureDecision(anyLong()))
+        Mockito.when(employeurService.getCandidatureDecision(anyLong()))
                 .thenReturn(Optional.of(candidatAccepterDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -117,7 +111,7 @@ public class CandidatAccepterControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldReturnNotFoundWhenDecisionNotFound() throws Exception {
-        Mockito.when(candidatAccepterService.getCandidatureDecision(anyLong()))
+        Mockito.when(employeurService.getCandidatureDecision(anyLong()))
                 .thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -131,7 +125,7 @@ public class CandidatAccepterControllerTest {
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldGetAllCandidaturesFromSession() throws Exception {
         CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO();
-        Mockito.when(candidatAccepterService.getCandidaturesBySession("HIVER25"))
+        Mockito.when(gestionnaireService.getCandidaturesBySession("HIVER25"))
                 .thenReturn(List.of(candidatAccepterDTO));
 
         mockMvc.perform(MockMvcRequestBuilders

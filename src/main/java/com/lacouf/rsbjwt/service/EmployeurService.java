@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeurService {
@@ -300,5 +301,28 @@ public class EmployeurService {
                     System.out.println("savedOffre = " + savedOffre);
                     return Optional.of(new OffreDeStageDTO(savedOffre));
                 });
+    }
+
+    public List<OffreDeStageDTO> getOffresEmployeurSession(Employeur employeur, String session) {
+        List<OffreDeStage> offres = offreDeStageRepository.findByEmployeurAndSession(employeur, session);
+        List<OffreDeStageDTO> offresDTO = offres.stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+        return offresDTO;
+    }
+
+    public Optional<List<EtudiantDTO>> getEtudiantsByOffre(Long offreId) {
+
+        Optional<OffreDeStage> offreOpt = offreDeStageRepository.findById(offreId);
+        if (offreOpt.isEmpty()) {
+            throw new IllegalArgumentException("Offre de stage introuvable");
+        }
+
+        List<EtudiantDTO> etudiants = offreOpt.get().getEtudiants().stream()
+                .map(EtudiantDTO::new)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
     }
 }

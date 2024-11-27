@@ -61,10 +61,6 @@ public class OffreDeStageControllerTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
-    @MockBean
-    private OffreDeStageService offreDeStageService;
-
-
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldCreateOffreDeStage() throws Exception {
@@ -79,7 +75,7 @@ public class OffreDeStageControllerTest {
         OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
         offreDeStageDTO.setTitre("Titre du stage");
 
-        when(offreDeStageService.creerOffreDeStage(any(OffreDeStageDTO.class), any(Optional.class)))
+        when(employeurService.creerOffreDeStage(any(OffreDeStageDTO.class), any(Optional.class)))
                 .thenReturn(Optional.of(offreDeStageDTO));
 
 
@@ -117,7 +113,7 @@ public class OffreDeStageControllerTest {
         OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
         offreDeStageDTO.setTitre("Titre du stage");
 
-        when(offreDeStageService.getOffreDeStageById(anyLong()))
+        when(employeurService.getOffreDeStageById(anyLong()))
                 .thenReturn(Optional.of(offreDeStageDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -153,7 +149,7 @@ public class OffreDeStageControllerTest {
         when(employeurService.findByCredentials_Email(any(String.class)))
                 .thenReturn(Optional.of(new Employeur()));
 
-        when(offreDeStageService.getOffresEmployeurSession(any(Employeur.class), anyString()))
+        when(employeurService.getOffresEmployeurSession(any(Employeur.class), anyString()))
                 .thenReturn(List.of(offreDeStageDTO, offreDeStageDTO2));
 
 
@@ -180,40 +176,12 @@ public class OffreDeStageControllerTest {
     }
 
 
-
-    @Test
-    @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
-    void deleteOffreDeStage() throws Exception {
-        // Mock the service to return the expected message
-        when(offreDeStageService.deleteOffreDeStage(anyLong()))
-                .thenReturn("Offre de stage supprimée");
-
-        // Perform the DELETE request to the correct URL
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/offreDeStage/1")// Corrected the double slash
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
-
-
-    @Test
-        @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
-        void try_to_deleteOffreDeStage_with_no_id() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders
-                            .delete("/offreDeStage/")
-                            .with(SecurityMockMvcRequestPostProcessors.csrf())
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.status().isNotFound());
-        }
-
-
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     void updateOffreDeStage() throws Exception {
         OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
 
-        when(offreDeStageService.updateOffreDeStage(anyLong(), any(OffreDeStageDTO.class)))
+        when(employeurService.updateOffreDeStage(anyLong(), any(OffreDeStageDTO.class)))
                 .thenReturn(Optional.of(offreDeStageDTO));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -263,7 +231,7 @@ public class OffreDeStageControllerTest {
         EtudiantDTO etudiantDTO1 = new EtudiantDTO("John", "Doe", Role.ETUDIANT, "1234567890", new CredentialDTO("john.doe@example.com", "password"), Departement.TECHNIQUES_INFORMATIQUE);
         EtudiantDTO etudiantDTO2 = new EtudiantDTO("Jane", "Smith", Role.ETUDIANT, "0987654321", new CredentialDTO("jane.smith@example.com", "password"), Departement.TECHNIQUES_INFORMATIQUE);
 
-        when(offreDeStageService.getEtudiantsByOffre(offreId))
+        when(employeurService.getEtudiantsByOffre(offreId))
                 .thenReturn(Optional.of(List.of(etudiantDTO1, etudiantDTO2)));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -293,7 +261,7 @@ public class OffreDeStageControllerTest {
 
         OffreDeStageDTO offreDeStageDTO = new OffreDeStageDTO();
 
-        when(offreDeStageService.getOffresBySession(session))
+        when(gestionnaireService.getOffresBySession(session))
                 .thenReturn(List.of(offreDeStageDTO));
 
         mockMvc.perform(MockMvcRequestBuilders

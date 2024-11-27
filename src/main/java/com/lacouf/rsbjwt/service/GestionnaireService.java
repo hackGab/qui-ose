@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GestionnaireService {
@@ -210,5 +211,22 @@ public class GestionnaireService {
         return contratRepository.findBySession(session).stream()
                 .map(ContratDTO::new)
                 .toList();
+    }
+
+    public List<OffreDeStageDTO> getOffresBySession(String session) {
+        List<OffreDeStageDTO> offres = offreDeStageRepository.findBySession(session)
+                .stream()
+                .map(OffreDeStageDTO::new)
+                .collect(Collectors.toList());
+
+        return offres;
+    }
+
+    public int getNombreOffresEnAttente() {
+        List<OffreDeStage> offres = offreDeStageRepository.findAll();
+        List<OffreDeStage> offresEnAttente = offres.stream()
+                .filter(offre -> offre.getStatus().equals("Attente"))
+                .toList();
+        return offresEnAttente.size();
     }
 }

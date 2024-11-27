@@ -3,7 +3,7 @@ package com.lacouf.rsbjwt.presentation;
 import com.lacouf.rsbjwt.model.Employeur;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
-import com.lacouf.rsbjwt.service.OffreDeStageService;
+import com.lacouf.rsbjwt.service.GestionnaireService;
 import com.lacouf.rsbjwt.service.dto.EtudiantDTO;
 import com.lacouf.rsbjwt.service.dto.OffreDeStageDTO;
 import org.springframework.http.HttpStatus;
@@ -20,12 +20,12 @@ public class OffreDeStageController {
 
     private final EmployeurService employeurService;
     private final EtudiantService etudiantService;
+    private final GestionnaireService gestionnaireService;
 
-
-
-    public OffreDeStageController(EmployeurService employeurService, EtudiantService etudiantService) {
+    public OffreDeStageController(EmployeurService employeurService, EtudiantService etudiantService, GestionnaireService gestionnaireService) {
         this.employeurService = employeurService;
         this.etudiantService = etudiantService;
+        this.gestionnaireService = gestionnaireService;
     }
 
     @PostMapping("/creerOffreDeStage/{email}")
@@ -52,30 +52,13 @@ public class OffreDeStageController {
 
         Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
         if (employeurOpt.isPresent()) {
-            List<OffreDeStageDTO> offreDeStageDTOList = offreDeStageService.getOffresEmployeurSession(employeurOpt.get(), session);
+            List<OffreDeStageDTO> offreDeStageDTOList = employeurService.getOffresEmployeurSession(employeurOpt.get(), session);
 
             return ResponseEntity.ok().body(offreDeStageDTOList);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOffreDeStage(@PathVariable Long id) {
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        String responseMessage = offreDeStageService.deleteOffreDeStage(id);
-
-
-        if ("Offre de stage supprimée".equals(responseMessage)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<OffreDeStageDTO> updateOffreDeStage(@PathVariable Long id, @RequestBody OffreDeStageDTO offreDeStageDTO) {
@@ -110,7 +93,7 @@ public class OffreDeStageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<OffreDeStageDTO> offresBySession = offreDeStageService.getOffresBySession(session);
+        List<OffreDeStageDTO> offresBySession = gestionnaireService.getOffresBySession(session);
 
         return ResponseEntity.ok().body(offresBySession);
     }
@@ -132,14 +115,14 @@ public class OffreDeStageController {
 
         System.out.println("offreId = " + offreId);
 
-        List<EtudiantDTO> etudiants = offreDeStageService.getEtudiantsByOffre(offreId).orElseGet(() -> List.of());
+        List<EtudiantDTO> etudiants = employeurService.getEtudiantsByOffre(offreId).orElseGet(() -> List.of());
 
         return ResponseEntity.ok().body(etudiants);
     }
 
     @GetMapping("/attentes")
     public ResponseEntity<Integer> getOffresAttentes() {
-        int nbOffres = offreDeStageService.getNombreOffresEnAttente();
+        int nbOffres = gestionnaireService.getNombreOffresEnAttente();
         return ResponseEntity.ok(nbOffres);
     }
 }

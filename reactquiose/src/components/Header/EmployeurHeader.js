@@ -1,12 +1,11 @@
 import React, {useEffect, useState } from 'react';
 import logo from '../../images/logo.png';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../../CSS/Header.css'
 import i18n from "i18next";
 import "../../CSS/BoutonLangue.css";
 import ProfileMenu from './ProfileMenu';
-import { handleLinkClick } from "../../utils/headerUtils";
 import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
 import {calculateNextSessions} from "../../utils/methodes/dateUtils";
 

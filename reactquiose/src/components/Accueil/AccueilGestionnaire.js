@@ -7,11 +7,9 @@ import { useTranslation } from 'react-i18next';
 import etudiantImage from '../../images/Etudiant.png';
 import professeurImage from '../../images/Professeur.png';
 import employeurImage from '../../images/Employeur.png';
-import GestionnaireHeader from "../Header/GestionnaireHeader";
 
 function AccueilGestionnaire() {
     const { t } = useTranslation();
-    const [refusNotification] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const userData = location.state?.userData;

@@ -1,11 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { format } from 'date-fns';
-import { useTranslation } from "react-i18next";
+import {useLocation} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {format} from 'date-fns';
+import {useTranslation} from "react-i18next";
 import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/MesEntrevueAccepte.css";
-import {forEach} from "react-bootstrap/ElementChildren";
-import {FaCalendarAlt, FaCheck, FaTimes} from "react-icons/fa";
+import {FaCalendarAlt} from "react-icons/fa";
 import ConfirmModal from "./ConfirmModal";
 import i18n from "i18next";
 import {FaLocationPinLock} from "react-icons/fa6";
@@ -29,7 +28,7 @@ function MesEntrevueAccepte() {
     const [evaluationCree, setEvaluationCree] = useState(false);
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
     const [evaluations, setEvaluations] = useState([]);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [session, setSession] = useState(getLocalStorageSession());
 
     const EvaluationConformiteOptions = [
@@ -111,8 +110,7 @@ function MesEntrevueAccepte() {
                         `Erreur du serveur: ${responseEntrevuesAccepte.statusText}`
                     );
                 }
-            }
-            else{
+            } else {
                 setEntrevues([]);
             }
 
@@ -146,8 +144,6 @@ function MesEntrevueAccepte() {
 
         fetchOffresEntrevues();
     }, [employeurEmail, session]); // Inclure `session` si elle peut changer dynamiquement
-
-
 
 
     useEffect(() => {
@@ -190,7 +186,7 @@ function MesEntrevueAccepte() {
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantgetEvaluationEtudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
-                    ? { ...entrevue, status: 'accepter' }
+                    ? {...entrevue, status: 'accepter'}
                     : entrevue
             )
         );
@@ -202,7 +198,7 @@ function MesEntrevueAccepte() {
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantDTO === entrevueRejete.etudiantDTO && entrevue.offreDeStageDTO === entrevueRejete.offreDeStageDTO
-                    ? { ...entrevue, status: 'refuser' }
+                    ? {...entrevue, status: 'refuser'}
                     : entrevue
             )
         );
@@ -238,12 +234,12 @@ function MesEntrevueAccepte() {
         console.log("A la candidature", candidature);
 
         const evaluation = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
-        if(evaluation) {
+        if (evaluation) {
             setShowDetailsModal(false);
             return;
         }
 
-        if(candidature && entrevue.etudiantDTO.professeur){
+        if (candidature && entrevue.etudiantDTO.professeur) {
             setSelectedEntrevue(entrevue);
             setShowDetailsModal(true);
             console.log("selectedEntrevue", selectedEntrevue);
@@ -257,7 +253,7 @@ function MesEntrevueAccepte() {
 
     const handleChange = (e, field) => {
         console.log("Evaluation", evaluation)
-        const { value } = e.target;
+        const {value} = e.target;
         setEvaluation((prevEvaluation) => ({
             ...prevEvaluation,
             [field]: value,
@@ -439,8 +435,8 @@ function MesEntrevueAccepte() {
                 throw new Error('Erreur lors de la création de l\'évaluation');
             }
 
-            if(response.status === 201) {
-                const data = await response.json();
+            if (response.status === 201) {
+                await response.json();
                 setEvaluationCree(true);
                 closeDetailsModal()
             }
@@ -513,7 +509,7 @@ function MesEntrevueAccepte() {
     }
 
     if (error) {
-        return <div style={{ fontSize: "1.5rem" }}>{t('Erreur')} {error}</div>;
+        return <div style={{fontSize: "1.5rem"}}>{t('Erreur')} {error}</div>;
     }
 
     const showButtonsIfDateBeforeToday = (entrevue) => {
@@ -523,7 +519,7 @@ function MesEntrevueAccepte() {
     }
 
     const formatDate = (dateString) => {
-        const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const options = {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'};
         return new Date(dateString).toLocaleDateString(i18n.language, options);
     }
 
@@ -1349,7 +1345,8 @@ function MesEntrevueAccepte() {
                                     onClick={() => creerEvaluationEtudiant(userData.credentials.email, selectedEntrevue.etudiantDTO.email, evaluation)}>
                                 {t('creer_evaluation')}
                             </button>
-                            <button type="button" className="btn btn-danger" onClick={closeDetailsModal}>{t('close')}</button>
+                            <button type="button" className="btn btn-danger"
+                                    onClick={closeDetailsModal}>{t('close')}</button>
                         </Modal.Footer>
 
                     </form>

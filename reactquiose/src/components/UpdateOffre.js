@@ -11,7 +11,7 @@ function UpdateOffre() {
     const [titre, setTitre] = useState(offre?.titre || "");
     const [localisation, setLocalisation] = useState(offre?.localisation || "");
     const [nbCandidats, setNbCandidats] = useState(offre?.nbCandidats || 0);
-    const [status, setStatus] = useState(offre?.status || "Attente");
+    const [status] = useState(offre?.status || "Attente");
     const [dateLimite, setDateLimite] = useState(offre?.dateLimite || "");
     const [pdfFile, setPdfFile] = useState(null);
     const [dragActive, setDragActive] = useState(false);

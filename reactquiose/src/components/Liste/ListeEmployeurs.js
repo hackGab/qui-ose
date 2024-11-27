@@ -9,7 +9,6 @@ import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorag
 
 function ListeEmployeurs() {
     const { t } = useTranslation();
-    const [employeurs, setEmployeurs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);

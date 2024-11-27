@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GestionnaireHeader from '../Header/GestionnaireHeader';
 import '../../CSS/ListeCandidature.css';
 import { useTranslation } from "react-i18next";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Icon} from "react-icons-kit";
 import {eye, eyeOff} from "react-icons-kit/feather";
 import TableauContrat from "../TableauContrat";
@@ -22,7 +22,7 @@ function ListeCandidature() {
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
+    const [modalMessage] = useState('');
     const [type, setType] = useState('password');
     const [password, setPassword] = useState('');
     const location = useLocation();

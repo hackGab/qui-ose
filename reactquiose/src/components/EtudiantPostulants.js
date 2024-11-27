@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/EtudiantPostulants.css";

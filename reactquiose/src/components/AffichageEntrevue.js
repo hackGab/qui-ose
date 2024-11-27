@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import {FaCalendarAlt, FaClock, FaHandPointer, FaMousePointer, FaRegHandPointer} from 'react-icons/fa';
+import {FaCalendarAlt, FaClock} from 'react-icons/fa';
 import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
 import '../CSS/MesEntrevues.css';
 import i18n from "i18next";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
     const [showModal, setShowModal] = useState(false);

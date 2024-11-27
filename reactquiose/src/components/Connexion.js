@@ -14,7 +14,7 @@ function Connexion() {
     const [icon, setIcon] = useState(eyeOff);
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const afficherMdp = () => {
         setIcon(type === 'password' ? eye : eyeOff);

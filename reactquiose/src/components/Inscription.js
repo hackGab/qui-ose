@@ -4,7 +4,6 @@ import InputMask from 'react-input-mask';
 import { Else, If, Then } from 'react-if';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
-import { eye } from 'react-icons-kit/feather/eye';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import '../CSS/BoutonLangue.css';
@@ -25,9 +24,9 @@ function Inscription() {
         { value: 'employeur', label: t('employeur') }
     ];
     const [type, setType] = useState('password');
-    const [icon, setIcon] = useState(eyeOff);
+    const [icon] = useState(eyeOff);
     const [typeConf, setTypeConf] = useState('password');
-    const [iconConf, setIconConf] = useState(eyeOff);
+    const [iconConf] = useState(eyeOff);
     const [departement, setDepartement] = useState('');
     const [selectedDepartement, setSelectedDepartement] = useState(null);
     const [optionsDepartement, setOptionsDepartement] = useState([]);

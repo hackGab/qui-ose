@@ -12,7 +12,7 @@ function ListeEtudiants() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [visibleStatus, setVisibleStatus] = useState({ 'En attente': true });
+    const [visibleStatus] = useState({ 'En attente': true });
 
 
     useEffect(() => {

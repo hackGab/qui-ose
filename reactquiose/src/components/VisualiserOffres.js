@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useLocation,useNavigate, Link } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import "../CSS/VisualiserOffres.css";
 import EmployeurHeader from "./Header/EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from "react-i18next";
-import i18n from "i18next";
 import {calculateNextSessions} from "../utils/methodes/dateUtils";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
@@ -27,7 +26,6 @@ function VisualiserOffres() {
 
     const fetchOffres = async (session) => {
         console.log("session ", session);
-
         if (session === "") {
             session = calculateNextSessions().slice(0, -2);
             localStorage.setItem('session', session)
@@ -81,9 +79,10 @@ function VisualiserOffres() {
 
     useEffect(() => {
         if (employeurEmail) {
-            fetchOffres(session);
+            setIsLoading(true)
+            fetchOffres(session).then(r => setIsLoading(false) );
         }
-    }, [employeurEmail, session]);
+    }, [employeurEmail,session]);
 
 
     const getNbCandidats = (offre) => {
@@ -160,7 +159,7 @@ function VisualiserOffres() {
     }
     const verificationSession = (data) => {
         setSession(data.session)
-        fetchOffres(data.session);
+        fetchOffres(data.session).then(r => setIsLoading(false));
     }
 
     return (

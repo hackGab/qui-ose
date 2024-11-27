@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Button } from "react-bootstrap";
-import { Tooltip } from 'react-tooltip';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import "../CSS/ListeDeStage.css";

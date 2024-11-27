@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import {useLocation} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import GestionnaireHeader from "../Header/GestionnaireHeader";
 import '../../CSS/DetailsProf.css';
 
@@ -76,13 +76,12 @@ function DetailsProfesseur() {
             .then(data => {
                 setSuccessMessage(data.message);
                 setEtudiants(prevEtudiants => {
-                    const updatedEtudiants = prevEtudiants.map(etudiant => {
+                    return prevEtudiants.map(etudiant => {
                         if (etudiantsSelectionner.includes(etudiant.email)) {
-                            return { ...etudiant, professeur: { email: professeur.email } };
+                            return {...etudiant, professeur: {email: professeur.email}};
                         }
                         return etudiant;
                     });
-                    return updatedEtudiants;
                 });
                 setEtudiantsSelectionner([]);
                 setTimeout(() => setSuccessMessage(''), 3000);
@@ -109,13 +108,12 @@ function DetailsProfesseur() {
             .then(data => {
                 setSuccessMessage(data.message);
                 setEtudiants(prevEtudiants => {
-                    const updatedEtudiants = prevEtudiants.map(etudiant => {
+                    return prevEtudiants.map(etudiant => {
                         if (etudiantsSelectionnerRetire.includes(etudiant.email)) {
-                            return { ...etudiant, professeur: null };
+                            return {...etudiant, professeur: null};
                         }
                         return etudiant;
                     });
-                    return updatedEtudiants;
                 });
                 setEtudiantsSelectionnerRetire([]);
                 setTimeout(() => setSuccessMessage(''), 3000);

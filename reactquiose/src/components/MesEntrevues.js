@@ -5,13 +5,12 @@ import { useTranslation } from 'react-i18next';
 import '../CSS/MesEntrevues.css';
 import EtudiantHeader from "./Header/EtudiantHeader";
 import AffichageEntrevue from "./AffichageEntrevue";
-import i18n from "i18next";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
 
 function MesEntrevues() {
     const { t } = useTranslation();
     const location = useLocation();
-    const [userData, setUserData] = useState(location.state?.userData || null);
+    const [userData] = useState(location.state?.userData || null);
     const [entrevues, setEntrevues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

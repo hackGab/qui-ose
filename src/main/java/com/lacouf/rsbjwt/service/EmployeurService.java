@@ -17,12 +17,14 @@ public class EmployeurService {
     private final OffreDeStageRepository offreDeStageRepository;
     private final UserAppRepository userAppRepository;
     private final EvaluationStageEmployeurRepository evaluationStageEmployeurRepository;
+    private final CandidatAccepterRepository candidatAccepterRepository;
+    private final NotificationRepository notificationRepository;
 
     private final ContratRepository contratRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository, UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository, EvaluationStageEmployeurRepository evaluationStageEmployeurRepository) {
+    public EmployeurService(EmployeurRepository employeurRepository, PasswordEncoder passwordEncoder, EntrevueRepository entrevueRepository, UserAppRepository userAppRepository, OffreDeStageRepository offreDeStageRepository, EtudiantRepository etudiantRepository, ContratRepository contratRepository, EvaluationStageEmployeurRepository evaluationStageEmployeurRepository, CandidatAccepterRepository candidatAccepterRepository, NotificationRepository notificationRepository) {
         this.employeurRepository = employeurRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAppRepository = userAppRepository;
@@ -31,6 +33,8 @@ public class EmployeurService {
         this.etudiantRepository = etudiantRepository;
         this.contratRepository = contratRepository;
         this.evaluationStageEmployeurRepository = evaluationStageEmployeurRepository;
+        this.candidatAccepterRepository = candidatAccepterRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public Optional<EmployeurDTO> creerEmployeur(EmployeurDTO employeurDTO) {
@@ -324,5 +328,51 @@ public class EmployeurService {
                 .collect(Collectors.toList());
 
         return etudiants.isEmpty() ? Optional.empty() : Optional.of(etudiants);
+    }
+
+    public NotificationDTO createNotification(Notification notification) {
+        Notification savedNotification = notificationRepository.save(notification);
+        return new NotificationDTO(savedNotification);
+    }
+
+    public Optional<CandidatAccepterDTO> accepterCandidature(Long entrevueId) {
+        Optional<Entrevue> entrevueOptional = entrevueRepository.findById(entrevueId);
+
+        if (entrevueOptional.isPresent()) {
+            Entrevue entrevue = entrevueOptional.get();
+            CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, true);
+            CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
+
+            createNotification(new Notification("Félicitations, vous avez été accepté pour le poste de", entrevue.getOffreDeStage().getTitre(), candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
+
+            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(),savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<CandidatAccepterDTO> refuserCandidature(Long entrevueId) {
+        Optional<Entrevue> entrevueOptional = entrevueRepository.findById(entrevueId);
+
+        if (entrevueOptional.isPresent()) {
+            Entrevue entrevue = entrevueOptional.get();
+            CandidatAccepter candidatAccepter = new CandidatAccepter(entrevue, false);
+            CandidatAccepter savedCandidatAccepter = candidatAccepterRepository.save(candidatAccepter);
+            createNotification(new Notification("Désoler, vous n'êtes pas accepté pour le poste de", entrevue.getOffreDeStage().getTitre(), candidatAccepter.getEmailEtudiant(), "/stagesAppliquees"));
+
+            return Optional.of(new CandidatAccepterDTO(savedCandidatAccepter.getId(), savedCandidatAccepter.getEntrevue().getId(), savedCandidatAccepter.isAccepte()));
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<CandidatAccepterDTO> getCandidatureDecision(Long entrevueId) {
+        Optional<CandidatAccepter> candidatAccepterOptional = candidatAccepterRepository.findByEntrevueId(entrevueId);
+
+        return candidatAccepterOptional.map(candidatAccepter -> new CandidatAccepterDTO(
+                candidatAccepter.getId(),
+                candidatAccepter.getEntrevue().getId(),
+                candidatAccepter.isAccepte()
+        ));
     }
 }

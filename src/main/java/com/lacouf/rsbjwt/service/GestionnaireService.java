@@ -18,6 +18,7 @@ public class GestionnaireService {
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
     private final ContratRepository contratRepository;
+    private final CandidatAccepterRepository candidatAccepterRepository;
 
     private final OffreDeStageRepository offreDeStageRepository;
     private final EntrevueRepository entrevueRepository;
@@ -25,7 +26,7 @@ public class GestionnaireService {
     private final EvaluationStageProfRepository evaluationStageProfRepository;
     private final NotificationRepository notificationRepository;
 
-    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository, EvaluationStageProfRepository evaluationStageProfRepository, NotificationRepository notificationRepository) {
+    public GestionnaireService(GestionnaireRepository gestionnaireRepository, CVRepository cvRepository, EtudiantRepository etudiantRepository , OffreDeStageRepository offreDeStageRepository, PasswordEncoder passwordEncoder, ContratRepository contratRepository, EntrevueRepository entrevueRepository, ProfesseurRepository professeurRepository, EvaluationStageProfRepository evaluationStageProfRepository, NotificationRepository notificationRepository, CandidatAccepterRepository candidatAccepterRepository) {
         this.gestionnaireRepository = gestionnaireRepository;
         this.cvRepository = cvRepository;
         this.etudiantRepository = etudiantRepository;
@@ -36,6 +37,7 @@ public class GestionnaireService {
         this.professeurRepository = professeurRepository;
         this.evaluationStageProfRepository = evaluationStageProfRepository;
         this.notificationRepository = notificationRepository;
+        this.candidatAccepterRepository = candidatAccepterRepository;
     }
 
     public Optional<GestionnaireDTO> creerGestionnaire(GestionnaireDTO gestionnaireDTO) {
@@ -228,5 +230,25 @@ public class GestionnaireService {
                 .filter(offre -> offre.getStatus().equals("Attente"))
                 .toList();
         return offresEnAttente.size();
+    }
+
+    public List<CandidatAccepterDTO> getAllCandidatures() {
+        return candidatAccepterRepository.findAll().stream()
+                .map(candidatAccepter -> new CandidatAccepterDTO(
+                        candidatAccepter.getId(),
+                        candidatAccepter.getEntrevue().getId(),
+                        candidatAccepter.isAccepte()
+                ))
+                .toList();
+    }
+
+    public List<CandidatAccepterDTO> getCandidaturesBySession(String session) {
+        return candidatAccepterRepository.findByEntrevueSession(session).stream()
+                .map(candidatAccepter -> new CandidatAccepterDTO(
+                        candidatAccepter.getId(),
+                        candidatAccepter.getEntrevue().getId(),
+                        candidatAccepter.isAccepte()
+                ))
+                .toList();
     }
 }

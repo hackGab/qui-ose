@@ -1,6 +1,8 @@
 package com.lacouf.rsbjwt.presentation;
 
-import com.lacouf.rsbjwt.service.CandidatAccepterService;
+import com.lacouf.rsbjwt.repository.GestionnaireRepository;
+import com.lacouf.rsbjwt.service.EmployeurService;
+import com.lacouf.rsbjwt.service.GestionnaireService;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +16,19 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class CandidatAccepterController {
 
-    private final CandidatAccepterService candidatAccepterService;
+    private final EmployeurService employeurService;
+    private final GestionnaireRepository gestionnaireRepository;
+    private final GestionnaireService gestionnaireService;
 
-    public CandidatAccepterController(CandidatAccepterService candidatAccepterService) {
-        this.candidatAccepterService = candidatAccepterService;
+    public CandidatAccepterController(EmployeurService employeurService, GestionnaireRepository gestionnaireRepository, GestionnaireService gestionnaireService) {this.employeurService = employeurService;
+        this.gestionnaireRepository = gestionnaireRepository;
+        this.gestionnaireService = gestionnaireService;
     }
 
     // Endpoint pour accepter une candidature
     @PutMapping("/accepter/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> accepterCandidature(@PathVariable Long entrevueId) {
-        Optional<CandidatAccepterDTO> candidatAccepterOpt = candidatAccepterService.accepterCandidature(entrevueId);
+        Optional<CandidatAccepterDTO> candidatAccepterOpt = employeurService.accepterCandidature(entrevueId);
 
         return candidatAccepterOpt
                 .map(candidatAccepter -> ResponseEntity.ok().body(candidatAccepter))
@@ -33,7 +38,7 @@ public class CandidatAccepterController {
     // Endpoint pour refuser une candidature
     @PutMapping("/refuser/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> refuserCandidature(@PathVariable Long entrevueId) {
-        Optional<CandidatAccepterDTO> candidatAccepterOpt = candidatAccepterService.refuserCandidature(entrevueId);
+        Optional<CandidatAccepterDTO> candidatAccepterOpt = employeurService.refuserCandidature(entrevueId);
 
         return candidatAccepterOpt
                 .map(candidatAccepter -> ResponseEntity.ok().body(candidatAccepter))
@@ -43,7 +48,7 @@ public class CandidatAccepterController {
     // Endpoint pour récupérer la décision d'une entrevue
     @GetMapping("/{entrevueId}")
     public ResponseEntity<CandidatAccepterDTO> getCandidatureDecision(@PathVariable Long entrevueId) {
-        Optional<CandidatAccepterDTO> decisionOpt = candidatAccepterService.getCandidatureDecision(entrevueId);
+        Optional<CandidatAccepterDTO> decisionOpt = employeurService.getCandidatureDecision(entrevueId);
 
         if (decisionOpt.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -54,12 +59,12 @@ public class CandidatAccepterController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<CandidatAccepterDTO>> getAllCandidatures() {
-        return ResponseEntity.ok().body(candidatAccepterService.getAllCandidatures());
+    public ResponseEntity<List<CandidatAccepterDTO>> getAllCandidatures() {
+        return ResponseEntity.ok().body(gestionnaireService.getAllCandidatures());
     }
 
     @GetMapping("/session/{session}")
     public ResponseEntity<List<CandidatAccepterDTO>> getCandidaturesBySession(@PathVariable String session) {
-        return ResponseEntity.ok().body(candidatAccepterService.getCandidaturesBySession(session));
+        return ResponseEntity.ok().body(gestionnaireService.getCandidaturesBySession(session));
     }
 }

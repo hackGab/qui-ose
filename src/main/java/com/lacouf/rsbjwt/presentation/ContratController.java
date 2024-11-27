@@ -1,6 +1,5 @@
 package com.lacouf.rsbjwt.presentation;
 
-import com.lacouf.rsbjwt.service.CandidatAccepterService;
 import com.lacouf.rsbjwt.service.EmployeurService;
 import com.lacouf.rsbjwt.service.EtudiantService;
 import com.lacouf.rsbjwt.service.GestionnaireService;
@@ -23,11 +22,9 @@ public class  ContratController {
     private final EmployeurService employeurService;
     private final EtudiantService etudiantService;
 
-    private final CandidatAccepterService candidatAccepterService;
 
-    public ContratController(GestionnaireService gestionnaireService, CandidatAccepterService candidatAccepterService, EmployeurService employeurService, EtudiantService etudiantService) {
+    public ContratController(GestionnaireService gestionnaireService, EmployeurService employeurService, EtudiantService etudiantService) {
         this.gestionnaireService = gestionnaireService;
-        this.candidatAccepterService = candidatAccepterService;
         this.employeurService = employeurService;
         this.etudiantService = etudiantService;
     }

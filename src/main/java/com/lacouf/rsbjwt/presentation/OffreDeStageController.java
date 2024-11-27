@@ -21,9 +21,12 @@ public class OffreDeStageController {
     private final EmployeurService employeurService;
     private final EtudiantService etudiantService;
 
-    public OffreDeStageController(EmployeurService employeurService, EtudiantService etudiantService) {
+    private final OffreDeStageService offreDeStageService;
+
+    public OffreDeStageController(EmployeurService employeurService, EtudiantService etudiantService, OffreDeStageService offreDeStageService) {
         this.employeurService = employeurService;
         this.etudiantService = etudiantService;
+        this.offreDeStageService = offreDeStageService;
     }
 
     @PostMapping("/creerOffreDeStage/{email}")

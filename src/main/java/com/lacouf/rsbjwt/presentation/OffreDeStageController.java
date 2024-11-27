@@ -18,12 +18,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class OffreDeStageController {
 
-    private final OffreDeStageService offreDeStageService;
     private final EmployeurService employeurService;
     private final EtudiantService etudiantService;
 
-    public OffreDeStageController(OffreDeStageService offreDeStageService, EmployeurService employeurService, EtudiantService etudiantService) {
-        this.offreDeStageService = offreDeStageService;
+    public OffreDeStageController(EmployeurService employeurService, EtudiantService etudiantService) {
         this.employeurService = employeurService;
         this.etudiantService = etudiantService;
     }
@@ -37,7 +35,7 @@ public class OffreDeStageController {
         }
 
         Optional<Employeur> employeurOpt = employeurService.findByCredentials_Email(email);
-        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.creerOffreDeStage(newOffreDeStageDTO, employeurOpt);
+        Optional<OffreDeStageDTO> offreDeStageDTO = employeurService.creerOffreDeStage(newOffreDeStageDTO, employeurOpt);
 
         return offreDeStageDTO
                 .map(offreDeStage -> ResponseEntity.status(HttpStatus.CREATED).body(offreDeStage))
@@ -86,7 +84,7 @@ public class OffreDeStageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<OffreDeStageDTO> offreDeStageDTOUpdated = offreDeStageService.updateOffreDeStage(id, offreDeStageDTO);
+        Optional<OffreDeStageDTO> offreDeStageDTOUpdated = employeurService.updateOffreDeStage(id, offreDeStageDTO);
 
         return offreDeStageDTOUpdated.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -98,7 +96,7 @@ public class OffreDeStageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<OffreDeStageDTO> offreDeStageDTO = offreDeStageService.getOffreDeStageById(id);
+        Optional<OffreDeStageDTO> offreDeStageDTO = employeurService.getOffreDeStageById(id);
 
         return offreDeStageDTO.map(offreDeStage -> ResponseEntity.ok().body(offreDeStage))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

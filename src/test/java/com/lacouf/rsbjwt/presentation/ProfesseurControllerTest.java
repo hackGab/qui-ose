@@ -50,8 +50,6 @@ public class ProfesseurControllerTest {
     @MockBean
     private GestionnaireService gestionnaireService;
 
-    @MockBean
-    private OffreDeStageService offreDeStageService;
 
     @MockBean
     private UserAppService userService;

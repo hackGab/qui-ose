@@ -5,161 +5,149 @@ import com.lacouf.rsbjwt.model.auth.Credentials;
 import com.lacouf.rsbjwt.model.auth.Role;
 import com.lacouf.rsbjwt.repository.*;
 import com.lacouf.rsbjwt.service.dto.*;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
-
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class GestionnaireServiceTest {
 
-    private Gestionnaire gestionnaireEntity;
-    private GestionnaireDTO gestionnaireDTO;
-
     private GestionnaireService gestionnaireService;
     private GestionnaireRepository gestionnaireRepository;
-    private EtudiantRepository etudiantRepository;
     private CVRepository cvRepository;
+    private EtudiantRepository etudiantRepository;
     private PasswordEncoder passwordEncoder;
+    private ContratRepository contratRepository;
     private CandidatAccepterRepository candidatAccepterRepository;
     private OffreDeStageRepository offreDeStageRepository;
-    private ContratRepository contratRepository;
     private EntrevueRepository entrevueRepository;
     private ProfesseurRepository professeurRepository;
-    private NotificationRepository notificationRepository;
     private EvaluationStageProfRepository evaluationStageProfRepository;
-    private Gestionnaire gestionnaire;
+    private NotificationRepository notificationRepository;
+    private Etudiant etudiantEntity;
+    private Employeur employeur;
+    private OffreDeStage offreDeStage;
+    private Professeur professeur;
 
-    private CV cvEntity;
+
     @BeforeEach
     void setUp() {
         gestionnaireRepository = Mockito.mock(GestionnaireRepository.class);
         cvRepository = Mockito.mock(CVRepository.class);
+        etudiantRepository = Mockito.mock(EtudiantRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         contratRepository = Mockito.mock(ContratRepository.class);
+        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
+        offreDeStageRepository = Mockito.mock(OffreDeStageRepository.class);
         entrevueRepository = Mockito.mock(EntrevueRepository.class);
         professeurRepository = Mockito.mock(ProfesseurRepository.class);
-        etudiantRepository = Mockito.mock(EtudiantRepository.class);
         evaluationStageProfRepository = Mockito.mock(EvaluationStageProfRepository.class);
         notificationRepository = Mockito.mock(NotificationRepository.class);
-        candidatAccepterRepository = Mockito.mock(CandidatAccepterRepository.class);
-        gestionnaireService = new GestionnaireService(gestionnaireRepository,  cvRepository, etudiantRepository,  offreDeStageRepository, passwordEncoder, contratRepository, entrevueRepository, professeurRepository, evaluationStageProfRepository, notificationRepository, candidatAccepterRepository);
-        gestionnaireEntity = new Gestionnaire("Thiraiyan", "Moon", "titi@gmail.com", "password", "123-456-7890");
-        gestionnaireDTO = new GestionnaireDTO(gestionnaireEntity);
 
-	    cvEntity = new CV();
-        cvEntity.setId(1L);
-        cvEntity.setStatus("attend");
-
-         gestionnaire = new Gestionnaire();
-
-         gestionnaire.setId(1L);
-         gestionnaire.setCredentials(new Credentials("email", "password", Role.GESTIONNAIRE));
+        gestionnaireService = new GestionnaireService(
+                gestionnaireRepository, cvRepository, etudiantRepository, offreDeStageRepository,
+                passwordEncoder, contratRepository, entrevueRepository, professeurRepository,
+                evaluationStageProfRepository, notificationRepository, candidatAccepterRepository
+        );
+        etudiantEntity = new Etudiant("John", "Doe", "email@gmail.com", "password", "123456789", Departement.TECHNIQUES_INFORMATIQUE);
+        employeur = new Employeur();
+        employeur.setId(1L);
+        employeur.setEntreprise("Company Name");
+        employeur.setCredentials(new Credentials("email@example.com", "password", Role.EMPLOYEUR));
+        offreDeStage = new OffreDeStage("Stage Title", "Location", LocalDate.now(), "data", 1, "Attente", "session");
+        offreDeStage.setEmployeur(employeur);
+        professeur = new Professeur("Jane", "Smith", "jane.smith@example.com", "password", "987654321", Departement.TECHNIQUES_INFORMATIQUE);
     }
 
     @Test
-    public void testCreerGestionnaire() {
-        // Arrange
-        when(gestionnaireRepository.save(any(Gestionnaire.class)))
-                .thenReturn(gestionnaireEntity);
+    void testCreerGestionnaire() {
+        GestionnaireDTO gestionnaireDTO = new GestionnaireDTO();
+        gestionnaireDTO.setFirstName("John");
+        gestionnaireDTO.setLastName("Doe");
+        gestionnaireDTO.setPhoneNumber("1234567890");
+        gestionnaireDTO.setCredentials(new CredentialDTO("john.doe@example.com", "password"));
 
-        // Act
-        Optional<GestionnaireDTO> response = gestionnaireService.creerGestionnaire(gestionnaireDTO);
-        GestionnaireDTO gestionnaireRecu = response.get();
+        Gestionnaire gestionnaire = new Gestionnaire("John", "Doe", "john.doe@example.com", "encodedPassword", "1234567890");
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        when(gestionnaireRepository.save(any(Gestionnaire.class))).thenReturn(gestionnaire);
 
-        // Assert
-        assert response.isPresent();
-        assertEquals(gestionnaireDTO.getFirstName(), gestionnaireRecu.getFirstName());
-        assertEquals(gestionnaireDTO.getLastName(), gestionnaireRecu.getLastName());
-        assertEquals(gestionnaireDTO.getPhoneNumber(), gestionnaireRecu.getPhoneNumber());
+        Optional<GestionnaireDTO> result = gestionnaireService.creerGestionnaire(gestionnaireDTO);
+
+        assertTrue(result.isPresent());
+        assertEquals("John", result.get().getFirstName());
+        assertEquals("Doe", result.get().getLastName());
+        assertEquals("1234567890", result.get().getPhoneNumber());
     }
 
     @Test
-    public void testCreerGestionnaireWithException() {
-        // Arrange
-        when(gestionnaireRepository.save(any(Gestionnaire.class)))
-                .thenThrow(new RuntimeException());
+    void testCreerGestionnaireWithException() {
+        GestionnaireDTO gestionnaireDTO = new GestionnaireDTO();
+        gestionnaireDTO.setFirstName("John");
+        gestionnaireDTO.setLastName("Doe");
+        gestionnaireDTO.setPhoneNumber("1234567890");
+        gestionnaireDTO.setCredentials(new CredentialDTO("john.doe@example.com", "password"));
 
-        // Act
-        Optional<GestionnaireDTO> response = gestionnaireService.creerGestionnaire(gestionnaireDTO);
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        when(gestionnaireRepository.save(any(Gestionnaire.class))).thenThrow(new RuntimeException());
 
-        // Assert
-        assert !response.isPresent();
+        Optional<GestionnaireDTO> result = gestionnaireService.creerGestionnaire(gestionnaireDTO);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
-    public void testValiderCV() {
-        // Arrange
-        when(cvRepository.findById(1L)).thenReturn(Optional.of(cvEntity));
-        when(cvRepository.save(any(CV.class))).thenReturn(cvEntity);
+    void testValiderOuRejeterCV() {
+        CV cv = new CV();
+        cv.setId(1L);
+        cv.setStatus("attend");
 
-        // Act
+        when(cvRepository.findById(1L)).thenReturn(Optional.of(cv));
+        when(cvRepository.save(any(CV.class))).thenReturn(cv);
+
         Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté", "");
 
-        // Assert
         assertTrue(result.isPresent());
         assertEquals("accepté", result.get().getStatus());
     }
 
     @Test
-    public void testRejeterCV() {
-        // Arrange
-        when(cvRepository.findById(1L)).thenReturn(Optional.of(cvEntity));
-        when(cvRepository.save(any(CV.class))).thenReturn(cvEntity);
+    void testValiderOuRejeterCVWithRejection() {
+        CV cv = new CV();
+        cv.setId(1L);
+        cv.setStatus("attend");
 
-        // Act
+        when(cvRepository.findById(1L)).thenReturn(Optional.of(cv));
+        when(cvRepository.save(any(CV.class))).thenReturn(cv);
+
         Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "rejeté", "raison");
 
-        // Assert
         assertTrue(result.isPresent());
         assertEquals("rejeté", result.get().getStatus());
+        assertEquals("raison", result.get().getRejetMessage());
     }
 
     @Test
-    public void testCVNonExistant() {
-        // Arrange
+    void testValiderOuRejeterCVNonExistant() {
         when(cvRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
         Optional<CVDTO> result = gestionnaireService.validerOuRejeterCV(1L, "accepté", "");
 
-        // Assert
         assertFalse(result.isPresent());
     }
 
-
     @Test
-    void validerOuRejeterOffre() {
-
-        OffreDeStage offreDeStage = new OffreDeStage();
-        offreDeStage.setId(1L);
-        offreDeStage.setStatus("attend");
-
-        OffreDeStage offreDeStage1 = new OffreDeStage();
-        offreDeStage1.setId(1L);
-        offreDeStage1.setStatus("accepté");
-
-
-        Employeur employeur = new Employeur();
-        employeur.setId(1L);
-        employeur.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
-        offreDeStage.setEmployeur(employeur);
-
+    void testValiderOuRejeterOffre() {
         when(offreDeStageRepository.findById(1L)).thenReturn(Optional.of(offreDeStage));
-        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage1);
+        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage);
 
         Optional<OffreDeStageDTO> result = gestionnaireService.validerOuRejeterOffre(1L, "accepté", "");
 
@@ -168,29 +156,50 @@ public class GestionnaireServiceTest {
     }
 
     @Test
-    void validerOuRejeterOffreWithRejection() {
-
-        OffreDeStage offreDeStage = new OffreDeStage();
-        offreDeStage.setId(1L);
-        offreDeStage.setStatus("attend");
-
-        OffreDeStage offreDeStage1 = new OffreDeStage();
-        offreDeStage1.setId(1L);
-        offreDeStage1.setStatus("rejeté");
-
-        Employeur employeur = new Employeur();
-        employeur.setId(1L);
-        employeur.setCredentials(new Credentials("email", "password", Role.EMPLOYEUR));
-
-        offreDeStage.setEmployeur(employeur);
-
+    void testValiderOuRejeterOffreWithRejection() {
         when(offreDeStageRepository.findById(1L)).thenReturn(Optional.of(offreDeStage));
-        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage1);
+        when(offreDeStageRepository.save(any(OffreDeStage.class))).thenReturn(offreDeStage);
 
         Optional<OffreDeStageDTO> result = gestionnaireService.validerOuRejeterOffre(1L, "rejeté", "raison");
 
         assertTrue(result.isPresent());
         assertEquals("rejeté", result.get().getStatus());
+    }
+
+    @Test
+    void testValiderOuRejeterOffreNonExistant() {
+        when(offreDeStageRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<OffreDeStageDTO> result = gestionnaireService.validerOuRejeterOffre(1L, "accepté", "");
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void testCreateNotification() {
+        Notification notification = new Notification("title", "message", "email", "url");
+        when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
+
+        NotificationDTO result = gestionnaireService.createNotification(notification);
+
+        assertEquals("title", result.getMessage());
+        assertEquals("email", result.getEmail());
+        assertEquals("url", result.getUrl());
+    }
+
+
+
+    @Test
+    void testCreerContratWithException() {
+        CandidatAccepterDTO candidatAccepterDTO = new CandidatAccepterDTO(1L, 1L, true);
+        ContratDTO contratDTO = new ContratDTO();
+        contratDTO.setCandidature(candidatAccepterDTO);
+
+        when(entrevueRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<ContratDTO> result = gestionnaireService.creerContrat(contratDTO);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
@@ -226,6 +235,7 @@ public class GestionnaireServiceTest {
         assertTrue(result.iterator().hasNext());
         assertEquals(2, result.spliterator().getExactSizeIfKnown());
     }
+
     @Test
     void signerContratGestionnaire() {
         String uuid = "uuid";
@@ -256,6 +266,10 @@ public class GestionnaireServiceTest {
         contrat1.setDateDebut(LocalDate.now());
         contrat1.setCandidature(new CandidatAccepter(new Entrevue(), true));
 
+        Gestionnaire gestionnaire = new Gestionnaire();
+        gestionnaire.setId(1L);
+        gestionnaire.setCredentials(new Credentials("gestionnaire@gmail.com", "password", Role.GESTIONNAIRE));
+
         when(contratRepository.findByUUID(uuid)).thenReturn(Optional.of(contrat));
         when(contratRepository.save(any(Contrat.class))).thenReturn(contrat1);
         when(passwordEncoder.matches(password, "password")).thenReturn(true);
@@ -268,89 +282,99 @@ public class GestionnaireServiceTest {
     }
 
     @Test
-    void testAssignerProfesseur_ContratNonSigne() {
-        // Arrange
-        Long etudiantId = 1L;
-        Long professeurId = 2L;
+    void testSignerContratGestionnaireWithException() {
+        String uuid = "uuid";
+        String password = "password";
+        String email = "email";
 
-        Etudiant etudiant = new Etudiant();
-        etudiant.setId(etudiantId);
-        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
+        when(contratRepository.findByUUID(uuid)).thenReturn(Optional.empty());
 
-        Professeur professeur = new Professeur();
-        professeur.setId(professeurId);
-        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
-
-        Contrat contrat = new Contrat();
-        contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
-        contrat.setGestionnaireSigne(false); // Contract not signed by the Gestionnaire
-
-        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
-        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
-        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(IllegalStateException.class, () -> {
-            gestionnaireService.assignerProfesseur(etudiantId, professeurId);
-        });
+        assertThrows(RuntimeException.class, () -> gestionnaireService.signerContratGestionnaire(uuid, password, email));
     }
 
-     @Test
+    @Test
     void testAssignerProfesseur() {
-        // Arrange
-        Long etudiantId = 1L;
-        Long professeurId = 2L;
+        Long etudiantId = 3L;
+        Long professeurId = 4L;
 
-        Etudiant etudiant = new Etudiant();
-        etudiant.setId(etudiantId);
-        etudiant.setCredentials(new Credentials("etudiant@example.com", "password", Role.ETUDIANT));
+        Etudiant etudiant1 = new Etudiant();
+        etudiant1.setId(etudiantId);
+        etudiant1.setCredentials(new Credentials("etudiant11@example.com", "password", Role.ETUDIANT));
 
-        Professeur professeur = new Professeur();
-        professeur.setId(professeurId);
-        professeur.setCredentials(new Credentials("professeur@example.com", "password", Role.PROFESSEUR));
+        Professeur professeur1 = new Professeur();
+        professeur1.setId(professeurId);
+        professeur1.setCredentials(new Credentials("professeue1@gmail.com", "password", Role.PROFESSEUR));
 
         Contrat contrat = new Contrat();
         contrat.setCandidature(new CandidatAccepter(new Entrevue(), true));
         contrat.setGestionnaireSigne(true);
 
-        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant1));
         when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
-        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.of(contrat));
-        when(etudiantRepository.save(any(Etudiant.class))).thenReturn(etudiant);
+        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant1)).thenReturn(Optional.of(contrat));
+        when(etudiantRepository.save(any(Etudiant.class))).thenReturn(etudiant1);
 
-        // Act
         Optional<EtudiantDTO> result = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
 
-        // Assert
         assertTrue(result.isPresent());
-        assertEquals(professeurId, result.get().getProfesseur().getId());
+    }
+
+    @Test
+    void testAssignerProfesseurWithException() {
+        Long etudiantId = 1L;
+        Long professeurId = 2L;
+
+        Etudiant etudiant = new Etudiant();
+        Professeur professeur = new Professeur();
+
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
+        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(professeur));
+        when(contratRepository.findByCandidature_EtudiantAndGestionnaireSigneTrue(etudiant)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalStateException.class, () -> gestionnaireService.assignerProfesseur(etudiantId, professeurId));
     }
 
 
     @Test
-    void testAssignerProfesseur_EtudiantOuProfesseurNonExistant() {
-        // Arrange
-        Long etudiantId = 1L;
-        Long professeurId = 2L;
+    void testGetOffresBySession() {
+        when(offreDeStageRepository.findBySession("session")).thenReturn(List.of(offreDeStage));
 
+        List<OffreDeStageDTO> result = gestionnaireService.getOffresBySession("session");
 
-        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.empty());
-        when(professeurRepository.findById(professeurId)).thenReturn(Optional.of(new Professeur()));
+        assertEquals(1, result.size());
+        assertEquals("Stage Title", result.get(0).getTitre());
+    }
 
-        // Act
-        Optional<EtudiantDTO> resultEtudiantNonExistant = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+    @Test
+    void testGetNombreOffresEnAttente() {
+        when(offreDeStageRepository.findAll()).thenReturn(List.of(offreDeStage));
 
-        // Assert
-        assertFalse(resultEtudiantNonExistant.isPresent());
+        int result = gestionnaireService.getNombreOffresEnAttente();
 
+        assertEquals(1, result);
+    }
 
-        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(new Etudiant()));
-        when(professeurRepository.findById(professeurId)).thenReturn(Optional.empty());
+    @Test
+    void testGetAllCandidatures() {
+        CandidatAccepter candidatAccepter = new CandidatAccepter();
+        Entrevue entrevue = new Entrevue();
+        candidatAccepter.setEntrevue(entrevue);
+        when(candidatAccepterRepository.findAll()).thenReturn(List.of(candidatAccepter));
 
-        // Act
-        Optional<EtudiantDTO> resultProfesseurNonExistant = gestionnaireService.assignerProfesseur(etudiantId, professeurId);
+        List<CandidatAccepterDTO> result = gestionnaireService.getAllCandidatures();
 
-        // Assert
-        assertFalse(resultProfesseurNonExistant.isPresent());
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGetCandidaturesBySession() {
+        CandidatAccepter candidatAccepter = new CandidatAccepter();
+        Entrevue entrevue = new Entrevue();
+        candidatAccepter.setEntrevue(entrevue);
+        when(candidatAccepterRepository.findByEntrevueSession("session")).thenReturn(List.of(candidatAccepter));
+
+        List<CandidatAccepterDTO> result = gestionnaireService.getCandidaturesBySession("session");
+
+        assertEquals(1, result.size());
     }
 }

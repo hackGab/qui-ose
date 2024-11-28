@@ -1,6 +1,7 @@
 package com.lacouf.rsbjwt.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lacouf.rsbjwt.repository.GestionnaireRepository;
 import com.lacouf.rsbjwt.service.*;
 import com.lacouf.rsbjwt.service.dto.CandidatAccepterDTO;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ public class CandidatAccepterControllerTest {
     @MockBean
     private UserAppService userService;
 
+    @MockBean
+    private GestionnaireRepository gestionnaireRepository;
+
     @Test
     @WithMockUser(username = "user", roles = {"EMPLOYEUR"})
     public void shouldAcceptCandidature() throws Exception {
@@ -75,8 +79,6 @@ public class CandidatAccepterControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(candidatAccepterDTO)));
-
-
     }
 
     @Test

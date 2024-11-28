@@ -38,8 +38,7 @@ class EtudiantControllerTest {
     @MockBean
     private EmployeurService employeurService;
 
-    @MockBean
-    private OffreDeStageService offreDeStageService;
+
 
     @MockBean
     private ProfesseurService professeurService;

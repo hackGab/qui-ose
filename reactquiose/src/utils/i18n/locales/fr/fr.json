@@ -390,5 +390,7 @@
   "NombreDeCandidats" : "Nombre de candidats",
   "EvaluationDisponible": "Évaluation disponible",
   "filtrerParSession": "Filtrer par session",
-  "erreurFichierPDF": "Veuillez choisir un fichier PDF"
+  "erreurFichierPDF": "Veuillez choisir un fichier PDF",
+  "contratNotificationLegend": "contrat en attente d'être créé ou signé",
+  "linkNotificationLegend": "demandes en attente d'approbation de votre part"
 }

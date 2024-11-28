@@ -380,5 +380,7 @@
   "Attente": "pending",
   "EvaluationDisponible": "Evaluation Available",
   "filtrerParSession": "Filter by session",
-  "erreurFichierPDF": "Please choose a PDF file"
+  "erreurFichierPDF": "Please choose a PDF file",
+  "contratNotificationLegend": "contract waiting to be created or signed",
+  "linkNotificationLegend": "requests waiting for your approval"
 }

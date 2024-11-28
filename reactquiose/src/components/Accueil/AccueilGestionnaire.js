@@ -109,7 +109,7 @@ function AccueilGestionnaire() {
                                 alt={section.title}
                             />
                             {hoveredSection === index && index !== 1 && (
-                                <div className="notification-tooltip">({section.notifications} demandes en attente d'approbation de votre par)</div>
+                                <div className="notification-tooltip">({section.notifications} {t('linkNotificationLegend')})</div>
                             )}
                         </Link>
 
@@ -131,7 +131,7 @@ function AccueilGestionnaire() {
                         )}
                     </button>
                     {hoveredSection === 3 && (
-                        <div className="notification-tooltip">({contratsAGenerer} contrat en attente d'être créé ou signé)</div>
+                        <div className="notification-tooltip">({contratsAGenerer} {t("contratNotificationLegend")})</div>
                     )}
                 </div>
             </div>

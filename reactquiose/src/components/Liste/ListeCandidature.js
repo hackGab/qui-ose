@@ -307,6 +307,18 @@ function ListeCandidature() {
 
     };
 
+    const getStatus = (candidat) => {
+        const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
+        if (!contrat) return "Générer un contrat";
+        if (isContractSigned(contrat)) return "générer version PDF du contrat";
+        return "En attente des signatures";
+    };
+
+    const sortedCandidatures = candidatures.sort((a, b) => {
+        const statusOrder = ["Générer un contrat", "En attente des signatures", "générer version PDF du contrat"];
+        return statusOrder.indexOf(getStatus(a)) - statusOrder.indexOf(getStatus(b));
+    });
+
     if (loading) {
         return <div className="text-center mt-5">
             <div className="spinner-border" role="status"></div>
@@ -332,18 +344,17 @@ function ListeCandidature() {
 
                     <If condition={candidatures.length > 0}>
                         <Then>
-
                             <table className="table table-striped table-hover">
                                 <thead className="thead-dark">
-                                <tr>
-                                    <th>{t('Etudiant')}</th>
-                                    <th>{t('OffreDeStage')}</th>
-                                    <th>{t('Employeur')}</th>
-                                    <th>{t('Actions')}</th>
-                                </tr>
+                                    <tr>
+                                        <th>{t('Etudiant')}</th>
+                                        <th>{t('OffreDeStage')}</th>
+                                        <th>{t('Employeur')}</th>
+                                        <th>{t('Actions')}</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {candidatures.map(candidat => {
+                                {sortedCandidatures.map(candidat => {
                                     const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
                                     const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
@@ -361,7 +372,7 @@ function ListeCandidature() {
                                                 ) : (
                                                     <>
                                                         {isContractSigned(contrat) ? (
-                                                            <button className="btn btn-success"
+                                                            <button className="btn btn-primary"
                                                                     onClick={() => {
                                                                         setSelectedContrat(contrat);
                                                                         handleOpenContractModal()
@@ -371,7 +382,7 @@ function ListeCandidature() {
                                                             </button>
                                                         ) : (
                                                             <button
-                                                                className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-warning' : 'btn-success'}`}
+                                                                className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-success' : 'btn-warning fw-bold'}`}
                                                                 disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
                                                                 onClick={() => {
                                                                     setSelectedContrat(contrat);

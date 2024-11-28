@@ -20,10 +20,11 @@ function SoumettreOffre() {
     const [nbCandidats, setNbCandidats] = useState(0);
     const [dateLimite, setDateLimite] = useState("");
     const { t } = useTranslation();
-    const [limite,setLimite] = useState(0);
-
+    const [limite, setLimite] = useState(0);
     const [season, setSeason] = useState("");
     const [year, setYear] = useState("");
+    const [erreur, setErreur] = useState("");
+
 
     useEffect(() => {
         const currentMonth = new Date().getMonth() + 1;
@@ -58,12 +59,16 @@ function SoumettreOffre() {
     const handleFileChange = (event) => {
         const uploadedFile = event.target.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
+            setErreur("");
             setTemporaryFile(uploadedFile);
             const reader = new FileReader();
             reader.onload = (e) => {
                 setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
+        }
+        else {
+            setErreur((t('erreurFichierPDF')));
         }
     };
 
@@ -84,6 +89,10 @@ function SoumettreOffre() {
         const uploadedFile = event.dataTransfer.files[0];
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({target: {files: [uploadedFile]}});
+            setErreur("");
+        }
+        else {
+            setErreur((t('erreurFichierPDF')));
         }
     };
 
@@ -104,8 +113,8 @@ function SoumettreOffre() {
                 data: temporaryFileData,
                 status: "Attente",
                 session,
-            }
-            ;console.log("Données de l'offre:", donnesOffre);
+            };
+            console.log("Données de l'offre:", donnesOffre);
 
             const urlAjout = `http://localhost:8081/offreDeStage/creerOffreDeStage/${employeurEmail}`;
             let ancienId = file ? file.id : null;
@@ -218,6 +227,19 @@ function SoumettreOffre() {
                                         <h5 className="modal-title"><b>{t('SoumettreOffreEmploi')}</b></h5>
                                     </div>
                                     <div className="modal-body">
+                                        {temporaryFile && (
+                                            <div className="file-details mt-3">
+                                                <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                                <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                                <h6><strong>{t('fileDate')}</strong> {new Date().toLocaleDateString()}
+                                                </h6>
+                                            </div>
+                                        )}
+
+                                        {erreur && (
+                                            <div className="alert alert-danger mt-3">{erreur}</div>
+                                        )}
+
                                         <div
                                             onDragEnter={handleDrag}
                                             onDragOver={handleDrag}
@@ -232,6 +254,7 @@ function SoumettreOffre() {
                                                 id="fileInput"
                                                 onChange={handleFileChange}
                                                 style={{display: "none"}}
+                                                accept=".pdf"
                                             />
                                         </div>
 
@@ -267,6 +290,7 @@ function SoumettreOffre() {
                                                 style={{textAlign: "center"}}
                                                 id="nbCandidats"
                                                 value={nbCandidats}
+                                                min={0}
                                                 onChange={(e) => setNbCandidats(e.target.value)}
                                             />
                                         </div>
@@ -306,16 +330,6 @@ function SoumettreOffre() {
                                                 onChange={(e) => setDateLimite(e.target.value)}
                                             />
                                         </div>
-
-
-                                        {temporaryFile && (
-                                            <div className="file-details mt-3">
-                                                <h6><strong>{t('fileName')}:</strong> {temporaryFile.name}</h6>
-                                                <h6><strong>{t('fileType')}:</strong> {temporaryFile.type}</h6>
-                                                <h6><strong>{t('fileDate')}:</strong> {new Date().toLocaleDateString()}
-                                                </h6>
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div className="modal-footer">

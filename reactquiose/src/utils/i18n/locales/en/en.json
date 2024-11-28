@@ -379,5 +379,6 @@
   "Validé": "validated",
   "Attente": "pending",
   "EvaluationDisponible": "Evaluation Available",
-  "filtrerParSession": "Filter by session"
+  "filtrerParSession": "Filter by session",
+  "erreurFichierPDF": "Please choose a PDF file"
 }

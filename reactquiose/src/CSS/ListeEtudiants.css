@@ -91,7 +91,7 @@ p {
     border: 5px solid #c4c418;
 }
 
-.card.sans-cv {
+.card.aucuncv {
     border: 5px solid gray;
 }
 
@@ -109,6 +109,24 @@ p {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.badge.rejeté {
+    background-color: red;
+}
+
+.badge.validé, .badge.accepter {
+    background-color: green;
+}
+
+.badge.attente {
+    background-color: #c4c418;
+}
+
+.badge.aucuncv {
+    background-color: gray;
+    color: white;
+}
+
 
 @media (max-width: 768px) {
     .custom-badge {

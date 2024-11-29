@@ -119,9 +119,9 @@ function ListeEtudiants() {
                                             state={{student: etudiant}}
                                         >
                                             <div
-                                                className={`card shadow w-100 position-relative ${status.toLowerCase()}`}>
+                                                className={`card shadow w-100 position-relative ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                 <span
-                                                    className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                    className={`position-absolute top-0 end-0 badge m-2 custom-badge ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                     {status ? t(status) : t('AucunCV')}
                                                 </span>
                                                 <div className="card-body">

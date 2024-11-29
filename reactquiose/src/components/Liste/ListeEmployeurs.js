@@ -169,8 +169,8 @@ function ListeEmployeurs() {
                                             className="text-decoration-none"
                                             state={{ offre: offreDeStage }}>
 
-                                            <div className={`card shadow w-100 ${status.toLowerCase()}`}>
-                                                <span className="position-absolute bottom-0 end-0 badge bg-secondary m-2 custom-badge">
+                                            <div className={`card shadow w-100 ${status.toLowerCase().replaceAll(' ', '')}`}>
+                                                <span className={`position-absolute bottom-0 end-0 badge m-2 custom-badge ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                     {t(status)}
                                                 </span>
                                                 <div className="card-body">

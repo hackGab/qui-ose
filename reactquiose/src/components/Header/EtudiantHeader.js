@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../../CSS/Header.css';
 import logo from '../../images/logo.png';
 import "../../CSS/BoutonLangue.css";
 import ProfileMenu from './ProfileMenu';
-import {calculateNextSessions} from "../../utils/methodes/dateUtils";
-import {hardCodedSessions} from "../../utils/variables/hardCodedSessions";
+import { calculateNextSessions } from "../../utils/methodes/dateUtils";
+import { hardCodedSessions } from "../../utils/variables/hardCodedSessions";
 
-
-function EtudiantHeader({ userData ,onSendData}) {
+function EtudiantHeader({ userData, onSendData }) {
     const { t } = useTranslation();
     const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
@@ -24,6 +23,10 @@ function EtudiantHeader({ userData ,onSendData}) {
     const [session, setSession] = useState(() => {
         return localStorage.getItem('session') || initialSession;
     });
+    const [navLinksOpen, setNavLinksOpen] = useState(false);
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
+    const navRef = useRef(null);
 
     const handleSessionChange = (newSession) => {
         setSession(newSession);
@@ -48,8 +51,8 @@ function EtudiantHeader({ userData ,onSendData}) {
         if (userData) {
             navigate(path, { state: { userData: userData } });
         }
+        setNavLinksOpen(false);
     };
-
 
     const handleDeleteNotification = async (index, notifId) => {
         setNotifications((prevNotifications) =>
@@ -79,7 +82,7 @@ function EtudiantHeader({ userData ,onSendData}) {
         setAvailableSessions(hardCodedSessions);
     }, []);
 
-   useEffect(() => {
+    useEffect(() => {
         if (userData) {
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
@@ -91,21 +94,16 @@ function EtudiantHeader({ userData ,onSendData}) {
                     return response.json();
                 })
                 .then((data) => {
-                    //console.log('Réponse du serveur:', data);
-
                     if (data.cv) {
                         setFile(data.cv);
                         setStagesAppliquees(data.offresAppliquees);
-
-                        //console.log('CV:', data.cv);
-                        //console.log('Stages appliquées:', data.offresAppliquees);
                     }
                 })
                 .catch((error) => {
                     console.error('Erreur:', error);
                 });
         }
-    },[userData]);
+    }, [userData]);
 
     useEffect(() => {
         fetch(`http://localhost:8081/entrevues/enAttente/etudiant/${userData.credentials.email}`)
@@ -116,7 +114,6 @@ function EtudiantHeader({ userData ,onSendData}) {
                 return response.json();
             })
             .then(data => {
-                console.log('Réponse du serveur :', data);
                 setNbEntrevuesEnAttente(data.length);
             })
             .catch(err => {
@@ -125,11 +122,9 @@ function EtudiantHeader({ userData ,onSendData}) {
 
     }, [userData]);
 
-
     useEffect(() => {
         if (userData) {
             const fetchNotifications = () => {
-                console.log('Fetching notifications...')
                 const url = `http://localhost:8081/notification/allUnread/${userData.credentials.email}`;
                 fetch(url, {
                     method: 'GET',
@@ -144,7 +139,6 @@ function EtudiantHeader({ userData ,onSendData}) {
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Réponse du serveur:', data);
                         setNotifications(data);
                     })
                     .catch(error => {
@@ -160,26 +154,53 @@ function EtudiantHeader({ userData ,onSendData}) {
         }
     }, [userData]);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (navRef.current && !navRef.current.contains(event.target)) {
+                setNavLinksOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [navRef]);
+
+    const closeNav = () => {
+        setNavLinksOpen(false);
+    };
+
+    const closeMenus = () => {
+        setProfileMenuOpen(false);
+        setNotificationMenuOpen(false);
+    };
 
     return (
         <header className="gestionnaire-header">
-            <nav className="navbar">
-                <div className="logo" onClick={handleClickLogo} style={{cursor: 'pointer'}}>
-                    <img src={logo} alt="Logo" className="header-logo"/>
+            <nav className="navbar" ref={navRef}>
+                <div className="logo" onClick={handleClickLogo} style={{ cursor: 'pointer' }}>
+                    <img src={logo} alt="Logo" className="header-logo" />
                     <div className="logo-text">Qui-Ose</div>
                 </div>
 
-                <div className="nav-links">
+                <div className={`hamburger-menu ${navLinksOpen ? 'active' : ''}`} onClick={() => { setNavLinksOpen(!navLinksOpen); closeMenus(); }}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+                <div className={`nav-links ${navLinksOpen ? 'show' : ''}`}>
                     <span
                         className={`nav-link ${activeLink === '/accueilEtudiant' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/accueilEtudiant', setActiveLink, navigate, userData)}
+                        onClick={() => handleLinkClick('/accueilEtudiant')}
                     >
                         {t('accueil')}
                     </span>
                     {file && file.status === "validé" && (
                         <span
                             className={`nav-link ${activeLink === '/stagesAppliquees' ? 'active' : ''}`}
-                            onClick={() => handleLinkClick('/stagesAppliquees', setActiveLink, navigate, userData)}
+                            onClick={() => handleLinkClick('/stagesAppliquees')}
                         >
                             {t('stagesAppliquées')} ({stagesAppliquees.length})
                         </span>
@@ -187,13 +208,13 @@ function EtudiantHeader({ userData ,onSendData}) {
 
                     <span
                         className={`nav-link ${activeLink === '/mesEntrevues' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/mesEntrevues', setActiveLink, navigate, userData)}
+                        onClick={() => handleLinkClick('/mesEntrevues')}
                     >
-                        {t('mesEntrevues')} ({nbEntrevuesEnAttente || 0})
+                        {t('mesEntrevues')} ({nbEntrevuesEnAttente})
                     </span>
                     <span
                         className={`nav-link ${activeLink === '/signerContrat' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('/signerContrat', setActiveLink, navigate, userData)}
+                        onClick={() => handleLinkClick('/signerContrat')}
                     >
                         {t('SignerContrat')}
                     </span>
@@ -203,15 +224,23 @@ function EtudiantHeader({ userData ,onSendData}) {
                         <div className="session-dropdown">
                             <select value={session} onChange={(e) => handleSessionChange(e.target.value)}>
                                 {availableSessions.map(sessionOption => (
-                                    <option key={sessionOption.id}
-                                            value={sessionOption.id}>{sessionOption.label}</option>
+                                    <option key={sessionOption.id} value={sessionOption.id}>{sessionOption.label}</option>
                                 ))}
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <ProfileMenu userData={userData} setActiveLink={setActiveLink}/>
+                <ProfileMenu
+                    userData={userData}
+                    setActiveLink={setActiveLink}
+                    closeNav={closeNav}
+                    closeMenus={closeMenus}
+                    profileMenuOpen={profileMenuOpen}
+                    setProfileMenuOpen={setProfileMenuOpen}
+                    notificationMenuOpen={notificationMenuOpen}
+                    setNotificationMenuOpen={setNotificationMenuOpen}
+                />
             </nav>
         </header>
     );

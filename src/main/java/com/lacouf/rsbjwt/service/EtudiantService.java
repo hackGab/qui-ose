@@ -201,7 +201,7 @@ public class EtudiantService {
             Etudiant etudiant = etudiantOptional.get();
             Long etudiantId = etudiant.getId();
             return entrevueRepository.findAllByEtudiantId(etudiantId).stream()
-                    .filter(entrevue -> entrevue.getStatus().equals("Attente"))
+                    .filter(entrevue -> entrevue.getStatus().equals("En attente"))
                     .map(EntrevueDTO::new)
                     .toList();
         } else {

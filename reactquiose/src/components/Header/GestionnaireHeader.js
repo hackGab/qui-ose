@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../../CSS/Header.css'
+import '../../CSS/Header.css';
 import logo from '../../images/logo.png';
 import i18n from "i18next";
 import "../../CSS/BoutonLangue.css";
 import { hardCodedSessions } from "../../utils/variables/hardCodedSessions";
 import { calculateNextSessions } from "../../utils/methodes/dateUtils";
 
-function GestionnaireHeader({onSendData}) {
-    const {t} = useTranslation();
+function GestionnaireHeader({ onSendData }) {
+    const { t } = useTranslation();
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
+    const [navLinksOpen, setNavLinksOpen] = useState(false);
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
 
@@ -22,6 +24,7 @@ function GestionnaireHeader({onSendData}) {
     });
 
     const [availableSessions, setAvailableSessions] = useState([]);
+    const navRef = useRef(null);
 
     useEffect(() => {
         console.log(session);
@@ -46,6 +49,7 @@ function GestionnaireHeader({onSendData}) {
 
     const handleLinkClick = (path) => {
         setActiveLink(path);
+        setNavLinksOpen(false); // Close the hamburger menu when a link is clicked
     };
 
     const changeLanguage = (lng) => {
@@ -59,16 +63,43 @@ function GestionnaireHeader({onSendData}) {
         sendData("session", newSession);
     };
 
+    const closeNav = () => {
+        setNavLinksOpen(false);
+    };
+
+    const closeMenus = () => {
+        setProfileMenuOpen(false);
+        setNotificationMenuOpen(false);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (navRef.current && !navRef.current.contains(event.target)) {
+                setNavLinksOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [navRef]);
+
     return (
         <header className="gestionnaire-header">
-            <nav className="navbar">
+            <nav className="navbar" ref={navRef}>
                 <div className="logo">
                     <img src={logo} alt="Logo" className="header-logo" />
                     <Link to="/accueilGestionnaire" className="logo-link">
                         <div className="logo-text">Qui-Ose</div>
                     </Link>
                 </div>
-                <div className="nav-links">
+                <div className={`hamburger-menu ${navLinksOpen ? 'active' : ''}`} onClick={() => { setNavLinksOpen(!navLinksOpen); closeMenus(); }}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div className={`nav-links ${navLinksOpen ? 'show' : ''}`}>
                     <Link
                         className={`nav-link ${activeLink === '/listeEtudiants' ? 'active' : ''}`}
                         to="/listeEtudiants"
@@ -98,7 +129,6 @@ function GestionnaireHeader({onSendData}) {
                         {t('candidatures')}
                     </Link>
 
-                    {/* Afficher le filtrage uniquement si on n'est pas sur /listeProfesseurs ou /listeEtudiants */}
                     {location.pathname !== '/listeProfesseurs' && location.pathname !== '/listeEtudiants' && (
                         <div className="filter-options" data-testid="filtreSession">
                             <label>{t('filtrerParSession')}</label>
@@ -119,8 +149,6 @@ function GestionnaireHeader({onSendData}) {
                     </div>
                     {profileMenuOpen && (
                         <div className="dropdown profile-dropdown">
-                            <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
-                            <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
                             <button onClick={() => changeLanguage('en')}
                                     className="language-button dropdown-link text-left">{t('Anglais')}

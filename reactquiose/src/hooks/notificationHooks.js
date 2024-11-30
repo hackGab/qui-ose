@@ -9,7 +9,8 @@ export const useFetchNotifications = (userData) => {
             const fetchNotificationsData = async () => {
                 try {
                     const data = await fetchNotifications(userData.credentials.email);
-                    setNotifications(data);
+                    const sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    setNotifications(sortedData);
                 } catch (error) {
                     console.error('Erreur:', error);
                 }

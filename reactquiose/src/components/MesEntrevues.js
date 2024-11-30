@@ -57,6 +57,8 @@ function MesEntrevues() {
                     : entrevue
             )
         );
+
+        EtudiantHeader.nbEntrevuesEnAttente = EtudiantHeader.nbEntrevuesEnAttente - 1;
     };
 
     const handleEntrevueRejete = (entrevueRejete) => {
@@ -69,6 +71,8 @@ function MesEntrevues() {
                     : entrevue
             )
         );
+
+        EtudiantHeader.nbEntrevuesEnAttente = EtudiantHeader.nbEntrevuesEnAttente - 1;
     };
 
 

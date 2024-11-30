@@ -114,11 +114,11 @@ p {
     background-color: red;
 }
 
-.badge.validé, .badge.accepter {
+.badge.validé, .badge.accepter, .badge.signer {
     background-color: green;
 }
 
-.badge.attente {
+.badge.attente, .badge.pasSigner {
     background-color: #c4c418;
 }
 

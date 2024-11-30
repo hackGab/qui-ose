@@ -8,6 +8,7 @@ import EtudiantHeader from "./Header/EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
 import "../CSS/SignerContrat.css";
 import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import {FaClock} from "react-icons/fa";
 
 function SignerContrat() {
     const location = useLocation();
@@ -36,7 +37,6 @@ function SignerContrat() {
             if (!response.ok) throw new Error(`Erreur: ${response.status}`);
 
             const data = await response.json();
-            console.log("serverur" + data);
             setContrats(data);
         } catch (error) {
             messageErreur(t('ErreurRecuperationContrat'));
@@ -180,7 +180,11 @@ function SignerContrat() {
                                                 </div>
                                                 <button
                                                     type="submit"
-                                                    className={`btn-success btn ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                                    className={`btn-success btn
+                                                        ${buttonClass}
+                                                        ${isButtonDisabled() ? 'btn-disabled' : ''} 
+                                                        ${(i18n.language === 'fr' || i18n.language === 'fr-CA') ? 'btn-signer-fr' : 'btn-signer-en'}
+                                                    `}
                                                     disabled={isButtonDisabled()}
                                                 />
                                             </form>
@@ -201,22 +205,40 @@ function SignerContrat() {
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
                             {contrats.map((contrat) => (
-                                <div key={contrat.uuid} className="col-md-4">
+                                <div key={contrat.uuid} className="col-12 col-md-6 col-lg-4 mb-4">
                                     <div className="card mt-4" onClick={() => setSelectedContrat(contrat)}>
-                                        <div className="card-body">
+                                        {/*className={`card shadow w-100 position-relative ${status.toLowerCase().replaceAll(' ', '')}`}>*/}
+                                        <div className="card-header">
                                             <h5 className="card-title">
-                                                {contrat.entrepriseEngagement ? String(contrat.entrepriseEngagement) : t('NomIndisponible')}
-                                            </h5>
-                                            <p className="card-text">
                                                 {contrat.description ? String(contrat.description) : t('DescriptionIndisponible')}
-                                            </p>
+                                            </h5>
+
                                             <p className="card-text">
-                                                {t('DateDebut')}: {contrat.dateDebut ? String(contrat.dateDebut) : t('Indisponible')}
+                                                {contrat.lieuStage ? String(contrat.lieuStage) : t('LieuIndisponible')}
                                             </p>
+                                        </div>
+
+                                        <div className="card-body">
                                             <p className="card-text">
-                                                {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
+                                                - {t('entrepriseEngagement')} <span className="text-lowercase">{contrat.entrepriseEngagement ? String(contrat.entrepriseEngagement) : t('NomIndisponible')}</span>
+                                                    <br/>
+                                                    <br/>
+                                                - <b>{t('description')} :</b> {contrat.description ? String(contrat.description) : t('DescriptionIndisponible')}
+                                                    <br/>
+                                                    <br/>
+                                                <b>
+                                                    <FaClock/> {t('dateDebut')}: {contrat.dateDebut ? String(contrat.dateDebut) : t('Indisponible')}
+                                                       <br/>
+                                                    <FaClock/> {t('dateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
+                                                </b>
                                             </p>
-                                            <p className={`card-text ${userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? 'text-success' : 'text-danger') : (contrat.etudiantSigne ? 'text-success' : 'text-danger')}`}>
+                                            {/*<p className={`card-text badge custom-badge ${userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? 'bg-success' : 'text-danger') : (contrat.etudiantSigne ? 'bg-success' : 'text-danger')}`}>*/}
+                                            <p className={`card-text badge custom-badge text-white
+                                                ${userData.role === 'EMPLOYEUR'
+                                                    ? (contrat.employeurSigne ? 'signer' : 'pasSigner')
+                                                    : (contrat.etudiantSigne ? 'signer' : 'pasSigner')}
+                                                `}
+                                            >
                                                 {userData.role === 'EMPLOYEUR'
                                                     ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne'))
                                                     : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))

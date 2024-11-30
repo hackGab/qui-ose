@@ -18,7 +18,8 @@ function ListeCandidature() {
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [selectedContrat, setSelectedContrat] = useState(null);
     const [icon, setIcon] = useState(eyeOff);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessageHeures, setErrorMessageHeures] = useState('');
+    const [errorMessageSalaire, setErrorMessageSalaire] = useState('');
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -27,6 +28,7 @@ function ListeCandidature() {
     const [password, setPassword] = useState('');
     const location = useLocation();
     const userData = location.state?.userData;
+    const salaireMinimumHoraire = 15.75;
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -172,9 +174,6 @@ function ListeCandidature() {
 
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
-        console.log("Mot de passe saisi :", password);
-        console.log("uuid du candidat sélectionné :", selectedContrat.uuid);
-        // console.log("Email de l'utilisateur connecté :", userData.credentials.email);
         handleSignContract(selectedContrat.uuid, userData.credentials.email);
         handleClosePasswordModal();
     };
@@ -212,9 +211,23 @@ function ListeCandidature() {
 
         if (name === "heuresParSemaine") {
             if (parseFloat(value) < minHeuresParSemaine) {
-                setErrorMessage("Le nombre d'heures par semaine doit être supérieur ou égal à la durée entre les heures de début et de fin.");
+                setErrorMessageHeures(`Le nombre d'heures par semaine doit être supérieur ou égal à ${minHeuresParSemaine}h.`);
             } else {
-                setErrorMessage('');
+                setErrorMessageHeures('');
+            }
+        }
+
+        if (name === "tauxHoraire") {
+            const regex = /^\d+(\.\d{0,2})?$/;
+
+            if (!regex.test(value)) {
+                setErrorMessageSalaire('Le salaire horaire doit être un nombre valide.');
+            }
+
+            if (parseFloat(value) < salaireMinimumHoraire) {
+                setErrorMessageSalaire(`Le salaire horaire doit être supérieur ou égal à ${salaireMinimumHoraire}$.`);
+            } else {
+                setErrorMessageSalaire('');
             }
         }
 
@@ -467,12 +480,12 @@ function ListeCandidature() {
                                             name="heuresParSemaine"
                                             value={formData.heuresParSemaine}
                                             onChange={handleChange}
-                                            required
                                             min={minHeuresParSemaine}
+                                            required
                                         />
-                                        {errorMessage && (
+                                        {errorMessageHeures && (
                                             <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                                                {errorMessage}
+                                                {errorMessageHeures}
                                             </div>
                                         )}
                                     </div>
@@ -485,18 +498,16 @@ function ListeCandidature() {
                                             className="form-control"
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
-                                            onChange={(e) => {
-                                                const { name, value } = e.target;
-                                                const regex = /^\d+(\.\d{0,2})?$/;
-
-                                                if (regex.test(value) || value === "") {
-                                                    setFormData({ ...formData, [name]: value });
-                                                }
-                                            }}
-                                            step="0.05"
-                                            min="0"
+                                            onChange={handleChange}
+                                            step="0.1"
+                                            min={salaireMinimumHoraire}
                                             required
                                         />
+                                        {errorMessageSalaire && (
+                                            <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+                                                {errorMessageSalaire}
+                                            </div>
+                                        )}
                                     </div>
                                     <h6>{t('TachesEtResponsabilitesDuStage')}</h6>
                                     <div className="form-group">

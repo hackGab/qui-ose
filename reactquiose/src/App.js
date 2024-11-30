@@ -6,7 +6,7 @@ import AccueilEtudiant from "./components/Accueil/AccueilEtudiant";
 import AccueilGestionnaire from "./components/Accueil/AccueilGestionnaire";
 import AccueilProfesseur from "./components/Accueil/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
-import VisualiserOffres from "./components/VisualiserOffres";
+import VisualiserOffres from "./components/Liste/VisualiserOffres";
 import ListeEtudiants from './components/Liste/ListeEtudiants';
 import DetailsEtudiants from './components/Details/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";

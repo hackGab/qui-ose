@@ -12,7 +12,7 @@ function ListeEtudiants() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [visibleStatus, setVisibleStatus] = useState({ 'En attente': true });
+    const [visibleStatus, setVisibleStatus] = useState({ 'Attente': true });
 
 
     useEffect(() => {
@@ -101,7 +101,7 @@ function ListeEtudiants() {
                     <input
                         type="text"
                         className="form-control mb-4"
-                        placeholder={t('searchPlaceholder')}
+                        placeholder={t('searchStudents')}
                         value={searchTerm}
                         onChange={handleSearch}
                     />

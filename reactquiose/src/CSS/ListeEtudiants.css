@@ -83,11 +83,11 @@ p {
     border: 5px solid red;
 }
 
-.card.validé, .card.accepter {
+.card.validé, .card.accepter, .card.signer {
     border: 5px solid green;
 }
 
-.card.attente {
+.card.attente, .card.pasSigner {
     border: 5px solid #c4c418;
 }
 

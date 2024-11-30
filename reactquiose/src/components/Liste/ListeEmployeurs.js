@@ -14,7 +14,7 @@ function ListeEmployeurs() {
     const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);
     const [selectedSession, setSelectedSession] = useState(getLocalStorageSession); // État pour la session active
-    const [visibleStatus, setVisibleStatus] = useState({ 'En attente': true });
+    const [visibleStatus, setVisibleStatus] = useState({ 'Attente': true });
     const [searchTerm, setSearchTerm] = useState('');
 
     const verifificationSession = (data) => {

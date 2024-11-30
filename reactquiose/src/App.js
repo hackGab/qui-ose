@@ -18,7 +18,7 @@ import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
 import MesEntrevues from "./components/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
 import ListeCandidature from "./components/Liste/ListeCandidature";
-import SignerContrat from "./components/SignerContrat";
+import SignerContrat from "./components/Contrat/SignerContrat";
 import ListeProfesseurs from "./components/Liste/ListeProfesseurs";
 import DetailsProfesseur from "./components/Details/DetailsProfesseur";
 

@@ -3,12 +3,13 @@ import {useLocation} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {eyeOff, eye} from 'react-icons-kit/feather';
 import {Icon} from "react-icons-kit";
-import EmployeurHeader from "./Header/EmployeurHeader";
-import EtudiantHeader from "./Header/EtudiantHeader";
+import EmployeurHeader from "../Header/EmployeurHeader";
+import EtudiantHeader from "../Header/EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
-import "../CSS/SignerContrat.css";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import "../../CSS/SignerContrat.css";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 import {FaClock} from "react-icons/fa";
+import ContratCard from "./ContratCard";
 
 function SignerContrat() {
     const location = useLocation();
@@ -115,7 +116,6 @@ function SignerContrat() {
         fetchSession(data.session)
     }
 
-
     const updateContratSignStatus = () => {
         setSelectedContrat(prevContrat => {
             if (userData.role === 'EMPLOYEUR') {
@@ -126,6 +126,16 @@ function SignerContrat() {
             return prevContrat;
         });
     };
+
+    const signedContrats = contrats.filter(contrat =>
+        (userData.role === 'EMPLOYEUR' && contrat.employeurSigne) ||
+        (userData.role === 'ETUDIANT' && contrat.etudiantSigne)
+    );
+
+    const unsignedContrats = contrats.filter(contrat =>
+        (userData.role === 'EMPLOYEUR' && !contrat.employeurSigne) ||
+        (userData.role === 'ETUDIANT' && !contrat.etudiantSigne)
+    );
 
 
     return (
@@ -204,51 +214,20 @@ function SignerContrat() {
                             <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
-                            {contrats.map((contrat) => (
-                                <div key={contrat.uuid} className="col-12 col-md-6 col-lg-4 mb-4">
-                                    <div className="card mt-4" onClick={() => setSelectedContrat(contrat)}>
-                                        {/*className={`card shadow w-100 position-relative ${status.toLowerCase().replaceAll(' ', '')}`}>*/}
-                                        <div className="card-header">
-                                            <h5 className="card-title">
-                                                {contrat.description ? String(contrat.description) : t('DescriptionIndisponible')}
-                                            </h5>
-
-                                            <p className="card-text">
-                                                {contrat.lieuStage ? String(contrat.lieuStage) : t('LieuIndisponible')}
-                                            </p>
-                                        </div>
-
-                                        <div className="card-body">
-                                            <p className="card-text">
-                                                - {t('entrepriseEngagement')} <span className="text-lowercase">{contrat.entrepriseEngagement ? String(contrat.entrepriseEngagement) : t('NomIndisponible')}</span>
-                                                    <br/>
-                                                    <br/>
-                                                - <b>{t('description')} :</b> {contrat.description ? String(contrat.description) : t('DescriptionIndisponible')}
-                                                    <br/>
-                                                    <br/>
-                                                <b>
-                                                    <FaClock/> {t('dateDebut')}: {contrat.dateDebut ? String(contrat.dateDebut) : t('Indisponible')}
-                                                       <br/>
-                                                    <FaClock/> {t('dateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
-                                                </b>
-                                            </p>
-                                            {/*<p className={`card-text badge custom-badge ${userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? 'bg-success' : 'text-danger') : (contrat.etudiantSigne ? 'bg-success' : 'text-danger')}`}>*/}
-                                            <p className={`card-text badge custom-badge text-white
-                                                ${userData.role === 'EMPLOYEUR'
-                                                    ? (contrat.employeurSigne ? 'signer' : 'pasSigner')
-                                                    : (contrat.etudiantSigne ? 'signer' : 'pasSigner')}
-                                                `}
-                                            >
-                                                {userData.role === 'EMPLOYEUR'
-                                                    ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne'))
-                                                    : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))
-                                                }
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                            <details open>
+                                <summary>{t('ContratsPasSignes')}</summary>
+                                {unsignedContrats.map((contrat) => (
+                                    <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                 setSelectedContrat={setSelectedContrat}/>
+                                ))}
+                            </details>
+                            <details>
+                                <summary>{t('ContratsSignes')}</summary>
+                                {signedContrats.map((contrat) => (
+                                    <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                 setSelectedContrat={setSelectedContrat}/>
+                                ))}
+                            </details>
                         </div>
                     )}
                 </div>

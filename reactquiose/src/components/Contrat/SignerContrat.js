@@ -214,22 +214,26 @@ function SignerContrat() {
                             <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
-                            <details open>
+                            <details open className="p-0">
                                 <summary>{t('ContratsPasSignes')}</summary>
-                                {unsignedContrats.map((contrat) => (
-                                    <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
-                                                 setSelectedContrat={setSelectedContrat}/>
-                                ))}
+                                <div className="row">
+                                    {unsignedContrats.map((contrat) => (
+                                        <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                     setSelectedContrat={setSelectedContrat}/>
+                                    ))}
+                                </div>
                             </details>
-                            <details>
+                            <details className="p-0">
                                 <summary>{t('ContratsSignes')}</summary>
-                                {signedContrats.map((contrat) => (
-                                    <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
-                                                 setSelectedContrat={setSelectedContrat}/>
-                                ))}
+                                <div className="row">
+                                    {signedContrats.map((contrat) => (
+                                        <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                     setSelectedContrat={setSelectedContrat}/>
+                                    ))}
+                                </div>
                             </details>
                         </div>
-                    )}
+                        )}
                 </div>
             </div>
         </>

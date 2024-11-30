@@ -382,5 +382,7 @@
   "filtrerParSession": "Filter by session",
   "erreurFichierPDF": "Please choose a PDF file",
   "contratNotificationLegend": "contract waiting to be created or signed",
-  "linkNotificationLegend": "requests waiting for your approval"
+  "linkNotificationLegend": "requests waiting for your approval",
+  "ContratsPasSignes": "Contracts to be signed",
+  "ContratsSignes": "Signed Contracts"
 }

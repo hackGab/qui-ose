@@ -385,5 +385,7 @@
   "linkNotificationLegend": "requests waiting for your approval",
   "ContratsPasSignes": "Contracts to be signed",
   "ContratsSignes": "Signed Contracts",
-  "Aucune": "None"
+  "Aucune": "None",
+  "RechercherParTitre": "Search by title",
+  "RechercherParLocalisation": "Search by location"
 }

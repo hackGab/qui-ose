@@ -395,5 +395,7 @@
   "linkNotificationLegend": "demandes en attente d'approbation de votre part",
   "ContratsPasSignes": "Contrats à signer",
   "ContratsSignes": "Contrats signés",
-  "Aucune": "Aucune"
+  "Aucune": "Aucune",
+  "RechercherParTitre": "Rechercher par titre",
+  "RechercherParLocalisation": "Rechercher par localisation"
 }

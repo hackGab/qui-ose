@@ -14,7 +14,7 @@ import ListeEmployeurs from "./components/Liste/ListeEmployeurs";
 import DetailsEmployeurs from "./components/Details/DetailsEmployeur";
 import ListeDeStage from "./components/Liste/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
-import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
+import StagesAppliqueesPage from "./components/Liste/StagesAppliqueesPage";
 import MesEntrevues from "./components/Entrevues/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/Entrevues/MesEntrevueAccepte";
 import ListeCandidature from "./components/Liste/ListeCandidature";

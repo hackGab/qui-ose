@@ -4,9 +4,9 @@ import { Modal, Button } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import "../CSS/ListeDeStage.css";
-import EtudiantHeader from "./Header/EtudiantHeader";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import "../../CSS/ListeDeStage.css";
+import EtudiantHeader from "../Header/EtudiantHeader";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 function StagesAppliquees() {
     const location = useLocation();
     const user = location.state?.userData;
@@ -141,6 +141,9 @@ function StagesAppliquees() {
                                              onClick={() => openModal(stage)}>
                                             <div className="internship-image"
                                                  style={{backgroundImage: `url(${stage.imageUrl})`}}>
+                                                <div className="overlay">
+                                                {/*  TODO préparation térain pour story 120 */}
+                                                </div>
                                             </div>
                                             <div
                                                 className="card-body d-flex flex-column justify-content-center align-items-center"

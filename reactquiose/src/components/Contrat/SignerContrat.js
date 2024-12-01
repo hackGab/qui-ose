@@ -137,6 +137,7 @@ function SignerContrat() {
         (userData.role === 'ETUDIANT' && !contrat.etudiantSigne)
     );
 
+    const shouldOpenSignedDetails = unsignedContrats.length === 0 && signedContrats.length > 0;
 
     return (
         <>
@@ -214,7 +215,7 @@ function SignerContrat() {
                             <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
-                            <details open className="p-0">
+                            <details open={!shouldOpenSignedDetails} className="p-0">
                                 <summary>{t('ContratsPasSignes')} ({unsignedContrats.length})</summary>
                                 <div className="row">
                                     {unsignedContrats.map((contrat) => (
@@ -223,7 +224,7 @@ function SignerContrat() {
                                     ))}
                                 </div>
                             </details>
-                            <details className="p-0">
+                            <details open={shouldOpenSignedDetails} className="p-0">
                                 <summary>{t('ContratsSignes')} ({signedContrats.length})</summary>
                                 <div className="row">
                                     {signedContrats.map((contrat) => (

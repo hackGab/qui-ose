@@ -267,7 +267,7 @@ function VisualiserOffres() {
                         <div className="row mt-3">
                             {categorizedOffers.map(category => (
                                 <details key={category.status} open={category.status === "Validé"} className="p-0">
-                                    <summary>{t(category.status)}</summary>
+                                    <summary>{t(category.status)} ({category.offers.length})</summary>
                                     <div className="row">
                                         {category.offers.map((offre, index) => (
                                             <OffreCard

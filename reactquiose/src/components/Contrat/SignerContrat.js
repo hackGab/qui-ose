@@ -215,7 +215,7 @@ function SignerContrat() {
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
                             <details open className="p-0">
-                                <summary>{t('ContratsPasSignes')}</summary>
+                                <summary>{t('ContratsPasSignes')} ({unsignedContrats.length})</summary>
                                 <div className="row">
                                     {unsignedContrats.map((contrat) => (
                                         <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
@@ -224,7 +224,7 @@ function SignerContrat() {
                                 </div>
                             </details>
                             <details className="p-0">
-                                <summary>{t('ContratsSignes')}</summary>
+                                <summary>{t('ContratsSignes')} ({signedContrats.length})</summary>
                                 <div className="row">
                                     {signedContrats.map((contrat) => (
                                         <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}

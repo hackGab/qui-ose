@@ -302,3 +302,24 @@
     transform: translateX(-50%);
     width: inherit;
 }
+
+.section-image-student {
+    width: 300px;
+    height: auto;
+    bottom: 0;
+    left: 90px;
+}
+
+.section-image-teacher {
+    width: 500px;
+    height: auto;
+    bottom: 0;
+    left: 0;
+}
+
+.section-image-employer {
+    width: 600px;
+    height: auto;
+    bottom: 0;
+    right: -50px;
+}

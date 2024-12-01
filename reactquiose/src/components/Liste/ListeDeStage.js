@@ -147,17 +147,22 @@ function ListeDeStage({ internships = [], userData }) {
         </Modal.Footer>
     );
 
+    const sortedInternships = internshipsWithImages.sort((a, b) => {
+        const aApplied = appliedInternship.includes(a.id);
+        const bApplied = appliedInternship.includes(b.id);
+        return aApplied - bApplied;
+    });
 
     return (
         <div className="container mb-5">
             <div className="m-auto text-center my-4">
                 <h3>{t('OffresDeStage')}</h3>
-                <small className="text-muted" style={{ fontSize: "1rem" }}><i>*{t('VoirStage')}</i></small>
+                <small className="text-muted" style={{fontSize: "1rem"}}><i>*{t('VoirStage')}</i></small>
             </div>
 
             <div className="row">
-                {internshipsWithImages.length > 0 ? (
-                    internshipsWithImages.map((internship, index) => (
+                {sortedInternships.length > 0 ? (
+                    sortedInternships.map((internship, index) => (
                         <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">
                             <div className="card my-3 h-100 internship-card" onClick={() => openModal(internship)}>
                                 <div className="internship-image"
@@ -187,7 +192,6 @@ function ListeDeStage({ internships = [], userData }) {
                                             <strong>{t('DateLimite')}</strong> {internship.dateLimite}
                                             <sup><b>(?)</b></sup>
                                         </p>
-                                        <Tooltip id="datelimiteTip" style={{fontSize: '1.2rem'}}/>
                                     </div>
 
                                     <p className="card-text text-center">
@@ -208,6 +212,7 @@ function ListeDeStage({ internships = [], userData }) {
                 )}
             </div>
 
+            <Tooltip id="datelimiteTip" style={{fontSize: '1.2rem', zIndex: '2'}}/>
 
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>

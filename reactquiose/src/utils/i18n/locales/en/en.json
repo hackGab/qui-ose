@@ -384,5 +384,6 @@
   "contratNotificationLegend": "contract waiting to be created or signed",
   "linkNotificationLegend": "requests waiting for your approval",
   "ContratsPasSignes": "Contracts to be signed",
-  "ContratsSignes": "Signed Contracts"
+  "ContratsSignes": "Signed Contracts",
+  "Aucune": "None"
 }

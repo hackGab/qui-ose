@@ -2,19 +2,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { format } from 'date-fns';
 import { useTranslation } from "react-i18next";
-import EmployeurHeader from "./Header/EmployeurHeader";
-import "../CSS/MesEntrevueAccepte.css";
+import EmployeurHeader from "../Header/EmployeurHeader";
+import "../../CSS/MesEntrevueAccepte.css";
 import {forEach} from "react-bootstrap/ElementChildren";
-import {FaCalendarAlt, FaCheck, FaTimes} from "react-icons/fa";
-import ConfirmModal from "./ConfirmModal";
+import {FaCalendarAlt, FaCheck, FaClipboardList, FaFilePdf, FaListAlt, FaPercent, FaTimes} from "react-icons/fa";
+import ConfirmModal from "../ConfirmModal";
 import i18n from "i18next";
 import {FaLocationPinLock} from "react-icons/fa6";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 import Modal from "react-bootstrap/Modal";
 
 function MesEntrevueAccepte() {
     const today = format(new Date(), 'dd/MM/yyyy');
-
     const location = useLocation();
     const userData = location.state?.userData;
     const employeurEmail = userData.credentials.email;
@@ -31,6 +30,8 @@ function MesEntrevueAccepte() {
     const [evaluations, setEvaluations] = useState([]);
     const { t } = useTranslation();
     const [session, setSession] = useState(getLocalStorageSession());
+
+    const [filters, setFilters] = useState(["all"]);
 
     const EvaluationConformiteOptions = [
         {label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD"},
@@ -92,14 +93,14 @@ function MesEntrevueAccepte() {
     });
 
     const fetchSession = async (session) => {
-        console.log("Session:", session);
+        // console.log("Session:", session);
         try {
-            console.log("EmployeurEmail:", employeurEmail);
+            // console.log("EmployeurEmail:", employeurEmail);
 
             const responseEntrevuesAccepte = await fetch(
                 `http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`
             );
-            console.log("ResponseEntrevuesAccepte:", responseEntrevuesAccepte);
+            // console.log("ResponseEntrevuesAccepte:", responseEntrevuesAccepte);
 
             if (!responseEntrevuesAccepte.ok) {
                 if (responseEntrevuesAccepte.status === 404 || responseEntrevuesAccepte.status === 204) {
@@ -117,14 +118,14 @@ function MesEntrevueAccepte() {
             }
 
             const entrevuesAccepteData = await responseEntrevuesAccepte.json();
-            console.log("EntrevuesAccepteData:", entrevuesAccepteData.status === 204);
+            // console.log("EntrevuesAccepteData:", entrevuesAccepteData.status === 204);
             if (entrevuesAccepteData.status === 204) {
                 console.warn("Réponse vide reçue du serveur.");
                 setEntrevues([]);
                 return;
             }
 
-            console.log("Données des entrevues acceptées:", entrevuesAccepteData);
+            // console.log("Données des entrevues acceptées:", entrevuesAccepteData);
             setEntrevues(entrevuesAccepteData);
 
         } catch (error) {
@@ -133,6 +134,14 @@ function MesEntrevueAccepte() {
             setIsLoading(false);
         }
     };
+
+
+    useEffect(() => {
+        if (filters.length === 0) {
+            setFilters(["all"]);
+        }
+    }, [filters]);
+
 
     useEffect(() => {
         const fetchOffresEntrevues = async () => {
@@ -146,9 +155,6 @@ function MesEntrevueAccepte() {
 
         fetchOffresEntrevues();
     }, [employeurEmail, session]); // Inclure `session` si elle peut changer dynamiquement
-
-
-
 
     useEffect(() => {
         entrevues.forEach(entrevue => {
@@ -177,7 +183,7 @@ function MesEntrevueAccepte() {
 
                 const data = await response.json();
                 setEvaluations(data);
-                console.log(data)
+                // console.log(data)
             } catch (error) {
                 console.error("Erreur réseau:", error);
             }
@@ -233,9 +239,9 @@ function MesEntrevueAccepte() {
     };
 
     const handleInterviewClick = async (entrevue) => {
-        console.log("entrevue", entrevue);
+        // console.log("entrevue", entrevue);
         const candidature = asCandidature(entrevue);
-        console.log("A la candidature", candidature);
+        // console.log("A la candidature", candidature);
 
         const evaluation = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
         if(evaluation) {
@@ -246,7 +252,7 @@ function MesEntrevueAccepte() {
         if(candidature && entrevue.etudiantDTO.professeur){
             setSelectedEntrevue(entrevue);
             setShowDetailsModal(true);
-            console.log("selectedEntrevue", selectedEntrevue);
+            // console.log("selectedEntrevue", selectedEntrevue);
         }
     };
 
@@ -516,11 +522,71 @@ function MesEntrevueAccepte() {
         return <div style={{ fontSize: "1.5rem" }}>{t('Erreur')} {error}</div>;
     }
 
+
+    const handleFilterChange = (e) => {
+        const { value, checked } = e.target;
+        if (value === "all") {
+            setFilters(checked ? ["all"] : []);
+        } else {
+            setFilters(prevFilters =>
+                checked ? prevFilters.filter(filter => filter !== "all").concat(value) : prevFilters.filter(filter => filter !== value)
+            );
+        }
+    };
+
     const showButtonsIfDateBeforeToday = (entrevue) => {
         const today = new Date();
         const dateEntrevue = new Date(entrevue.dateHeure);
         return today > dateEntrevue;
     }
+
+    const getFilteredCount = (filter) => {
+        return entrevues.filter(entrevue => {
+            switch (filter) {
+                case "all":
+                    return true;
+                case "withButtons":
+                    return statusMessages[entrevue.id] == null;
+                case "withEvaluation":
+                    return !evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "withPdf":
+                    return evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "acceptedOnly":
+                    return statusMessages[entrevue.id] !== null && statusMessages[entrevue.id] === "Candidature acceptée" && !entrevue.etudiantDTO.professeur;
+                default:
+                    return true;
+            }
+        }).length;
+    };
+
+    const filterOptions = [
+        { value: "all", label: t('Tous'), icon: <FaListAlt className="filter-option-icon" /> },
+        { value: "withButtons", label: t('Avec Boutons'), icon: <FaClipboardList className="filter-option-icon" /> },
+        { value: "withEvaluation", label: t('Avec Évaluation'), icon: <FaPercent className="filter-option-icon" /> },
+        { value: "withPdf", label: t('Avec PDF'), icon: <FaFilePdf className="filter-option-icon" /> },
+        { value: "acceptedOnly", label: t('Acceptée Seulement'), icon: <FaCheck className="filter-option-icon" /> }
+    ];
+
+    const filteredInterviews = entrevues.filter(entrevue => {
+        if (filters.length === 0 || filters.includes("all")) {
+            return true;
+        }
+        return filters.some(filter => {
+            switch (filter) {
+                case "withButtons":
+                    return statusMessages[entrevue.id] == null;
+                case "withEvaluation":
+                    return !evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "withPdf":
+                    return evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "acceptedOnly":
+                    return statusMessages[entrevue.id] !== null && statusMessages[entrevue.id] === "Candidature acceptée" && !entrevue.etudiantDTO.professeur;
+                default:
+                    return true;
+            }
+        });
+    });
+
 
     const formatDate = (dateString) => {
         const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -528,14 +594,10 @@ function MesEntrevueAccepte() {
     }
 
     const verificationSession = (data) => {
-        console.log("session ", data);
+        // console.log("session ", data);
         setSession(data.session);
         fetchSession(data.session);
     }
-
-
-    const groupedInterviews = groupInterviewsByOffer(entrevues);
-
 
     return (
         <>
@@ -543,14 +605,30 @@ function MesEntrevueAccepte() {
             <div className="container-fluid p-4 mes-entrevues-container">
                 <div className="container mt-5">
                     <h1 className="text-center mt-5 page-title">{t('vosEntrevues')}</h1>
-
                     <legend className="mb-5 mt-0"><i>*{t('AttendreDateEntrevue')}</i></legend>
+
+                    <div className="filters">
+                        {filterOptions.map(option => (
+                            <label key={option.value} className="filter-option">
+                                <input
+                                    type="checkbox"
+                                    value={option.value}
+                                    checked={filters.includes(option.value)}
+                                    onChange={handleFilterChange}
+                                    disabled={option.value === "all" && filters.includes("all")}
+                                />
+                                {option.icon}
+                                {option.label} ({getFilteredCount(option.value)})
+                            </label>
+                        ))}
+                    </div>
+
 
                     {Object.keys(entrevues).length === 0 ? (
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3 mb-3">
-                            {Object.values(groupedInterviews).map(({offer, entrevues}) => (
+                            {Object.values(groupInterviewsByOffer(filteredInterviews)).map(({offer, entrevues}) => (
                                 <div key={offer.id} className="col-md-12 offre-card">
                                     <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
                                     <hr/>
@@ -559,25 +637,18 @@ function MesEntrevueAccepte() {
                                             <li
                                                 key={entrevue.id}
                                                 className="entrevue-item text-capitalize"
-                                                onClick={() => handleInterviewClick(entrevue)
-                                                }
+                                                onClick={() => handleInterviewClick(entrevue)}
                                             >
-                                                <div style={{
-                                                    minWidth: "15em",
-                                                    marginRight: "3em",
-                                                }}>
+                                                <div style={{minWidth: "15em", marginRight: "3em"}}>
                                                     <span style={{fontSize: "1rem"}}>
                                                         <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
                                                     </span>
                                                     <br/>
-
                                                     <span className="entrevue-details">
                                                         <FaCalendarAlt/> &nbsp;
                                                         {formatDate(entrevue.dateHeure)}
                                                     </span>
                                                     <br/>
-
-
                                                     <span className="entrevue-details">
                                                         <FaLocationPinLock/> &nbsp;
                                                         {entrevue.location}
@@ -599,43 +670,39 @@ function MesEntrevueAccepte() {
                                                             </button>
                                                         ) : (
                                                             <strong
-                                                                className="evaluation-possible-text">{t('EvaluationDisponible')}
-                                                            </strong>
+                                                                className="evaluation-possible-text">{t('EvaluationDisponible')}</strong>
                                                         )}
                                                     </div>
                                                 )}
-
-
+                                                
                                                 {showButtonsIfDateBeforeToday(entrevue) && (
-                                                    <>
-                                                        <div className="m-auto d-flex">
-                                                            {statusMessages[entrevue.id] ? (
-                                                                <div
-                                                                    className="status-message">{statusMessages[entrevue.id]}</div>
-                                                            ) : (
-                                                                <div className="entrevue-actions">
-                                                                    <div className="icon-block">
-                                                                        <button
-                                                                            className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
-                                                                            onClick={() => handleAccept(entrevue)}
-                                                                            style={{margin: "0", fontSize: "1.2rem"}}
-                                                                        >
-                                                                            {t('Embaucher')}
-                                                                        </button>
-                                                                    </div>
-                                                                    <div className="icon-block">
-                                                                        <button
-                                                                            className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
-                                                                            onClick={() => handleRefuse(entrevue)}
-                                                                            style={{margin: "0", fontSize: "1.2rem"}}
-                                                                        >
-                                                                            {t('Refuser')}
-                                                                        </button>
-                                                                    </div>
+                                                    <div className="m-auto d-flex">
+                                                        {statusMessages[entrevue.id] ? (
+                                                            <div
+                                                                className="status-message">{statusMessages[entrevue.id]}</div>
+                                                        ) : (
+                                                            <div className="entrevue-actions">
+                                                                <div className="icon-block">
+                                                                    <button
+                                                                        className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
+                                                                        onClick={() => handleAccept(entrevue)}
+                                                                        style={{margin: "0", fontSize: "1.2rem"}}
+                                                                    >
+                                                                        {t('Embaucher')}
+                                                                    </button>
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    </>
+                                                                <div className="icon-block">
+                                                                    <button
+                                                                        className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
+                                                                        onClick={() => handleRefuse(entrevue)}
+                                                                        style={{margin: "0", fontSize: "1.2rem"}}
+                                                                    >
+                                                                        {t('Refuser')}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </li>
                                         ))}

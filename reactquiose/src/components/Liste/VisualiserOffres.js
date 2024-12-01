@@ -1,15 +1,90 @@
 import React, { useEffect, useState } from "react";
 import { useLocation,useNavigate, Link } from "react-router-dom";
-import "../CSS/VisualiserOffres.css";
-import EmployeurHeader from "./Header/EmployeurHeader";
+import "../../CSS/VisualiserOffres.css";
+import EmployeurHeader from "../Header/EmployeurHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
-import {calculateNextSessions} from "../utils/methodes/dateUtils";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import {calculateNextSessions} from "../../utils/methodes/dateUtils";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 
+const OffreCard = ({ offre, index, deletingId, selectedOffre, handleOffreClick, handleListeClick, getNbCandidats, getStatusClass, openPDF, handleUpdateClick, deleteOffre, employeurEmail, t }) => (
+    <div key={index} className="col-md-4 mb-4">
+        <div className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`} onClick={() => handleOffreClick(index)}>
+            <div className="card-body">
+                <h5 className="card-title">{offre.titre}</h5>
+                <p className="card-text">
+                    <strong>{t('localisation')}</strong> {offre.localisation} <br />
+                    <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
+                    <br />
+                    <br />
+                    {offre.status === "Validé" && (
+                        <div
+                            onClick={() => handleListeClick(offre)}
+                            className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline"
+                        >
+                            {t('VoirLaListeDesCandidats')} ({getNbCandidats(offre) || 0})
+                        </div>
+                    )}
+                </p>
+                <p className="info-stage">
+                    {t('DateDePublication')}{" "}
+                    {new Date(offre.datePublication).toLocaleDateString()}
+                    <br />
+                    {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
+                </p>
+                <div className={`status-badge ${getStatusClass(offre.status)}`}>
+                    {t('Status')} {t(offre.status)}
+                </div>
+                {offre.status === "Rejeté" && (
+                    <p className="info-stage">
+                        {t('RaisonDuRejet')}
+                        <b>{offre.raisonRejet || t('Aucune')}</b>
+                    </p>
+                )}
 
+                {selectedOffre === index && (
+                    <>
+                        <div
+                            className="card pdf-card mt-4"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                            onClick={() => openPDF(offre.data)}
+                        >
+                            <div className="card-body text-center">
+                                <h5 className="card-title">{t('VoirLeFichierPfd')}</h5>
+                                <p className="card-text">{t('ClickToViewPdf')}</p>
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-between mt-4">
+                            <FontAwesomeIcon
+                                icon={faEdit}
+                                size="2x"
+                                className="text-warning"
+                                style={{ cursor: "pointer" }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleUpdateClick(offre, employeurEmail);
+                                }}
+                            />
+
+                            <FontAwesomeIcon
+                                icon={faTrash}
+                                size="2x"
+                                className="text-danger"
+                                style={{ cursor: "pointer" }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteOffre(offre.id);
+                                }}
+                            />
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    </div>
+);
 
 function VisualiserOffres() {
     const location = useLocation();
@@ -26,8 +101,6 @@ function VisualiserOffres() {
     const {t} = useTranslation();
 
     const fetchOffres = async (session) => {
-        console.log("session ", session);
-
         if (session === "") {
             session = calculateNextSessions().slice(0, -2);
             localStorage.setItem('session', session)
@@ -163,6 +236,12 @@ function VisualiserOffres() {
         fetchOffres(data.session);
     }
 
+    const statusCategories = ["Validé", "Attente", "Rejeté"];
+    const categorizedOffers = statusCategories.map(status => ({
+        status,
+        offers: offres.filter(offre => offre.status === status)
+    }));
+
     return (
         <>
             <EmployeurHeader userData={userData} onSendData={verificationSession}/>
@@ -186,86 +265,31 @@ function VisualiserOffres() {
                         <div className="alert alert-info mt-3" style={{ fontSize: "large"}}>{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3">
-                            {offres.map((offre, index) => (
-                                <div key={index} className="col-md-4 mb-4">
-                                    <div
-                                        className={`card offre-card ${deletingId === offre.id ? "fade-out" : ""}`}
-                                        onClick={() => handleOffreClick(index)}
-                                    >
-                                        <div className="card-body">
-                                            <h5 className="card-title">{offre.titre}</h5>
-                                            <p className="card-text">
-                                                <strong>{t('localisation')}</strong> {offre.localisation} <br />
-                                                <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
-                                                <br />
-                                                <br />
-                                                <br />
-                                                {offre.status === "Validé" && (
-                                                    <div
-                                                        onClick={() => handleListeClick(offre)}
-                                                        className="alert alert-link p-0 m-1 text-left text-primary text-decoration-underline"
-                                                    >
-                                                        {t('VoirLaListeDesCandidats')} ({getNbCandidats(offre) || 0})
-                                                    </div>
-                                                )}
-                                            </p>
-                                            <p className="info-stage">
-                                                {t('DateDePublication')}{" "}
-                                                {new Date(offre.datePublication).toLocaleDateString()}
-                                                <br />
-                                                {t('DateLimite')} {new Date(offre.dateLimite).toLocaleDateString()}
-                                            </p>
-                                            <div className={`status-badge ${getStatusClass(offre.status)}`}>
-                                                {t('Status')} {offre.status}
-                                            </div>
-                                            {offre.status === "Rejeté" && (
-                                                <p className="info-stage">
-                                                    {t('RaisonDuRejet')}
-                                                    <strong>{offre.rejetMessage}</strong>
-                                                </p>
-                                            )}
-
-                                            {selectedOffre === index && (
-                                                <>
-                                                    <div
-                                                        className="card pdf-card mt-4"
-                                                        style={{ backgroundColor: "#f0f0f0" }}
-                                                        onClick={() => openPDF(offre.data)}
-                                                    >
-                                                        <div className="card-body text-center">
-                                                            <h5 className="card-title">{t('VoirLeFichierPfd')}</h5>
-                                                            <p className="card-text">{t('ClickToViewPdf')}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="d-flex justify-content-between mt-4">
-                                                        <FontAwesomeIcon
-                                                            icon={faEdit}
-                                                            size="2x"
-                                                            className="text-warning"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleUpdateClick(offre, employeurEmail);
-                                                            }}
-                                                        />
-
-                                                        <FontAwesomeIcon
-                                                            icon={faTrash}
-                                                            size="2x"
-                                                            className="text-danger"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                deleteOffre(offre.id);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
+                            {categorizedOffers.map(category => (
+                                <details key={category.status} open={category.status === "Validé"} className="p-0">
+                                    <summary>{t(category.status)}</summary>
+                                    <div className="row">
+                                        {category.offers.map((offre, index) => (
+                                            <OffreCard
+                                                key={index}
+                                                offre={offre}
+                                                index={index}
+                                                deletingId={deletingId}
+                                                selectedOffre={selectedOffre}
+                                                handleOffreClick={handleOffreClick}
+                                                handleListeClick={handleListeClick}
+                                                getNbCandidats={getNbCandidats}
+                                                getStatusClass={getStatusClass}
+                                                openPDF={openPDF}
+                                                handleUpdateClick={handleUpdateClick}
+                                                deleteOffre={deleteOffre}
+                                                employeurEmail={employeurEmail}
+                                                t={t}
+                                            />
+                                        ))}
                                     </div>
-                                </div>
-                            ))}
+                                </details>
+                                ))}
                         </div>
                     )}
                 </div>
@@ -274,5 +298,4 @@ function VisualiserOffres() {
     );
 }
 
-
-    export default VisualiserOffres;
+export default VisualiserOffres;

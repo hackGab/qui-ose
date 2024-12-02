@@ -123,6 +123,28 @@ function StagesAppliquees() {
     }, [entrevues, candidatureDecision]);
 
 
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            const iframeModal = document.getElementById('pdfIframeModal');
+            const iframeFullscreen = document.getElementById('pdfIframeFullscreen');
+            if (!document.fullscreenElement) {
+                iframeModal.style.display = "block";
+                iframeFullscreen.style.display = "none";
+            }
+            else {
+                iframeModal.style.display = "none";
+                iframeFullscreen.style.display = "block";
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+
     const retirerApplication = (stage) => {
         const url = `http://localhost:8081/etudiant/${user.credentials.email}/retirerOffre/${stage.id}`;
 

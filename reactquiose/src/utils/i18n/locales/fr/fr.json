@@ -397,5 +397,9 @@
   "ContratsSignes": "Contrats signés",
   "Aucune": "Aucune",
   "RechercherParTitre": "Rechercher par titre",
-  "RechercherParLocalisation": "Rechercher par localisation"
+  "RechercherParLocalisation": "Rechercher par localisation",
+  "En attente d'entrevue": "En attente d'entrevue",
+  "Candidature en attente": "Candidature en attente",
+  "Candidature Acceptée": "Candidature Acceptée",
+  "Candidature Refusée": "Candidature Refusée"
 }

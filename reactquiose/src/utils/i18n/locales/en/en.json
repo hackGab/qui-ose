@@ -387,5 +387,9 @@
   "ContratsSignes": "Signed Contracts",
   "Aucune": "None",
   "RechercherParTitre": "Search by title",
-  "RechercherParLocalisation": "Search by location"
+  "RechercherParLocalisation": "Search by location",
+  "En attente d'entrevue": "Waiting for interview",
+  "Candidature en attente": "Application pending",
+  "Candidature Acceptée": "Application accepted",
+  "Candidature Refusée": "Application rejected"
 }

@@ -107,8 +107,6 @@ function StagesAppliquees() {
 
 
     useEffect(() => {
-        //if (!entrevues.length || !candidatureDecision.length) return;
-
         const decisions = {};
         entrevues.forEach(entrevue => {
             const candidature = candidatureDecision.find(c => c.entrevueId === entrevue.id);
@@ -123,30 +121,6 @@ function StagesAppliquees() {
 
         setDecisionEmployeurCandidature(decisions);
     }, [entrevues, candidatureDecision]);
-
-    // const getDecisionCandidate = (offreId) => {
-    //     if (!candidatureDecision?.length || !entrevues?.length) {
-    //         // console.log('CandidatureDecision:', candidatureDecision);
-    //         // console.log('Entrevues:', entrevues);
-    //         //
-    //         console.error('CandidatureDecision ou entrevues non trouvées');
-    //         return 'En attente';
-    //     }
-    //
-    //     const entrevue = entrevues.find(e => e.offreDeStageDTO?.id === offreId);
-    //     if (!entrevue) {
-    //         console.error('Entrevue non trouvée pour l’offre:', offreId);
-    //         return 'En attente';
-    //     }
-    //
-    //     const candidature = candidatureDecision.find(c => c.entrevueId === entrevue.id);
-    //     if (!candidature) {
-    //         console.error('Candidature non trouvée pour l’entrevue:', entrevue.id);
-    //         return 'En attente';
-    //     }
-    //
-    //     return candidature.accepte ? 'Candidature Acceptée' : 'Candidature Refusée';
-    // };
 
 
     const retirerApplication = (stage) => {
@@ -237,7 +211,7 @@ function StagesAppliquees() {
                                                 <div className="overlay">
                                                     <div>
                                                         <p className="text-center text-white" style={{ wordWrap: "normal" }}>
-                                                            { decisionEmployeurCandidature[stage.id] || t('En attente d\'entrevue')}
+                                                            { t(decisionEmployeurCandidature[stage.id]) || t('En attente d\'entrevue')}
                                                         </p>
                                                     </div>
                                                 </div>

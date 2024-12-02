@@ -561,7 +561,7 @@ function MesEntrevueAccepte() {
 
     const filterOptions = [
         { value: "all", label: t('Tous'), icon: <FaListAlt className="filter-option-icon" /> },
-        { value: "withButtons", label: t('Avec Boutons'), icon: <FaClipboardList className="filter-option-icon" /> },
+        { value: "withButtons", label: t('Embaucher / Refuser'), icon: <FaClipboardList className="filter-option-icon" /> },
         { value: "withEvaluation", label: t('Avec Évaluation'), icon: <FaPercent className="filter-option-icon" /> },
         { value: "withPdf", label: t('Avec PDF'), icon: <FaFilePdf className="filter-option-icon" /> },
         { value: "acceptedOnly", label: t('Acceptée Seulement'), icon: <FaCheck className="filter-option-icon" /> }

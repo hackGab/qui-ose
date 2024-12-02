@@ -391,5 +391,10 @@
   "En attente d'entrevue": "Waiting for interview",
   "Candidature en attente": "Application pending",
   "Candidature Acceptée": "Application accepted",
-  "Candidature Rejetée": "Application rejected"
+  "Candidature Rejetée": "Application rejected",
+  "Tous": "All",
+  "Embaucher / Refuser": "Hire / Refuse",
+  "Avec Évaluation": "With Evaluation",
+  "Avec PDF": "With PDF",
+  "Acceptée Seulement": "Accepted Only"
 }

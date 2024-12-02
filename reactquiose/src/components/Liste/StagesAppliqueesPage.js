@@ -115,7 +115,7 @@ function StagesAppliquees() {
                 decisions[entrevue.offreDeStageDTO?.id] = 'Candidature en attente';
             }
             else {
-                decisions[entrevue.offreDeStageDTO?.id] = candidature.accepte ? 'Candidature Acceptée' : 'Candidature Refusée';
+                decisions[entrevue.offreDeStageDTO?.id] = candidature.accepte ? 'Candidature Acceptée' : 'Candidature Rejetée';
             }
         });
 

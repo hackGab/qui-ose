@@ -121,34 +121,6 @@ function DetailsProfesseur() {
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => console.error('Error unassigning students:', error));
-
-        // console.log('Unassigning student:', etudiantEmail);
-        // fetch(`http://localhost:8081/gestionnaire/etudiants/deassignerProfesseur/${encodeURIComponent(etudiantEmail)}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     }
-        // })
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Erreur lors de la désassignation de l\'étudiant');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         setSuccessMessage('Étudiant désassigné avec succès');
-        //         setEtudiants(prevEtudiants => {
-        //             const updatedEtudiants = prevEtudiants.map(etudiant => {
-        //                 if (etudiant.email === etudiantEmail) {
-        //                     return { ...etudiant, professeur: null };
-        //                 }
-        //                 return etudiant;
-        //             });
-        //             return updatedEtudiants;
-        //         });
-        //         setTimeout(() => setSuccessMessage(''), 3000);
-        //     })
-        //     .catch(error => console.error('Error unassigning student:', error));
     };
 
 

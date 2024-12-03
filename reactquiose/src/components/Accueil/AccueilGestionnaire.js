@@ -123,7 +123,7 @@ function AccueilGestionnaire() {
                     onMouseLeave={() => setHoveredSection(null)}
                 >
                     <button className="candidature-button position-relative" onClick={handleNavigateCandidatures}>
-                        {t("Voir les Candidatures")}
+                        {t("VoirCandidature")}
                         {contratsAGenerer > 0 && (
                             <div className="notification-badge-candidature position-absolute" data-testid="notif-contrat" >
                                 {contratsAGenerer}

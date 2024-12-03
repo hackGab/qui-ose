@@ -500,7 +500,6 @@ function ListeCandidature() {
                                             value={formData.tauxHoraire}
                                             onChange={handleChange}
                                             step="0.1"
-                                            min={salaireMinimumHoraire}
                                             required
                                         />
                                         {errorMessageSalaire && (
@@ -579,7 +578,7 @@ function ListeCandidature() {
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-danger"
                                             onClick={handleClosePasswordModal}>
-                                        {t('Fermer')}
+                                        {t('close')}
                                     </button>
                                     <button type="submit" className="btn btn-success">
                                         {t('Signer')}

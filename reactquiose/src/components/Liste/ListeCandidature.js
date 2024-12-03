@@ -480,6 +480,7 @@ function ListeCandidature() {
                                             name="heuresParSemaine"
                                             value={formData.heuresParSemaine}
                                             onChange={handleChange}
+                                            step="0.05"
                                             min={minHeuresParSemaine}
                                             required
                                         />
@@ -499,7 +500,8 @@ function ListeCandidature() {
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
                                             onChange={handleChange}
-                                            step="0.1"
+                                            step="0.05"
+                                            min={salaireMinimumHoraire}
                                             required
                                         />
                                         {errorMessageSalaire && (

@@ -218,14 +218,17 @@ function ListeCandidature() {
         }
 
         if (name === "tauxHoraire") {
-            const regex = /^\d+([.,]\d{0,2})?\$?$/;
+            const regex = /^\d+([.,]\d{0,2})?$/;
 
             if (!regex.test(value)) {
                 setErrorMessageSalaire('Le salaire horaire doit être un nombre valide.');
+                return;
             }
 
             const salaire = parseFloat(value.replace('$', '').replace(',', '.'));
-            if (salaire < salaireMinimumHoraire) {
+            if (isNaN(salaire)) {
+                setErrorMessageSalaire('Le salaire horaire doit être un nombre valide.');
+            } else if (salaire < salaireMinimumHoraire) {
                 setErrorMessageSalaire(`Le salaire horaire doit être supérieur ou égal à ${salaireMinimumHoraire}$.`);
             } else {
                 setErrorMessageSalaire('');
@@ -481,6 +484,7 @@ function ListeCandidature() {
                                             name="heuresParSemaine"
                                             value={formData.heuresParSemaine}
                                             onChange={handleChange}
+                                            step="0.05"
                                             min={minHeuresParSemaine}
                                             required
                                         />
@@ -500,8 +504,8 @@ function ListeCandidature() {
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
                                             onChange={handleChange}
-                                            step="0.1"
-                                            min={salaireMinimumHoraire}
+                                            step="0.05"
+                                            min={salaireMinimumHoraire.toString()}
                                             required
                                         />
                                         {errorMessageSalaire && (

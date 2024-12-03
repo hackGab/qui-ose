@@ -20,7 +20,7 @@ function ListeDeStage({ internships = [], userData }) {
             const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
             const updatedInternships = await Promise.all(internships.map(async internship => {
                 try {
-                    const response = await axios.get(`https://api.unsplash.com/search/photos?query=${internship.localisation}&client_id=${apiKey}`);
+                    const response = await axios.get(`https://api.unsplash.com/search/photos?query=${internship.employeur.entreprise}&client_id=${apiKey}`);
                     if (response.data.results.length > 0) {
                         return { ...internship, imageUrl: response.data.results[0].urls.regular };
                     } else {
@@ -228,6 +228,7 @@ function ListeDeStage({ internships = [], userData }) {
                                      }}>
                                     <h5 className="card-title text-center">{internship.titre}</h5>
                                     <h6 className="card-subtitle mb-2 text-muted text-center">{internship.localisation}</h6>
+                                    <h6 className="card-subtitle mb-2 text-muted text-center">{internship.employeur.entreprise}</h6>
 
                                     <div>
                                         <p data-tooltip-id="datelimiteTip"

@@ -218,13 +218,14 @@ function ListeCandidature() {
         }
 
         if (name === "tauxHoraire") {
-            const regex = /^\d+(\.\d{0,2})?$/;
+            const regex = /^\d+([.,]\d{0,2})?\$?$/;
 
             if (!regex.test(value)) {
                 setErrorMessageSalaire('Le salaire horaire doit être un nombre valide.');
             }
 
-            if (parseFloat(value) < salaireMinimumHoraire) {
+            const salaire = parseFloat(value.replace('$', '').replace(',', '.'));
+            if (salaire < salaireMinimumHoraire) {
                 setErrorMessageSalaire(`Le salaire horaire doit être supérieur ou égal à ${salaireMinimumHoraire}$.`);
             } else {
                 setErrorMessageSalaire('');

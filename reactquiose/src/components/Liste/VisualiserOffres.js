@@ -15,7 +15,7 @@ const OffreCard = ({ offre, index, deletingId, selectedOffre, handleOffreClick, 
             <div className="card-body">
                 <h5 className="card-title">{offre.titre}</h5>
                 <p className="card-text">
-                    <strong>{t('localisation')}</strong> {offre.localisation} <br />
+                    <strong>{t('localisation')} :</strong> {offre.localisation} <br />
                     <strong>{t('NombreDeCandidatsMax')}</strong> {offre.nbCandidats}
                     <br />
                     <br />
@@ -40,7 +40,7 @@ const OffreCard = ({ offre, index, deletingId, selectedOffre, handleOffreClick, 
                 {offre.status === "Rejeté" && (
                     <p className="info-stage">
                         {t('RaisonDuRejet')}
-                        <b>{offre.raisonRejet || t('Aucune')}</b>
+                        <b>{offre.rejetMessage || t('Aucune')}</b>
                     </p>
                 )}
 
@@ -190,24 +190,21 @@ function VisualiserOffres() {
     };
 
     const deleteOffre = async (id) => {
-        const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette offre ?");
-        if (confirmDelete) {
-            setDeletingId(id);
-            try {
-                const response = await fetch(`http://localhost:8081/offreDeStage/${id}`, {
-                    method: "DELETE",
-                });
-                if (response.status === 204) {
-                    setOffres(offres.filter((offre) => offre.id !== id));
-                    setSelectedOffre(null);
-                } else {
-                    setError("Erreur lors de la suppression de l'offre");
-                }
-            } catch (error) {
+        setDeletingId(id);
+        try {
+            const response = await fetch(`http://localhost:8081/offreDeStage/${id}`, {
+                method: "DELETE",
+            });
+            if (response.status === 204) {
+                setOffres(offres.filter((offre) => offre.id !== id));
+                setSelectedOffre(null);
+            } else {
                 setError("Erreur lors de la suppression de l'offre");
-            } finally {
-                setDeletingId(null);
             }
+        } catch (error) {
+            setError("Erreur lors de la suppression de l'offre");
+        } finally {
+            setDeletingId(null);
         }
     };
 

@@ -76,7 +76,9 @@ function AccueilGestionnaire() {
                 candidat => !contrats.some(contrat => contrat.candidature.id === candidat.id)
             );
 
-            setContratsAGenerer(candidatsSansContrat.length);
+            const filteredCandidatures = candidatsSansContrat.filter(candidat => candidat.accepte);
+
+            setContratsAGenerer(filteredCandidatures.length);
         } catch (error) {
             console.error('Erreur lors de la vérification des contrats à générer:', error);
         }

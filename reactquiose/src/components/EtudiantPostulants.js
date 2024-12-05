@@ -192,6 +192,12 @@ function EtudiantPostulants() {
 
     }
 
+    const formatDepartementLabel = (departement) => {
+        return departement
+            ? departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())
+            : '';
+    };
+
     return (
         <>
             <EmployeurHeader userData={ user } onSendData={verificationSession}/>
@@ -237,7 +243,7 @@ function EtudiantPostulants() {
                                                         <br/>
                                                         <FaPhone/> {etudiant.phoneNumber}
                                                         <br/>
-                                                        {t('departmentDetail')} {etudiant.departement}
+                                                         {formatDepartementLabel(etudiant.departement)}
                                                     </p>
 
                                                     <Button variant="primary"

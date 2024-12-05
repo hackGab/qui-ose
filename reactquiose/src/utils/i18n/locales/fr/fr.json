@@ -44,10 +44,10 @@
   "offreNotFound": "Offre non trouvée",
   "RequiredFields": "Champs Obligatoires *",
 
-  "AucunEtudiantTrouve": "Aucun étudiant trouvé",
-  "AucunEmployeurTrouve": "Aucun employeur trouvé",
-  "AucunProfesseurTrouve": "Aucun professeur trouvé",
-  "AucuneCandidatureTrouvee": "Aucune candidature trouvée",
+  "AucunEtudiantTrouve": "Aucun étudiants trouvés",
+  "AucunEmployeurTrouve": "Aucune offres de stages trouvées",
+  "AucunProfesseurTrouve": "Aucun professeurs trouvés",
+  "AucuneCandidatureTrouvee": "Aucune candidatures trouvées",
 
   "Dashboard": "Tableau de Bord",
 
@@ -64,7 +64,7 @@
   "profDetailsTitle": "Détails du Professeur",
   "searchStudents": "Rechercher des étudiants",
   "searchProfessors": "Rechercher des professeurs",
-  "searchEmployeur": "Rechercher des employeurs",
+  "searchEmployeur": "Rechercher des offres de stages par titre ou entreprise",
   "unassignedStudents": "Étudiants non assignés",
   "assignedStudents": "Étudiants assignés",
   "assignStudents": "Assigner des étudiants",
@@ -409,7 +409,7 @@
   "Acceptée Seulement": "Acceptée Seulement",
   "RechercherParEntreprise": "Rechercher par entreprise",
   "Gestion de Commerces":  "Gestion de Commerces",
-  "rejeté": "rejeté"
-
-
+  "rejeté": "Rejeté",
+  "collapseAll": "Développer tout",
+  "expandAll": "Réduire tout"
 }

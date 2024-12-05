@@ -298,7 +298,11 @@ function ListeCandidature() {
             })
             .then(candidatsWithEntrevues => {
                 console.log(candidatsWithEntrevues);
-                setCandidatures(candidatsWithEntrevues);
+
+                const filteredCandidatures = candidatsWithEntrevues.filter(candidat => candidat.accepte);
+
+                setCandidatures(filteredCandidatures);
+                console.log(filteredCandidatures);
                 setLoading(false);
             })
             .then(() => {
@@ -322,6 +326,7 @@ function ListeCandidature() {
 
     const getStatus = (candidat) => {
         const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
+        console.log(contrat);
         if (!contrat) return "Générer un contrat";
         if (isContractSigned(contrat)) return "générer version PDF du contrat";
         return "En attente des signatures";
@@ -368,6 +373,7 @@ function ListeCandidature() {
                                 </thead>
                                 <tbody>
                                 {sortedCandidatures.map(candidat => {
+
                                     const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
                                     const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 

@@ -163,23 +163,21 @@ function DetailsProfesseur() {
                     </div>
 
                     <div className="col-md-6">
-                        { unassignedStudents.length !== 0 || assignedStudents.length !== 0 ? (
-                            <>
-                                <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
-                                <input
-                                    type="text"
-                                    className="form-control mb-3"
-                                    placeholder={t('searchStudents')}
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                            </>
-                        ) : (
+                        <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder={t('searchStudents')}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        {unassignedStudents.length === 0 && assignedStudents.length === 0 && (
                             <h5>{t('noStudentsInDepartment')}</h5>
                         )}
 
 
-                        { unassignedStudents.length !== 0 && (
+                        {unassignedStudents.length !== 0 && (
                             <div>
                                 <h6>{t('unassignedStudents')}</h6>
 

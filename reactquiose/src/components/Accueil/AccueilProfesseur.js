@@ -114,6 +114,13 @@ function AccueilProfesseur() {
         selectedEvaluation.dateSignature = formattedDate;
         selectedEvaluation.signatureEnseignant = userData.credentials.email;
 
+        setListeEvaluations(listeEvaluations.map((evaluation) => {
+            if (evaluation.id === selectedEvaluation.id) {
+                return selectedEvaluation;
+            }
+            return evaluation;
+        }));
+
         setEvaluation({
             tachesConformite: "",
             accueilIntegration: "",
@@ -237,16 +244,16 @@ function AccueilProfesseur() {
                     <Modal.Body>
 
                         <div className="mb-3">
-                            <p>
+                            <p className="fs-3">
                             <strong>{t('LocationDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.adresse : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('DateDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.dateStage : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('NomEntreprise')}: </strong>{selectedEvaluation ? selectedEvaluation.nomEntreprise : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('TelephoneEmployeur')}: </strong>{selectedEvaluation ? selectedEvaluation.telephone : null}
                             </p>
                         </div>

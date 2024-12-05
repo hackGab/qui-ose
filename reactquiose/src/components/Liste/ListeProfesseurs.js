@@ -123,7 +123,8 @@ function ListeProfesseurs() {
                             <button className="btn btn-secondary" onClick={collapseAll}>
                                 <FaChevronUp/> {t('collapseAll')}</button>
                             &nbsp;
-                            <button className="btn btn-secondary" onClick={expandAll}><FaChevronDown/> {t('expandAll')}
+                            <button className="btn btn-secondary" onClick={expandAll}>
+                                <FaChevronDown/> {t('expandAll')}
                             </button>
                         </div>
                     </div>

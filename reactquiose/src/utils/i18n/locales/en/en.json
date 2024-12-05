@@ -44,7 +44,7 @@
   "profDetailsTitle": "Teacher Details",
   "searchStudents": "Search for students",
   "searchProfessors": "Search for teachers",
-  "searchEmployeur": "Search for employers",
+  "searchEmployeur": "Search for offers by title or company name ",
   "unassignedStudents": "Unassigned Students",
   "assignedStudents": "Assigned Students",
   "assignStudents": "Assign Students",
@@ -53,9 +53,9 @@
   "studentsInSameDepartment": "Students in the same department",
   "RequiredFields": "Required Fields *",
 
-  "AucunEtudiantTrouve": "No student found",
-  "AucunEmployeurTrouve": "No employer found",
-  "AucunProfesseurTrouve": "No teacher found",
+  "AucunEtudiantTrouve": "No students found",
+  "AucunEmployeurTrouve": "No offers found",
+  "AucunProfesseurTrouve": "No teachers found",
   "AucuneCandidatureTrouvee": "No application found",
 
   "studentListTitle": "Student List",
@@ -399,5 +399,7 @@
   "Acceptée Seulement": "Accepted Only",
   "RechercherParEntreprise": "Search by company",
   "Gestion de Commerces": "Business Management",
-  "rejeté": "rejected"
+  "rejeté": "rejected",
+  "collapseAll": "Expand All",
+  "expandAll": "Collapse All"
 }

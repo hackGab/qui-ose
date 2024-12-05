@@ -21,7 +21,7 @@ function UpdateOffre() {
 
     useEffect(() => {
         if (!offre) {
-            navigate("/visualiser-offres", {state: {employeurEmail}});
+            navigate("/accueilEmployeur", {state: {userData}});
         }
         console.log(offre);
 
@@ -108,7 +108,7 @@ function UpdateOffre() {
             });
 
             if (response.ok) {
-                navigate("/visualiser-offres", { state: { employeurEmail } });
+                navigate("/accueilEmployeur", { state: { userData } });
             } else {
                 console.error("Erreur lors de la mise à jour de l'offre");
             }

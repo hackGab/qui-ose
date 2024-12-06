@@ -18,7 +18,6 @@ function AccueilProfesseur() {
     ];
     const location = useLocation();
     const {userData} = location.state || {};
-    console.log("userData", userData);
     const [listeEvaluations, setListeEvaluations] = useState([]);
     const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -47,7 +46,6 @@ function AccueilProfesseur() {
 
     useEffect(() => {
         if (userData?.credentials?.email) {
-            console.log("userData", userData);
             const fetchEvaluations = async () => {
                 try {
                     const response = await fetch(`http://localhost:8081/professeur/evaluations/${userData.credentials.email}`);
@@ -56,10 +54,7 @@ function AccueilProfesseur() {
                         throw new Error("Erreur lors de la récupération des évaluations");
                     }
 
-                    console.log("response", response);
-
                     const data = await response.json();
-                    console.log("data", data);
                     setListeEvaluations(data);
                 } catch (error) {
                     console.error("Erreur lors de la récupération des données :", error);
@@ -72,7 +67,6 @@ function AccueilProfesseur() {
 
     const handleShowModal = (evaluation) => {
         setSelectedEvaluation(evaluation);
-        console.log("Selected Evaluation:", evaluation);
         setShowModal(true);
     };
 
@@ -113,6 +107,13 @@ function AccueilProfesseur() {
         const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         selectedEvaluation.dateSignature = formattedDate;
         selectedEvaluation.signatureEnseignant = userData.credentials.email;
+
+        setListeEvaluations(listeEvaluations.map((evaluation) => {
+            if (evaluation.id === selectedEvaluation.id) {
+                return selectedEvaluation;
+            }
+            return evaluation;
+        }));
 
         setEvaluation({
             tachesConformite: "",
@@ -167,8 +168,6 @@ function AccueilProfesseur() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            console.log("PDF généré et téléchargé avec succès");
         } catch (error) {
             console.error("Erreur lors de la génération du PDF :", error);
         }
@@ -237,16 +236,16 @@ function AccueilProfesseur() {
                     <Modal.Body>
 
                         <div className="mb-3">
-                            <p>
+                            <p className="fs-3">
                             <strong>{t('LocationDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.adresse : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('DateDuStage')}: </strong>{selectedEvaluation ? selectedEvaluation.dateStage : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('NomEntreprise')}: </strong>{selectedEvaluation ? selectedEvaluation.nomEntreprise : null}
                             </p>
-                            <p>
+                            <p className="fs-3">
                                 <strong>{t('TelephoneEmployeur')}: </strong>{selectedEvaluation ? selectedEvaluation.telephone : null}
                             </p>
                         </div>

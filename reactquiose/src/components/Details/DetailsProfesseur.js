@@ -15,8 +15,6 @@ function DetailsProfesseur() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    console.log('Professeur details:', professeur);
-    console.log('Etudiants:', etudiants);
 
     // Fetch students by department
     useEffect(() => {
@@ -95,8 +93,6 @@ function DetailsProfesseur() {
             return;
         }
 
-        console.log('Unassigning students:', etudiantsSelectionnerRetire);
-
         fetch(`http://localhost:8081/professeur/deassignerEtudiants/${professeur.email}`, {
             method: 'PUT',
             headers: {
@@ -119,34 +115,6 @@ function DetailsProfesseur() {
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => console.error('Error unassigning students:', error));
-
-        // console.log('Unassigning student:', etudiantEmail);
-        // fetch(`http://localhost:8081/gestionnaire/etudiants/deassignerProfesseur/${encodeURIComponent(etudiantEmail)}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     }
-        // })
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Erreur lors de la désassignation de l\'étudiant');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         setSuccessMessage('Étudiant désassigné avec succès');
-        //         setEtudiants(prevEtudiants => {
-        //             const updatedEtudiants = prevEtudiants.map(etudiant => {
-        //                 if (etudiant.email === etudiantEmail) {
-        //                     return { ...etudiant, professeur: null };
-        //                 }
-        //                 return etudiant;
-        //             });
-        //             return updatedEtudiants;
-        //         });
-        //         setTimeout(() => setSuccessMessage(''), 3000);
-        //     })
-        //     .catch(error => console.error('Error unassigning student:', error));
     };
 
 
@@ -189,23 +157,21 @@ function DetailsProfesseur() {
                     </div>
 
                     <div className="col-md-6">
-                        { unassignedStudents.length !== 0 || assignedStudents.length !== 0 ? (
-                            <>
-                                <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
-                                <input
-                                    type="text"
-                                    className="form-control mb-3"
-                                    placeholder={t('searchStudents')}
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                            </>
-                        ) : (
+                        <h5 className="mb-3">{t('studentsInSameDepartment')}</h5>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder={t('searchStudents')}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        {unassignedStudents.length === 0 && assignedStudents.length === 0 && (
                             <h5>{t('noStudentsInDepartment')}</h5>
                         )}
 
 
-                        { unassignedStudents.length !== 0 && (
+                        {unassignedStudents.length !== 0 && (
                             <div>
                                 <h6>{t('unassignedStudents')}</h6>
 

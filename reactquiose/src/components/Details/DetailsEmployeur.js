@@ -27,11 +27,8 @@ function DetailsEmployeurs() {
             body: JSON.stringify(body)
         })
             .then(response => {
-                console.log('Response status:', response);
                 if (response.ok) {
                     window.location.href = '/listeEmployeurs';
-                } else {
-                    console.error('Error details:', response.statusText);
                 }
             })
             .catch(error => {

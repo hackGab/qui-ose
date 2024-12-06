@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import "../CSS/ListeDeStage.css";
-import EtudiantHeader from "./Header/EtudiantHeader";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import "../../CSS/ListeDeStage.css";
+import EtudiantHeader from "../Header/EtudiantHeader";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 function StagesAppliquees() {
     const location = useLocation();
     const user = location.state?.userData;
@@ -15,52 +15,134 @@ function StagesAppliquees() {
     const [selectedInternship, setSelectedInternship] = useState(null);
     const [stagesWithImages, setStagesWithImages] = useState([]);
     const [session, setSession] = useState(getLocalStorageSession());
+    const [entrevues, setEntrevues] = useState([]);
+    const [candidatureDecision, setCandidatureDecision] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [decisionEmployeurCandidature, setDecisionEmployeurCandidature] = useState({});
 
     useEffect(() => {
-        if (user) {
-            const url = `http://localhost:8081/etudiant/credentials/${user.credentials.email}`;
+        if (!user) return;
 
-            fetch(url)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`Erreur lors de la requête: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Réponse du serveur:', data);
-                    setStagesAppliquees(data.offresAppliquees || []);
-                    console.log('Stages appliquées:', data.offresAppliquees);
-                    return data.offresAppliquees;
-                })
-                .then((offresAppliquees) => {
-                    if (offresAppliquees.length > 0) {
-                        const fetchImages = async () => {
-                            const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
-                            const updatedStages = await Promise.all(offresAppliquees.map(async stage => {
-                                try {
-                                    const response = await axios.get(`https://api.unsplash.com/search/photos?query=${stage.localisation}&client_id=${apiKey}`);
-                                    if (response.data.results.length > 0) {
-                                        return { ...stage, imageUrl: response.data.results[0].urls.regular };
-                                    } else {
-                                        return { ...stage, imageUrl: '' };
-                                    }
-                                } catch (error) {
-                                    console.error('Erreur lors de la récupération de l’image :', error);
+        const url = `http://localhost:8081/etudiant/credentials/${user.credentials.email}`;
+
+        fetch(url)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la requête: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setStagesAppliquees(data.offresAppliquees || []);
+                return data.offresAppliquees;
+            })
+            .then((offresAppliquees) => {
+                if (offresAppliquees.length > 0) {
+                    const fetchImages = async () => {
+                        const apiKey = 'YaQ86E_nZfoK9ks-hpmvKbP9Gal_JCSLlcgDairpDGM';
+                        const updatedStages = await Promise.all(offresAppliquees.map(async stage => {
+                            try {
+                                const response = await axios.get(`https://api.unsplash.com/search/photos?query=${stage.localisation}&client_id=${apiKey}`);
+                                if (response.data.results.length > 0) {
+                                    return { ...stage, imageUrl: response.data.results[0].urls.regular };
+                                } else {
                                     return { ...stage, imageUrl: '' };
                                 }
-                            }));
-                            setStagesWithImages(updatedStages);
-                        };
+                            } catch (error) {
+                                console.error('Erreur lors de la récupération de l’image :', error);
+                                return { ...stage, imageUrl: '' };
+                            }
+                        }));
+                        setStagesWithImages(updatedStages);
+                    };
 
-                        fetchImages();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Erreur:', error);
-                });
-        }
+                    fetchImages();
+                }
+            })
+            .catch((error) => {
+                console.error('Erreur:', error);
+            });
+
     }, [user]);
+
+
+    useEffect(() => {
+        if (!user || !session) return;
+
+        const email = user.credentials.email;
+        if (!email) return;
+
+        const getEntrevuesByUserAndSession = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8081/entrevues/etudiant/${email}/session/${session.session}`);
+                setEntrevues(response.data);
+                setLoading(false)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des entrevues:', error);
+            }
+        };
+
+        getEntrevuesByUserAndSession();
+    }, [user, session]);
+
+
+    useEffect(() => {
+        if (!entrevues.length) return;
+
+        const getCandidatureDecision = async () => {
+            try {
+                const entrevueDecision = [];
+                for (const entrevue of entrevues) {
+                    const response = await axios.get(`http://localhost:8081/candidatures/${entrevue.id}`);
+                    entrevueDecision.push(response.data);
+                }
+                setCandidatureDecision(entrevueDecision);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des candidatures:', error);
+            }
+        };
+
+        getCandidatureDecision();
+    }, [entrevues]);
+
+
+    useEffect(() => {
+        const decisions = {};
+        entrevues.forEach(entrevue => {
+            const candidature = candidatureDecision.find(c => c.entrevueId === entrevue.id);
+            if (!candidature) {
+                decisions[entrevue.offreDeStageDTO?.id] = 'Candidature en attente';
+            }
+            else {
+                decisions[entrevue.offreDeStageDTO?.id] = candidature.accepte ? 'Candidature Acceptée' : 'Candidature Rejetée';
+            }
+        });
+
+        setDecisionEmployeurCandidature(decisions);
+    }, [entrevues, candidatureDecision]);
+
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            const iframeModal = document.getElementById('pdfIframeModal');
+            const iframeFullscreen = document.getElementById('pdfIframeFullscreen');
+            if (!document.fullscreenElement) {
+                iframeModal.style.display = "block";
+                iframeFullscreen.style.display = "none";
+            }
+            else {
+                iframeModal.style.display = "none";
+                iframeFullscreen.style.display = "block";
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
 
     const retirerApplication = (stage) => {
         const url = `http://localhost:8081/etudiant/${user.credentials.email}/retirerOffre/${stage.id}`;
@@ -78,7 +160,6 @@ function StagesAppliquees() {
                 return response.json();
             })
             .then((data) => {
-                console.log("Application retirée avec succès :", data);
                 setShowModal(false);
                 setSelectedInternship(null);
                 setStagesWithImages(stagesWithImages.filter((s) => s.id !== stage.id));
@@ -114,8 +195,15 @@ function StagesAppliquees() {
     );
 
     const verificationSession = (session) => {
-        console.log(session);
         setSession(session)
+    }
+
+    if (loading) {
+        return <div className="text-center mt-5">
+            <div className="spinner-border" role="status"></div>
+            <br/>
+            <span className="sr-only">{t('ChargementDesOffres')}</span>
+        </div>;
     }
 
     return (
@@ -140,6 +228,13 @@ function StagesAppliquees() {
                                              onClick={() => openModal(stage)}>
                                             <div className="internship-image"
                                                  style={{backgroundImage: `url(${stage.imageUrl})`}}>
+                                                <div className="overlay">
+                                                    <div>
+                                                        <p className="text-center text-white" style={{ wordWrap: "normal" }}>
+                                                            { t(decisionEmployeurCandidature[stage.id]) || t('En attente d\'entrevue')}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div
                                                 className="card-body d-flex flex-column justify-content-center align-items-center"

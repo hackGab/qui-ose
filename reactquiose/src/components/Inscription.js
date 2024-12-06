@@ -50,8 +50,6 @@ function Inscription() {
                         label: departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())
                     }));
                     setOptionsDepartement(formattedDepartements);
-                } else {
-                    console.error('Unexpected data format:', data);
                 }
             })
             .catch(error => {
@@ -97,7 +95,7 @@ function Inscription() {
                 url = 'http://localhost:8081/employeur/creerEmployeur';
                 break;
             default:
-                console.error('Rôle inconnu');
+                //console.error('Rôle inconnu');
                 return;
         }
 

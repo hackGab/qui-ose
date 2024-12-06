@@ -21,13 +21,9 @@ function UpdateOffre() {
 
     useEffect(() => {
         if (!offre) {
-            navigate("/visualiser-offres", {state: {employeurEmail}});
+            navigate("/accueilEmployeur", {state: {userData}});
         }
-        console.log(offre);
-
         verifierDate(offre.session);
-
-
     }, [offre, employeurEmail, navigate]);
 
     const verifierDate = (date) => {
@@ -74,13 +70,6 @@ function UpdateOffre() {
     };
 
     const sendUpdateRequest = async (formData) => {
-        console.log(formData.get("titre"));
-        console.log(formData.get("localisation"));
-        console.log(formData.get("nbCandidats"));
-        console.log(formData.get("status"));
-        console.log(formData.get("dateLimite"));
-        console.log(formData);
-
         const data = {
             id: offre.id,
             titre: formData.get("titre"),
@@ -108,9 +97,7 @@ function UpdateOffre() {
             });
 
             if (response.ok) {
-                navigate("/visualiser-offres", { state: { employeurEmail } });
-            } else {
-                console.error("Erreur lors de la mise à jour de l'offre");
+                navigate("/accueilEmployeur", { state: { userData } });
             }
         } catch (error) {
             console.error("Erreur:", error);
@@ -138,8 +125,7 @@ function UpdateOffre() {
     };
 
     const verificationSession = (data) => {
-        console.log("session ", data);
-
+       // console.log("session ", data);
     }
 
     return (

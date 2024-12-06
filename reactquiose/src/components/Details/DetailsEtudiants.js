@@ -11,7 +11,6 @@ function DetailsEtudiants() {
     const student = location.state?.student;
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [rejectionReason, setRejectionReason] = useState('');
-    console.log('Student details:', student);
 
     const updateCVStatus = (status) => {
         const body = {
@@ -27,11 +26,8 @@ function DetailsEtudiants() {
             body: JSON.stringify(body)
         })
             .then(response => {
-                console.log('Response status:', response.status);
                 if (response.ok) {
                     window.location.href = '/listeEtudiants';
-                } else {
-                    console.error('Error details:', response.statusText);
                 }
             })
             .catch(error => {

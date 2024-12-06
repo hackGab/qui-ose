@@ -83,15 +83,15 @@ p {
     border: 5px solid red;
 }
 
-.card.validé, .card.accepter {
+.card.validé, .card.accepter, .card.signer {
     border: 5px solid green;
 }
 
-.card.attente {
-    border: 5px solid #c4c418;
+.card.attente, .card.pasSigner {
+    border: 5px solid #eacb05;
 }
 
-.card.sans-cv {
+.card.aucuncv {
     border: 5px solid gray;
 }
 
@@ -110,6 +110,24 @@ p {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.badge.rejeté {
+    background-color: red;
+}
+
+.badge.validé, .badge.accepter, .badge.signer {
+    background-color: green;
+}
+
+.badge.attente, .badge.pasSigner {
+    background-color: #eacb05;
+}
+
+.badge.aucuncv {
+    background-color: gray;
+    color: white;
+}
+
+
 @media (max-width: 768px) {
     .custom-badge {
         font-size: 12px;
@@ -124,8 +142,6 @@ p {
     }
 }
 
-
-/* Add this CSS to your 'ListeEtudiants.css' or a new CSS file */
 details {
     margin-bottom: 1rem;
     border: 1px solid #ddd;

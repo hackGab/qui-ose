@@ -13,11 +13,10 @@ function ListeEmployeurs() {
     const [offres, setOffres] = useState([]);
     const [error, setError] = useState(null);
     const [selectedSession, setSelectedSession] = useState(getLocalStorageSession); // État pour la session active
-    const [visibleStatus, setVisibleStatus] = useState({ 'En attente': true });
+    const [visibleStatus, setVisibleStatus] = useState({ 'Attente': true });
     const [searchTerm, setSearchTerm] = useState('');
 
     const verifificationSession = (data) => {
-        console.log(data.session + "data");
         setSelectedSession(data.session);
         fetchBySession(data.session);
     }
@@ -35,13 +34,11 @@ function ListeEmployeurs() {
         })
             .then(response => {
                 if (!response.ok) {
-                    console.log(response);
                     throw new Error('lors de la récupération des données');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setOffres(data);
                 setLoading(false);
             })
@@ -54,7 +51,6 @@ function ListeEmployeurs() {
 
     useEffect(() => {
         setSelectedSession(getLocalStorageSession());
-        console.log(setSelectedSession() + "session");
         fetch(`http://localhost:8081/offreDeStage/session/${selectedSession}`, {
             method: 'GET',
             headers: {
@@ -63,13 +59,11 @@ function ListeEmployeurs() {
         })
             .then(response => {
                 if (!response.ok) {
-                    console.log(response);
                     throw new Error('lors de la récupération des données');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setOffres(data);
                 setLoading(false);
             })
@@ -118,7 +112,6 @@ function ListeEmployeurs() {
                 ...prevState,
                 [firstStatus]: true
             }));
-            console.log(visibleStatus)
         }
     }, [searchTerm]);
 
@@ -168,8 +161,8 @@ function ListeEmployeurs() {
                                             className="text-decoration-none"
                                             state={{ offre: offreDeStage }}>
 
-                                            <div className={`card shadow w-100 ${status.toLowerCase()}`}>
-                                                <span className="position-absolute bottom-0 end-0 badge bg-secondary m-2 custom-badge">
+                                            <div className={`card shadow w-100 ${status.toLowerCase().replaceAll(' ', '')}`}>
+                                                <span className={`position-absolute bottom-0 end-0 badge m-2 custom-badge ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                     {t(status)}
                                                 </span>
                                                 <div className="card-body">

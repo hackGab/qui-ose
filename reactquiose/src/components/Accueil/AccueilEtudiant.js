@@ -17,12 +17,12 @@ function AccueilEtudiant() {
     const [fileData, setFileData] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [rejectionMessage, setRejectionMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const {t} = useTranslation();
     const [internships, setInternships] = useState([]);
     const [session, setSession] = useState(getLocalStorageSession());
 
     useEffect(() => {
-        console.log('userData:', userData);
         if (userData) {
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
@@ -34,12 +34,10 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log('Réponse du serveur:', data);
 
                     if (data.cv) {
                         setFile(data.cv);
                         setFileData(data.cv.data);
-                        console.log('CV:', data.cv.rejetMessage);
 
                         if (data.cv.status === 'rejeté') {
                             setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
@@ -48,23 +46,16 @@ function AccueilEtudiant() {
                         }
 
                         // Vérifiez si le statut est valide
-                        console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
-                            console.log('Récupération des stages...');
-
                             const data = {
                                 session: session
                             }
-
                             fetchSession(data);
-
-                        } else {
-                            console.log('Le CV n\'est pas valide, aucune récupération de stages.');
                         }
                     }
                 })
                 .catch((error) => {
-                    console.error('Erreur:', error);
+                     console.error("Erreur:", error);
                 });
         }
     }, [userData]);
@@ -77,6 +68,7 @@ function AccueilEtudiant() {
     const fermerAffichageCV = () => {
         setShowModal(false);
         setTemporaryFile(null);
+        setErrorMessage("");
     };
 
     const handleFileChange = (event) => {
@@ -88,7 +80,9 @@ function AccueilEtudiant() {
                 setTemporaryFileData(e.target.result);
             };
             reader.readAsDataURL(uploadedFile);
+            setErrorMessage("");
         } else {
+            setErrorMessage("Le fichier doit être un PDF.");
         }
     };
 
@@ -110,6 +104,7 @@ function AccueilEtudiant() {
         if (uploadedFile && uploadedFile.type === "application/pdf") {
             handleFileChange({ target: { files: [uploadedFile] } });
         } else {
+            setErrorMessage("Le fichier doit être un PDF.");
         }
     };
 
@@ -142,7 +137,6 @@ function AccueilEtudiant() {
                 .then((data) => {
                     setFile(data);
                     setFileData(data.data);
-                    console.log("Réponse du serveur:", data);
                 })
                 .then(() => {
                     if (ancienId) {
@@ -184,7 +178,6 @@ function AccueilEtudiant() {
     };
 
     const verificationSession = (session) => {
-        console.log(session);
         setSession(session);
         fetchSession(session);
     };
@@ -200,7 +193,6 @@ function AccueilEtudiant() {
                 return response.json();
             })
             .then((data) => {
-                console.log('Stages récupérés:', data);
                 setInternships(data);
             })
             .catch((error) => {
@@ -227,31 +219,31 @@ function AccueilEtudiant() {
                 </div>
 
                 {file && file.status === "rejeté" && (
-                <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
-                    <h5>{t('rejectionReason')}</h5>
-                    <p>{rejectionMessage}</p>
-                </div>
+                    <div className="alert alert-danger text-center error-text" style={{fontSize: "1.25rem"}}>
+                        <h5>{t('rejectionReason')}</h5>
+                        <p>{rejectionMessage}</p>
+                    </div>
                 )}
 
                 <div className="d-flex justify-content-center my-3">
-                <button
-                    className={`btn btn-lg rounded-top-pill custom-btn ${file == null ? 'btn-secondary' :
-                        file.status === 'Attente' ? 'btn-warning' :
-                            file.status === 'validé' ? 'btn-success' :
-                                file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
-                    onClick={afficherAjoutCV}
-                    style={{width: "10em"}}
-                > {t('uploadCV')}
-                </button>
+                    <button
+                        className={`btn btn-lg rounded-top-pill custom-btn ${file == null ? 'btn-secondary' :
+                            file.status === 'Attente' ? 'btn-warning' :
+                                file.status === 'validé' ? 'btn-success' :
+                                    file.status === 'rejeté' ? 'btn-danger' : 'btn-primary'}`}
+                        onClick={afficherAjoutCV}
+                        style={{width: "10em"}}
+                    > {t('uploadCV')}
+                    </button>
                 </div>
 
                 {file && (
-                <div className="d-flex justify-content-center mt-3 mb-4">
-                    <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info"
-                            onClick={() => openFile(fileData)} style={{width: "10em"}}>
-                        {t('viewMyCV')}
-                    </button>
-                </div>
+                    <div className="d-flex justify-content-center mt-3 mb-4">
+                        <button className="btn btn-lg rounded-bottom-pill custom-btn btn-info"
+                                onClick={() => openFile(fileData)} style={{width: "10em"}}>
+                            {t('viewMyCV')}
+                        </button>
+                    </div>
                 )}
 
                 <hr style={{width: "45em", margin: "auto", borderWidth: "0.2em"}}/>
@@ -259,51 +251,57 @@ function AccueilEtudiant() {
                     <ListeDeStage internships={internships} userData={userData} />
                 )}
                 {showModal && (
-                <div className="custom-modal-overlay">
-                    <div className="modal modal-custom" tabIndex="-1" role="dialog">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">{t('manipulateCV')}</h5>
-                                </div>
-                                <div className="modal-body">
-                                    <div
-                                        onDragEnter={handleDrag}
-                                        onDragOver={handleDrag}
-                                        onDragLeave={handleDrag}
-                                        onDrop={handleDrop}
-                                        onClick={handleClick}
-                                        className={`drop-zone ${dragActive ? "active" : ""}`}
-                                    >
-                                        <p>{t('dragOrClick')}</p>
-                                        <input
-                                            type="file"
-                                            id="fileInput"
-                                            onChange={handleFileChange}
-                                            style={{display: "none"}}
-                                        />
+                    <div className="custom-modal-overlay">
+                        <div className="modal modal-custom" tabIndex="-1" role="dialog">
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">{t('manipulateCV')}</h5>
                                     </div>
-
-                                    {temporaryFile && (
-                                        <div className="file-details mt-3">
-                                            <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
-                                            <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
-                                            <h6><strong>{t('fileDate')}</strong> {temporaryFile.uploadDate}</h6>
+                                    <div className="modal-body">
+                                        <div
+                                            onDragEnter={handleDrag}
+                                            onDragOver={handleDrag}
+                                            onDragLeave={handleDrag}
+                                            onDrop={handleDrop}
+                                            onClick={handleClick}
+                                            className={`drop-zone ${dragActive ? "active" : ""}`}
+                                        >
+                                            <p>{t('dragOrClick')}</p>
+                                            <input
+                                                type="file"
+                                                id="fileInput"
+                                                onChange={handleFileChange}
+                                                style={{display: "none"}}
+                                            />
                                         </div>
-                                    )}
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-primary" onClick={handleSubmit}>
-                                        {t('submit')}
-                                    </button>
-                                    <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
-                                        {t('close')}
-                                    </button>
+
+                                        {temporaryFile && (
+                                            <div className="file-details mt-3">
+                                                <h6><strong>{t('fileName')}</strong> {temporaryFile.name}</h6>
+                                                <h6><strong>{t('fileType')}</strong> {temporaryFile.type}</h6>
+                                                <h6><strong>{t('fileDate')}</strong> {temporaryFile.uploadDate}</h6>
+                                            </div>
+                                        )}
+
+                                        {errorMessage && (
+                                            <div className="alert alert-danger mt-3">
+                                                {errorMessage}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button className="btn btn-primary" onClick={handleSubmit}>
+                                            {t('submit')}
+                                        </button>
+                                        <button type="button" className="btn btn-secondary" onClick={fermerAffichageCV}>
+                                            {t('close')}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 )}
 
             </div>

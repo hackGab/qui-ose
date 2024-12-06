@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useParams} from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import EmployeurHeader from "./Header/EmployeurHeader";
 import "../CSS/EtudiantPostulants.css";
-import { Button, Modal, Form } from "react-bootstrap";
+import {Button, Form, Modal} from "react-bootstrap";
 import {FaEnvelope, FaPhone} from "react-icons/fa";
 
 function EtudiantPostulants() {
@@ -49,8 +49,7 @@ function EtudiantPostulants() {
 
                 const etudiantsData = await etudiantsResponse.json();
                 setEtudiants(etudiantsData);
-                console.log("Etudiants data:", etudiantsData);
-                console.log("Etudiants:", etudiants);
+               
 
                 if (entrevueResponse.ok) {
                     const entrevueData = await entrevueResponse.json();
@@ -95,8 +94,7 @@ function EtudiantPostulants() {
         if (!selectedEtudiant) return;
 
         const email = selectedEtudiant.credentials?.email || '';
-        console.log("Selected student email:", email);
-        console.log("Current students:", etudiants);
+    
 
         try {
             const response = await fetch(`http://localhost:8081/etudiant/${email}/retirerOffre/${offreId}`, {
@@ -108,17 +106,12 @@ function EtudiantPostulants() {
 
             if (response.ok) {
                 setEtudiants((prevEtudiants) => {
-                    const updatedStudents = prevEtudiants.filter((etudiant) => etudiant.credentials.email !== email);
-                    console.log("Updated students after filter:", updatedStudents);
-                    return updatedStudents;
+                    return prevEtudiants.filter((etudiant) => etudiant.credentials.email !== email);
                 });
                 handleCloseRejectModal();
-            } else {
-                const errorData = await response.json();
-                alert(`Erreur lors du rejet de l'étudiant : ${errorData.message} (Code: ${response.status})`);
-            }
+            } 
         } catch (error) {
-            alert("Erreur réseau lors du rejet de l'étudiant");
+            console.error("Erreur réseau lors du rejet de l'étudiant");
         }
     };
 
@@ -188,9 +181,14 @@ function EtudiantPostulants() {
     };
 
     const verificationSession = (data) => {
-        console.log("session ", data);
-
+        //console.log("session ", data);
     }
+
+    const formatDepartementLabel = (departement) => {
+        return departement
+            ? departement.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase())
+            : '';
+    };
 
     return (
         <>
@@ -237,7 +235,7 @@ function EtudiantPostulants() {
                                                         <br/>
                                                         <FaPhone/> {etudiant.phoneNumber}
                                                         <br/>
-                                                        {t('departmentDetail')} {etudiant.departement}
+                                                         {formatDepartementLabel(etudiant.departement)}
                                                     </p>
 
                                                     <Button variant="primary"

@@ -26,7 +26,6 @@ function ListeProfesseurs() {
         })
             .then(response => {
                 if (!response.ok) {
-                    console.log(response);
                     throw new Error('lors de la récupération des données');
                 }
                 return response.json();
@@ -123,7 +122,8 @@ function ListeProfesseurs() {
                             <button className="btn btn-secondary" onClick={collapseAll}>
                                 <FaChevronUp/> {t('collapseAll')}</button>
                             &nbsp;
-                            <button className="btn btn-secondary" onClick={expandAll}><FaChevronDown/> {t('expandAll')}
+                            <button className="btn btn-secondary" onClick={expandAll}>
+                                <FaChevronDown/> {t('expandAll')}
                             </button>
                         </div>
                     </div>

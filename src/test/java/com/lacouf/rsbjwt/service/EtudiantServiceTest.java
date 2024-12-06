@@ -353,7 +353,7 @@ class EtudiantServiceTest {
         Entrevue entrevue = new Entrevue();
         entrevue.setEtudiant(etudiantEntity);
         entrevue.setOffreDeStage(offreDeStage);
-        entrevue.setStatus("Attente");
+        entrevue.setStatus("En attente");
         List<Entrevue> entrevues = List.of(entrevue);
         when(etudiantRepository.findByEmail(email)).thenReturn(Optional.of(etudiantEntity));
         when(entrevueRepository.findAllByEtudiantId(etudiantEntity.getId())).thenReturn(entrevues);
@@ -363,7 +363,7 @@ class EtudiantServiceTest {
 
         // Assert
         assertEquals(1, response.size());
-        assertEquals("Attente", response.getFirst().getStatus());
+        assertEquals("En attente", response.getFirst().getStatus());
     }
 
     @Test

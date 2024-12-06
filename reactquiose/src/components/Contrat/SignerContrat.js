@@ -3,11 +3,13 @@ import {useLocation} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {eyeOff, eye} from 'react-icons-kit/feather';
 import {Icon} from "react-icons-kit";
-import EmployeurHeader from "./Header/EmployeurHeader";
-import EtudiantHeader from "./Header/EtudiantHeader";
+import EmployeurHeader from "../Header/EmployeurHeader";
+import EtudiantHeader from "../Header/EtudiantHeader";
 import TableauContrat from "./TableauContrat.js";
-import "../CSS/SignerContrat.css";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import "../../CSS/SignerContrat.css";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
+import {FaClock} from "react-icons/fa";
+import ContratCard from "./ContratCard";
 
 function SignerContrat() {
     const location = useLocation();
@@ -36,7 +38,6 @@ function SignerContrat() {
             if (!response.ok) throw new Error(`Erreur: ${response.status}`);
 
             const data = await response.json();
-            console.log("serverur" + data);
             setContrats(data);
         } catch (error) {
             messageErreur(t('ErreurRecuperationContrat'));
@@ -63,7 +64,6 @@ function SignerContrat() {
             });
 
             const data = await response.json();
-            console.log(data);
             if (data) {
                 handleAnimation(true, null);
                 updateContratSignStatus();
@@ -110,11 +110,9 @@ function SignerContrat() {
     };
 
     const verificationSession = (data) => {
-        console.log(data);
         setSession(data.session);
         fetchSession(data.session)
     }
-
 
     const updateContratSignStatus = () => {
         setSelectedContrat(prevContrat => {
@@ -127,6 +125,17 @@ function SignerContrat() {
         });
     };
 
+    const signedContrats = contrats.filter(contrat =>
+        (userData.role === 'EMPLOYEUR' && contrat.employeurSigne) ||
+        (userData.role === 'ETUDIANT' && contrat.etudiantSigne)
+    );
+
+    const unsignedContrats = contrats.filter(contrat =>
+        (userData.role === 'EMPLOYEUR' && !contrat.employeurSigne) ||
+        (userData.role === 'ETUDIANT' && !contrat.etudiantSigne)
+    );
+
+    const shouldOpenSignedDetails = unsignedContrats.length === 0 && signedContrats.length > 0;
 
     return (
         <>
@@ -180,7 +189,11 @@ function SignerContrat() {
                                                 </div>
                                                 <button
                                                     type="submit"
-                                                    className={`btn-success btn ${buttonClass} ${isButtonDisabled() ? 'btn-disabled' : ''} ${i18n.language === 'fr-CA' ? 'btn-signer-fr' : 'btn-signer-en'}`}
+                                                    className={`btn-success btn
+                                                        ${buttonClass}
+                                                        ${isButtonDisabled() ? 'btn-disabled' : ''} 
+                                                        ${(i18n.language === 'fr' || i18n.language === 'fr-CA') ? 'btn-signer-fr' : 'btn-signer-en'}
+                                                    `}
                                                     disabled={isButtonDisabled()}
                                                 />
                                             </form>
@@ -200,35 +213,26 @@ function SignerContrat() {
                             <div className="text-center mb-4">
                                 <h4>{t('CliquezSurLesContratsPourSigner')}</h4>
                             </div>
-                            {contrats.map((contrat) => (
-                                <div key={contrat.uuid} className="col-md-4">
-                                    <div className="card mt-4" onClick={() => setSelectedContrat(contrat)}>
-                                        <div className="card-body">
-                                            <h5 className="card-title">
-                                                {contrat.entrepriseEngagement ? String(contrat.entrepriseEngagement) : t('NomIndisponible')}
-                                            </h5>
-                                            <p className="card-text">
-                                                {contrat.description ? String(contrat.description) : t('DescriptionIndisponible')}
-                                            </p>
-                                            <p className="card-text">
-                                                {t('DateDebut')}: {contrat.dateDebut ? String(contrat.dateDebut) : t('Indisponible')}
-                                            </p>
-                                            <p className="card-text">
-                                                {t('DateFin')}: {contrat.dateFin ? String(contrat.dateFin) : t('Indisponible')}
-                                            </p>
-                                            <p className={`card-text ${userData.role === 'EMPLOYEUR' ? (contrat.employeurSigne ? 'text-success' : 'text-danger') : (contrat.etudiantSigne ? 'text-success' : 'text-danger')}`}>
-                                                {userData.role === 'EMPLOYEUR'
-                                                    ? (contrat.employeurSigne ? t('EmployeurDejaSigne') : t('EmployeurPasEncoreSigne'))
-                                                    : (contrat.etudiantSigne ? t('EtudiantDejaSigne') : t('EtudiantPasEncoreSigne'))
-                                                }
-                                            </p>
-
-                                        </div>
-                                    </div>
+                            <details open={!shouldOpenSignedDetails} className="p-0">
+                                <summary>{t('ContratsPasSignes')} ({unsignedContrats.length})</summary>
+                                <div className="row">
+                                    {unsignedContrats.map((contrat) => (
+                                        <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                     setSelectedContrat={setSelectedContrat}/>
+                                    ))}
                                 </div>
-                            ))}
+                            </details>
+                            <details open={shouldOpenSignedDetails} className="p-0">
+                                <summary>{t('ContratsSignes')} ({signedContrats.length})</summary>
+                                <div className="row">
+                                    {signedContrats.map((contrat) => (
+                                        <ContratCard key={contrat.uuid} contrat={contrat} userData={userData} t={t}
+                                                     setSelectedContrat={setSelectedContrat}/>
+                                    ))}
+                                </div>
+                            </details>
                         </div>
-                    )}
+                        )}
                 </div>
             </div>
         </>

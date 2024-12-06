@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import '../CSS/TableauContrat.css';
+import '../../CSS/TableauContrat.css';
 
 function TableauContrat({ contrat }) {
     const { t } = useTranslation();

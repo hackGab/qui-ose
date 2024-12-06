@@ -47,14 +47,14 @@
 }
 .button {
     display: inline-block;
-    padding: 8px 12px; /* Réduire le padding pour un bouton plus compact */
-    font-size: 14px; /* Taille de police plus petite */
+    padding: 8px 12px;
+    font-size: 14px;
     font-weight: bold;
     color: white;
-    border-radius: 4px; /* Coins légèrement arrondis */
+    border-radius: 4px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12); /* Ombre 3D plus discrète */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
     transition: all 0.2s ease;
     position: relative;
     text-transform: uppercase;
@@ -62,16 +62,16 @@
 }
 
 .button:active {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Réduction de l'ombre lors du clic */
-    transform: translateY(1px); /* Effet d'enfoncement */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
 }
 
 .button-green {
-    background-color: #28a745; /* Couleur verte pour "Accepter" */
+    background-color: #28a745;
 }
 
 .button-red {
-    background-color: #dc3545; /* Couleur rouge pour "Refuser" */
+    background-color: #dc3545;
 }
 
 .button::after {
@@ -87,11 +87,11 @@
 }
 
 .button:hover {
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.18); /* Ombre plus prononcée au survol */
-    transform: translateY(-1px); /* Légère remontée au survol */
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
 }
 
 .icon {
-    margin-left: 5px; /* Réduire l'espacement entre le texte et l'icône */
-    font-size: 12px; /* Taille réduite pour l'icône */
+    margin-left: 5px;
+    font-size: 12px;
 }

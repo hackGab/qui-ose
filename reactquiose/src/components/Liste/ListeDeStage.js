@@ -4,7 +4,7 @@ import { Modal, Button } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
 import axios from "axios";
 import "../../CSS/ListeDeStage.css";
-
+import {FaMapMarkerAlt, FaSearch} from "react-icons/fa";
 
 function ListeDeStage({ internships = [], userData }) {
     const { t } = useTranslation();
@@ -12,6 +12,8 @@ function ListeDeStage({ internships = [], userData }) {
     const [selectedInternship, setSelectedInternship] = useState(null);
     const [appliedInternship, setAppliedInternship] = useState([]);
     const [internshipsWithImages, setInternshipsWithImages] = useState([]);
+    const [searchTitle, setSearchTitle] = useState("");
+    const [searchLocation, setSearchLocation] = useState("");
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -32,9 +34,8 @@ function ListeDeStage({ internships = [], userData }) {
             setInternshipsWithImages(updatedInternships);
         };
 
-        fetchImages().then(r => console.log('Images récupérées :', r));
+        fetchImages();
     }, [internships]);
-
 
     useEffect(() => {
         const handleFullscreenChange = () => {
@@ -48,7 +49,6 @@ function ListeDeStage({ internships = [], userData }) {
                 iframeModal.style.display = "none";
                 iframeFullscreen.style.display = "block";
             }
-
         };
 
         document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -57,7 +57,6 @@ function ListeDeStage({ internships = [], userData }) {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
         };
     }, []);
-
 
     const openModal = (internship) => {
         setSelectedInternship(internship);
@@ -84,16 +83,12 @@ function ListeDeStage({ internships = [], userData }) {
             setAppliedInternship([...appliedInternship, offreId])
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
-            alert("Échec de la candidature. Veuillez réessayer.");
         }
     };
 
     useEffect(() => {
         const fetchAppliedInternships = async () => {
-            console.log('userData :', userData);
-            // Vérifier que userData et credentials sont définis avant de les utiliser
             if (userData && userData.credentials && userData.credentials.email) {
-                console.log('Récupération des offres postulées par l’étudiant :', userData.credentials.email);
                 try {
                     const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
                     if (!response.ok) {
@@ -104,8 +99,6 @@ function ListeDeStage({ internships = [], userData }) {
                 } catch (error) {
                     console.error('Erreur lors de la récupération des offres :', error);
                 }
-            } else {
-                console.error('Les données utilisateur ne sont pas disponibles ou incorrectes.');
             }
         };
 
@@ -147,17 +140,69 @@ function ListeDeStage({ internships = [], userData }) {
         </Modal.Footer>
     );
 
+    const filteredInternships = internshipsWithImages.filter(internship =>
+        internship.titre.toLowerCase().includes(searchTitle.toLowerCase()) &&
+        internship.localisation.toLowerCase().includes(searchLocation.toLowerCase())
+    );
+
+    const sortedInternships = filteredInternships.sort((a, b) => {
+        const aApplied = appliedInternship.includes(a.id);
+        const bApplied = appliedInternship.includes(b.id);
+        return aApplied - bApplied;
+    });
+
+    const clearInputs = () => {
+        setSearchTitle("");
+        setSearchLocation("");
+    };
 
     return (
         <div className="container mb-5">
             <div className="m-auto text-center my-4">
                 <h3>{t('OffresDeStage')}</h3>
-                <small className="text-muted" style={{ fontSize: "1rem" }}><i>*{t('VoirStage')}</i></small>
+                <small className="text-muted" style={{fontSize: "1rem"}}><i>*{t('VoirStage')}</i></small>
+            </div>
+
+            <div className="row mb-3">
+                <div className="col-md-8 m-auto">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className="input-group-text" id="search-title-icon">
+                                <FaSearch/>
+                            </span>
+                        </div>
+                        <input
+                            type="text"
+                            className="form-control search-input"
+                            placeholder={t('RechercherParTitre')}
+                            value={searchTitle}
+                            onChange={(e) => setSearchTitle(e.target.value)}
+                        />
+                        <div className="vertical-bar">|</div>
+                        <div className="input-group-prepend">
+                            <span className="input-group-text" id="search-location-icon">
+                                <FaMapMarkerAlt/>
+                            </span>
+                        </div>
+                        <input
+                            type="text"
+                            className="form-control search-input"
+                            placeholder={t('RechercherParLocalisation')}
+                            value={searchLocation}
+                            onChange={(e) => setSearchLocation(e.target.value)}
+                        />
+                        <div className="input-group-append">
+                            <Button variant="outline-secondary" onClick={clearInputs}>
+                                {t('Effacer')}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="row">
-                {internshipsWithImages.length > 0 ? (
-                    internshipsWithImages.map((internship, index) => (
+                {sortedInternships.length > 0 ? (
+                    sortedInternships.map((internship, index) => (
                         <div key={index} className="col-lg-4 col-md-6 col-sm-12 p-2">
                             <div className="card my-3 h-100 internship-card" onClick={() => openModal(internship)}>
                                 <div className="internship-image"
@@ -178,6 +223,7 @@ function ListeDeStage({ internships = [], userData }) {
                                      }}>
                                     <h5 className="card-title text-center">{internship.titre}</h5>
                                     <h6 className="card-subtitle mb-2 text-muted text-center">{internship.localisation}</h6>
+                                    <h6 className="card-subtitle mb-2 text-muted text-center">{internship.employeur.entreprise}</h6>
 
                                     <div>
                                         <p data-tooltip-id="datelimiteTip"
@@ -187,7 +233,6 @@ function ListeDeStage({ internships = [], userData }) {
                                             <strong>{t('DateLimite')}</strong> {internship.dateLimite}
                                             <sup><b>(?)</b></sup>
                                         </p>
-                                        <Tooltip id="datelimiteTip" style={{fontSize: '1.2rem'}}/>
                                     </div>
 
                                     <p className="card-text text-center">
@@ -208,6 +253,7 @@ function ListeDeStage({ internships = [], userData }) {
                 )}
             </div>
 
+            <Tooltip id="datelimiteTip" style={{fontSize: '1.2rem', zIndex: '2'}}/>
 
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>

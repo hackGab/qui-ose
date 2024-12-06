@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import {useLocation} from "react-router-dom";
 import {Icon} from "react-icons-kit";
 import {eye, eyeOff} from "react-icons-kit/feather";
-import TableauContrat from "../TableauContrat";
+import TableauContrat from "../Contrat/TableauContrat";
 import {If, Then} from "react-if";
 
 function ListeCandidature() {
@@ -18,7 +18,8 @@ function ListeCandidature() {
     const [selectedCandidat, setSelectedCandidat] = useState(null);
     const [selectedContrat, setSelectedContrat] = useState(null);
     const [icon, setIcon] = useState(eyeOff);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessageHeures, setErrorMessageHeures] = useState('');
+    const [errorMessageSalaire, setErrorMessageSalaire] = useState('');
     const [showModal, setShowModal] = useState(false);
     const { t } = useTranslation();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -27,6 +28,7 @@ function ListeCandidature() {
     const [password, setPassword] = useState('');
     const location = useLocation();
     const userData = location.state?.userData;
+    const salaireMinimumHoraire = 15.75;
     const [formData, setFormData] = useState({
         lieuStage: '',
         dateDebut: '',
@@ -172,9 +174,6 @@ function ListeCandidature() {
 
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
-        console.log("Mot de passe saisi :", password);
-        console.log("uuid du candidat sélectionné :", selectedContrat.uuid);
-        // console.log("Email de l'utilisateur connecté :", userData.credentials.email);
         handleSignContract(selectedContrat.uuid, userData.credentials.email);
         handleClosePasswordModal();
     };
@@ -212,9 +211,23 @@ function ListeCandidature() {
 
         if (name === "heuresParSemaine") {
             if (parseFloat(value) < minHeuresParSemaine) {
-                setErrorMessage("Le nombre d'heures par semaine doit être supérieur ou égal à la durée entre les heures de début et de fin.");
+                setErrorMessageHeures(`Le nombre d'heures par semaine doit être supérieur ou égal à ${minHeuresParSemaine}h.`);
             } else {
-                setErrorMessage('');
+                setErrorMessageHeures('');
+            }
+        }
+
+        if (name === "tauxHoraire") {
+            const regex = /^\d+(\.\d{0,2})?$/;
+
+            if (!regex.test(value)) {
+                setErrorMessageSalaire('Le salaire horaire doit être un nombre valide.');
+            }
+
+            if (parseFloat(value) < salaireMinimumHoraire) {
+                setErrorMessageSalaire(`Le salaire horaire doit être supérieur ou égal à ${salaireMinimumHoraire}$.`);
+            } else {
+                setErrorMessageSalaire('');
             }
         }
 
@@ -223,7 +236,6 @@ function ListeCandidature() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         await fetch('http://localhost:8081/contrat/creerContrat', {
             method: 'POST',
@@ -265,7 +277,6 @@ function ListeCandidature() {
     };
 
     const verifificationFiltre = (data) => {
-        console.log(data);
         fetchBySession(data.session);
     };
 
@@ -273,7 +284,6 @@ function ListeCandidature() {
         fetch(`http://localhost:8081/candidatures/session/${session}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 setCandidatures(data);
                 const fetchPromises = data.map(candidat =>
                     fetch(`http://localhost:8081/entrevues/${candidat.entrevueId}`)
@@ -284,15 +294,15 @@ function ListeCandidature() {
                 return Promise.all(fetchPromises);
             })
             .then(candidatsWithEntrevues => {
-                console.log(candidatsWithEntrevues);
-                setCandidatures(candidatsWithEntrevues);
+
+                const filteredCandidatures = candidatsWithEntrevues.filter(candidat => candidat.accepte);
+                setCandidatures(filteredCandidatures);
                 setLoading(false);
             })
             .then(() => {
                 fetch(`http://localhost:8081/contrat/session/${session}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         setContrats(data);
                     })
                     .catch(err => {
@@ -306,6 +316,19 @@ function ListeCandidature() {
 
 
     };
+
+    const getStatus = (candidat) => {
+        const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
+
+        if (!contrat) return "Générer un contrat";
+        if (isContractSigned(contrat)) return "générer version PDF du contrat";
+        return "En attente des signatures";
+    };
+
+    const sortedCandidatures = candidatures.sort((a, b) => {
+        const statusOrder = ["Générer un contrat", "En attente des signatures", "générer version PDF du contrat"];
+        return statusOrder.indexOf(getStatus(a)) - statusOrder.indexOf(getStatus(b));
+    });
 
     if (loading) {
         return <div className="text-center mt-5">
@@ -332,18 +355,18 @@ function ListeCandidature() {
 
                     <If condition={candidatures.length > 0}>
                         <Then>
-
                             <table className="table table-striped table-hover">
                                 <thead className="thead-dark">
-                                <tr>
-                                    <th>{t('Etudiant')}</th>
-                                    <th>{t('OffreDeStage')}</th>
-                                    <th>{t('Employeur')}</th>
-                                    <th>{t('Actions')}</th>
-                                </tr>
+                                    <tr>
+                                        <th>{t('Etudiant')}</th>
+                                        <th>{t('OffreDeStage')}</th>
+                                        <th>{t('Employeur')}</th>
+                                        <th>{t('Actions')}</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {candidatures.map(candidat => {
+                                {sortedCandidatures.map(candidat => {
+
                                     const hasContrat = contrats.some(contrat => contrat.candidature.id === candidat.id);
                                     const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
 
@@ -361,7 +384,7 @@ function ListeCandidature() {
                                                 ) : (
                                                     <>
                                                         {isContractSigned(contrat) ? (
-                                                            <button className="btn btn-success"
+                                                            <button className="btn btn-primary"
                                                                     onClick={() => {
                                                                         setSelectedContrat(contrat);
                                                                         handleOpenContractModal()
@@ -371,7 +394,7 @@ function ListeCandidature() {
                                                             </button>
                                                         ) : (
                                                             <button
-                                                                className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-warning' : 'btn-success'}`}
+                                                                className={`btn ${contrat.etudiantSigne && contrat.employeurSigne ? 'btn-success' : 'btn-warning fw-bold'}`}
                                                                 disabled={!(contrat.etudiantSigne && contrat.employeurSigne)}
                                                                 onClick={() => {
                                                                     setSelectedContrat(contrat);
@@ -456,12 +479,13 @@ function ListeCandidature() {
                                             name="heuresParSemaine"
                                             value={formData.heuresParSemaine}
                                             onChange={handleChange}
-                                            required
+                                            step="0.05"
                                             min={minHeuresParSemaine}
+                                            required
                                         />
-                                        {errorMessage && (
+                                        {errorMessageHeures && (
                                             <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
-                                                {errorMessage}
+                                                {errorMessageHeures}
                                             </div>
                                         )}
                                     </div>
@@ -474,18 +498,16 @@ function ListeCandidature() {
                                             className="form-control"
                                             name="tauxHoraire"
                                             value={formData.tauxHoraire}
-                                            onChange={(e) => {
-                                                const { name, value } = e.target;
-                                                const regex = /^\d+(\.\d{0,2})?$/;
-
-                                                if (regex.test(value) || value === "") {
-                                                    setFormData({ ...formData, [name]: value });
-                                                }
-                                            }}
+                                            onChange={handleChange}
                                             step="0.05"
-                                            min="0"
+                                            min={salaireMinimumHoraire}
                                             required
                                         />
+                                        {errorMessageSalaire && (
+                                            <div className='alert alert-danger' style={{ textAlign: 'center', fontSize: '2vmin' }}>
+                                                {errorMessageSalaire}
+                                            </div>
+                                        )}
                                     </div>
                                     <h6>{t('TachesEtResponsabilitesDuStage')}</h6>
                                     <div className="form-group">
@@ -557,7 +579,7 @@ function ListeCandidature() {
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-danger"
                                             onClick={handleClosePasswordModal}>
-                                        {t('Fermer')}
+                                        {t('close')}
                                     </button>
                                     <button type="submit" className="btn btn-success">
                                         {t('Signer')}

@@ -14,12 +14,9 @@ describe('GestionnaireHeader', () => {
     beforeEach(() => {
         localStorage.clear();
         localStorage.setItem('session', calculateNextSessions());
-
     });
 
-
     const verfiySession = jest.fn();
-
 
     it('ne devrait pas afficher le filtre si le path est /listeProfesseurs ou /listeEtudiants', () => {
         render(
@@ -27,7 +24,6 @@ describe('GestionnaireHeader', () => {
                 <GestionnaireHeader  onSendData={verfiySession}/>
             </MemoryRouter>
         );
-
         expect(screen.queryByRole('combobox')).toBeNull();
     });
 
@@ -37,7 +33,6 @@ describe('GestionnaireHeader', () => {
                 <GestionnaireHeader  onSendData={verfiySession}/>
             </MemoryRouter>
         );
-
         expect(screen.queryByRole('combobox')).toBeNull();
     });
 
@@ -47,7 +42,6 @@ describe('GestionnaireHeader', () => {
                 <GestionnaireHeader  onSendData={verfiySession}/>
             </MemoryRouter>
         );
-
         expect(screen.getByTestId('filtreSession')).toBeInTheDocument();
     });
 
@@ -74,7 +68,6 @@ describe('GestionnaireHeader', () => {
         fireEvent.change(selectElement, { target: { value: newSession } });
 
         expect(selectElement.value).toBe(newSession);
-
 
         expect(localStorage.getItem('session')).toBe(newSession);
 

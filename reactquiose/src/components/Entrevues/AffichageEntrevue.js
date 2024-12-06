@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {FaCalendarAlt, FaClock} from 'react-icons/fa';
 import { FaLocationPinLock } from 'react-icons/fa6';
 import { Modal, Button, Card } from 'react-bootstrap';
-import '../CSS/MesEntrevues.css';
+import '../../CSS/MesEntrevues.css';
 import i18n from "i18next";
 
 function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
@@ -22,10 +22,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
             });
 
             if (response.ok) {
-                console.log('Entrevue acceptée:', entrevue);
                 if (onAccept) onAccept(entrevue);
-            } else {
-                console.error('Erreur lors de l\'acceptation de l\'entrevue');
             }
         } catch (error) {
             console.error('Erreur réseau:', error);
@@ -44,11 +41,9 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
             });
 
             if (response.ok) {
-                console.log('Entrevue refusée:', entrevue);
                 if (onReject) onReject(entrevue);
-            } else {
-                console.error('Erreur lors du refus de l\'entrevue');
             }
+
         } catch (error) {
             console.error('Erreur réseau:', error);
         }

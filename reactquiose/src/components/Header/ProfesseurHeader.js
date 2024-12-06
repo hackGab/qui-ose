@@ -32,8 +32,6 @@ function ProfesseurHeader({userData}) {
                     </div>
                     {profileMenuOpen && (
                         <div className="dropdown profile-dropdown">
-                            <Link className="dropdown-link" to="/profile">{t('myProfile')}</Link>
-                            <Link className="dropdown-link" to="/settings">{t('settings')}</Link>
                             <Link className="dropdown-link" to="/login">{t('logout')}</Link>
                             <button onClick={() => changeLanguage('en')}
                                     className="language-button dropdown-link text-left no-underline">

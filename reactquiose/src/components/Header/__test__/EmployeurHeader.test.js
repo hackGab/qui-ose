@@ -24,7 +24,7 @@ describe('EmployeurHeader Component - Notifications', () => {
             })
         );
 
-        i18n.changeLanguage('fr'); // Changez la langue si nécessaire
+        i18n.changeLanguage('fr');
     });
 
     it('Devrait afficher en français le temps depuis la notification', () => {

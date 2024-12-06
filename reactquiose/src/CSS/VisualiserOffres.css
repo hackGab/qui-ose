@@ -2,7 +2,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     max-width: 400px;
-    /*margin: 10px;*/
     margin: auto !important;
     position: relative;
 }
@@ -45,6 +44,7 @@
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
+    font-size: 1.1rem;
 }
 
 .status-green {
@@ -58,6 +58,6 @@
 }
 
 .status-yellow {
-    background-color: #ffc107;
+    background-color: #eacb05;
     color: black;
 }

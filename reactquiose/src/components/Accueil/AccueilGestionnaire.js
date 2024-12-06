@@ -13,16 +13,24 @@ function AccueilGestionnaire() {
     const location = useLocation();
     const navigate = useNavigate();
     const userData = location.state?.userData;
-    console.log("AccueilGestionnaire userData: ", userData);
     const [cvAttentes, setCvAttentes] = useState(0);
     const [offresAttentes, setOffresAttentes] = useState(0);
     const [contratsAGenerer, setContratsAGenerer] = useState(0);
+    const [hoveredSection, setHoveredSection] = useState(null);
 
     const sections = [
         { title: t("etudiant"), notifications: cvAttentes, image: etudiantImage, link: "/listeEtudiants" },
         { title: t("prof"), notifications: 0, image: professeurImage, link: "/listeProfesseurs" },
         { title: t("employeur"), notifications: offresAttentes, image: employeurImage, link: "/listeEmployeurs" },
     ];
+
+    const handleMouseEnter = (index) => {
+        setHoveredSection(index);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredSection(null);
+    };
 
     const handleNavigateCandidatures = () => {
         navigate('/listeCandidatures', { state: { userData } });
@@ -31,7 +39,7 @@ function AccueilGestionnaire() {
     useEffect(() => {
         fetchCvAttentes();
         fetchOffresAttentes();
-	fetchContratsAGenerer();
+	    fetchContratsAGenerer();
     }, []);
 
     const fetchCvAttentes = async () => {
@@ -66,7 +74,9 @@ function AccueilGestionnaire() {
                 candidat => !contrats.some(contrat => contrat.candidature.id === candidat.id)
             );
 
-            setContratsAGenerer(candidatsSansContrat.length);
+            const filteredCandidatures = candidatsSansContrat.filter(candidat => candidat.accepte);
+
+            setContratsAGenerer(filteredCandidatures.length);
         } catch (error) {
             console.error('Erreur lors de la vérification des contrats à générer:', error);
         }
@@ -81,7 +91,12 @@ function AccueilGestionnaire() {
             <h1>{t("Dashboard")}</h1>
             <div className="row justify-content-center">
                 {sections.map((section, index) => (
-                    <div className="col-lg-4 col-md-6 mb-4 d-flex flex-column align-items-center" key={index}>
+                    <div
+                        className="col-lg-4 col-md-6 mb-4 d-flex flex-column align-items-center"
+                        key={index}
+                        onMouseEnter={() => setHoveredSection(index)}
+                        onMouseLeave={() => setHoveredSection(null)}
+                    >
                         <h2 className="section-title-outside">{section.title}</h2>
                         <Link to={section.link} className="section">
                             <h2 className="section-title-inside">{section.title}</h2>
@@ -93,20 +108,32 @@ function AccueilGestionnaire() {
                                 src={section.image}
                                 alt={section.title}
                             />
+                            {hoveredSection === index && index !== 1 && (
+                                <div className="notification-tooltip">({section.notifications} {t('linkNotificationLegend')})</div>
+                            )}
                         </Link>
+
                     </div>
                 ))}
             </div>
 
             <div className="candidature-button-container mt-5 position-relative">
-                <button className="candidature-button position-relative" onClick={handleNavigateCandidatures}>
-                    {t("Voir les Candidatures")}
-                    {contratsAGenerer > 0 && (
-                        <div className="notification-badge-candidature position-absolute" data-testid="notif-contrat" >
-                            {contratsAGenerer}
-                        </div>
+                <div
+                    onMouseEnter={() => setHoveredSection(3)}
+                    onMouseLeave={() => setHoveredSection(null)}
+                >
+                    <button className="candidature-button position-relative" onClick={handleNavigateCandidatures}>
+                        {t("VoirCandidature")}
+                        {contratsAGenerer > 0 && (
+                            <div className="notification-badge-candidature position-absolute" data-testid="notif-contrat" >
+                                {contratsAGenerer}
+                            </div>
+                        )}
+                    </button>
+                    {hoveredSection === 3 && (
+                        <div className="notification-tooltip">({contratsAGenerer} {t("contratNotificationLegend")})</div>
                     )}
-                </button>
+                </div>
             </div>
         </div>
     );

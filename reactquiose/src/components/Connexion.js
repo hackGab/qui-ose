@@ -27,7 +27,6 @@ function Connexion() {
             email: email,
             password: mpd.trim(),
         };
-        console.log('Données envoyées au backend:', userData);
 
         fetch('http://localhost:8081/user/login', {
             method: 'POST',
@@ -43,7 +42,6 @@ function Connexion() {
                 throw new Error(t('connexionEchouee'));
             })
             .then((data) => {
-                console.log('Réponse du serveur:', data);
                 const accessToken = data.accessToken;
 
                 return fetch('http://localhost:8081/user/me', {
@@ -61,7 +59,6 @@ function Connexion() {
                 throw new Error(t('erreurLorsRecuperationUtilisateur'));
             })
             .then((userData) => {
-                console.log('Données utilisateur:', userData);
                 if (userData.role === 'ETUDIANT') {
                     navigate('/accueilEtudiant', { state: { userData } });
                 } else if (userData.role === 'EMPLOYEUR') {

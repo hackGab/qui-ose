@@ -12,7 +12,7 @@ function ListeEtudiants() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [visibleStatus] = useState({ 'En attente': true });
+    const [visibleStatus, setVisibleStatus] = useState({ 'Attente': true });
 
 
     useEffect(() => {
@@ -29,7 +29,7 @@ function ListeEtudiants() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+
                 setEtudiants(data);
                 setLoading(false);
             })
@@ -101,7 +101,7 @@ function ListeEtudiants() {
                     <input
                         type="text"
                         className="form-control mb-4"
-                        placeholder={t('searchPlaceholder')}
+                        placeholder={t('searchStudents')}
                         value={searchTerm}
                         onChange={handleSearch}
                     />
@@ -119,9 +119,9 @@ function ListeEtudiants() {
                                             state={{student: etudiant}}
                                         >
                                             <div
-                                                className={`card shadow w-100 position-relative ${status.toLowerCase()}`}>
+                                                className={`card shadow w-100 position-relative ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                 <span
-                                                    className="position-absolute top-0 end-0 badge bg-secondary m-2 custom-badge">
+                                                    className={`position-absolute top-0 end-0 badge m-2 custom-badge ${status.toLowerCase().replaceAll(' ', '')}`}>
                                                     {status ? t(status) : t('AucunCV')}
                                                 </span>
                                                 <div className="card-body">

@@ -2,13 +2,13 @@ import {useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {format} from 'date-fns';
 import {useTranslation} from "react-i18next";
-import EmployeurHeader from "./Header/EmployeurHeader";
-import "../CSS/MesEntrevueAccepte.css";
-import {FaCalendarAlt} from "react-icons/fa";
-import ConfirmModal from "./ConfirmModal";
+import EmployeurHeader from "../Header/EmployeurHeader";
+import "../../CSS/MesEntrevueAccepte.css";
+import {FaCalendarAlt, FaCheck, FaClipboardList, FaFilePdf, FaListAlt, FaPercent} from "react-icons/fa";
+import ConfirmModal from "../ConfirmModal";
 import i18n from "i18next";
 import {FaLocationPinLock} from "react-icons/fa6";
-import {getLocalStorageSession} from "../utils/methodes/getSessionLocalStorage";
+import {getLocalStorageSession} from "../../utils/methodes/getSessionLocalStorage";
 import Modal from "react-bootstrap/Modal";
 
 function MesEntrevueAccepte() {
@@ -28,8 +28,10 @@ function MesEntrevueAccepte() {
     const [evaluationCree, setEvaluationCree] = useState(false);
     const [selectedEntrevue, setSelectedEntrevue] = useState(null);
     const [evaluations, setEvaluations] = useState([]);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [session, setSession] = useState(getLocalStorageSession());
+
+    const [filters, setFilters] = useState(["all"]);
 
     const EvaluationConformiteOptions = [
         {label: t("TotalementEnAccord"), value: "TOTAL_EN_ACCORD"},
@@ -91,18 +93,17 @@ function MesEntrevueAccepte() {
     });
 
     const fetchSession = async (session) => {
-        console.log("Session:", session);
         try {
-            console.log("EmployeurEmail:", employeurEmail);
+
 
             const responseEntrevuesAccepte = await fetch(
                 `http://localhost:8081/entrevues/acceptees/employeur/${employeurEmail}/session/${session}`
             );
-            console.log("ResponseEntrevuesAccepte:", responseEntrevuesAccepte);
+
 
             if (!responseEntrevuesAccepte.ok) {
                 if (responseEntrevuesAccepte.status === 404 || responseEntrevuesAccepte.status === 204) {
-                    console.warn("Aucune entrevue trouvée pour cette session.");
+
                     setEntrevues([]);
                     return;
                 } else {
@@ -110,19 +111,19 @@ function MesEntrevueAccepte() {
                         `Erreur du serveur: ${responseEntrevuesAccepte.statusText}`
                     );
                 }
-            } else {
+            }
+            else{
                 setEntrevues([]);
             }
 
             const entrevuesAccepteData = await responseEntrevuesAccepte.json();
-            console.log("EntrevuesAccepteData:", entrevuesAccepteData.status === 204);
+
             if (entrevuesAccepteData.status === 204) {
-                console.warn("Réponse vide reçue du serveur.");
+
                 setEntrevues([]);
                 return;
             }
 
-            console.log("Données des entrevues acceptées:", entrevuesAccepteData);
             setEntrevues(entrevuesAccepteData);
 
         } catch (error) {
@@ -131,6 +132,14 @@ function MesEntrevueAccepte() {
             setIsLoading(false);
         }
     };
+
+
+    useEffect(() => {
+        if (filters.length === 0) {
+            setFilters(["all"]);
+        }
+    }, [filters]);
+
 
     useEffect(() => {
         const fetchOffresEntrevues = async () => {
@@ -143,18 +152,13 @@ function MesEntrevueAccepte() {
         };
 
         fetchOffresEntrevues();
-    }, [employeurEmail, session]); // Inclure `session` si elle peut changer dynamiquement
-
+    }, [employeurEmail, session]);
 
     useEffect(() => {
         entrevues.forEach(entrevue => {
-            setDecisionCandidate(entrevue).then(r => console.log("Decision updated"));
+            setDecisionCandidate(entrevue)
         });
     }, [entrevues]);
-
-    useEffect(() => {
-        console.log("selectedEntrevue a été mis à jour : ", selectedEntrevue);
-    }, [selectedEntrevue])
 
     useEffect(() => {
         const fetchEvaluations = async () => {
@@ -167,13 +171,11 @@ function MesEntrevueAccepte() {
                 });
 
                 if (!response.ok) {
-                    console.error("Erreur HTTP:", response.status, response.statusText);
                     return;
                 }
 
                 const data = await response.json();
                 setEvaluations(data);
-                console.log(data)
             } catch (error) {
                 console.error("Erreur réseau:", error);
             }
@@ -191,7 +193,7 @@ function MesEntrevueAccepte() {
             )
         );
 
-        setDecisionCandidate(entrevueAcceptee).then(r => console.log("Decision updated"));
+        setDecisionCandidate(entrevueAcceptee)
     }
 
     const handleCandidatureRejete = (entrevueRejete) => {
@@ -203,7 +205,7 @@ function MesEntrevueAccepte() {
             )
         );
 
-        setDecisionCandidate(entrevueRejete).then(r => console.log("Decision updated"));
+        setDecisionCandidate(entrevueRejete)
     }
 
     const setDecisionCandidate = async (entrevue) => {
@@ -229,20 +231,20 @@ function MesEntrevueAccepte() {
     };
 
     const handleInterviewClick = async (entrevue) => {
-        console.log("entrevue", entrevue);
+
         const candidature = asCandidature(entrevue);
-        console.log("A la candidature", candidature);
+
 
         const evaluation = await getEvaluationEtudiant(employeurEmail, entrevue.etudiantDTO.email);
-        if (evaluation) {
+        if(evaluation) {
             setShowDetailsModal(false);
             return;
         }
 
-        if (candidature && entrevue.etudiantDTO.professeur) {
+        if(candidature && entrevue.etudiantDTO.professeur){
             setSelectedEntrevue(entrevue);
             setShowDetailsModal(true);
-            console.log("selectedEntrevue", selectedEntrevue);
+
         }
     };
 
@@ -252,8 +254,8 @@ function MesEntrevueAccepte() {
     };
 
     const handleChange = (e, field) => {
-        console.log("Evaluation", evaluation)
-        const {value} = e.target;
+
+        const { value } = e.target;
         setEvaluation((prevEvaluation) => ({
             ...prevEvaluation,
             [field]: value,
@@ -279,8 +281,6 @@ function MesEntrevueAccepte() {
 
             if (response.ok) {
                 handleCandidatureAcceptee(entrevue);
-            } else {
-                console.error('Erreur lors de l\'acceptation de l\'entrevue');
             }
         } catch (error) {
             console.error('Erreur réseau:', error);
@@ -300,8 +300,6 @@ function MesEntrevueAccepte() {
 
             if (response.ok) {
                 handleCandidatureRejete(entrevue);
-            } else {
-                console.error('Erreur lors du refus de l\'entrevue');
             }
         } catch (error) {
             console.error('Erreur réseau:', error);
@@ -320,18 +318,18 @@ function MesEntrevueAccepte() {
             });
 
             if (response.status === 404) {
-                console.error("Candidature non trouvée");
+
                 return null;
             }
 
             if (response.ok) {
                 const data = await response.json();
                 if (data === null || data === undefined) {
-                    console.error('Erreur lors de la récupération de la décision de la candidature');
+
                     return null;
                 }
 
-                console.log('Status:', data.accepte ? 'Accepted' : 'Rejected');
+
                 return data.accepte;
             }
         } catch (error) {
@@ -350,7 +348,7 @@ function MesEntrevueAccepte() {
             });
 
             if (response.status === 404) {
-                console.error("Candidature non trouvée");
+
                 closeDetailsModal()
                 return false;
             }
@@ -388,18 +386,12 @@ function MesEntrevueAccepte() {
             });
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    console.error("Étudiant non trouvé");
-                } else if (response.status === 400) {
-                    console.error("Requête incorrecte, email manquant");
-                } else {
-                    console.error("Erreur lors de la récupération de l'étudiant");
-                }
+               
                 return;
             }
 
             const etudiantData = await response.json();
-            console.log('Données de l\'étudiant:', etudiantData);
+
             return etudiantData;
 
         } catch (error) {
@@ -411,7 +403,7 @@ function MesEntrevueAccepte() {
         try {
             const etudiant = await getEtudiantByEmail(emailEtudiant);
             if (!etudiant) {
-                console.error("Étudiant non trouvé");
+
                 return;
             }
 
@@ -419,7 +411,7 @@ function MesEntrevueAccepte() {
             evaluationStageEmployeur.nomEleve = etudiant.firstName + " " + etudiant.lastName;
             evaluationStageEmployeur.telephone = etudiant.phoneNumber;
 
-            console.log("evaluationStageEmployeur", evaluationStageEmployeur);
+
 
             const response = await fetch(`http://localhost:8081/employeur/creerEvaluationEtudiant/${emailEmployeur}/${emailEtudiant}`, {
                 method: 'POST',
@@ -455,22 +447,13 @@ function MesEntrevueAccepte() {
                 }
             });
 
-            console.log("response", response)
+
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    console.error("Évaluation non trouvée");
-                } else if (response.status === 400) {
-                    console.error("Requête incorrecte, email manquant");
-                } else {
-                    console.error("Erreur lors de la récupération de l'évaluation");
-                }
                 return;
             }
 
-            const evaluationData = await response.json();
-            console.log('Données de l\'évaluation:', evaluationData);
-            return evaluationData;
+            return await response.json();
 
         } catch (error) {
             console.error('Erreur réseau:', error);
@@ -509,8 +492,20 @@ function MesEntrevueAccepte() {
     }
 
     if (error) {
-        return <div style={{fontSize: "1.5rem"}}>{t('Erreur')} {error}</div>;
+        return <div style={{ fontSize: "1.5rem" }}>{t('Erreur')} {error}</div>;
     }
+
+
+    const handleFilterChange = (e) => {
+        const { value, checked } = e.target;
+        if (value === "all") {
+            setFilters(checked ? ["all"] : []);
+        } else {
+            setFilters(prevFilters =>
+                checked ? prevFilters.filter(filter => filter !== "all").concat(value) : prevFilters.filter(filter => filter !== value)
+            );
+        }
+    };
 
     const showButtonsIfDateBeforeToday = (entrevue) => {
         const today = new Date();
@@ -518,13 +513,61 @@ function MesEntrevueAccepte() {
         return today > dateEntrevue;
     }
 
+    const getFilteredCount = (filter) => {
+        return entrevues.filter(entrevue => {
+            switch (filter) {
+                case "all":
+                    return true;
+                case "withButtons":
+                    return statusMessages[entrevue.id] == null;
+                case "withEvaluation":
+                    return !evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "withPdf":
+                    return evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "acceptedOnly":
+                    return statusMessages[entrevue.id] !== null && statusMessages[entrevue.id] === "Candidature acceptée" && !entrevue.etudiantDTO.professeur;
+                default:
+                    return true;
+            }
+        }).length;
+    };
+
+    const filterOptions = [
+        { value: "all", label: t('Tous'), icon: <FaListAlt className="filter-option-icon" /> },
+        { value: "withButtons", label: t('Embaucher / Refuser'), icon: <FaClipboardList className="filter-option-icon" /> },
+        { value: "withEvaluation", label: t('Avec Évaluation'), icon: <FaPercent className="filter-option-icon" /> },
+        { value: "withPdf", label: t('Avec PDF'), icon: <FaFilePdf className="filter-option-icon" /> },
+        { value: "acceptedOnly", label: t('Acceptée Seulement'), icon: <FaCheck className="filter-option-icon" /> }
+    ];
+
+    const filteredInterviews = entrevues.filter(entrevue => {
+        if (filters.length === 0 || filters.includes("all")) {
+            return true;
+        }
+        return filters.some(filter => {
+            switch (filter) {
+                case "withButtons":
+                    return statusMessages[entrevue.id] == null;
+                case "withEvaluation":
+                    return !evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "withPdf":
+                    return evaluations.some(evaluation => evaluation.etudiant && evaluation.etudiant.email === entrevue.etudiantDTO.email) && entrevue.etudiantDTO.professeur;
+                case "acceptedOnly":
+                    return statusMessages[entrevue.id] !== null && statusMessages[entrevue.id] === "Candidature acceptée" && !entrevue.etudiantDTO.professeur;
+                default:
+                    return true;
+            }
+        });
+    });
+
+
     const formatDate = (dateString) => {
-        const options = {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'};
+        const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(i18n.language, options);
     }
 
     const verificationSession = (data) => {
-        console.log("session ", data);
+
         setSession(data.session);
         fetchSession(data.session);
     }
@@ -542,11 +585,28 @@ function MesEntrevueAccepte() {
 
                     <legend className="mb-5 mt-0"><i>*{t('AttendreDateEntrevue')}</i></legend>
 
+                    <div className="filters">
+                        {filterOptions.map(option => (
+                            <label key={option.value} className="filter-option">
+                                <input
+                                    type="checkbox"
+                                    value={option.value}
+                                    checked={filters.includes(option.value)}
+                                    onChange={handleFilterChange}
+                                    disabled={option.value === "all" && filters.includes("all")}
+                                />
+                                {option.icon}
+                                {option.label} ({getFilteredCount(option.value)})
+                            </label>
+                        ))}
+                    </div>
+
+
                     {Object.keys(entrevues).length === 0 ? (
                         <div className="alert alert-info mt-3 no-offres-alert">{t('AccuneOffreTrouve')}</div>
                     ) : (
                         <div className="row mt-3 mb-3">
-                            {Object.values(groupedInterviews).map(({offer, entrevues}) => (
+                            {Object.values(groupInterviewsByOffer(filteredInterviews)).map(({offer, entrevues}) => (
                                 <div key={offer.id} className="col-md-12 offre-card">
                                     <h5 className="offre-title">{t('Offre')} #{offer.id}: {offer.titre}</h5>
                                     <hr/>
@@ -555,13 +615,9 @@ function MesEntrevueAccepte() {
                                             <li
                                                 key={entrevue.id}
                                                 className="entrevue-item text-capitalize"
-                                                onClick={() => handleInterviewClick(entrevue)
-                                                }
+                                                onClick={() => handleInterviewClick(entrevue)}
                                             >
-                                                <div style={{
-                                                    minWidth: "15em",
-                                                    marginRight: "3em",
-                                                }}>
+                                                <div style={{minWidth: "15em", marginRight: "3em"}}>
                                                     <span style={{fontSize: "1rem"}}>
                                                         <strong>{t('Entrevue')}</strong> - {entrevue.etudiantDTO.firstName} {entrevue.etudiantDTO.lastName}
                                                     </span>
@@ -600,38 +656,35 @@ function MesEntrevueAccepte() {
                                                         )}
                                                     </div>
                                                 )}
-
-
+                                                
                                                 {showButtonsIfDateBeforeToday(entrevue) && (
-                                                    <>
-                                                        <div className="m-auto d-flex">
-                                                            {statusMessages[entrevue.id] ? (
-                                                                <div
-                                                                    className="status-message">{statusMessages[entrevue.id]}</div>
-                                                            ) : (
-                                                                <div className="entrevue-actions">
-                                                                    <div className="icon-block">
-                                                                        <button
-                                                                            className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
-                                                                            onClick={() => handleAccept(entrevue)}
-                                                                            style={{margin: "0", fontSize: "1.2rem"}}
-                                                                        >
-                                                                            {t('Embaucher')}
-                                                                        </button>
-                                                                    </div>
-                                                                    <div className="icon-block">
-                                                                        <button
-                                                                            className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
-                                                                            onClick={() => handleRefuse(entrevue)}
-                                                                            style={{margin: "0", fontSize: "1.2rem"}}
-                                                                        >
-                                                                            {t('Refuser')}
-                                                                        </button>
-                                                                    </div>
+                                                    <div className="m-auto d-flex">
+                                                        {statusMessages[entrevue.id] ? (
+                                                            <div
+                                                                className="status-message">{statusMessages[entrevue.id]}</div>
+                                                        ) : (
+                                                            <div className="entrevue-actions">
+                                                                <div className="icon-block">
+                                                                    <button
+                                                                        className={`btn btn-lg rounded-start-pill custom-btn icon-accept`}
+                                                                        onClick={() => handleAccept(entrevue)}
+                                                                        style={{margin: "0", fontSize: "1.2rem"}}
+                                                                    >
+                                                                        {t('Embaucher')}
+                                                                    </button>
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    </>
+                                                                <div className="icon-block">
+                                                                    <button
+                                                                        className={`btn btn-lg rounded-end-pill custom-btn icon-refuse`}
+                                                                        onClick={() => handleRefuse(entrevue)}
+                                                                        style={{margin: "0", fontSize: "1.2rem"}}
+                                                                    >
+                                                                        {t('Refuser')}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </li>
                                         ))}
@@ -1345,8 +1398,7 @@ function MesEntrevueAccepte() {
                                     onClick={() => creerEvaluationEtudiant(userData.credentials.email, selectedEntrevue.etudiantDTO.email, evaluation)}>
                                 {t('creer_evaluation')}
                             </button>
-                            <button type="button" className="btn btn-danger"
-                                    onClick={closeDetailsModal}>{t('close')}</button>
+                            <button type="button" className="btn btn-danger" onClick={closeDetailsModal}>{t('close')}</button>
                         </Modal.Footer>
 
                     </form>

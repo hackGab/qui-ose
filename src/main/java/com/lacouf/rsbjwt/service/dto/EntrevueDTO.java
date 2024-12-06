@@ -39,4 +39,16 @@ public class EntrevueDTO {
     public EntrevueDTO() {}
 
     public static EntrevueDTO empty() {return new EntrevueDTO();}
+
+    @Override
+    public String toString() {
+        return "EntrevueDTO{" +
+                "id=" + id +
+                ", dateHeure=" + dateHeure +
+                ", location='" + location + '\'' +
+                ", status='" + status + '\'' +
+                ", etudiantDTO=" + etudiantDTO +
+                ", offreDeStageDTO=" + offreDeStageDTO +
+                '}';
+    }
 }

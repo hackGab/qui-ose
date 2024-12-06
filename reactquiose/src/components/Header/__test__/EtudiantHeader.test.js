@@ -25,7 +25,7 @@ describe('EtudiantHeader Component - Notifications', () => {
             })
         );
 
-        i18n.changeLanguage('fr'); // Changez la langue si nécessaire
+        i18n.changeLanguage('fr');
     });
 
     it('should translate time ago correctly in French', () => {
@@ -189,7 +189,6 @@ describe('EtudiantHeader Component - Notifications', () => {
             );
         });
 
-        // Manually call fetch with a bad notifId
         const badNotifId = 'bad-id';
         try {
             await fetch(`http://localhost:8081/notification/markAsRead/${badNotifId}`, { method: 'PUT' });

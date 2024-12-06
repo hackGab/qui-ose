@@ -236,7 +236,6 @@ function ListeCandidature() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         await fetch('http://localhost:8081/contrat/creerContrat', {
             method: 'POST',
@@ -278,7 +277,6 @@ function ListeCandidature() {
     };
 
     const verifificationFiltre = (data) => {
-        console.log(data);
         fetchBySession(data.session);
     };
 
@@ -286,7 +284,6 @@ function ListeCandidature() {
         fetch(`http://localhost:8081/candidatures/session/${session}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 setCandidatures(data);
                 const fetchPromises = data.map(candidat =>
                     fetch(`http://localhost:8081/entrevues/${candidat.entrevueId}`)
@@ -297,19 +294,15 @@ function ListeCandidature() {
                 return Promise.all(fetchPromises);
             })
             .then(candidatsWithEntrevues => {
-                console.log(candidatsWithEntrevues);
 
                 const filteredCandidatures = candidatsWithEntrevues.filter(candidat => candidat.accepte);
-
                 setCandidatures(filteredCandidatures);
-                console.log(filteredCandidatures);
                 setLoading(false);
             })
             .then(() => {
                 fetch(`http://localhost:8081/contrat/session/${session}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         setContrats(data);
                     })
                     .catch(err => {
@@ -326,7 +319,7 @@ function ListeCandidature() {
 
     const getStatus = (candidat) => {
         const contrat = contrats.find(contrat => contrat.candidature.id === candidat.id);
-        console.log(contrat);
+
         if (!contrat) return "Générer un contrat";
         if (isContractSigned(contrat)) return "générer version PDF du contrat";
         return "En attente des signatures";

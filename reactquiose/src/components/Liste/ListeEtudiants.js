@@ -29,7 +29,6 @@ function ListeEtudiants() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setEtudiants(data);
                 setLoading(false);
             })

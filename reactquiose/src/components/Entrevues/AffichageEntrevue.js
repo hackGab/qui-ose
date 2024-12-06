@@ -23,10 +23,7 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
             });
 
             if (response.ok) {
-                console.log('Entrevue acceptée:', entrevue);
                 if (onAccept) onAccept(entrevue);
-            } else {
-                console.error('Erreur lors de l\'acceptation de l\'entrevue');
             }
         } catch (error) {
             console.error('Erreur réseau:', error);
@@ -45,11 +42,9 @@ function AffichageEntrevue({ entrevue, t, onAccept, onReject }) {
             });
 
             if (response.ok) {
-                console.log('Entrevue refusée:', entrevue);
                 if (onReject) onReject(entrevue);
-            } else {
-                console.error('Erreur lors du refus de l\'entrevue');
             }
+
         } catch (error) {
             console.error('Erreur réseau:', error);
         }

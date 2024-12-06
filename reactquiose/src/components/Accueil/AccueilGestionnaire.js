@@ -14,7 +14,6 @@ function AccueilGestionnaire() {
     const location = useLocation();
     const navigate = useNavigate();
     const userData = location.state?.userData;
-    console.log("AccueilGestionnaire userData: ", userData);
     const [cvAttentes, setCvAttentes] = useState(0);
     const [offresAttentes, setOffresAttentes] = useState(0);
     const [contratsAGenerer, setContratsAGenerer] = useState(0);

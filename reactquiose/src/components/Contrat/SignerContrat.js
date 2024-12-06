@@ -64,7 +64,6 @@ function SignerContrat() {
             });
 
             const data = await response.json();
-            console.log(data);
             if (data) {
                 handleAnimation(true, null);
                 updateContratSignStatus();
@@ -111,7 +110,6 @@ function SignerContrat() {
     };
 
     const verificationSession = (data) => {
-        console.log(data);
         setSession(data.session);
         fetchSession(data.session)
     }

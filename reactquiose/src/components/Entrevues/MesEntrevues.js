@@ -24,7 +24,6 @@ function MesEntrevues() {
     const [searchCompany, setSearchCompany] = useState('');
 
     const fetchSession = (session) => {
-        console.log('Session:', session);
         const email = userData?.credentials.email;
         if (email) {
             fetch(`http://localhost:8081/entrevues/etudiant/${email}/session/${session}`)
@@ -35,7 +34,6 @@ function MesEntrevues() {
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Réponse du serveur:', data);
                     setEntrevues(data);
                     setLoading(false);
                 })
@@ -54,8 +52,6 @@ function MesEntrevues() {
     }, [userData]);
 
     const handleEntrevueAcceptee = (entrevueAcceptee) => {
-        console.log('Entrevue acceptée:', entrevueAcceptee);
-
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantDTO === entrevueAcceptee.etudiantDTO && entrevue.offreDeStageDTO === entrevueAcceptee.offreDeStageDTO
@@ -68,8 +64,6 @@ function MesEntrevues() {
     };
 
     const handleEntrevueRejete = (entrevueRejete) => {
-        console.log('Entrevue refusée:', entrevueRejete);
-
         setEntrevues(prevEntrevues =>
             prevEntrevues.map(entrevue =>
                 entrevue.etudiantDTO === entrevueRejete.etudiantDTO && entrevue.offreDeStageDTO === entrevueRejete.offreDeStageDTO
@@ -106,7 +100,6 @@ function MesEntrevues() {
     }
 
     const verificationSession = (session) => {
-        console.log(session);
         setSession(session.session)
         fetchSession(session.session)
     }

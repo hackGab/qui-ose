@@ -101,7 +101,6 @@ function SoumettreOffre() {
     const handleSubmit = () => {
         if (temporaryFile) {
             const session = `${season}${year}`;
-            console.log("Session:", session);
             const donnesOffre = {
                 titre,
                 localisation,
@@ -114,7 +113,6 @@ function SoumettreOffre() {
                 status: "Attente",
                 session,
             };
-            console.log("Données de l'offre:", donnesOffre);
 
             const urlAjout = `http://localhost:8081/offreDeStage/creerOffreDeStage/${employeurEmail}`;
             let ancienId = file ? file.id : null;
@@ -177,8 +175,7 @@ function SoumettreOffre() {
     };
 
     const verificationSession = (data) => {
-        console.log("session ", data);
-
+        //console.log("session ", data);
     }
 
     return (

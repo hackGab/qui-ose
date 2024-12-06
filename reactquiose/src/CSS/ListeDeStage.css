@@ -16,7 +16,7 @@
 
 .overlay {
     position: absolute;
-    inset: 0; /* Fills all the space of the parent div */
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     place-content: center;
     border-top-left-radius: 1em;

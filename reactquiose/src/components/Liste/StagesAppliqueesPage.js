@@ -111,7 +111,6 @@ function StagesAppliquees() {
         entrevues.forEach(entrevue => {
             const candidature = candidatureDecision.find(c => c.entrevueId === entrevue.id);
             if (!candidature) {
-                console.error('Candidature non trouvée pour l’entrevue:', entrevue.id);
                 decisions[entrevue.offreDeStageDTO?.id] = 'Candidature en attente';
             }
             else {
@@ -161,7 +160,6 @@ function StagesAppliquees() {
                 return response.json();
             })
             .then((data) => {
-                console.log("Application retirée avec succès :", data);
                 setShowModal(false);
                 setSelectedInternship(null);
                 setStagesWithImages(stagesWithImages.filter((s) => s.id !== stage.id));

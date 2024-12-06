@@ -23,7 +23,6 @@ function AccueilEtudiant() {
     const [session, setSession] = useState(getLocalStorageSession());
 
     useEffect(() => {
-        console.log('userData:', userData);
         if (userData) {
             const url = `http://localhost:8081/etudiant/credentials/${userData.credentials.email}`;
 
@@ -35,12 +34,10 @@ function AccueilEtudiant() {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log('Réponse du serveur:', data);
 
                     if (data.cv) {
                         setFile(data.cv);
                         setFileData(data.cv.data);
-                        console.log('CV:', data.cv.rejetMessage);
 
                         if (data.cv.status === 'rejeté') {
                             setRejectionMessage(data.cv.rejetMessage || "Le CV a été rejeté sans raison spécifiée.");
@@ -49,23 +46,16 @@ function AccueilEtudiant() {
                         }
 
                         // Vérifiez si le statut est valide
-                        console.log('CV Status:', data.cv.status);
                         if (data.cv.status === 'validé') {
-                            console.log('Récupération des stages...');
-
                             const data = {
                                 session: session
                             }
-
                             fetchSession(data);
-
-                        } else {
-                            console.log('Le CV n\'est pas valide, aucune récupération de stages.');
                         }
                     }
                 })
                 .catch((error) => {
-                    console.error('Erreur:', error);
+                     console.error("Erreur:", error);
                 });
         }
     }, [userData]);
@@ -147,7 +137,6 @@ function AccueilEtudiant() {
                 .then((data) => {
                     setFile(data);
                     setFileData(data.data);
-                    console.log("Réponse du serveur:", data);
                 })
                 .then(() => {
                     if (ancienId) {
@@ -189,7 +178,6 @@ function AccueilEtudiant() {
     };
 
     const verificationSession = (session) => {
-        console.log(session);
         setSession(session);
         fetchSession(session);
     };
@@ -205,7 +193,6 @@ function AccueilEtudiant() {
                 return response.json();
             })
             .then((data) => {
-                console.log('Stages récupérés:', data);
                 setInternships(data);
             })
             .catch((error) => {

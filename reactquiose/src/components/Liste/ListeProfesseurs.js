@@ -26,7 +26,6 @@ function ListeProfesseurs() {
         })
             .then(response => {
                 if (!response.ok) {
-                    console.log(response);
                     throw new Error('lors de la récupération des données');
                 }
                 return response.json();

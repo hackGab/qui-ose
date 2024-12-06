@@ -27,7 +27,6 @@ function GestionnaireHeader({ onSendData }) {
     const navRef = useRef(null);
 
     useEffect(() => {
-        console.log(session);
         onSendData({
             session: session,
         });
@@ -57,14 +56,9 @@ function GestionnaireHeader({ onSendData }) {
     };
 
     const handleSessionChange = (newSession) => {
-        console.log(newSession + "newSession");
         setSession(newSession);
         localStorage.setItem('session', newSession);
         sendData("session", newSession);
-    };
-
-    const closeNav = () => {
-        setNavLinksOpen(false);
     };
 
     const closeMenus = () => {

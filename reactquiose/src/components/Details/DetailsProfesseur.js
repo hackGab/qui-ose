@@ -15,8 +15,6 @@ function DetailsProfesseur() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    console.log('Professeur details:', professeur);
-    console.log('Etudiants:', etudiants);
 
     // Fetch students by department
     useEffect(() => {
@@ -95,8 +93,6 @@ function DetailsProfesseur() {
         if (etudiantsSelectionnerRetire.length === 0 || !professeur) {
             return;
         }
-
-        console.log('Unassigning students:', etudiantsSelectionnerRetire);
 
         fetch(`http://localhost:8081/professeur/deassignerEtudiants/${professeur.email}`, {
             method: 'PUT',

@@ -23,7 +23,7 @@ export const useFetchNotifications = (userData) => {
         };
 
         fetchAndSortNotifications();
-        const intervalId = setInterval(fetchAndSortNotifications, 60000); // Fetch toutes les 60 secondes
+        const intervalId = setInterval(fetchAndSortNotifications, 60000);
 
         return () => clearInterval(intervalId);
     }, [userData]);

@@ -34,7 +34,7 @@ function ListeDeStage({ internships = [], userData }) {
             setInternshipsWithImages(updatedInternships);
         };
 
-        fetchImages().then(r => console.log('Images récupérées :', r));
+        fetchImages();
     }, [internships]);
 
     useEffect(() => {
@@ -83,15 +83,12 @@ function ListeDeStage({ internships = [], userData }) {
             setAppliedInternship([...appliedInternship, offreId])
         } catch (error) {
             console.error('Erreur lors de la soumission :', error);
-            alert("Échec de la candidature. Veuillez réessayer.");
         }
     };
 
     useEffect(() => {
         const fetchAppliedInternships = async () => {
-            console.log('userData :', userData);
             if (userData && userData.credentials && userData.credentials.email) {
-                console.log('Récupération des offres postulées par l’étudiant :', userData.credentials.email);
                 try {
                     const response = await fetch(`http://localhost:8081/etudiant/${userData.credentials.email}/offres`);
                     if (!response.ok) {
@@ -102,8 +99,6 @@ function ListeDeStage({ internships = [], userData }) {
                 } catch (error) {
                     console.error('Erreur lors de la récupération des offres :', error);
                 }
-            } else {
-                console.error('Les données utilisateur ne sont pas disponibles ou incorrectes.');
             }
         };
 

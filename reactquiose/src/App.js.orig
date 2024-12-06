@@ -6,7 +6,11 @@ import AccueilEtudiant from "./components/Accueil/AccueilEtudiant";
 import AccueilGestionnaire from "./components/Accueil/AccueilGestionnaire";
 import AccueilProfesseur from "./components/Accueil/AccueilProfesseur";
 import SoumettreOffre from "./components/SoumettreOffre";
+<<<<<<< HEAD
+import VisualiserOffres from "./components/Liste/VisualiserOffres";
+=======
 import VisualiserOffres from "./components/VisualiserOffres";
+>>>>>>> 3f913dcc1d9dcbb2b66d84768edaa169ef1026a6
 import ListeEtudiants from './components/Liste/ListeEtudiants';
 import DetailsEtudiants from './components/Details/DetailsEtudiants';
 import UpdateOffre from "./components/UpdateOffre";
@@ -14,11 +18,19 @@ import ListeEmployeurs from "./components/Liste/ListeEmployeurs";
 import DetailsEmployeurs from "./components/Details/DetailsEmployeur";
 import ListeDeStage from "./components/Liste/ListeDeStage";
 import EtudiantPostulants from "./components/EtudiantPostulants";
+<<<<<<< HEAD
 import StagesAppliqueesPage from "./components/Liste/StagesAppliqueesPage";
 import MesEntrevues from "./components/Entrevues/MesEntrevues";
 import ListeEntrevuesAcceptees from "./components/Entrevues/MesEntrevueAccepte";
 import ListeCandidature from "./components/Liste/ListeCandidature";
 import SignerContrat from "./components/Contrat/SignerContrat";
+=======
+import StagesAppliqueesPage from "./components/StagesAppliqueesPage";
+import MesEntrevues from "./components/MesEntrevues";
+import ListeEntrevuesAcceptees from "./components/MesEntrevueAccepte";
+import ListeCandidature from "./components/Liste/ListeCandidature";
+import SignerContrat from "./components/SignerContrat";
+>>>>>>> 3f913dcc1d9dcbb2b66d84768edaa169ef1026a6
 import ListeProfesseurs from "./components/Liste/ListeProfesseurs";
 import DetailsProfesseur from "./components/Details/DetailsProfesseur";
 
@@ -29,6 +41,10 @@ function App() {
             <div className="App-body">
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" />} />
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3f913dcc1d9dcbb2b66d84768edaa169ef1026a6
                     <Route path="/signUp" element={<Formulaire title="Inscription" />} />
                     <Route path="/login" element={<Formulaire title="Connexion" />} />
                     <Route path="/accueilEtudiant" element={<AccueilEtudiant />} />

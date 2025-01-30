@@ -1,3 +1,12 @@
+Procédure pour ouvrir le site :
+1. Clonez le projet localement.
+2. Excécuter dans un IDE src/main/java/com/lacouf/rsbjwt/ReactSpringSecurityJwtApplication.java
+3. Ouvrir le terminal
+5. Allez dans le dossier /reactquiose
+6. Dans la ligne de commande écrivez "npm start"
+
+
+
 Définition de "DONE"
 
 1.Code complété : Le développement de la fonctionnalité est terminé selon les exigences définies dans la story.
